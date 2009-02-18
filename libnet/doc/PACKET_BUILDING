@@ -1,0 +1,161 @@
+===============================================================================
+    $Id: PACKET_BUILDING,v 1.2 2004/01/03 20:31:00 mike Exp $
+    LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
+                               http://www.packetfactory.net/libnet
+===============================================================================
+
+
+    ADDING A NEW PACKET BUILDER
+
+    Adding a new packet building module is usually pretty simple.  It depends
+    completely on the complexity of the protocol.  The following document
+    shows you how to add a packet builder for a simple protocol with a
+    static header size, but these concepts can be extended to a complex 
+    protocol also.
+
+    1) Start by defining your protocol header format in libnet-headers.h:
+
+    #define LIBNET_XXX_H 0xSIZE
+
+    struct XXX_hdr
+    {
+        u_char  field1;
+        u_short field2;
+        u_long  field3;
+    };
+
+    2) Add a pblock definition to libnet-structures.h (appened to the list):
+
+    #define LIBNET_PBLOCK_XXX_H            0xNUMBER 
+
+    3) Then work from the following template for libnet_build_XXX.c:
+
+#if (HAVE_CONFIG_H)
+#include "../include/config.h"
+#endif
+#include "../include/libnet.h"
+
+
+libnet_ptag_t
+libnet_build_XXX(u_char arg1, u_short arg2, u_long arg3, u_char *payload,
+            u_long payload_s, libnet_t *l, libnet_ptag_t ptag)
+{
+    /*
+     *  n is the size of the protocol unit.  This is usually the header size
+     *  plus the payload size.  This is also how many bytes are allocated on
+     *  the heap to hold this protocol unit.
+     */
+    u_long n;
+
+    /*
+     *  h is used inside the pblock structure to let libnet know how big
+     *  much data to checksum.  This is different for different protocols.
+     *  The IPv4 checksum covers the IP header only, while TCP and UDP
+     *  checksums cover header and data.
+     */
+    u_short h;
+
+    /*
+     *  p will be used to refer to the protocol block that will either be
+     *  allocated if the function's pt argument is 0, or located if ptag refers
+     *  to a previously created protocol unit.
+     */
+    libnet_pblock_t *p;
+
+    /*
+     *  XXX_hdr is the header structure that will be overlaid onto the
+     *  allocated memory by way of a memcpy.
+     */
+    struct libnet_XXX_hdr XXX_hdr;
+
+    /*
+     *  Here we sanity check to make sure we have a live l.
+     */
+    if (l == NULL)
+    { 
+        return (-1);
+    }
+
+    n = LIBNET_XXX_H + payload_s;
+    h = 0;          /* no checksum by default */
+
+    /*
+     *  Find the existing protocol block if a ptag is specified, or create
+     *  a new one.
+     */
+    p = libnet_pblock_probe(l, pt, n, LIBNET_PBLOCK_XXX_H);
+    if (p == NULL)
+    {
+        return (-1);
+    }
+
+    /*
+     *  Build your packet here.  Be sure to call appropriate endian conversion
+     *  routines.
+     */
+    XXX_hdr.field1 = arg1;
+    XXX_hdr.field2 = htons(arg2);
+    XXX_hdr.field3 = htonl(arg3);
+
+    /*
+     *  Appened the protocol unit to the list.
+     */
+    n = libnet_pblock_append(l, p, (u_char *)&XXX_hdr, LIBNET_XXX_H);
+    if (n == -1)
+    {
+        goto bad;
+    }
+
+    /*
+     *  Sanity check the payload arguments.
+     */
+    if ((payload && !payload_s) || (!payload && payload_s))
+    {
+        sprintf(l->err_buf, "%s(): payload inconsistency\n", __FUNCTION__);
+        goto bad;
+    }
+
+    /*
+     *  Append the payload to the list if it exists.
+     */
+    if (payload && payload_s)
+    {
+        n = libnet_pblock_append(l, p, payload, payload_s);
+        if (n == -1)
+        {
+            goto bad;
+        }
+    }
+
+    /*
+     *  If this packet header has a checksum field, you'll add this
+     *  and you'll have to edit libnet_checksum.c to add it to the switch
+     *  table.  You might have to define the protocol number too.
+     */
+    if (sum == 0 && l->injection_type != LIBNET_RAW4)
+    {
+        /*
+         *  If checksum is zero, by default libnet will compute a checksum
+         *  for the user.  The programmer can override this by calling
+         *  libnet_toggle_checksum(l, ptag, 1);
+         */
+        libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
+    }
+
+    /*
+     *  Update the protocol block's meta information and return the protocol
+     *  tag id of this pblock.  This tag will be used to locate the pblock
+     *  in order to modify the protocol header in subsequent calls.
+     */
+    return (pt ? pt : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_XXX_H));
+bad:
+    libnet_pblock_delete(l, p);
+    return (-1);
+
+}
+    4) Add it to src/Makefile.am and then automake from the TLD.
+    5) Test the shit out of it.
+    6) Send it over to mike@infonexus.com.
+
+
+EOF

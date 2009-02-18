@@ -1,0 +1,41 @@
+.TH "libnet_802_1x_hdr" 3 "10 Mar 2004" "libnet" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libnet_802_1x_hdr \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <libnet-headers.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "u_int8_t \fBdot1x_version\fP"
+.br
+.ti -1c
+.RI "u_int8_t \fBdot1x_type\fP"
+.br
+.ti -1c
+.RI "u_int16_t \fBdot1x_length\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+IEEE 802.1X EAP (Extensible Authentication Protocol) header, static header size: 4 bytes 
+.SH "Field Documentation"
+.PP 
+.SS "u_int16_t \fBlibnet_802_1x_hdr::dot1x_length\fP"
+.PP
+total frame length 
+.SS "u_int8_t \fBlibnet_802_1x_hdr::dot1x_type\fP"
+.PP
+frame type 
+.SS "u_int8_t \fBlibnet_802_1x_hdr::dot1x_version\fP"
+.PP
+protocol version 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for libnet from the source code.
