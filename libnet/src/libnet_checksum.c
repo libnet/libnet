@@ -42,8 +42,10 @@ int
 libnet_in_cksum(u_int16_t *addr, int len)
 {
     int sum;
+    u_int16_t last_byte;
 
     sum = 0;
+    last_byte = 0;
 
     while (len > 1)
     {
@@ -52,7 +54,8 @@ libnet_in_cksum(u_int16_t *addr, int len)
     }
     if (len == 1)
     {
-        sum += *(u_int16_t *)addr;
+        *(u_int8_t *)&last_byte = *(u_int8_t *)addr;
+        sum += last_byte;
     }
 
     return (sum);
