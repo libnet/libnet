@@ -339,7 +339,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find a layer 2 header\n",
                     __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             case LIBNET_RAW4:
@@ -348,7 +348,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find an IPv4 header\n",
                      __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             case LIBNET_RAW6:
@@ -357,7 +357,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find an IPv6 header\n",
                      __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             default:
@@ -365,7 +365,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                 "%s(): suddenly the dungeon collapses -- you die\n",
                  __func__);
-                return (-1);
+                goto err;
             break;
         }
     }
@@ -419,6 +419,10 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
         *size -= l->aligner;
     }
     return (1);
+
+err:
+    free(packet);
+    return (-1);
 }
 
 void
