@@ -393,3 +393,14 @@ libnet_cq_size()
 {
     return (l_cqd.node);
 }
+
+u_int32_t
+libnet_cq_end_loop()
+{
+    if (! clear_cq_lock(CQ_LOCK_WRITE))
+    {
+        return (0);
+    }
+    l_cqd.current = l_cq;
+    return (1);
+}

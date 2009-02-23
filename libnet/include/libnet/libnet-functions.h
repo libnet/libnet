@@ -1886,6 +1886,12 @@ u_int32_t
 libnet_cq_size();
 
 /**
+ * [Context Queue]
+ */
+u_int32_t
+libnet_cq_end_loop();
+
+/**
  * [Diagnostic] 
  * Prints the contents of the given context.
  * @param l pointer to a libnet context
