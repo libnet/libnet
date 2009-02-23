@@ -85,8 +85,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ntp_hdr.ntp_ref_ts.fraction     = htonl(ref_ts_frac);
     ntp_hdr.ntp_orig_ts.integer     = htonl(orig_ts_int);
     ntp_hdr.ntp_orig_ts.fraction    = htonl(orig_ts_frac);
-    ntp_hdr.ntp_rec_ts.integer      = htonl(orig_ts_int);
-    ntp_hdr.ntp_rec_ts.fraction     = htonl(orig_ts_frac);
+    ntp_hdr.ntp_rec_ts.integer      = htonl(rec_ts_int);
+    ntp_hdr.ntp_rec_ts.fraction     = htonl(rec_ts_frac);
     ntp_hdr.ntp_xmt_ts.integer      = htonl(xmt_ts_int);
     ntp_hdr.ntp_xmt_ts.fraction     = htonl(xmt_ts_frac);
 
