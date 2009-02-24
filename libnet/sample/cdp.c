@@ -41,7 +41,7 @@ main(int argc, char *argv[])
     int c, len;
     libnet_t *l;
     libnet_ptag_t t;
-    u_char *value;
+    char *value;
     u_char values[100];
     u_short tmp;
     u_long tmp2;
@@ -72,7 +72,7 @@ main(int argc, char *argv[])
             0,                                      /* checksum */
             LIBNET_CDP_DEVID,                       /* type */
             len,                                    /* length */
-            value,                                  /* value */
+            (u_char*)value,                         /* value */
             NULL,                                   /* payload */
             0,                                      /* payload size */
             l,                                      /* libnet handle */

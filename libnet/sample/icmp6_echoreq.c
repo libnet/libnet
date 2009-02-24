@@ -48,7 +48,7 @@ main(int argc, char **argv)
     u_short src_prt = 0;
     libnet_t *l;
     libnet_ptag_t t;
-    u_char *cp;
+    char *cp;
     char errbuf[LIBNET_ERRBUF_SIZE];
     int i, c, packet_amt, burst_int, burst_amt, build_ip;
 	char srcname[100],dstname[100];
@@ -123,7 +123,7 @@ main(int argc, char **argv)
     {
         for (i = 0; i < packet_amt; i++)
         {
-			char payload[56];
+			u_int8_t payload[56];
 			int i;
 			for (i=0; i<56; i++) payload[i]='A'+((char)(i%26));
 			t = libnet_build_icmpv4_echo(ICMP6_ECHO,0,0,1,0,payload,sizeof(payload),l,t);

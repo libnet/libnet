@@ -46,7 +46,7 @@ main(int argc, char **argv)
     libnet_ptag_t t;
     u_long src, dst, nbr;
     char errbuf[LIBNET_ERRBUF_SIZE];
-    u_char *to, *from, *neighbor;
+    char *to, *from, *neighbor;
     u_char auth[8] = {0,0,0,0,0,0,0,0};
 
 

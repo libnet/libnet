@@ -50,7 +50,7 @@ main(int argc, char **argv)
     u_short src_prt = 0;
     libnet_t *l;
     libnet_ptag_t t;
-    u_char *cp;
+    char *cp;
     char errbuf[LIBNET_ERRBUF_SIZE];
     int i, c, packet_amt, burst_int, burst_amt, build_ip;
 

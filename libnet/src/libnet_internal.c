@@ -173,7 +173,7 @@ libnet_diag_dump_pblock(libnet_t *l)
 char *
 libnet_diag_dump_pblock_type(u_int8_t type)
 {
-    static int8_t buf[50];
+    static char buf[50];
     switch (type)
     {
         case LIBNET_PBLOCK_ARP_H:

@@ -40,7 +40,7 @@ int
 main(int argc, char *argv[])
 {
     int c;
-    u_char *cp;
+    char *cp;
     libnet_t *l;
     libnet_ptag_t t;
     libnet_ptag_t ip;

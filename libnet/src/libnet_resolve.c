@@ -364,12 +364,12 @@ libnet_get_ipaddr4(libnet_t *l)
 #endif /* WIN32 */
 
 u_int8_t *
-libnet_hex_aton(int8_t *s, int *len)
+libnet_hex_aton(const char *s, int *len)
 {
     u_int8_t *buf;
     int i;
     int32_t l;
-    int8_t *pp;
+    char *pp;
         
     while (isspace(*s))
     {
@@ -390,7 +390,7 @@ libnet_hex_aton(int8_t *s, int *len)
     /* expect len hex octets separated by ':' */
     for (i = 0; i < *len + 1; i++)
     {
-        l = strtol(s, (char **)&pp, 16);
+        l = strtol(s, &pp, 16);
         if (pp == s || l > 0xff || l < 0)
         {
             *len = 0;

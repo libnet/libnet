@@ -103,7 +103,7 @@ libnet_getfd(libnet_t *l);
  * @return the canonical name of the device used for packet injection. Note 
  * it can be NULL without being an error.
  */
-int8_t *
+const char *
 libnet_getdevice(libnet_t *l);
 
 /**
@@ -1705,7 +1705,7 @@ libnet_get_hwaddr(libnet_t *l);
  * @return a byte string or NULL on failure
  */
 u_int8_t *
-libnet_hex_aton(int8_t *s, int *len);
+libnet_hex_aton(const char *s, int *len);
 
 /**
  * [Advanced Interface]
@@ -1819,7 +1819,7 @@ libnet_cq_remove_by_label(char *label);
  * @param l pointer to a libnet context
  * @return pointer to the libnet context's label
  */   
-int8_t *
+const char *
 libnet_cq_getlabel(libnet_t *l);
  
 /**

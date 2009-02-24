@@ -192,7 +192,7 @@ libnet_getfd(libnet_t *l)
     return (l->fd);
 }
 
-int8_t *
+const char *
 libnet_getdevice(libnet_t *l)
 {
     if (l == NULL)

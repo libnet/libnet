@@ -325,7 +325,7 @@ libnet_cq_find_by_label(char *label)
     return (p ? p->context : NULL);
 }
 
-int8_t *
+const char *
 libnet_cq_getlabel(libnet_t *l)
 {
     return (l->label);

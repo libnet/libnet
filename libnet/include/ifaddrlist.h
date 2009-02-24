@@ -27,13 +27,13 @@ struct ifaddrlist
 #else
     u_int32_t addr;              
 #endif
-    int8_t *device;
+    char *device;
 };
 
 struct libnet_ifaddr_list
 {
     u_int32_t addr;
-    int8_t *device;
+    char *device;
 };
 
 int

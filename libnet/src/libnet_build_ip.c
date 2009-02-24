@@ -407,7 +407,7 @@ libnet_ptag_t ptag)
     }
 
     /* append padding */
-    n = libnet_pblock_append(l, p, "\0\0\0", adj_size - options_s);
+    n = libnet_pblock_append(l, p, (u_int8_t*)"\0\0\0", adj_size - options_s);
     if (n == -1)
     {
         goto bad;

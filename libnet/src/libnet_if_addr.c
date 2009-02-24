@@ -109,12 +109,12 @@ libnet_check_iface(libnet_t *l)
 #endif
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, int8_t *dev,
-register int8_t *errbuf)
+libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev,
+register char *errbuf)
 {
     register struct libnet_ifaddr_list *al;
     struct ifreq *ifr, *lifr, *pifr, nifr;
-    int8_t device[sizeof(nifr.ifr_name)];
+    char device[sizeof(nifr.ifr_name)];
     static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
     
     char *p;
@@ -282,8 +282,8 @@ static int8_t *iptos(u_int32_t in)
 }
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, int8_t *dev,
-register int8_t *errbuf)
+libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev,
+register char *errbuf)
 {
     int nipaddr = 0;    int i = 0;
 
@@ -326,7 +326,7 @@ int
 libnet_select_device(libnet_t *l)
 {
     int c, i;
-    int8_t err_buf[LIBNET_ERRBUF_SIZE];
+    char err_buf[LIBNET_ERRBUF_SIZE];
     struct libnet_ifaddr_list *address_list, *al;
     u_int32_t addr;
 

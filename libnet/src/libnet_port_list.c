@@ -44,9 +44,9 @@ u_int16_t *all_lists;
 int
 libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
 {
-    int8_t libnet_plist_legal_tokens[] = "0123456789,- ";
+    char libnet_plist_legal_tokens[] = "0123456789,- ";
     libnet_plist_t *tmp;
-    int8_t *tok;
+    char *tok;
     int i, j, valid_token, cur_node;
     u_int16_t *all_lists_tmp;
     static u_int8_t cur_id;

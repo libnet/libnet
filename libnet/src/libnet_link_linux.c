@@ -175,7 +175,7 @@ libnet_close_link(libnet_t *l)
 
 #if (HAVE_PACKET_SOCKET)
 static int
-get_iface_index(int fd, const int8_t *device)
+get_iface_index(int fd, const char *device)
 {
     struct ifreq ifr;
  
