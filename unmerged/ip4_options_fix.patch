@@ -1,0 +1,46 @@
+Index: include/libnet/libnet-functions.h
+===================================================================
+--- include/libnet/libnet-functions.h	(revision 381)
++++ include/libnet/libnet-functions.h	(working copy)
+@@ -822,6 +822,9 @@
+  * options string would not result in a packet larger than 65,535 bytes 
+  * (IPMAXPACKET). The function counts up the number of 32-bit words in the 
+  * options string and adjusts the IP header length value as necessary.
++ *
++ *   WRONG - if no ptag, it must be built BEFORE the IPv4 header is.
++ *
+  * @param options byte string of IP options
+  * @param options_s length of options string
+  * @param l pointer to a libnet context
+Index: src/libnet_build_ip.c
+===================================================================
+--- src/libnet_build_ip.c	(revision 381)
++++ src/libnet_build_ip.c	(working copy)
+@@ -472,6 +472,8 @@
+             ip_hdr = (struct libnet_ipv4_hdr *) p_temp->buf;
+             ip_hdr->ip_hl = j + 5;
+ 
++	    // WRONG - must also fix the ip_len field!
++
+             if (!underflow)
+             {
+                 p_temp->h_len += offset;
+@@ -480,9 +482,18 @@
+             {
+                 p_temp->h_len -= offset;
+             }
++
++	    // WRONG - must also correct the ip_offsets of the rest of the chain, or
++	    // the checksums will be wrong.
++	    //
++	    // Probably this will fix this, but need unit tests:
++	    libnet_pblock_record_ip_offset(l, p_temp);
+         }
+     }
+ 
++    /* WRONG - this won't work if an ipv4 block is being replaced, it makes the
++     * l->pblock_end point to the options, when it should be the link header.
++     */
+     return (ptag ? ptag : libnet_pblock_update(l, p, adj_size,
+             LIBNET_PBLOCK_IPO_H));
+ bad:
