@@ -395,7 +395,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     if (c == -1)
                     {
                         /* err msg set in libnet_do_checksum() */
-                        return (-1);
+                        goto err;
                     }
                 }
                 q = p;
@@ -421,7 +421,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
     return (1);
 
 err:
-    free(packet);
+    free(*packet);
     return (-1);
 }
 
