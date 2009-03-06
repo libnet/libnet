@@ -52,6 +52,7 @@ libnet/sample/stp
 libnet/sample/synflood
 libnet/sample/synflood6
 libnet/sample/synflood6_frag
+libnet/sample/test_ipv4
 libnet/sample/tcp1
 libnet/sample/tcp2
 libnet/sample/tftp

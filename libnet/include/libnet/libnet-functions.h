@@ -794,6 +794,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds a version 4 RFC 791 Internet Protocol (IP) header.
  * @param len total length of the IP packet including all subsequent data
+ *   FIXME There is no reason this can't be calculated if zero is passed.
  * @param tos type of service bits
  * @param id IP identification number
  * @param frag fragmentation bits and offset
@@ -2080,10 +2081,10 @@ u_int8_t type);
   * Function updates referer used to compute the checksum. All
   * pblock need to know where is their referer (ie IP header).
   * So, this function is called each time a new IP header is inserted.
-  * It updates the ip_pos field (referer) of each subsequent pblock.
+  * It updates the ip_offset field (referer) of each previous pblock.
   */
 void
-libnet_pblock_record_ip_offset(libnet_t *l, u_int32_t offset);
+libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p);
 
 /*
  * [Internal] 
