@@ -58,4 +58,10 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_write.c
 
 libnet_la_LIBADD = @LTLIBOBJS@
-libnet_la_LDFLAGS = -version-info 1:3:1 -Wl
+libnet_la_LDFLAGS = -version-info 5:0:4 -Wl
+
+# Note: this version-info should NOT simply be the version of the libnet
+# package. See:
+#   http://www.sourceware.org/autobook/autobook/autobook_91.html
+# for the rules.
+
