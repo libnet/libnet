@@ -106,7 +106,7 @@
 #define LIBNET_UDP_H            0x08    /**< UDP header:           8 bytes */
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
 
-/**
+/*
  * IEEE 802.1Q (Virtual Local Area Network) VLAN header, static header 
  * size: 18 bytes
  */
@@ -122,7 +122,7 @@ struct libnet_802_1q_hdr
     u_int16_t vlan_len;                   /**< length or type (802.3 / Eth 2) */
 };  
 
-/**
+/*
  * IEEE 802.1X EAP (Extensible Authentication Protocol) header, static header
  * size: 4 bytes
  */
