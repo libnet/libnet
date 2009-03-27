@@ -18,6 +18,7 @@ install-sh
 libnet-config
 libnet.h
 libtool
+ltmain.sh
 missing
 stamp-*
 tags
