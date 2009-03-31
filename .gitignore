@@ -23,6 +23,7 @@ missing
 stamp-*
 tags
 version.h
+libnet/libnet-1*
 libnet/doc/html
 libnet/doc/man
 libnet/sample/arp
@@ -38,6 +39,7 @@ libnet/sample/fddi_tcp1
 libnet/sample/fddi_tcp2
 libnet/sample/get_addr
 libnet/sample/gre
+libnet/sample/hsrp
 libnet/sample/icmp6_echoreq
 libnet/sample/icmp_echo_cq
 libnet/sample/icmp_redirect
@@ -62,6 +64,7 @@ libnet/sample/synflood
 libnet/sample/synflood6
 libnet/sample/synflood6_frag
 libnet/sample/test_ipv4
+libnet/sample/test_ipv6_icmpv4
 libnet/sample/tcp1
 libnet/sample/tcp2
 libnet/sample/tftp

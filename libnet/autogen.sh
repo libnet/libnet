@@ -12,10 +12,11 @@ set -x
 set -e
 
 rm -fr autom4te.cache
-libtoolize --copy --force
+libtoolize --force
 aclocal -I .
 autoheader
-automake -a -c --foreign
+automake -a -c --foreign --force
+libtoolize --force
 autoconf
 rm -fr autom4te.cache
 
