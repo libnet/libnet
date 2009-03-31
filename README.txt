@@ -7,6 +7,9 @@ corruption bugs.
 
 I also have the start of Lua bindings.
 
+Maybe it's ready to release?
+
+The known bugs aren't worse than it used to be...
 
 Complete:
 
