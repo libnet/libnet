@@ -40,12 +40,12 @@ dnl
 AC_DEFUN([AC_LIBNET_CHECK_PF_PACKET],
 [
     AC_MSG_CHECKING(for packet socket (PF_SOCKET))
-    AC_CACHE_VAL(ac_libnet_have_packet_socket,
+    AC_CACHE_VAL(libnet_cv_have_packet_socket,
 
         [case "$target_os" in
 
         linux)
-                ac_libnet_have_packet_socket = no
+                libnet_cv_have_packet_socket = no
                 ;;
         *)
 
@@ -94,17 +94,17 @@ EOF
 
     # Oopz 4.3 BSD doesn't have this.  Sorry.
     if test ! -x ./pf_packet-test ; then
-        ac_libnet_have_packet_socket=choked
+        libnet_cv_have_packet_socket=choked
     else
-        ac_libnet_have_packet_socket=`./pf_packet-test`;
+        libnet_cv_have_packet_socket=`./pf_packet-test`;
     fi
-    if test $ac_libnet_have_packet_socket = choked; then
+    if test $libnet_cv_have_packet_socket = choked; then
         AC_MSG_RESULT(test program compile choked... assuming no)
-    elif test $ac_libnet_have_packet_socket = yes; then
+    elif test $libnet_cv_have_packet_socket = yes; then
         AC_MSG_RESULT(yes)
-    elif test $ac_libnet_have_packet_socket = probably; then
+    elif test $libnet_cv_have_packet_socket = probably; then
         AC_MSG_RESULT(test program got EPERM... assuming yes)
-    elif test $ac_libnet_have_packet_socket = no; then
+    elif test $libnet_cv_have_packet_socket = no; then
         AC_MSG_RESULT(no)
     fi
 
@@ -112,7 +112,7 @@ EOF
     ;;
     esac])
 
-    if test $ac_libnet_have_packet_socket = yes -o $ac_libnet_have_packet_socket = probably; then
+    if test $libnet_cv_have_packet_socket = yes -o $libnet_cv_have_packet_socket = probably; then
         AC_DEFINE(HAVE_PACKET_SOCKET, 1,
           [Define if we're running on a Linux system with PF_PACKET sockets.])
     fi
