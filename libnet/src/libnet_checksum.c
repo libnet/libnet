@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_checksum.c,v 1.13 2004/03/01 20:26:12 mike Exp $
+ *  $Id: libnet_checksum.c,v 1.14 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_checksum.c - checksum routines
@@ -38,24 +38,44 @@
 #else
 #include "../include/win32/libnet.h"
 #endif
+
+/* FIXME - unit test these - 0 is debian's version, else is -RC1's */
 int
 libnet_in_cksum(u_int16_t *addr, int len)
 {
     int sum;
+#if 0
     u_int16_t last_byte;
 
     sum = 0;
     last_byte = 0;
+#else
+    union
+    {
+        u_int16_t s;
+        u_int8_t b[2];
+    }pad;
+
+    sum = 0;
+#endif
 
     while (len > 1)
     {
         sum += *addr++;
         len -= 2;
     }
+#if 0
     if (len == 1)
     {
         *(u_int8_t *)&last_byte = *(u_int8_t *)addr;
         sum += last_byte;
+#else
+    if (len == 1)
+    {
+        pad.b[0] = *(u_int8_t *)addr;
+        pad.b[1] = 0;
+        sum += pad.s;
+#endif
     }
 
     return (sum);
@@ -349,8 +369,10 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
         }
         case LIBNET_PROTO_ISL:
         {
-           // struct libnet_isl_hdr *islh_p =
-           //     (struct libnet_isl_hdr *)buf;
+#if 0
+            struct libnet_isl_hdr *islh_p =
+                (struct libnet_isl_hdr *)buf;
+#endif
             /*
              *  Need to compute 4 byte CRC for the ethernet frame and for
              *  the ISL frame itself.  Use the libnet_crc function.

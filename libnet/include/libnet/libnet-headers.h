@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-headers.h,v 1.14 2004/03/11 18:50:20 mike Exp $
+ *  $Id: libnet-headers.h,v 1.15 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-headers.h - Network routine library headers header file
  *
@@ -105,6 +105,7 @@
 #define LIBNET_TCP_H            0x14    /**< TCP header:          20 bytes */
 #define LIBNET_UDP_H            0x08    /**< UDP header:           8 bytes */
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
+#define LIBNET_HSRP_H           0x14    /**< HSRP header:          8 bytes */
 
 /*
  * IEEE 802.1Q (Virtual Local Area Network) VLAN header, static header 
@@ -471,6 +472,16 @@ struct libnet_dnsv4_hdr
     u_int16_t num_addi_rr;    /* Number of additional resource records */
 };
 
+#define LIBNET_DNS_H LIBNET_UDP_DNSV4_H
+struct libnet_dnsv4udp_hdr
+{
+    u_int16_t id;             /* DNS packet ID */
+    u_int16_t flags;          /* DNS flags */
+    u_int16_t num_q;          /* Number of questions */
+    u_int16_t num_answ_rr;    /* Number of answer resource records */
+    u_int16_t num_auth_rr;    /* Number of authority resource records */
+    u_int16_t num_addi_rr;    /* Number of additional resource records */
+};
 
 /*
  *  Ethernet II header
@@ -1450,7 +1461,9 @@ struct libnet_rpc_opaque_auth
 {
     u_int32_t rpc_auth_flavor;
     u_int32_t rpc_auth_length;
-//    u_int8_t *rpc_auth_data;
+#if 0
+    u_int8_t *rpc_auth_data;
+#endif
 };
 
 struct libnet_rpc_call
@@ -1655,6 +1668,36 @@ struct libnet_vrrp_hdr
     u_int16_t vrrp_sum;       /* checksum */
     /* additional addresses */
     /* authentication info */
+};
+
+
+/*
+ *  HSRP header
+ *  Static header size: 20 bytes
+ */
+struct libnet_hsrp_hdr
+{
+#define LIBNET_HSRP_VERSION 0x0
+    u_int8_t version;           /* Version of the HSRP messages */
+#define LIBNET_HSRP_TYPE_HELLO 0x0
+#define LIBNET_HSRP_TYPE_COUP 0x1
+#define LIBNET_HSRP_TYPE_RESIGN 0x2
+    u_int8_t opcode;            /* Type of message */
+#define LIBNET_HSRP_STATE_INITIAL 0x0
+#define LIBNET_HSRP_STATE_LEARN   0x1
+#define LIBNET_HSRP_STATE_LISTEN  0x2
+#define LIBNET_HSRP_STATE_SPEAK   0x4
+#define LIBNET_HSRP_STATE_STANDBY 0x8
+#define LIBNET_HSRP_STATE_ACTIVE  0x10
+    u_int8_t state;            /* Current state of the router */
+    u_int8_t hello_time;       /* Period in seconds between hello messages */
+    u_int8_t hold_time;        /* Seconds that the current hello message is valid */
+    u_int8_t priority;         /* Priority for the election proccess */
+    u_int8_t group;            /* Standby group */
+    u_int8_t reserved;         /* Reserved field */
+#define HSRP_AUTHDATA_LENGTH  8 
+    u_int8_t authdata[HSRP_AUTHDATA_LENGTH]; /* Password */
+    u_int32_t virtual_ip;      /* Virtual IP address */
 };
 
 #endif  /* __LIBNET_HEADERS_H */

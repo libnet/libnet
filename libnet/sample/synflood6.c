@@ -165,7 +165,6 @@ main(int argc, char **argv)
                     0,
                     l,
                     0);
-				//libnet_autobuild_ipv6(LIBNET_TCP_H,IPPROTO_TCP,dst_ip,l);
             }
             printf("%15s/%5d -> %15s/%5d\n", 
                     srcname,

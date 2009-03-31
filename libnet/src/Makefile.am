@@ -24,6 +24,7 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_build_ethernet.c \
 			libnet_build_fddi.c \
 			libnet_build_gre.c \
+			libnet_build_hsrp.c \
 			libnet_build_icmp.c \
 			libnet_build_igmp.c \
 			libnet_build_ip.c \
@@ -64,4 +65,7 @@ libnet_la_LDFLAGS = -version-info 5:0:4 -Wl
 # package. See:
 #   http://www.sourceware.org/autobook/autobook/autobook_91.html
 # for the rules.
+#
+# Note: merging 1.1.3-RC-01 brings new capabilities, and API changes. 5:0:4 may
+# no longer be correct.
 

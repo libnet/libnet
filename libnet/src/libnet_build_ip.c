@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_ip.c,v 1.18 2004/03/16 18:40:59 mike Exp $
+ *  $Id: libnet_build_ip.c,v 1.19 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_ip.c - IP packet assembler
@@ -503,21 +503,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {  
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     /* no checksum for IPv6 */
     return (ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
@@ -578,26 +565,8 @@ libnet_ptag_t ptag)
         goto bad;
     }
 
-    /*
-     *  Sanity check the payload arguments.
-     */
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    /*
-     *  Append the payload to the list if it exists.
-     */
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     /*
      *  Update the protocol block's meta information and return the protocol
@@ -665,26 +634,8 @@ libnet_ptag_t ptag)
         goto bad;
     }
 
-    /*
-     *  Sanity check the payload arguments.
-     */
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    /*
-     *  Append the payload to the list if it exists.
-     */
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     /*
      *  Update the protocol block's meta information and return the protocol
@@ -749,26 +700,8 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    /*
-     *  Sanity check the payload arguments.
-     */
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    /*
-     *  Append the payload to the list if it exists.
-     */
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     /*
      *  Update the protocol block's meta information and return the protocol
@@ -833,26 +766,8 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    /*
-     *  Sanity check the payload arguments.
-     */
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    /*
-     *  Append the payload to the list if it exists.
-     */
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     /*
      *  Update the protocol block's meta information and return the protocol

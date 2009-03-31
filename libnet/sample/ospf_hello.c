@@ -1,5 +1,5 @@
 /*
- *  $Id: ospf_hello.c,v 1.2 2004/01/03 20:31:01 mike Exp $
+ *  $Id: ospf_hello.c,v 1.3 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet 1.1
  *  Build an OSPF Hello packet
@@ -44,22 +44,21 @@ main(int argc, char **argv)
     int c;
     libnet_t *l;
     libnet_ptag_t t;
-    u_long src, dst, nbr;
+    u_long src, dst;
     char errbuf[LIBNET_ERRBUF_SIZE];
-    char *to, *from, *neighbor;
+    char *to, *from;
     u_char auth[8] = {0,0,0,0,0,0,0,0};
 
 
     printf("libnet 1.1 OSPF Hello packet shaping[raw]\n");
 
-    if (argc != 4) 
+    if (argc != 3) 
     {
         usage(argv[0]);
     }
 
     from        = argv[1];
     to          = argv[2];
-    neighbor    = argv[3];
 
     /*
      *  Initialize the library.  Root priviledges are required.
@@ -78,7 +77,6 @@ main(int argc, char **argv)
     /* Too lazy to check for error */
     src = libnet_name2addr4(l, from, LIBNET_DONT_RESOLVE);
     dst = libnet_name2addr4(l, to, LIBNET_DONT_RESOLVE);
-    nbr = libnet_name2addr4(l, neighbor, LIBNET_DONT_RESOLVE);
 
     t = libnet_build_ospfv2_hello(
         0xffffffff,                                 /* netmask */
@@ -88,7 +86,6 @@ main(int argc, char **argv)
         30,                                         /* dead int */
         src,                                        /* router */
         src,                                        /* router */
-        nbr,                                        /* neighbor */
         NULL,                                       /* payload */
         0,                                          /* payload size */
         l,                                          /* libnet handle */

@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_resolve.c,v 1.20 2004/03/04 20:52:26 kkuehl Exp $
+ *  $Id: libnet_resolve.c,v 1.21 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_resolve.c - various name resolution type routines
@@ -126,7 +126,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, u_int8_t use_name)
             if (!(host_ent = gethostbyname(host_name)))
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): %s\n", __func__, strerror(errno));
+                        "%s(): %s\n", __func__, hstrerror(h_errno));
                 /* XXX - this is actually 255.255.255.255 */
                 return (-1);
             }

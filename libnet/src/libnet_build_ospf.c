@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_ospf.c,v 1.10 2004/03/01 20:26:12 mike Exp $
+ *  $Id: libnet_build_ospf.c,v 1.12 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_build_ospf.c - OSPF packet assembler
@@ -73,9 +73,9 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ospf_hdr.ospf_v               = 2;              /* OSPF version 2 */
     ospf_hdr.ospf_type            = type;           /* Type of pkt */
     ospf_hdr.ospf_len             = htons(h);       /* Pkt len */
-    ospf_hdr.ospf_rtr_id.s_addr   = htonl(rtr_id);  /* Router ID */
-    ospf_hdr.ospf_area_id.s_addr  = htonl(area_id); /* Area ID */
-    ospf_hdr.ospf_sum             = (sum ? htons(sum) : 0);
+    ospf_hdr.ospf_rtr_id.s_addr   = rtr_id;  /* Router ID */
+    ospf_hdr.ospf_area_id.s_addr  = area_id; /* Area ID */
+    ospf_hdr.ospf_sum             = sum;
     ospf_hdr.ospf_auth_type       = htons(autype);  /* Type of auth */
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&ospf_hdr, LIBNET_OSPF_H);
@@ -84,21 +84,8 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     if (sum == 0)
     {
@@ -119,8 +106,7 @@ bad:
 libnet_ptag_t
 libnet_build_ospfv2_hello(u_int32_t netmask, u_int16_t interval, u_int8_t opts, 
 u_int8_t priority, u_int32_t dead_int, u_int32_t des_rtr, u_int32_t bkup_rtr,
-u_int32_t neighbor, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag)
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     u_int32_t n, h;
     libnet_pblock_t *p;
@@ -145,14 +131,14 @@ libnet_ptag_t ptag)
     }
     
     memset(&hello_hdr, 0, sizeof(hello_hdr));
-    hello_hdr.hello_nmask.s_addr    = htonl(netmask);  /* Netmask */
+    hello_hdr.hello_nmask.s_addr    = netmask;  /* Netmask */
     hello_hdr.hello_intrvl          = htons(interval);	/* # seconds since last packet sent */
     hello_hdr.hello_opts            = opts;     /* OSPF_* options */
     hello_hdr.hello_rtr_pri         = priority; /* If 0, can't be backup */
     hello_hdr.hello_dead_intvl      = htonl(dead_int); /* Time til router is deemed down */
-    hello_hdr.hello_des_rtr.s_addr  = htonl(des_rtr);	/* Networks designated router */
-    hello_hdr.hello_bkup_rtr.s_addr = htonl(bkup_rtr); /* Networks backup router */
-    hello_hdr.hello_nbr.s_addr      = htonl(neighbor);
+    hello_hdr.hello_des_rtr.s_addr  = des_rtr;	/* Networks designated router */
+    hello_hdr.hello_bkup_rtr.s_addr = bkup_rtr; /* Networks backup router */
+    /*hello_hdr.hello_nbr.s_addr      = htonl(neighbor); */
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&hello_hdr, LIBNET_OSPF_HELLO_H);
     if (n == -1)
@@ -160,21 +146,8 @@ libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_OSPF_HELLO_H));
@@ -223,21 +196,8 @@ libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad; 
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_OSPF_DBD_H));
@@ -284,21 +244,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_OSPF_LSR_H));
@@ -343,21 +290,8 @@ libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_OSPF_LSU_H));
@@ -401,7 +335,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     lsa_hdr.lsa_id          = htonl(lsid);
     lsa_hdr.lsa_adv.s_addr  = htonl(advrtr);
     lsa_hdr.lsa_seq         = htonl(seqnum);
-    lsa_hdr.lsa_sum         = (sum ? htons(sum) : 0);
+    lsa_hdr.lsa_sum         = sum;
     lsa_hdr.lsa_len         = htons(h);
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&lsa_hdr, LIBNET_OSPF_LSA_H);
@@ -410,21 +344,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     if (sum == 0)
     {
@@ -486,21 +407,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_LS_RTR_H));
@@ -547,21 +455,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_LS_NET_H));
@@ -609,21 +504,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-           goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_LS_SUM_H));
@@ -673,21 +555,8 @@ libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, 
             LIBNET_PBLOCK_LS_AS_EXT_H));

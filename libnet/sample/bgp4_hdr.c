@@ -65,9 +65,6 @@ main(int argc, char *argv[])
 
     printf("libnet 1.1 packet shaping: BGP4 hdr + payload[raw]\n");
 
-    /*
-     *  Initialize the library.  Root priviledges are required.
-     */
     l = libnet_init(
             LIBNET_RAW4,                            /* injection type */
             NULL,                                   /* network interface */

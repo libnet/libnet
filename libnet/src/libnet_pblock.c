@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_pblock.c,v 1.13 2004/03/16 18:40:59 mike Exp $
+ *  $Id: libnet_pblock.c,v 1.14 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_pblock.c - Memory protocol block routines.
@@ -73,7 +73,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
         if (p->type != type)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-               "%s(): ptag refers to different type than expected (%d != %d)",
+            "%s(): ptag refers to different type than expected (0x%x != 0x%x)",
                __func__, p->type, type);
             return (NULL); 
         }

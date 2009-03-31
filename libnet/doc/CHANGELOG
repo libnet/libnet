@@ -1,13 +1,35 @@
 ===============================================================================
-    $Id: CHANGELOG,v 1.24 2004/03/29 17:24:34 mike Exp $
+    $Id: CHANGELOG,v 1.26 2004/11/09 07:05:06 mike Exp $
     LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
 
+    Added a libnet_version() function
+    Fixed a bug in libnet_build_ntp() where two arguments werent used due to a
+     typo
+    Fixed a bug ln libnet_name2addr4 in which it didnt call hstrerror
+    Fixed a memory leak in libnet_if_addr.c
+    Internals: added a payload builder macro
+    Added an HSRP builder
+    Fixed the cdp.c sample code
+    Added AC_PREREQ(2.50) to configure.in to come correct
+    Added a libnet udp header prototype. We need to add an entire exported
+     interface for the sole purpose of casting captured packets, this will
+     presumably be a part of the pcap integration.
+    Added libnet_adv_write_raw_ipv4()
+    Fixed the checksum function
+    Updated the autoconf/automake stuff to be up to date with the latest
+     versions. We now use libtool.
+    Fixed a signed/unsigned comparison warning in the LIBNET_DO_PAYLOAD() macro
+    Changed all empty function prototypes to contain the void keyword
+    Removed all C++ style comments
+    Removed the configure.in check for strerror()   
+     
+
 Mon Mar 29 09:23:49 PST 2004                                            1.1.2.1
 
-    Fixed a typo in the ICMP patch mentioned below.
+    Fixed a typo in the ICMP patch mentioned below
 
 Thu Mar 25 10:49:04 PST 2004                                              1.1.2
 

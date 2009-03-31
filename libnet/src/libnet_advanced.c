@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_advanced.c,v 1.7 2004/02/16 23:13:38 mike Exp $
+ *  $Id: libnet_advanced.c,v 1.8 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_advanced.c - Advanced routines
@@ -97,6 +97,40 @@ libnet_adv_write_link(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
         return (-1);
     }
     c = libnet_write_link(l, packet, packet_s);
+
+    /* do statistics */
+    if (c == packet_s)
+    {
+        l->stats.packets_sent++;
+        l->stats.bytes_written += c;
+    }
+    else
+    {
+        l->stats.packet_errors++;
+        /*
+         *  XXX - we probably should have a way to retrieve the number of
+         *  bytes actually written (since we might have written something).
+         */
+        if (c > 0)
+        {
+            l->stats.bytes_written += c;
+        }
+    }
+    return (c);
+}
+
+int
+libnet_adv_write_raw_ipv4(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
+{
+    int c;
+
+    if (l->injection_type != LIBNET_RAW4_ADV)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): advanced raw4 mode not enabled\n", __func__);
+        return (-1);
+    }
+    c = libnet_write_raw_ipv4(l, packet, packet_s);
 
     /* do statistics */
     if (c == packet_s)

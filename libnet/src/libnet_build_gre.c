@@ -107,8 +107,8 @@
  *         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  *      
  */
-
-static inline void
+#if 0
+static void
 __libnet_print_gre_flags_ver(u_int16_t fv)
 {
     printf("version = %d (%d) -> ",
@@ -135,10 +135,10 @@ __libnet_print_gre_flags_ver(u_int16_t fv)
     }
     printf("\n");
 }
-
+#endif
 
 /* FIXME: what is the portability of the "((struct libnet_gre_hdr*)0)->" ? */
-inline u_int32_t
+u_int32_t
 libnet_getgre_length(u_int16_t fv)
 {
 
@@ -253,21 +253,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 	}
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            /* err msg set in libnet_pblock_append() */
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     if ( (fv & GRE_CSUM) && (!sum) )
     {
@@ -359,21 +346,8 @@ libnet_ptag_t ptag)
         }
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        sprintf(l->err_buf, "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            /* err msg set in libnet_pblock_append() */
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, 0, 
            LIBNET_PBLOCK_GRE_SRE_H));
@@ -422,6 +396,4 @@ bad:
     return (-1);
 
 }
-
-
 /* EOF */

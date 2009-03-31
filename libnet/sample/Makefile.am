@@ -14,7 +14,7 @@ noinst_PROGRAMS = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
                   fddi_tcp1 fddi_tcp2 tring_tcp1 tring_tcp2 icmp_redirect \
                   bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
-                  synflood6_frag tftp ip_link ip_raw sebek
+                  synflood6_frag tftp ip_link ip_raw sebek hsrp
 
 arp_SOURCES             = arp.c
 cdp_SOURCES             = cdp.c
@@ -59,5 +59,6 @@ gre_SOURCES		= gre.c
 ip_raw_SOURCES          = ip_raw.c
 ip_link_SOURCES		= ip_link.c
 sebek_SOURCES           = sebek.c
+hsrp_SOURCES            = hsrp.c
 
 LDADD 			= $(top_srcdir)/src/libnet.la

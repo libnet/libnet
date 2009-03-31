@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-macros.h,v 1.6 2004/03/01 20:26:12 mike Exp $
+ *  $Id: libnet-macros.h,v 1.7 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet-macros.h - Network routine library macro header file
  *
@@ -129,6 +129,24 @@
 #define FIX(n)      (n)
 #define UNFIX(n)    (n)
 #endif
+
+/* used internaly for packet builders */
+#define LIBNET_DO_PAYLOAD(l, p)                                              \
+if ((payload && !payload_s) || (!payload && payload_s))                      \
+{                                                                            \
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,                                 \
+            "%s(): payload inconsistency\n", __func__);                      \
+    goto bad;                                                                \
+}                                                                            \
+if (payload && payload_s)                                                    \
+{                                                                            \
+    n = libnet_pblock_append(l, p, payload, payload_s);                      \
+    if (n == (u_int32_t) - 1)                                                \
+    {                                                                        \
+        goto bad;                                                            \
+    }                                                                        \
+}                                                                            \
+
 
 /* used internally for checksum stuff */
 #define LIBNET_CKSUM_CARRY(x) \

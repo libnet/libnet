@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_ntp.c,v 1.9 2004/03/01 20:26:12 mike Exp $
+ *  $Id: libnet_build_ntp.c,v 1.11 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_build_ntp.c - NTP packet assembler
@@ -96,21 +96,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_NTP_H));
 bad:

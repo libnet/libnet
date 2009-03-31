@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_802.1x.c,v 1.11 2004/01/28 19:45:00 mike Exp $
+ *  $Id: libnet_build_802.1x.c,v 1.12 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_802.1x.c - 802.1x packet assembler
@@ -71,33 +71,18 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     dot1x_hdr.dot1x_length = htons(length);
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&dot1x_hdr, LIBNET_802_1X_H);
-    if (n == -1)
+    if (n == (u_int32_t)-1)
     {
         goto bad;
     }
+    
+    LIBNET_DO_PAYLOAD(l, p);
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
- 
     return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_802_1X_H));
 bad:
     libnet_pblock_delete(l, p);
     return (-1);
 }
-
 
 /* EOF */

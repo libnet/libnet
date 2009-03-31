@@ -1,5 +1,5 @@
 ===============================================================================
-    $Id: CONTRIB,v 1.8 2004/03/01 20:26:11 mike Exp $
+    $Id: CONTRIB,v 1.9 2004/11/09 07:05:06 mike Exp $
     LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
                                http://www.packetfactory.net/libnet
 ===============================================================================
@@ -21,6 +21,8 @@
     Davis, Michael          <mike@datanerds.net>
         . bugfixes
     Dulai, Danny            <ddulai@stake.com>
+    Keramida, Giorgos      <keramida@ceid.upatras.gr>
+        . various bugfixes
     Kuehl, Kirby            <kkuehl@cisco.com>
         . u_short -> u_long patch
         . 1.1.1 Win32 porting
@@ -43,6 +45,8 @@
         . pblock sanity check oversight fix
     Schlott, Stefan         <stefan@ploing.de>
         . IPv6 code
+    Shields, Michael        <shieldszero@aol.com>
+        . configure.in patch
     Simons, Terry           <Terry.Simons@m.cc.utah.edu>
         . OS/X port
     Song, Doug              <dug@monkey.org>

@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-structures.h,v 1.18 2004/03/16 18:40:58 mike Exp $
+ *  $Id: libnet-structures.h,v 1.19 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-structures.h - Network routine library structures header file
  *
@@ -146,6 +146,7 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_IPV6_DESTOPTS_H   0x3d    /* IPv6 dest opts header */
 #define LIBNET_PBLOCK_IPV6_HBHOPTS_H    0x3e    /* IPv6 hop/hop opts header */
 #define LIBNET_PBLOCK_SEBEK_H           0x3f    /* Sebek header */
+#define LIBNET_PBLOCK_HSRP_H            0x40    /* HSRP header */
     u_int8_t flags;                             /* control flags */
 #define LIBNET_PBLOCK_DO_CHECKSUM       0x01    /* needs a checksum */
     libnet_ptag_t ptag;                 /* protocol block tag */

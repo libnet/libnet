@@ -96,21 +96,8 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
  
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
     return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_FDDI_H));
 bad:
@@ -121,7 +108,7 @@ bad:
 
 libnet_ptag_t
 libnet_autobuild_fddi(u_int8_t fc, u_int8_t *dst, u_int8_t dsap, u_int8_t ssap,
-                      u_int8_t cf, u_int8_t *org, u_int16_t type, libnet_t *l)
+u_int8_t cf, u_int8_t *org, u_int16_t type, libnet_t *l)
 {
     u_int32_t n, h;
     u_int16_t protocol_type;
@@ -164,18 +151,18 @@ libnet_autobuild_fddi(u_int8_t fc, u_int8_t *dst, u_int8_t dsap, u_int8_t ssap,
         return (-1);
     }
 
-	memset(&fddi_hdr, 0, sizeof(fddi_hdr));
-	fddi_hdr.fddi_frame_control     = fc;             /* Class/Format/Priority */
-    memcpy(fddi_hdr.fddi_dhost, dst, FDDI_ADDR_LEN);  /* destination fddi address */
-    memcpy(fddi_hdr.fddi_shost, src, FDDI_ADDR_LEN);  /* source fddi address */
-    fddi_hdr.fddi_llc_dsap          = dsap;           /* */
-    fddi_hdr.fddi_llc_ssap          = ssap;           /* */
-    fddi_hdr.fddi_llc_control_field = cf;             /* Class/Format/Priority */
+    memset(&fddi_hdr, 0, sizeof(fddi_hdr));
+    fddi_hdr.fddi_frame_control     = fc;            /* Class/Format/Priority */
+    memcpy(fddi_hdr.fddi_dhost, dst, FDDI_ADDR_LEN); /* destination fddi addr */
+    memcpy(fddi_hdr.fddi_shost, src, FDDI_ADDR_LEN); /* source fddi addr */
+    fddi_hdr.fddi_llc_dsap          = dsap;          /* */
+    fddi_hdr.fddi_llc_ssap          = ssap;          /* */
+    fddi_hdr.fddi_llc_control_field = cf;            /* Class/Format/Priority */
     memcpy(&fddi_hdr.fddi_llc_org_code, org, LIBNET_ORG_CODE_SIZE); 
 
     /* Deal with unaligned int16_t for type */
     protocol_type = htons(type);
-    memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));   /* Protocol Type */
+    memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&fddi_hdr, LIBNET_FDDI_H);
     if (n == -1)

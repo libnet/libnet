@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_stp.c,v 1.8 2004/01/15 20:11:15 mike Exp $
+ *  $Id: libnet_build_stp.c,v 1.9 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_stp.c - STP packet assembler
@@ -134,21 +134,8 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			    "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
     return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_STP_CONF_H));
@@ -160,7 +147,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_stp_tcn(u_int16_t id, u_int8_t version, u_int8_t bpdu_type,
-            u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     u_int32_t n, h;
     libnet_pblock_t *p;
@@ -185,8 +172,8 @@ libnet_build_stp_tcn(u_int16_t id, u_int8_t version, u_int8_t bpdu_type,
         return (-1);
     }
 
-	memset(&stp_hdr, 0, sizeof(stp_hdr));
-	stp_hdr.stp_id        = htons(id);
+    memset(&stp_hdr, 0, sizeof(stp_hdr));
+    stp_hdr.stp_id        = htons(id);
     stp_hdr.stp_version   = version;
     stp_hdr.stp_bpdu_type = bpdu_type;
 
@@ -196,21 +183,8 @@ libnet_build_stp_tcn(u_int16_t id, u_int8_t version, u_int8_t bpdu_type,
         goto bad;
     }
  
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			    "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
     return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_STP_TCN_H));

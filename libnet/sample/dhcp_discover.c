@@ -64,26 +64,28 @@ main(int argc, char *argv[])
     
     char errbuf[LIBNET_ERRBUF_SIZE];
     
-    u_char options_req[] = { LIBNET_DHCP_SUBNETMASK , LIBNET_DHCP_BROADCASTADDR , LIBNET_DHCP_TIMEOFFSET , LIBNET_DHCP_ROUTER , LIBNET_DHCP_DOMAINNAME , LIBNET_DHCP_DNS , LIBNET_DHCP_HOSTNAME };
+    u_char options_req[] = { LIBNET_DHCP_SUBNETMASK,
+                             LIBNET_DHCP_BROADCASTADDR, LIBNET_DHCP_TIMEOFFSET,
+                             LIBNET_DHCP_ROUTER, LIBNET_DHCP_DOMAINNAME,
+                             LIBNET_DHCP_DNS, LIBNET_DHCP_HOSTNAME };
     u_char *options;
     u_char enet_dst[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     u_char *tmp;
     
-    // have to specify interface
     if (argc != 2)
+    {
         usage(argv[0]);
+    }
     intf = argv[1];
     
-    l = libnet_init(
-            LIBNET_LINK,                            // injection type
-            intf,                                   // network interface
-            errbuf);                                // errbuf
+    l = libnet_init(LIBNET_LINK, intf, errbuf);
     if (!l)
     {
         fprintf(stderr, "libnet_init: %s", errbuf);
         exit(EXIT_FAILURE);
     }
-    else {
+    else
+    {
         src_ip = libnet_get_ipaddr4(l);;
         
         if ((ethaddr = libnet_get_hwaddr(l)) == NULL)
@@ -92,65 +94,64 @@ main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
         
-        printf("ip addr     : %s\n", libnet_addr2name4(src_ip, LIBNET_DONT_RESOLVE));
+        printf("ip addr     : %s\n", libnet_addr2name4(src_ip,
+                LIBNET_DONT_RESOLVE));
         printf("eth addr    : ");
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < 6; i++)
+        {
             printf("%2.2x", ethaddr->ether_addr_octet[i]);
-            if (i != 5) {
+            if (i != 5)
+            {
                 printf(":");
             }
         }
         printf("\n");
         
         
-        // build options packet
+        /* build options packet */
         i = 0;
-        options_len = 3;                            // update total payload size
+	/* update total payload size */
+        options_len = 3;
         
-        // we are a discover packet
+        /* we are a discover packet */
         options = malloc(3);
-        options[i++] = LIBNET_DHCP_MESSAGETYPE;     // type
-        options[i++] = 1;                           // len
-        options[i++] = LIBNET_DHCP_MSGDISCOVER;     // data
+        options[i++] = LIBNET_DHCP_MESSAGETYPE;     /* type */
+        options[i++] = 1;                           /* len */
+        options[i++] = LIBNET_DHCP_MSGDISCOVER;     /* data */
         
         orig_len = options_len;
-        options_len += sizeof(options_req) + 2;     // update total payload size
+	/* update total payload size */
+        options_len += sizeof(options_req) + 2;
         
-        // workaround for realloc on old machines
-        // options = realloc(options, options_len); // resize options buffer
         tmp = malloc(options_len);
         memcpy(tmp, options, orig_len);
         free(options);
         options = tmp;
         
-        // we are going to request some parameters
-        options[i++] = LIBNET_DHCP_PARAMREQUEST;    // type
-        options[i++] = sizeof(options_req);         // len
-        memcpy(options + i, options_req, sizeof(options_req)); // data
+        /* we are going to request some parameters */
+        options[i++] = LIBNET_DHCP_PARAMREQUEST;                 /* type */
+        options[i++] = sizeof(options_req);                      /* len */
+        memcpy(options + i, options_req, sizeof(options_req));   /* data */
         i += sizeof(options_req);
         
-        // if we have an ip already, let's request it.
+        /* if we have an ip already, let's request it. */
         if (src_ip)
         {
             orig_len = options_len;
             options_len += 2 + sizeof(src_ip);
             
-            // workaround for realloc on old machines
-            // options = realloc(options, options_len);
             tmp = malloc(options_len);
             memcpy(tmp, options, orig_len);
             free(options);
             options = tmp;
             
-            options[i++] = LIBNET_DHCP_DISCOVERADDR;	// type
-            options[i++] = sizeof(src_ip);			    // len
-            memcpy(options + i, (char *)&src_ip, sizeof(src_ip));// data
+            options[i++] = LIBNET_DHCP_DISCOVERADDR;	          /* type */
+            options[i++] = sizeof(src_ip);			  /* len */
+            memcpy(options + i, (char *)&src_ip, sizeof(src_ip)); /* data */
             i += sizeof(src_ip);
         }
         
-        // end our options packet
-        // workaround for realloc on old machines
-        // options = realloc(options, options_len); // resize options buffer
+        /* end our options packet */
         orig_len = options_len;
         options_len += 1;
         tmp = malloc(options_len);
@@ -160,15 +161,13 @@ main(int argc, char *argv[])
         options[i++] = LIBNET_DHCP_END;
 
         
-        // make sure we are at least the minimum length, if not fill
-        // this could go in libnet, but we will leave it in the app for now
+        /* make sure we are at least the minimum length, if not fill */
+        /* this could go in libnet, but we will leave it in the app for now */
         if (options_len + LIBNET_DHCPV4_H < LIBNET_BOOTP_MIN_LEN)
         {
             orig_len = options_len;
             options_len = LIBNET_BOOTP_MIN_LEN - LIBNET_DHCPV4_H;
             
-            // workaround for realloc on old machines
-            // options = realloc(options, options_len);
             tmp = malloc(options_len);
             memcpy(tmp, options, orig_len);
             free(options);
@@ -177,62 +176,57 @@ main(int argc, char *argv[])
             memset(options + i, 0, options_len - i);
         }
         
-        // the goodies are here
         dhcp = libnet_build_dhcpv4(
-                LIBNET_DHCP_REQUEST,                            // opcode
-                1,                                              // hardware type
-                6,                                              // hardware address length
-                0,                                              // hop count
-                0xdeadbeef,                                     // transaction id
-                0,                                              // seconds since bootstrap
-                0x8000,                                         // flags
-                0,                                              // client ip
-                0,                                              // your ip
-                0,                                              // server ip
-                0,                                              // gateway ip
-                ethaddr->ether_addr_octet,                      // client hardware addr
-                NULL,                                           // server host name
-                NULL,                                           // boot file
-                options,                                        // dhcp options stuck in payload since it is dynamic
-                options_len,                                    // length of options
-                l,                                              // libnet handle 
-                0);                                             // libnet id 
+                LIBNET_DHCP_REQUEST,            /* opcode */
+                1,                              /* hardware type */
+                6,                              /* hardware address length */
+                0,                              /* hop count */
+                0xdeadbeef,                     /* transaction id */
+                0,                              /* seconds since bootstrap */
+                0x8000,                         /* flags */
+                0,                              /* client ip */
+                0,                              /* your ip */
+                0,                              /* server ip */
+                0,                              /* gateway ip */
+                ethaddr->ether_addr_octet,      /* client hardware addr */
+                NULL,                           /* server host name */
+                NULL,                           /* boot file */
+                options,                        /* dhcp options in payload */
+                options_len,                    /* length of options */
+                l,                              /* libnet context */
+                0);                             /* libnet ptag */
         
-        // wrap it
         udp = libnet_build_udp(
-                68,                                             // source port
-                67,                                             // destination port
-                LIBNET_UDP_H + LIBNET_DHCPV4_H + options_len,   // packet size
-                0,                                              // checksum
-                NULL,                                           // payload 
-                0,                                              // payload size 
-                l,                                              // libnet handle 
-                0);                                             // libnet id 
+                68,                             /* source port */
+                67,                             /* destination port */
+                LIBNET_UDP_H + LIBNET_DHCPV4_H + options_len,  /* packet size */
+                0,                              /* checksum */
+                NULL,                           /* payload */
+                0,                              /* payload size */
+                l,                              /* libnet context */
+                0);                             /* libnet ptag */
         
-        // hook me up with some ipv4
         ip = libnet_build_ipv4(
                 LIBNET_IPV4_H + LIBNET_UDP_H + LIBNET_DHCPV4_H
-                + options_len,                                  // length
-                0x10,                                           // TOS
-                0,                                              // IP ID
-                0,                                              // IP Frag 
-                16,                                             // TTL
-                IPPROTO_UDP,                                    // protocol
-                0,                                              // checksum
-                src_ip,                                         // src ip
-                inet_addr("255.255.255.255"),                   // destination ip
-                NULL,                                           // payload
-                0,                                              // payload size
-                l,                                              // libnet handle
-                0);                                             // libnet id
+                + options_len,                  /* length */
+                0x10,                           /* TOS */
+                0,                              /* IP ID */
+                0,                              /* IP Frag */
+                16,                             /* TTL */
+                IPPROTO_UDP,                    /* protocol */
+                0,                              /* checksum */
+                src_ip,                         /* src ip */
+                inet_addr("255.255.255.255"),   /* destination ip */
+                NULL,                           /* payload */
+                0,                              /* payload size */
+                l,                              /* libnet context */
+                0);                             /* libnet ptag */
         
-        // we can just autobuild since we arent doing anything tricky
         t = libnet_autobuild_ethernet(
-                enet_dst,                                       // ethernet destination
-                ETHERTYPE_IP,                                   // protocol type
-                l);                                             // libnet handle
+                enet_dst,                       /* ethernet destination */
+                ETHERTYPE_IP,                   /* protocol type */
+                l);                             /* libnet context */
         
-        // write to the wire
         if (libnet_write(l) == -1)
         {
             fprintf(stderr, " %s: libnet_write: %s\n", argv[0],
@@ -240,7 +234,6 @@ main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
         
-        // fill and print stats
         libnet_stats(l, &ls);
         fprintf(stderr, "Packets sent:  %lld\n"
                     "Packet errors: %lld\n"
@@ -248,7 +241,6 @@ main(int argc, char *argv[])
                     ls.packets_sent, ls.packet_errors, ls.bytes_written);
         libnet_destroy(l);
         
-        // free mem
         free(options);
         
         exit(0);

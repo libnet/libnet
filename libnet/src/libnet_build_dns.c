@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_dns.c,v 1.9 2004/01/03 20:31:01 mike Exp $
+ *  $Id: libnet_build_dns.c,v 1.10 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_dns.c - DNS packet assembler
@@ -76,15 +76,15 @@ libnet_build_dnsv4(u_int16_t h_len, u_int16_t id, u_int16_t flags,
     {
         return (-1);
     }
+
     /*
      * The sizeof(dns_hdr.h_len) is not counted is the packet size
      * for TCP packet.
      * And since this will be ignored for udp packets, let's compute it 
      * anyway.
      */
-
-	memset(&dns_hdr, 0, sizeof(dns_hdr));
-	dns_hdr.h_len       = htons(n - sizeof (dns_hdr.h_len));
+    memset(&dns_hdr, 0, sizeof(dns_hdr));
+    dns_hdr.h_len       = htons(n - sizeof (dns_hdr.h_len));
     dns_hdr.id          = htons(id);
     dns_hdr.flags       = htons(flags);
     dns_hdr.num_q       = htons(num_q);
@@ -98,27 +98,14 @@ libnet_build_dnsv4(u_int16_t h_len, u_int16_t id, u_int16_t flags,
      * but not in UDP packets. As they are the first 2 bytes of the header,
      * they are skipped if the packet is UDP...
      */
-    n = libnet_pblock_append(l, p, ((u_int8_t *)&dns_hdr)+ offset, h_len);
+    n = libnet_pblock_append(l, p, ((u_int8_t *)&dns_hdr) + offset, h_len);
     if (n == -1)
     {
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad; 
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
     return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_DNSV4_H));
 bad:

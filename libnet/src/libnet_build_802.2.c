@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_802.2.c,v 1.10 2004/01/28 19:45:00 mike Exp $
+ *  $Id: libnet_build_802.2.c,v 1.11 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_802.2.c - 802.2 packet assembler
@@ -71,26 +71,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     _802_2_hdr.llc_control = control;
 
     n = libnet_pblock_append(l, p, (u_int8_t *)&_802_2_hdr, LIBNET_802_2_H);
-    if (n == -1)
+    if (n == (u_int32_t)-1)
     {
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
- 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_802_2_H));
@@ -99,11 +86,10 @@ bad:
     return (-1);
 }
 
-
 libnet_ptag_t
-libnet_build_802_2snap(u_int8_t dsap, u_int8_t ssap, u_int8_t control, u_int8_t *oui,
-            u_int16_t type, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-            libnet_ptag_t ptag)
+libnet_build_802_2snap(u_int8_t dsap, u_int8_t ssap, u_int8_t control,
+u_int8_t *oui, u_int16_t type, u_int8_t *payload, u_int32_t payload_s,
+libnet_t *l, libnet_ptag_t ptag)
 {
     u_int32_t n, h;
     libnet_pblock_t *p;
@@ -127,8 +113,8 @@ libnet_build_802_2snap(u_int8_t dsap, u_int8_t ssap, u_int8_t control, u_int8_t 
         return (-1);
     }
 
-	memset(&_802_2_hdr, 0, sizeof(_802_2_hdr));
-	_802_2_hdr.snap_dsap = dsap;
+    memset(&_802_2_hdr, 0, sizeof(_802_2_hdr));
+    _802_2_hdr.snap_dsap = dsap;
     _802_2_hdr.snap_ssap = ssap;
     _802_2_hdr.snap_control = control;
     memcpy(_802_2_hdr.snap_oui, oui, 3);
@@ -139,23 +125,10 @@ libnet_build_802_2snap(u_int8_t dsap, u_int8_t ssap, u_int8_t control, u_int8_t 
     {
         goto bad;
     }
+
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
  
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
-
     return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_802_2SNAP_H));
 bad:

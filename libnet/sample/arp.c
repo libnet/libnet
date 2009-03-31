@@ -1,5 +1,5 @@
 /*
- *  $Id: arp.c,v 1.6 2004/03/01 20:26:12 mike Exp $
+ *  $Id: arp.c,v 1.7 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet 1.1
  *  Build an ARP packet
@@ -70,21 +70,6 @@ main(int argc, char *argv[])
     }
 	else
 
-    /*
-     *  Build the packet, remmebering that order IS important.  We must
-     *  build the packet from lowest protocol type on up as it would
-     *  appear on the wire.  So for our ARP packet:
-     *
-     *  -------------------------------------------
-     *  |  Ethernet   |           ARP             |
-     *  -------------------------------------------
-     *         ^                     ^
-     *         |------------------   |
-     *  libnet_build_ethernet()--|   |
-     *                               |
-     *  libnet_build_arp()-----------|
-     */
-	 
     i = libnet_get_ipaddr4(l);
   
     t = libnet_build_arp(

@@ -32,13 +32,23 @@
 #ifndef __LIBNET_TYPES_H
 #define __LIBNET_TYPES_H
 
-/* Solaris has messed up POSIX nomenclature for these */
-#if (__sun__ && __svr4__)
+#ifdef HAVE_CONFIG_H
+#include "../config.h"
+#endif
+
+/* Solaris has messed up POSIX nomenclature for int types */
+#if HAVE_SOLARIS
+#include <inttypes.h>
+#else
+#include <stdint.h>
+#endif
+
+/*
 typedef uint8_t  u_int8_t;
 typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
 typedef uint64_t u_int64_t;
-#endif
+*/
 
 #endif  /* __LIBNET_TYPES_H */
 

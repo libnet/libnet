@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_write.c,v 1.13 2004/02/20 18:53:50 mike Exp $
+ *  $Id: libnet_write.c,v 1.14 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_write.c - writes a prebuilt packet to the network
@@ -187,7 +187,6 @@ libnet_ptag_t ptag)
     memcpy(packet, &token_ring_hdr, sizeof(token_ring_hdr));
     return (1);
 }
-
 
 int
 libnet_win32_write_raw_ipv4(libnet_t *l, u_int8_t *payload, u_int32_t payload_s)

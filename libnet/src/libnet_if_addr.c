@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_if_addr.c,v 1.22 2004/03/04 20:51:07 kkuehl Exp $
+ *  $Id: libnet_if_addr.c,v 1.23 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_if_addr.c - interface selection code
@@ -235,7 +235,12 @@ register char *errbuf)
         {
             al->addr = ((struct sockaddr_in *)&nifr.ifr_addr)->sin_addr.s_addr;
         }
-
+        
+        if (al->device)
+        {
+            /* fix memory leak */
+            free(al->device);
+        }
         if ((al->device = strdup(device)) == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 

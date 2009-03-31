@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_igmp.c,v 1.11 2004/01/21 19:01:29 mike Exp $
+ *  $Id: libnet_build_igmp.c,v 1.12 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_igmp.c - IGMP packet assembler
@@ -77,21 +77,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			     "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            goto bad;
-        }
-    }
     if (sum == 0)
     {
         /*
@@ -101,7 +89,6 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
          */
         libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
     }
-
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_IGMP_H));
 bad:

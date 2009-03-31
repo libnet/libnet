@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_link.c,v 1.9 2004/03/04 20:50:20 kkuehl Exp $
+ *  $Id: libnet_build_link.c,v 1.10 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_link.c - link-layer packet assembler
@@ -45,7 +45,7 @@ libnet_build_link(u_int8_t *dst, u_int8_t *src, u_int8_t *oui, u_int16_t type,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
 {
-	u_int8_t org[3] = {0x00, 0x00, 0x00};
+    u_int8_t org[3] = {0x00, 0x00, 0x00};
     switch (l->link_type)
     {
         /* add FDDI */

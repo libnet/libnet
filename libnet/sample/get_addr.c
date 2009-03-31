@@ -1,5 +1,5 @@
 /*
- *  $Id: get_addr.c,v 1.3 2004/01/03 20:31:01 mike Exp $
+ *  $Id: get_addr.c,v 1.4 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet 1.1
  *  get_addr.c - Retrieve the MAC and IP address of an interface
@@ -76,7 +76,7 @@ main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-	printf("Interface:\t%s\n", libnet_getdevice(l));
+    printf("Interface:\t%s\n", libnet_getdevice(l));
     e = libnet_get_hwaddr(l);
     if (e == NULL)
     {

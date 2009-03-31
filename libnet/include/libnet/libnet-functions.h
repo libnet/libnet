@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-functions.h,v 1.42 2004/03/25 18:50:48 mike Exp $
+ *  $Id: libnet-functions.h,v 1.43 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-functions.h - function prototypes
  *
@@ -964,7 +964,7 @@ libnet_t *l);
  * @param len total length of the encapuslated packet less 18 bytes
  * @param snap SNAP information (0xaaaa03 + vendor code)
  * @param vid 15 bit VLAN ID, 1 bit BPDU or CDP indicator
- * @param index port index
+ * @param portindex port index
  * @param reserved used for FDDI and token ring
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -973,10 +973,10 @@ libnet_t *l);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_isl(u_int8_t *dhost, u_int8_t type, u_int8_t user, u_int8_t *shost,
-u_int16_t len, u_int8_t *snap, u_int16_t vid, u_int16_t index,
-u_int16_t reserved, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag);
+libnet_build_isl(u_int8_t *dhost, u_int8_t type, u_int8_t user,
+u_int8_t *shost, u_int16_t len, u_int8_t *snap, u_int16_t vid,
+u_int16_t portindex, u_int16_t reserved, u_int8_t *payload,
+u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an Internet Protocol Security Encapsulating Security Payload header.
@@ -1285,8 +1285,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_ospfv2_hello(u_int32_t netmask, u_int16_t interval, u_int8_t opts,
 u_int8_t priority, u_int dead_int, u_int32_t des_rtr, u_int32_t bkup_rtr,
-u_int32_t neighbor, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag);
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
  * @param payload optional payload or NULL
@@ -1429,7 +1428,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
-inline u_int32_t
+u_int32_t
 libnet_getgre_length(u_int16_t fv);
 
 /**
@@ -1618,6 +1617,31 @@ u_int32_t uid, u_int32_t fd, u_int8_t cmd[SEBEK_CMD_LENGTH], u_int32_t length,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * Builds a HSRP header. HSRP is a Cisco propietary protocol defined in
+ * RFC 2281
+ * @param version version of the HSRP messages
+ * @param opcode type of message
+ * @param state current state of the router
+ * @param hello_time period in seconds between hello messages
+ * @param hold_time seconds that the current hello message is valid
+ * @param priority priority for the election proccess
+ * @param group standby group
+ * @param reserved reserved field
+ * @param authdata password
+ * @param virtual_ip virtual ip address
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t
+libnet_build_hsrp(u_int8_t version, u_int8_t opcode, u_int8_t state, 
+u_int8_t hello_time, u_int8_t hold_time, u_int8_t priority, u_int8_t group,
+u_int8_t reserved, u_int8_t authdata[HSRP_AUTHDATA_LENGTH], u_int32_t virtual_ip,
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
+/**
  * Builds a link layer header for an initialized l. The function
  * determines the proper link layer header format from how l was initialized.
  * The function current supports Ethernet and Token Ring link layers.
@@ -1708,6 +1732,13 @@ u_int8_t *
 libnet_hex_aton(const char *s, int *len);
 
 /**
+ * Returns the version of libnet.
+ * @return the libnet version
+ */
+const char *
+libnet_version(void);
+
+/**
  * [Advanced Interface]
  * Yanks a prebuilt, wire-ready packet from the given libnet context. If
  * libnet was configured to do so (which it is by default) the packet will have
@@ -1756,6 +1787,22 @@ u_int32_t *header_s);
  */
 int
 libnet_adv_write_link(libnet_t *l, u_int8_t *packet, u_int32_t packet_s);
+
+/**
+ * [Advanced Interface] 
+ * Writes a packet the network at the raw socket layer. This function is useful
+ * to write a packet that has been constructed by hand by the application
+ * programmer or, more commonly, to write a packet that has been returned by
+ * a call to libnet_adv_cull_packet(). This function is part of the advanced
+ * interface and is only available when libnet is initialized in advanced mode.
+ * If the function fails libnet_geterror() can tell you why.
+ * @param l pointer to a libnet context
+ * @param packet a pointer to the packet to inject
+ * @param packet_s the size of the packet
+ * @return the number of bytes written, or -1 on failure
+ */
+int
+libnet_adv_write_raw_ipv4(libnet_t *l, u_int8_t *packet, u_int32_t packet_s);
 
 /**
  * [Advanced Interface] 
@@ -1837,7 +1884,7 @@ libnet_cq_find_by_label(char *label);
  * member context.
  */
 void
-libnet_cq_destroy();
+libnet_cq_destroy(void);
 
 /**
  * [Context Queue] 
@@ -1859,7 +1906,7 @@ libnet_cq_destroy();
  * @return the head of the context queue
  */
 libnet_t *
-libnet_cq_head();
+libnet_cq_head(void);
 
 /**
  * [Context Queue] 
@@ -1867,7 +1914,7 @@ libnet_cq_head();
  * @return 1 if at the end of the context queue, 0 otherwise
  */
 int
-libnet_cq_last();
+libnet_cq_last(void);
 
 /**
  * [Context Queue] 
@@ -1875,7 +1922,7 @@ libnet_cq_last();
  * @reutrn the next context from the context queue
  */
 libnet_t *
-libnet_cq_next();
+libnet_cq_next(void);
 
 /**
  * [Context Queue] 
@@ -1883,13 +1930,13 @@ libnet_cq_next();
  * @return the number of libnet contexts currently in the queue
  */
 u_int32_t
-libnet_cq_size();
+libnet_cq_size(void);
 
 /**
  * [Context Queue]
  */
 u_int32_t
-libnet_cq_end_loop();
+libnet_cq_end_loop(void);
 
 /**
  * [Diagnostic] 

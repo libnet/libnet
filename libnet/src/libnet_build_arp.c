@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_build_arp.c,v 1.12 2004/03/01 20:26:12 mike Exp $
+ *  $Id: libnet_build_arp.c,v 1.13 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
  *  libnet_build_arp.c - ARP packet assembler
@@ -105,22 +105,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): payload inconsistency\n", __func__);
-        goto bad;
-    }
-
-    if (payload && payload_s)
-    {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
-        {
-            /* err msg set in libnet_pblock_append() */
-            goto bad;
-        }
-    }
+    /* boilerplate payload sanity check / append macro */
+    LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_ARP_H));
 bad:
@@ -157,9 +143,9 @@ u_int8_t *tpa, libnet_t *l)
         4,                                      /* protocol addr size */
         op,                                     /* operation type */
         sha,                                    /* sender hardware addr */
-        spa,                       /* sender protocol addr */
+        spa,                                    /* sender protocol addr */
         tha,                                    /* target hardware addr */
-        tpa,                       /* target protocol addr */
+        tpa,                                    /* target protocol addr */
         NULL,                                   /* payload */
         0,                                      /* payload size */
         l,                                      /* libnet context */
