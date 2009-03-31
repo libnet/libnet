@@ -24,8 +24,6 @@ stamp-*
 tags
 version.h
 libnet/libnet-1*
-libnet/doc/html
-libnet/doc/man
 libnet/sample/arp
 libnet/sample/bgp4_hdr
 libnet/sample/bgp4_notification
