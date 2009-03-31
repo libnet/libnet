@@ -45,7 +45,6 @@ libnet_build_ipv4(u_int16_t len, u_int8_t tos, u_int16_t id, u_int16_t frag,
 u_int8_t ttl, u_int8_t prot, u_int16_t sum, u_int32_t src, u_int32_t dst,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    int offset;
     u_int32_t h, n, i, j;
     libnet_pblock_t *p, *p_data, *p_temp;
     struct libnet_ipv4_hdr ip_hdr;
@@ -58,9 +57,12 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     n = LIBNET_IPV4_H;                      /* size of memory block */
     h = len;                                /* header length */
+    // WRONG - this is total len of ip packet, and is put into the IP header
     ptag_data = 0;                          /* used if options are present */
+    // WRONG - is used if there is ipv4 payload
 
     if (h + payload_s > IP_MAXPACKET)
+    // WRONG - h is the total length, it already includes payload_s
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): IP packet too large\n", __func__);
@@ -97,6 +99,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             ip_hdr.ip_hl += j;
         }
     }
+    // Note that p->h_len is not adjusted. This seems a bug, but it is because
+    // it is not used!  libnet_do_checksum() is passed the h_len (as `len'),
+    // but for IPPROTO_IP it is ignored in favor of the ip_hl.
 
     ip_hdr.ip_tos        = tos;                       /* IP tos */
     ip_hdr.ip_len        = htons(h);                  /* total length */
@@ -123,7 +128,10 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     /* find and set the appropriate ptag, or else use the default of 0 */
-    offset = payload_s;
+    /* When updating the ipv4 block, we need to find the data block, and
+     * adjust our ip_offset if the new payload size is different from what
+     * it used to be.
+     */
     if (ptag_hold && p->prev)
     {
         p_temp = p->prev;
@@ -136,9 +144,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
         if (p_temp->type == LIBNET_PBLOCK_IPDATA)
         {
+            int offset = payload_s;
+
             ptag_data = p_temp->ptag;
             offset -=  p_temp->b_len;
-            p->h_len += offset;
+            //p->h_len += offset;
+            // WRONG h_len is unused for checksum for IPv4, and even if it was used,
+            // the h_len doesn't depend on the payload size.
         }
         else
         {
@@ -157,6 +169,16 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (payload && payload_s)
     {
         /* update ptag_data with the new payload */
+        // on create:
+        //    b_len = payload_s
+        //    l->total_size += b_len
+        //    h_len = 0
+        // on update:
+        //    b_len = payload_s
+        //    h_len += <diff in size between new b_len and old b_len>
+        //      increments if if b_len goes up, down if it goes down
+        // in either case:
+        //    copied = 0
         p_data = libnet_pblock_probe(l, ptag_data, payload_s,
                 LIBNET_PBLOCK_IPDATA);
         if (p_data == NULL)
@@ -171,6 +193,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
         if (ptag_data == LIBNET_PTAG_INITIALIZER)
         {
+            // IPDATA's h_len gets set to payload_s in both branches
             if (p_data->prev->type == LIBNET_PBLOCK_IPV4_H)
             {
                 libnet_pblock_update(l, p_data, payload_s,
@@ -180,6 +203,10 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             }
             else
             {
+                // SR - I'm not sure how to reach this code. Maybe if the first
+                // time we added an ipv4 block, there was no payload, but when
+                // we modify the block the next time, we have payload?
+
                 /* update without setting this as the final pblock */
                 p_data->type  =  LIBNET_PBLOCK_IPDATA;
                 p_data->ptag  =  ++(l->ptag_state);
@@ -187,6 +214,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
                 /* Adjust h_len for checksum. */
                 p->h_len += payload_s;
+                // WRONG - IPV4 checksum doesn't include the payload_s.
 
                 /* data was added after the initial construction */
                 for (p_temp = l->protocol_blocks;
@@ -238,7 +266,16 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      * FREDRAYNAL: as we insert a new IP header, all checksums for headers
      * placed after this one will refer to here.
      */
-    libnet_pblock_record_ip_offset(l, l->total_size);
+    // WRONG - the total_size when updating the pblock will include the link layer
+    // WRONG - it isn't called after adding options, so will be wrong by the amount of ip options
+    // WRONG - it updates the wrong protocol blocks:
+    //   - the first time it runs we set the ip offsets for p (ipv4), and
+    //     ipdata to the total size of just the ip portion
+    //   - the next time, it starts at end, which is the ethernet block, and
+    //     updates everything up to but not including the ipv4 block to the total size, which means it
+    //     changes just the ethernet block, and the offset it sets is the total size including the ethernet
+    //     header.... WTF?
+    libnet_pblock_record_ip_offset(l, p);
 
     return (ptag);
 bad:
@@ -323,7 +360,7 @@ libnet_autobuild_ipv4(u_int16_t len, u_int8_t prot, u_int32_t dst, libnet_t *l)
      * FREDRAYNAL: as we insert a new IP header, all checksums for headers
      * placed after this one will refer to here.
      */
-    libnet_pblock_record_ip_offset(l, l->total_size);
+    libnet_pblock_record_ip_offset(l, p);
     return (ptag);
 
 bad:
@@ -507,8 +544,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     LIBNET_DO_PAYLOAD(l, p);
 
     /* no checksum for IPv6 */
-    return (ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
-            LIBNET_PBLOCK_IPV6_H));
+    ptag = ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
+            LIBNET_PBLOCK_IPV6_H);
+
+    libnet_pblock_record_ip_offset(l, p);
+
+    return ptag;
+
 bad:
     libnet_pblock_delete(l, p);
     return (-1);

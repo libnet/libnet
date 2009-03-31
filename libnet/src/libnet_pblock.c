@@ -38,6 +38,7 @@
 #else
 #include "../include/win32/libnet.h"
 #endif
+#include <assert.h>
 
 libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
@@ -500,15 +501,18 @@ libnet_pblock_p2p(u_int8_t type)
 }
 
 void
-libnet_pblock_record_ip_offset(libnet_t *l, u_int32_t offset)
+libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
 {
-    libnet_pblock_t *p = l->pblock_end;
+    libnet_pblock_t *c;
+    u_int32_t ip_offset = 0;
 
-    do
-    {
-        p->ip_offset = offset;
-        p = p->prev;
-    } while (p && p->type != LIBNET_PBLOCK_IPV4_H);
+    assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
+
+    for(c = p; c; c = c->prev)
+        ip_offset += c->b_len;
+
+    for(c = p; c; c = c->prev)
+        c->ip_offset = ip_offset;
 }
 
 
