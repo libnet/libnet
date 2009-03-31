@@ -23,6 +23,7 @@ missing
 stamp-*
 tags
 version.h
+doc/html/*.html
 libnet/libnet-1*
 libnet/sample/arp
 libnet/sample/bgp4_hdr
