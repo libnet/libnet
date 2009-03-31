@@ -557,8 +557,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     /* no checksum for IPv6 */
-    return (ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
-            LIBNET_PBLOCK_IPV6_H));
+    ptag = ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
+            LIBNET_PBLOCK_IPV6_H);
+
+    libnet_pblock_record_ip_offset(l, p);
+
+    return ptag;
+
 bad:
     libnet_pblock_delete(l, p);
     return (-1);

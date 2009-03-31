@@ -506,7 +506,7 @@ libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
     libnet_pblock_t *c;
     u_int32_t ip_offset = 0;
 
-    assert(p->type == LIBNET_PBLOCK_IPV4_H);
+    assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
 
     for(c = p; c; c = c->prev)
         ip_offset += c->b_len;
