@@ -79,8 +79,19 @@ struct libnet_protocol_block
     u_int8_t *buf;                      /* protocol buffer */
     u_int32_t b_len;                    /* length of buf */
     u_int16_t h_len;                    /* header length (for checksumming) */
-    u_int32_t ip_offset;                /* offset to IP header for csums */
-    u_int32_t copied;                   /* bytes copied */
+       /* Unused for IPV4_H block types.
+        * For protocols that sit on top of IP, it should be the the amount of
+        * buf that is the header, and will be included in the checksum.
+        */
+    u_int32_t ip_offset;                /* offset from end of pkt to beginning of IP header for csums */
+       /* Unused for IPV4_H block types.
+        * For protocols that sit on top of IP (UDP, ICMP, ...), they often
+        * include some information from the IP header (in the form of a "pseudo
+        * header") in their own checksum calculation. To build that
+        * pseudo-header, thet need to find the real header.
+        */
+    u_int32_t copied;                   /* bytes copied - the amount of data copied into buf */
+       /* Used and updated by libnet_pblock_append(). */
     u_int8_t type;                      /* type of pblock */
 /* this needs to be updated every time a new packet builder is added */
 #define LIBNET_PBLOCK_ARP_H             0x01    /* ARP header */
