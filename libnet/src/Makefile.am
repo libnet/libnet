@@ -59,13 +59,14 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_write.c
 
 libnet_la_LIBADD = @LTLIBOBJS@
-libnet_la_LDFLAGS = -version-info 5:0:4 -Wl
+libnet_la_LDFLAGS = -version-info 6:0:5 -Wl
 
 # Note: this version-info should NOT simply be the version of the libnet
 # package. See:
 #   http://www.sourceware.org/autobook/autobook/autobook_91.html
 # for the rules.
 #
-# Note: merging 1.1.3-RC-01 brings new capabilities, and API changes. 5:0:4 may
-# no longer be correct.
+# Note:
+# 1.1.2.1-fork is 5:0:4
+# 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
 
