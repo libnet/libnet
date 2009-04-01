@@ -31,12 +31,12 @@
 
 #ifndef __LIBNET_HEADERS_H
 #define __LIBNET_HEADERS_H
-/**
+/*
  * @file libnet-headers.h
  * @brief libnet header information
  */
 
-/**
+/*
  * Libnet defines header sizes for every builder function exported.
  */
 #define LIBNET_802_1Q_H         0x12    /**< 802.1Q header:       18 bytes */
@@ -107,7 +107,7 @@
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
 #define LIBNET_HSRP_H           0x14    /**< HSRP header:          8 bytes */
 
-/**
+/*
  * IEEE 802.1Q (Virtual Local Area Network) VLAN header, static header 
  * size: 18 bytes
  */
@@ -123,7 +123,7 @@ struct libnet_802_1q_hdr
     u_int16_t vlan_len;                   /**< length or type (802.3 / Eth 2) */
 };  
 
-/**
+/*
  * IEEE 802.1X EAP (Extensible Authentication Protocol) header, static header
  * size: 4 bytes
  */
@@ -139,7 +139,7 @@ struct libnet_802_1x_hdr
     u_int16_t dot1x_length;               /**< total frame length */
 };  
 
-/**
+/*
  *  IEEE 802.2 LLC header
  *  Link Layer Control
  *  static header size: 3 bytes
@@ -154,7 +154,7 @@ struct libnet_802_2_hdr
 };
 
 
-/**
+/*
  *  IEEE 802.2 LLC/SNAP header
  *  SubNetwork Attachment Point
  *  static header size: 8 bytes
@@ -169,7 +169,7 @@ struct libnet_802_2snap_hdr
 };
 
 
-/**
+/*
  *  802.3 header
  *  IEEE Ethernet
  *  Static header size: 14 bytes
@@ -182,7 +182,7 @@ struct libnet_802_3_hdr
 };
 
 
-/** 
+/* 
  *  ARP header
  *  Address Resolution Protocol
  *  Base header size: 8 bytes
@@ -217,7 +217,7 @@ struct libnet_arp_hdr
     /* address information allocated dynamically */
 };
 
-/**
+/*
  * BGP4 header
  * Border Gateway Protocol 4
  * Base header size : 19 bytes
@@ -234,7 +234,7 @@ struct libnet_bgp4_header_hdr
 #define LIBNET_BGP4_KEEPALIVE     4
 };
 
-/**
+/*
  * BGP4 open header
  * Border Gateway Protocol 4
  * Base header size : 10 bytes
@@ -248,7 +248,7 @@ struct libnet_bgp4_open_hdr
     u_int8_t opt_len;
 };
 
-/**
+/*
  * BGP4 notification message
  *
  * Border Gateway Protocol 4
@@ -294,13 +294,13 @@ struct libnet_bgp4_notification_hdr
 
 
 
-/**
+/*
  *  For checksum stuff -- IANA says 135-254 is "unassigned" as of 12.2001.
  *  Let's hope this one stays that way for a while!
  */
 #define LIBNET_PROTO_CDP    200
 
-/**
+/*
  *  CDP header
  *  Cisco Discovery Protocol
  *  Base header size: 8 bytes
@@ -332,7 +332,7 @@ struct libnet_cdp_hdr
 };
 
 
-/**
+/*
  *  Used as an overlay for type/len/values
  */
 struct libnet_cdp_value_hdr
@@ -342,7 +342,7 @@ struct libnet_cdp_value_hdr
 };
 
 
-/**
+/*
  *  DHCP header
  *  Dynamic Host Configuration Protocol
  *  Static header size: f0 bytes
@@ -456,7 +456,7 @@ struct libnet_dhcpv4_hdr
 
 /* this little guy got left out in the cold */
 #define LIBNET_DNS_H LIBNET_UDP_DNSV4_H
-/**
+/*
  *  Base DNSv4 header
  *  Domain Name System
  *  Base header size: 12/14 bytes
@@ -483,7 +483,7 @@ struct libnet_dnsv4udp_hdr
     u_int16_t num_addi_rr;    /* Number of additional resource records */
 };
 
-/**
+/*
  *  Ethernet II header
  *  Static header size: 14 bytes
  */
@@ -524,7 +524,7 @@ struct libnet_ether_addr
     u_int8_t  ether_addr_octet[6];        /* Ethernet address */
 };
 
-/**
+/*
  *  Fiber Distributed Data Interface header
  *
  *  Static header size: 21 bytes (LLC and 48-bit address addr only)
@@ -559,7 +559,7 @@ struct libnet_fddi_addr
 };
 
 
-/**
+/*
  * GRE header - RFC 1701 & 2637
  * Generic Routing Encapsulation (GRE) 
  * Base header size: 4 bytes
@@ -636,7 +636,7 @@ struct libnet_gre_hdr
 #define IPPROTO_GRE 47
 #endif
 
-/**
+/*
  * Source Route Entries (SRE)
  * This is used for GRE as the Routing field is a list of SREs - RFC 1701
  * Base header size: 4 bytes
@@ -727,7 +727,7 @@ struct libnet_ipv4_hdr
 #define IPOPT_SSRR      137 /* strict source route */
 #endif
 
-/**
+/*
  * IPv6 address
  */
 struct libnet_in6_addr
@@ -741,7 +741,7 @@ struct libnet_in6_addr
 };
 #define libnet_s6_addr __u6_addr.__u6_addr8
 
-/**
+/*
  *  IPv6 header
  *  Internet Protocol, version 6
  *  Static header size: 40 bytes
@@ -756,7 +756,7 @@ struct libnet_ipv6_hdr
 
 };
 
-/**
+/*
  *  IPv6 frag header
  *  Internet Protocol, version 6
  *  Static header size: 8 bytes
@@ -770,7 +770,7 @@ struct libnet_ipv6_frag_hdr
     u_int32_t ip_id;         /* id */
 };
 
-/**
+/*
  *  IPv6 routing header
  *  Internet Protocol, version 6
  *  Base header size: 4 bytes
@@ -785,7 +785,7 @@ struct libnet_ipv6_routing_hdr
     /* routing information allocated dynamically */
 };
 
-/**
+/*
  *  IPv6 destination options header
  *  Internet Protocol, version 6
  *  Base header size: 2 bytes
@@ -798,7 +798,7 @@ struct libnet_ipv6_destopts_hdr
     /* destination options information allocated dynamically */
 };
 
-/**
+/*
  *  IPv6 hop by hop options header
  *  Internet Protocol, version 6
  *  Base header size: 2 bytes
@@ -811,7 +811,7 @@ struct libnet_ipv6_hbhopts_hdr
     /* destination options information allocated dynamically */
 };
 
-/**
+/*
  *  ICMP6 header
  *  Internet Control Message Protocol v6
  *  Base header size: 8 bytes
@@ -848,7 +848,7 @@ struct libnet_icmpv6_hdr
 
 
 
-/**
+/*
  *  ICMP header
  *  Internet Control Message Protocol
  *  Base header size: 4 bytes
@@ -1025,7 +1025,7 @@ struct libnet_icmpv4_hdr
 };
 
 
-/**
+/*
  *  IGMP header
  *  Internet Group Message Protocol
  *  Static header size: 8 bytes
@@ -1051,7 +1051,7 @@ struct libnet_igmp_hdr
 };
 
 
-/**
+/*
  *  IPSEC header
  *  Internet Protocol Security Protocol
  *  Encapsulating Security Payload Header Static header size: 12 bytes
@@ -1094,7 +1094,7 @@ struct libnet_ah_hdr
  *  Let's hope this one stays that way for a while!
  */
 #define LIBNET_PROTO_ISL    201
-/**
+/*
  *  ISL header
  *  Cisco Inter-Switch Link
  *  Static header size: 26 bytes
@@ -1136,7 +1136,7 @@ struct libnet_isl_hdr
 #define LIBNET_OPT_DCBIT 0x20 /* describes handling of demand circuits */
 
 
-/**
+/*
  *  MPLS header
  *  Multi-Protocol Label Switching
  *  Static header size: 4 bytes
@@ -1148,7 +1148,7 @@ struct libnet_mpls_hdr
 #define LIBNET_MPLS_BOS_OFF   0
 };
 
-/**
+/*
  *  NTP header
  *  Network Time Protocol
  *  Static header size: 48 bytes
@@ -1219,7 +1219,7 @@ struct libnet_ntp_hdr
 };
 
 
-/**
+/*
  *  OSPFv2 header
  *  Open Shortest Path First
  *  Static header size: 16 bytes
@@ -1246,7 +1246,7 @@ struct libnet_ospf_hdr
 };
 
 
-/**
+/*
  *  OSPF authentication header
  *  Open Shortest Path First
  *  Static header size: 8 bytes
@@ -1260,7 +1260,7 @@ struct libnet_auth_hdr
 };
 
 
-/**
+/*
  *  OSPF hello header
  *  Open Shortest Path First
  *  Static header size: 28 bytes
@@ -1278,7 +1278,7 @@ struct libnet_ospf_hello_hdr
 };
 
 
-/**
+/*
  *  Database Description header.
  */
 struct libnet_dbd_hdr
@@ -1303,7 +1303,7 @@ struct libnet_dbd_hdr
 #define LIBNET_LS_TYPE_ASEXT    5   /* AS-external-LSA */
 
 
-/**
+/*
  *  Link State Request header
  */
 struct libnet_lsr_hdr
@@ -1314,7 +1314,7 @@ struct libnet_lsr_hdr
 };
 
 
-/**
+/*
  *  Link State Update header
  */
 struct libnet_lsu_hdr
@@ -1323,7 +1323,7 @@ struct libnet_lsu_hdr
 };
 
 
-/**
+/*
  *  Link State Acknowledgement header.
  */
 struct libnet_lsa_hdr
@@ -1339,7 +1339,7 @@ struct libnet_lsa_hdr
 };
 
 
-/**
+/*
  *  Router LSA data format
  *
  *  Other stuff for TOS can be added for backward compatability, for this
@@ -1367,7 +1367,7 @@ struct libnet_rtr_lsa_hdr
 };
 
 
-/**
+/*
  *  Network LSA data format.
  */
 struct libnet_net_lsa_hdr
@@ -1377,7 +1377,7 @@ struct libnet_net_lsa_hdr
 };
  
  
-/**
+/*
  *  Summary LSA data format.
  */
 struct libnet_sum_lsa_hdr
@@ -1388,7 +1388,7 @@ struct libnet_sum_lsa_hdr
 };
  
  
-/**
+/*
  *  AS External LSA data format.
  *  & 0xfff logic operator for as_metric to get last 24bits.
  */
@@ -1402,7 +1402,7 @@ struct libnet_as_lsa_hdr
 };
 
 
-/**
+/*
  *  Base RIP header
  *  Routing Information Protocol
  *  Base header size: 24 bytes
@@ -1492,7 +1492,7 @@ struct libnet_rpc_call_tcp_hdr
     struct libnet_rpc_call_hdr rpc_common;
 };
 
-/**
+/*
  *  STP configuration header
  *  Spanning Tree Protocol
  *  Static header size: 35 bytes
@@ -1514,7 +1514,7 @@ struct libnet_stp_conf_hdr
 };
 
 
-/**
+/*
  *  STP topology change notification header
  *  Spanning Tree Protocol
  *  Static header size: 4 bytes
@@ -1527,7 +1527,7 @@ struct libnet_stp_tcn_hdr
 };
 
 
-/**
+/*
  *  TCP header
  *  Transmission Control Protocol
  *  Static header size: 20 bytes
@@ -1576,7 +1576,7 @@ struct libnet_tcp_hdr
     u_int16_t th_urp;         /* urgent pointer */
 };
 
-/**
+/*
  *  Token Ring Header
  */
 struct libnet_token_ring_hdr
@@ -1602,7 +1602,7 @@ struct libnet_token_ring_addr
     u_int8_t  token_ring_addr_octet[6];        /* Token Ring address */
 };
 
-/**
+/*
  *  UDP header
  *  User Data Protocol
  *  Static header size: 8 bytes
@@ -1615,7 +1615,7 @@ struct libnet_udp_hdr
     u_int16_t uh_sum;         /* checksum */
 };
 
-/**
+/*
  *  Sebek header
  *  Static header size: 48 bytes
  */
@@ -1639,7 +1639,7 @@ struct libnet_sebek_hdr
 };
 
 
-/**
+/*
  *  VRRP header
  *  Virtual Router Redundancy Protocol
  *  Static header size: 8 bytes
@@ -1674,7 +1674,7 @@ struct libnet_vrrp_hdr
 };
 
 
-/**
+/*
  *  HSRP header
  *  Static header size: 20 bytes
  */
