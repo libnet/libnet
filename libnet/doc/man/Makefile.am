@@ -1,2 +1,1 @@
 SUBDIRS        = man3
-

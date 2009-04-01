@@ -1,2 +1,2 @@
-EXTRA_DIST = *.html *.css *.md5 *.map *.png *.gif
+EXTRA_DIST = *.html *.css *.png *.gif
 
