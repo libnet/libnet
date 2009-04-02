@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -x
+
+git clean -x -d
+
+sh ./autogen.sh
+
+./configure --with-pic --enable-maintainer-mode --enable-dependency-tracking
+
+make -C doc doc
+

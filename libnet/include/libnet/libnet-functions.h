@@ -507,8 +507,8 @@ libnet_autobuild_ethernet(u_int8_t *dst, u_int16_t type, libnet_t *l);
 /**
  * Builds a Fiber Distributed Data Interface (FDDI) header.
  * @param fc class format and priority
- * @oaram dst destination fddi address
- * @oaram src source fddi address
+ * @param dst destination fddi address
+ * @param src source fddi address
  * @param dsap destination service access point
  * @param ssap source service access point
  * @param cf cf
@@ -528,7 +528,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Autobuilds a Fiber Distributed Data Interface (FDDI) header.
  * @param fc class format and priority
- * @oaram dst destination fddi address
+ * @param dst destination fddi address
  * @param dsap destination service access point
  * @param ssap source service access point
  * @param cf cf
@@ -591,7 +591,8 @@ u_int8_t *tpa, libnet_t *l);
  * @param win window size
  * @param sum checksum (0 for libnet to autofill)
  * @param urg urgent pointer
- * @parama len total length of the TCP packet (for checksum calculation)
+ * @param len total length of the TCP packet (for checksum calculation)
+ * @param payload
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -724,6 +725,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param type type of ICMP packet (should be ICMP_REDIRECT)
  * @param code code of ICMP packet (should be one of the four redirect codes)
  * @param sum checksum (0 for libnet to autofill)
+ * @param gateway
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -893,7 +895,7 @@ libnet_ptag_t ptag);
  * payload interface.
  * @param nh next header
  * @param len length of the header in 8-byte octets not including the first 8 octets
- * @rtype routing header type
+ * @param rtype routing header type
  * @param segments number of routing segments that follow
  * @param payload optional payload of routing information
  * @param payload_s payload length
@@ -942,19 +944,17 @@ libnet_build_ipv6_hbhopts(u_int8_t nh, u_int8_t len, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * This function is not yet implement and is a NONOP.
+ * This function is not yet implement and is a NOOP.
  * @param len length
  * @param nh next header
  * @param dst destination IPv6 address
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
 libnet_autobuild_ipv6(u_int16_t len, u_int8_t nh, struct libnet_in6_addr dst,
-libnet_t *l);
+libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds a Cisco Inter-Switch Link (ISL) header.
@@ -1031,6 +1031,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds an RFC 1035 version 4 DNS header. Additional DNS payload information
  * should be specified using the payload interface.
+ * @param h_len
  * @param id DNS packet id
  * @param flags control flags
  * @param num_q number of questions
@@ -1236,7 +1237,7 @@ libnet_ptag_t ptag);
  * @param stratum stratum
  * @param poll polling interval
  * @param precision precision
- * @param delay_interval delay interval
+ * @param delay_int delay interval
  * @param delay_frac delay fraction
  * @param dispersion_int dispersion interval
  * @param dispersion_frac dispersion fraction
@@ -1265,6 +1266,12 @@ u_int32_t rec_ts_frac, u_int32_t xmt_ts_int, u_int32_t xmt_ts_frac,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param len
+ * @param type
+ * @param rtr_id
+ * @param area_id
+ * @param sum
+ * @param autype
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1277,6 +1284,13 @@ u_int32_t area_id, u_int16_t sum, u_int16_t autype, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param netmask
+ * @param interval
+ * @param opts
+ * @param priority
+ * @param dead_int
+ * @param des_rtr
+ * @param bkup_rtr
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1289,6 +1303,10 @@ u_int8_t priority, u_int dead_int, u_int32_t des_rtr, u_int32_t bkup_rtr,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param dgram_len
+ * @param opts
+ * @param type
+ * @param seqnum
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1301,6 +1319,9 @@ u_int seqnum, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
  
 /**
+ * @param type
+ * @param lsid
+ * @param advrtr
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1312,6 +1333,7 @@ libnet_build_ospfv2_lsr(u_int type, u_int lsid, u_int32_t advrtr,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param num
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1323,6 +1345,14 @@ libnet_build_ospfv2_lsu(u_int num, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param age
+ * @param opts
+ * @param type
+ * @param lsid
+ * @param advrtr
+ * @param seqnum
+ * @param sum
+ * @param len
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1335,6 +1365,13 @@ u_int lsid, u_int32_t advrtr, u_int seqnum, u_int16_t sum, u_int16_t len,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param flags
+ * @param num
+ * @param id
+ * @param data
+ * @param type
+ * @param tos
+ * @param metric
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1347,6 +1384,8 @@ u_int data, u_int8_t type, u_int8_t tos, u_int16_t metric, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param rtrid
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1358,6 +1397,9 @@ libnet_build_ospfv2_lsa_net(u_int32_t nmask, u_int rtrid, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param metric
+ * @param tos
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1369,6 +1411,10 @@ libnet_build_ospfv2_lsa_sum(u_int32_t nmask, u_int metric, u_int tos,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param metric
+ * @param fwdaddr
+ * @param tag
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1395,6 +1441,20 @@ libnet_build_data(u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
+ * @param opcode
+ * @param htype
+ * @param hlen
+ * @param hopcount
+ * @param xid
+ * @param secs
+ * @param flags
+ * @param cip
+ * @param yip
+ * @param sip
+ * @param gip
+ * @param chaddr
+ * @param sname
+ * @param file
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1409,6 +1469,20 @@ u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param opcode
+ * @param htype
+ * @param hlen
+ * @param hopcount
+ * @param xid
+ * @param secs
+ * @param flags
+ * @param cip
+ * @param yip
+ * @param sip
+ * @param gip
+ * @param chaddr
+ * @param sname
+ * @param file
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1423,11 +1497,8 @@ u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
- * @param l pointer to a libnet context
- * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @param fv see libnet_build_gre().
+ * @return size, see libnet_build_gre().
  */
 u_int32_t
 libnet_getgre_length(u_int16_t fv);
@@ -1440,14 +1511,15 @@ libnet_getgre_length(u_int16_t fv);
  * As GRE is very modular, the first GRE header describes the structure of the
  * header, using bits and flag to specify which fields will be present in the
  * header.
- * @param fv the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
- * @param payload optional payload or NULL
+ * @param fv the 16 0 to 7: which fields are included in the header (checksum,
+ *   seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
  * @param type which protocol is encapsulated (PPP, IP, ...)
  * @param sum checksum (0 for libnet to autofill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
  * @param len size of the GRE packet
+ * @param payload
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -1467,13 +1539,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * header, using bits and flag to specify which fields will be present in the
  * header.
  * @param fv the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
- * @param payload optional payload or NULL
  * @param type which protocol is encapsulated (PPP, IP, ...)
  * @param sum checksum (0 for libnet to autofill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
  * @param len size of the GRE packet
+ * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -1485,6 +1557,10 @@ u_int16_t offset, u_int32_t key, u_int32_t seq, u_int16_t len,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param af
+ * @param offset
+ * @param length
+ * @param routing
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1497,8 +1573,6 @@ u_int8_t *routing, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
@@ -1603,7 +1677,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param pid PID 
  * @param uid UID 
  * @param fd FD 
- * @param cmd[SEBEK_CMD_LENGTH] 12 first characters of the command 
+ * @param cmd 12 first characters of the command 
  * @param length length in bytes of the PDU's body 
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -1920,7 +1994,7 @@ libnet_cq_last(void);
 /**
  * [Context Queue] 
  * Get next context from the context queue.
- * @reutrn the next context from the context queue
+ * @return the next context from the context queue
  */
 libnet_t *
 libnet_cq_next(void);

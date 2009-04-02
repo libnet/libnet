@@ -33,7 +33,7 @@
 #define __LIBNET_MACROS_H
 /**
  * @file libnet-macros.h
- * @brief libnet macros and symbloc constants
+ * @brief libnet macros and symbolic constants
  */
 
 /* for systems without snprintf */
@@ -130,7 +130,7 @@
 #define UNFIX(n)    (n)
 #endif
 
-/* used internaly for packet builders */
+/* used internally for packet builders */
 #define LIBNET_DO_PAYLOAD(l, p)                                              \
 if ((payload && !payload_s) || (!payload && payload_s))                      \
 {                                                                            \
