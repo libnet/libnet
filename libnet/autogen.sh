@@ -12,8 +12,9 @@ set -x
 set -e
 
 rm -fr autom4te.cache
-libtoolize --force
 aclocal -I .
+# for aclocal? -I /usr/share/aclocal
+libtoolize --force
 autoheader
 automake -a -c --foreign --force
 libtoolize --force
