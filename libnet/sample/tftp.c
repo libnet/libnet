@@ -3,7 +3,7 @@
  * libnet 1.1
  * Build a TFTP scanner using payload
  *
- * Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
+ * Copyright (c) 2003 FrÃ©dÃ©ric Raynal <pappy@security-labs.org>
  * All rights reserved.
  *
  * Ex:
