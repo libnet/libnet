@@ -3,7 +3,7 @@
  * libnet 1.1
  * Build a BGP4 update message with what you want as payload
  *
- * Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
+ * Copyright (c) 2003 FrÃ©dÃ©ric Raynal <pappy@security-labs.org>
  * All rights reserved.
  *
  * Examples:

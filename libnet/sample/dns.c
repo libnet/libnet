@@ -4,7 +4,7 @@
  *  Build a DNSv4 packet
  *  To view: /usr/sbin/tcpdump -vvvvven -s 0 port 53
  *
- *  Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2003 FrÃ©dÃ©ric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

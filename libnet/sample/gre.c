@@ -4,7 +4,7 @@
  *  Build a GRE packet
  *  To view: tcpdump -s 0 -n -X -vvv proto gre
  *
- *  Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2003 FrÃ©dÃ©ric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  *
