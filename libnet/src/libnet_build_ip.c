@@ -825,7 +825,7 @@ bad:
 
 libnet_ptag_t
 libnet_autobuild_ipv6(u_int16_t len, u_int8_t nh, struct libnet_in6_addr dst,
-            libnet_t *l)
+            libnet_t *l, libnet_ptag_t ptag)
 {
 
     /* NYI */
