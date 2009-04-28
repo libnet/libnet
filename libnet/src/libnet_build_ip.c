@@ -472,6 +472,8 @@ libnet_ptag_t ptag)
             ip_hdr = (struct libnet_ipv4_hdr *) p_temp->buf;
             ip_hdr->ip_hl = j + 5;
 
+	    // WRONG - must also fix the ip_len field!
+
             if (!underflow)
             {
                 p_temp->h_len += offset;
@@ -480,9 +482,18 @@ libnet_ptag_t ptag)
             {
                 p_temp->h_len -= offset;
             }
+
+	    // WRONG - must also correct the ip_offsets of the rest of the chain, or
+	    // the checksums will be wrong.
+	    //
+	    // Probably this will fix this, but need unit tests:
+	    libnet_pblock_record_ip_offset(l, p_temp);
         }
     }
 
+    /* WRONG - this won't work if an ipv4 block is being replaced, it makes the
+     * l->pblock_end point to the options, when it should be the link header.
+     */
     return (ptag ? ptag : libnet_pblock_update(l, p, adj_size,
             LIBNET_PBLOCK_IPO_H));
 bad:

@@ -824,6 +824,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * options string would not result in a packet larger than 65,535 bytes 
  * (IPMAXPACKET). The function counts up the number of 32-bit words in the 
  * options string and adjusts the IP header length value as necessary.
+ *
+ *   WRONG - if no ptag, it must be built BEFORE the IPv4 header is.
+ *
  * @param options byte string of IP options
  * @param options_s length of options string
  * @param l pointer to a libnet context
