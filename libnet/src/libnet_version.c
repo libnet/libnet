@@ -52,7 +52,7 @@ __libnet_print_vers(void)
 #endif
 }
 
-char *
+const char *
 libnet_version(void)
 {
     return (banner);
