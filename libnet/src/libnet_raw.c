@@ -67,7 +67,7 @@ libnet_close_raw6(libnet_t *l)
 int
 libnet_open_raw4(libnet_t *l)
 {
-    int len;
+    int len; /* now supposed to be socklen_t, but maybe old systems used int? */
 
 #if !(__WIN32__)
      int n = 1;
