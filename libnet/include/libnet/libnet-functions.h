@@ -795,8 +795,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds a version 4 RFC 791 Internet Protocol (IP) header.
- * @param len total length of the IP packet including all subsequent data
- *   FIXME There is no reason this can't be calculated if zero is passed.
+ *
+ * @param ip_len total length of the IP packet including all subsequent data (subsequent
+ *   data includes any IP options and IP options padding)
  * @param tos type of service bits
  * @param id IP identification number
  * @param frag fragmentation bits and offset
@@ -812,22 +813,23 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t 
-libnet_build_ipv4(u_int16_t len, u_int8_t tos, u_int16_t id, u_int16_t frag,
+libnet_build_ipv4(u_int16_t ip_len, u_int8_t tos, u_int16_t id, u_int16_t frag,
 u_int8_t ttl, u_int8_t prot, u_int16_t sum, u_int32_t src, u_int32_t dst,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an version 4 Internet Protocol (IP) options header. The function 
  * expects options to be a valid IP options string of size options_s, no larger
- * than 40 bytes (the maximum size of an options string). The function checks 
- * to make sure that the preceding header is an IPv4 header and that the 
- * options string would not result in a packet larger than 65,535 bytes 
- * (IPMAXPACKET). The function counts up the number of 32-bit words in the 
- * options string and adjusts the IP header length value as necessary.
+ * than 40 bytes (the maximum size of an options string).
  *
- *   WRONG - if no ptag, it must be built BEFORE the IPv4 header is.
+ * When building a chain, the options must be built, then the IPv4 header.
  *
- * @param options byte string of IP options
+ * When updating a chain, if the block following the options is an IPv4 header,
+ * it's total length and header length will be updated if the options block
+ * size changes.
+ *
+ * @param options byte string of IP options (it will be padded up to be an integral
+ *   multiple of 32-bit words).
  * @param options_s length of options string
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -838,7 +840,8 @@ libnet_build_ipv4_options(u_int8_t *options, u_int32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
- * Autobuilds a version 4 Internet Protocol (IP) header. The function is useful  * to build an IP header quickly when you do not need a granular level of
+ * Autobuilds a version 4 Internet Protocol (IP) header. The function is useful
+ * to build an IP header quickly when you do not need a granular level of
  * control. The function takes the same len, prot, and dst arguments as 
  * libnet_build_ipv4(). The function does not accept a ptag argument, but it
  * does return a ptag. In other words, you can use it to build a new IP header
@@ -2049,7 +2052,9 @@ libnet_diag_dump_pblock_type(u_int8_t type);
  * packet.
  * @param packet the packet to print
  * @param len length of the packet in bytes
- * @param swap 1 to swap byte order, 0 to not
+ * @param swap 1 to swap byte order, 0 to not.
+ *   Counter-intuitively, it is necessary to swap in order to see the byte
+ *   order as it is on the wire (this may be a bug).
  * @param stream a stream pointer to print to
  */
 void

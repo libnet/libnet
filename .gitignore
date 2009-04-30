@@ -68,6 +68,7 @@ libnet/sample/synflood
 libnet/sample/synflood6
 libnet/sample/synflood6_frag
 libnet/sample/test_ipv4
+libnet/sample/test_ipv4_options
 libnet/sample/test_ipv6_icmpv4
 libnet/sample/tcp1
 libnet/sample/tcp2
