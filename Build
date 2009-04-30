@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -x
+
+make -C doc doc
+make
+
