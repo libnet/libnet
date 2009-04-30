@@ -138,14 +138,10 @@ static int build_ethernet(libnet_t* l, libnet_ptag_t ptag)
 static
 void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
 {
-    int pkt1_payload = 10;
     u_int8_t* pkt1 = NULL;
     u_int32_t pkt1_sz = 0;
     struct libnet_ipv4_hdr* h1;
-    int pkt2_payload = 2;
-    u_int8_t* pkt2 = NULL;
-    u_int32_t pkt2_sz = 0;
-    struct libnet_ipv4_hdr* h2;
+    uint8_t* payload = NULL;
 
 
     int r = libnet_pblock_coalesce(l, &pkt1, &pkt1_sz);
@@ -161,7 +157,7 @@ void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
     assert_eq(h1->ip_hl, ip_ihl); 
     assert_eq(ntohs(h1->ip_len), ip_len);
 
-    uint8_t* payload = ((u_int8_t*) h1) + ip_ihl * 4;
+    payload = ((u_int8_t*) h1) + ip_ihl * 4;
     if(payload_s > 0) {
         assert(payload[0] == (u_int8_t)'\x99');
         assert(payload[payload_s-1] == (u_int8_t)'\x99');
@@ -172,7 +168,6 @@ int
 main(int argc, char *argv[])
 {
     libnet_t *l;
-    int r;
     char *device = "eth0";
     char errbuf[LIBNET_ERRBUF_SIZE];
     libnet_ptag_t ipo_ptag = 0;

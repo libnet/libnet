@@ -29,7 +29,6 @@ libnet/doc/html/*.css
 libnet/doc/html/*.png
 libnet/doc/html/*.gif
 libnet/doc/man/man3/*.3
-libnet/libnet-1*
 libnet/sample/arp
 libnet/sample/bgp4_hdr
 libnet/sample/bgp4_notification
