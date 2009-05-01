@@ -17,16 +17,17 @@ Complete:
 - autotools from upstream v1.1.3-RC-01 merged to v1.1.2.1-fork
 - completed ip_offset patches being merged into ip_offset-patch
 - merge to master
+- completed ip4 options fixes
 
 
 In progresss:
 
+- update changelog
+- get host for release tarballs
+- re-release
 
 Incomplete:
 
 - lua bindings
-- build_ipv4_options is known to cause memory corruption under some conditions,
-  but fix is more complicated than others and is not merged
 - cleanup of in source comments/documentation of libnet data structures
-- re-release
 

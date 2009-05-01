@@ -4,6 +4,3 @@ set -x
 
 git clean -x -d
 
-sh ./autogen.sh
-
-

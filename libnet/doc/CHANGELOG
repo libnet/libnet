@@ -5,6 +5,72 @@
 ===============================================================================
 
 
+- 1.1.3
+
+Merged 1.1.3 release candidate from packet factory, 1.1.2, debian patches, and
+my own fixes, including bugs causing memory corruption:
+
+    - Fixed various errors, including memory corruption, when IPv4 options are
+      modified.  (Sam Roberts)
+    - Convert from latin-1 to utf-8, from Robert Scheck. (Sam Roberts)
+    - Fixed doxygen errors and warnings, and added a deveoper script to prepare
+      libnet. (Sam Roberts)
+    - Removed CVS crud, again. (Sam Roberts)
+    - Applied autotools cleanup patch from Stefanos. (Sam Roberts)
+    - Applied patch from Stefanos to remove the autotools ephemera that leaked
+      back in. (Sam Roberts)
+    - Patches from Stefanos. (Sam Roberts)
+    - Updated .so revision to be one backwards compatible interface after
+      1.1.2.1-fork's. (Sam Roberts)
+    - Fix for debian bug# 418975, IPv6 wasn't updating ip_offset. See
+      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=418975 and sample
+      test_ipv6_icmpv4.c for more information, and reproduction. (Sam Roberts)
+    - merged autogen.sh from 1.1.3, now ltmain.sh comes from autogen.sh (Sam
+      Roberts)
+    - 802.1Q and 802.1X header documentation was incorrectly using /** /** is
+      reserved for doxygen documentation comments, and they didn't have any.
+      That those packet headers, and no others, were marked that way was
+      causing man pages to be generated for them, incomplete man pages that
+      then were being hacked by debian patches 02- and 03-. (Sam Roberts)
+    - Update .so version to be one src change past the last debian release.
+      Debian patches to v1.1.2.1 used 4:0:3, in error, so we use 5:0:4, as per
+      the rules. See Makefile.am comments for reference. (Sam Roberts)
+    - Bug fixes and reproduction code for ip_offset accounting problem in
+      libnet_build_ipv4 (Sam Roberts)
+    - doxygen configuration updated, html seems fine - I don't know about the
+      man pages. (Sam Roberts)
+    - autotools merged from v1.1.3 to v1.1.2 (Sam Roberts)
+    - Remove autotools. And some garbage local files that should not have been
+      in upstream tarball. (Sam Roberts)
+    - Removed object files and cvs conflict residue contained in original
+      package. (Sam Roberts)
+    - debian patch 06 attempts to free the wrong pointer, and also leaks memory
+      from the inner loop. (Sam Roberts)
+    - libnet (inconsistently) uses various signed and/or unsigned typedefs
+      instead of char ANSI C uses char for string literals and the standard
+      library, so this generates many warnings. I've fixed a number of the
+      places where types representing null-terminated strings weren't typed
+      correctly. (Sam Roberts)
+    - 09-fix_hurd-i386_build.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 08-fix_libnet_checksum.c.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 07-add_libnet-cq-end-loop.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 06-fix_libnet_pblock_coalesce_leak.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 04-fix_libnet_build_ntp.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 03-fix_libnet_802_1x_hdr.3.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 02-fix_libnet_802_1q_hdr.3.patch See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - 01-fix_libnet-functions.h.3.patch from debian source package See
+      http://packages.debian.org/source/sid/libnet (Sam Roberts)
+    - strip CVS subdirectories from upstream package (Sam Roberts)
+
+From 1.1.3-rc:
+
     Added a libnet_version() function
     Fixed a bug in libnet_build_ntp() where two arguments werent used due to a
      typo

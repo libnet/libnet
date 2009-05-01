@@ -4,6 +4,18 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+
+libnet has become unmaintained at packetfactory, and it's maintainer is unreachable.
+
+This fork is a release of the 1.1.3 release candidate, bug fixed.
+
+Home page and more info is available at:
+
+    http://github.com/sam-github/libnet
+
+Contact Sam Roberts <vieuxtech@gmail.com> if you have patches or have found bugs.
+
+
     A C library for portable packet creation and injection.
  
     Libnet is an API to help with the construction and handling of network

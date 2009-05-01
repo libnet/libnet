@@ -6,7 +6,6 @@
 
 
     1.1.x CONTRIBUTERS
-
     Barbato, Luca
         . faster C checksum routine
     Beverly, Scott          <scottbeverly@xengin.com>
@@ -21,26 +20,32 @@
     Davis, Michael          <mike@datanerds.net>
         . bugfixes
     Dulai, Danny            <ddulai@stake.com>
+    Harhalakis, Stefanos    <v13@v13.gr>
+        . debian packaging and help with autotools
     Keramida, Giorgos      <keramida@ceid.upatras.gr>
         . various bugfixes
     Kuehl, Kirby            <kkuehl@cisco.com>
         . u_short -> u_long patch
         . 1.1.1 Win32 porting
         . tons and tons of other stuff
-    Roberto Larcher         <roberto.larcher@libero.it>
-        . 1.1.0 Win32 Porting
     Newsham, Tim            <tnewsham@stake.com>
         . general elitism
     O'Donnell, Adam         <javaman@west.philly.ghetto.org>
         . Solaris IPv6 address fix
     Omella, Alfredo Andres  <aandres@s21sec.com>
         . Solaris DLPI fix
+    Paleino, David          <d.paleino@gmail.com>
+        . debian packaging and help with autotools
     Raynal, Frederic        <frederic.raynal@security-labs.org>
         . cq interface
         . numerous bugfixes and suggestions
 	. keeping the project alive during my sabbatical!
+    Roberto Larcher         <roberto.larcher@libero.it>
+        . 1.1.0 Win32 Porting
     Salvatori, Alessandro
         . many many patches
+    Scheck, Robert
+        . latin-1 to utf-8 conversion from Fedora
     Sehgal, Anupma          <asehgal@cisco.com>
         . pblock sanity check oversight fix
     Schlott, Stefan         <stefan@ploing.de>
