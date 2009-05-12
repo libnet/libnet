@@ -5,9 +5,10 @@
 ===============================================================================
 
 
-libnet has become unmaintained at packetfactory, and it's maintainer is unreachable.
+libnet has become unmaintained at packetfactory.net, and it's author is unreachable.
 
-This fork is a release of the 1.1.3 release candidate, bug fixed.
+This version was forked from the 1.1.3 release candidate, then bug fixed,
+actively maintained, and rereleased.
 
 Home page and more info is available at:
 

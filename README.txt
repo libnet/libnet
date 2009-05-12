@@ -1,15 +1,14 @@
 Upstream on libnet is dead.
 
-Debian has unmerged patches.
+Debian and Fedora have unmerged patches.
 
 I have patches to ip_offset handling (used for IP checksumming) to fix memory
-corruption bugs.
+corruption bugs, and I have the start of Lua bindings.
 
-I also have the start of Lua bindings.
+I've forked from packetfactory.net and am maintaining and rereleasing libnet.
 
-Maybe it's ready to release?
+Contact Sam Roberts <vieuxtech@gmail.com> if you have bugs or patches to contribute.
 
-The known bugs aren't worse than it used to be...
 
 Complete:
 
@@ -20,15 +19,15 @@ Complete:
 - completed ip4 options fixes
 - update changelog
 - get host for release tarballs: sourceforge
+- confirm installation works
+- re-release
 
 
 In progresss:
-
-- confirm installation works
-- re-release
 
 
 Incomplete:
 
 - lua bindings
+- debian packaging
 
