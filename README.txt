@@ -18,16 +18,17 @@ Complete:
 - completed ip_offset patches being merged into ip_offset-patch
 - merge to master
 - completed ip4 options fixes
+- update changelog
+- get host for release tarballs: sourceforge
 
 
 In progresss:
 
-- update changelog
-- get host for release tarballs
+- confirm installation works
 - re-release
+
 
 Incomplete:
 
 - lua bindings
-- cleanup of in source comments/documentation of libnet data structures
 
