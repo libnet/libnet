@@ -5,9 +5,10 @@
 ===============================================================================
 
 - 1.1.4
-    
-    - Patch to libnet.h.in for compilation on HURD (David Paleino)
 
+    - Strip CRLF from files not in win32/
+    - libnet was using HAVE_CONFIG_H in a public header in order to deal with platform types.
+    - Patch to libnet.h.in for compilation on HURD (David Paleino)
 
 - 1.1.3
 
