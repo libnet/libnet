@@ -17,9 +17,10 @@ Complete:
 
 In progresss:
 
+- lua bindings
+
 
 Incomplete:
 
-- lua bindings
 - debian packaging
 

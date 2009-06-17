@@ -38,7 +38,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "lauxlib.h"
 #include "lualib.h"
 
-#undef NET_DUMP
 //#define NET_DUMP
 
 /*

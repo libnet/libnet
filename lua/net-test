@@ -1,9 +1,5 @@
 #!/usr/bin/env lua5.1
 
-package.path =  package.path  .. ";".."wurldtech/lgram/?.lua"
-package.cpath = package.cpath .. ";".."wurldtech/lgram/?.so"
-
-require"grammar"
 require"net"
 
 local function check_ipv4()
@@ -29,7 +25,21 @@ local function check_first()
  	assert(ok, "net:ipv4 fails to construct ipv4 options correctly")
 end
 
-local q = grammar.quote
+-- Quote a string into lua form (including the non-printable characters from
+-- 0-31, and from 127-255).
+local function q(_)
+  local fmt = string.format
+  local _ = fmt("%q", _)
+
+  _ = string.gsub(_, "\\\n", "\\n")
+  _ = string.gsub(_, "[%z\1-\31,\127-\255]", function (x)
+    --print("x=", x)
+    return fmt("\\%03d",string.byte(x))
+  end)
+
+  return _
+end
+
 
 n = net.init("link", "eth0")
 

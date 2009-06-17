@@ -17,6 +17,7 @@ config.sub
 configure
 install-sh
 libnet-config
+libnet-1.1.*
 libnet.h
 libtool
 ltmain.sh
@@ -24,6 +25,7 @@ missing
 stamp-*
 tags
 version.h
+lua/net.so
 libnet/doc/html/*.html
 libnet/doc/html/*.css
 libnet/doc/html/*.png
