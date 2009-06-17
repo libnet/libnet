@@ -4,6 +4,8 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+- 1.1.5
+
 - 1.1.4
 
     - Strip CRLF from files not in win32/ (Robert Scheck)

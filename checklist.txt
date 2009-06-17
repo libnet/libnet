@@ -1,0 +1,9 @@
+Release Checklist
+=================
+
+Modify version number in:
+
+- doc/libnet/doxygen.conf
+- doc/CHANGELOG
+- configure.in
+
