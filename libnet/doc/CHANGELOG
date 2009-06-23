@@ -5,6 +5,7 @@
 ===============================================================================
 
 - 1.1.5
+    - Adjust srcdir and builddir so libnet can build out-of-tree (Robin Getz/Mike Frysinger)
 
 - 1.1.4
 
