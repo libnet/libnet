@@ -2,29 +2,6 @@
 
 require"net"
 
-local function check_ipv4()
- 	local n = net.init("link", "eth0") 
- 	n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
-	n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
-	
-	ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"})
-	assert(not ok, "net:ipv4 fails to detect incorrect usage of IPv4 options")
-end
-
-local function check_ptag()
-	local n = net.init("link", "eth0") 
-	eth = n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
-	ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA", ptag = eth})
-	assert(not ok, "net:ipv4 fails to detect specifying a ptag when creating IPv4 options")
-end
-
-local function check_first()
-	local n = net.init("link", "eth0") 
- 	ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"})
-	eth = n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
- 	assert(ok, "net:ipv4 fails to construct ipv4 options correctly")
-end
-
 -- Quote a string into lua form (including the non-printable characters from
 -- 0-31, and from 127-255).
 local function q(_)
@@ -71,8 +48,49 @@ print("b2=", q(b2))
 
 assert(b1 == b2)
 
-check_ipv4()
-check_ptag()
-check_first()
+local function dump(n, size)
+    local b = n:block()
+    print(n:dump())
+    print("[["..q(b).."]]")
 
+    if size then
+        assert(#b == size, "block's size is not correct")
+    end
+end
+
+
+print""
+
+do
+    print"test: +ipv4 w/options"
+    
+    local n = net.init("link", "eth0") 
+    local ptag = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
+    n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
+
+    dump(n, 14+24)
+
+    n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="BB", ptag=ptag}
+
+    dump(n, 14+24)
+
+    n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+0, ptag=ptag}
+
+    dump(n, 14+20)
+
+    n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+8, options="DDDDD", ptag=ptag}
+
+    dump(n, 14+28)
+end
+
+print""
+
+do
+    print"test: -ipv4 with invalid ptag"
+
+    assert(not pcall(
+        n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+8, options="DDDDD", ptag=999}
+        )
+    )
+end
 

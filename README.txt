@@ -19,8 +19,10 @@ In progresss:
 
 - lua bindings
 
+- debian packaging
+    dpkg-buildpackage -b -us -uc -rfakeroot -i -I.svn -I.swp
+
 
 Incomplete:
 
-- debian packaging
 

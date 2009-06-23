@@ -38,7 +38,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "lauxlib.h"
 #include "lualib.h"
 
-//#define NET_DUMP
+/*#define NET_DUMP*/
 
 /*
 Get field from arg table, errors if argt is not a table, returns
@@ -205,7 +205,6 @@ static const char* type_string(u_int8_t type)
 static int lnet_dump(lua_State* L)
 {
     libnet_t** ud = luaL_checkudata(L, 1, L_NET_REGID);
-
     luaL_argcheck(L, *ud, 1, "net has been destroyed");
 
     libnet_pblock_t* p = (*ud)->protocol_blocks;
@@ -221,7 +220,7 @@ static int lnet_dump(lua_State* L)
         p = p->next;
         strings++;
     }
-    lua_pushfstring(L, "link_offset %d aligner %d total_size %u nblocks %d\n",
+    lua_pushfstring(L, "link_offset %d aligner %d total_size %d nblocks %d\n",
             (*ud)->link_offset, (*ud)->aligner, (*ud)->total_size, (*ud)->n_pblocks);
     strings++;
 
@@ -328,8 +327,8 @@ static int lnet_ipv4 (lua_State *L)
     const char* dst = v_arg_string(L, 2, "dst");
     size_t payloadsz = 0;
     const char* payload = v_arg_lstring(L, 2, "payload", &payloadsz, "");
-    int ip_options_tag = 0;
     int ptag = lnet_arg_ptag(L, 2);
+    int options_ptag = 0;
     size_t optionsz = 0;
     const char* options = v_arg_lstring(L, 2, "options", &optionsz, "");
 
@@ -340,27 +339,30 @@ static int lnet_ipv4 (lua_State *L)
 #ifdef NET_DUMP
     printf("net ipv4 src %s dst %s len %d payloadsz %lu ptag %d optionsz %lu\n", src, dst, len, payloadsz, ptag, optionsz);
 #endif
+
     uint32_t src_n = check_ip_pton(L, src, "src");
     uint32_t dst_n = check_ip_pton(L, dst, "dst");
 
-    if (optionsz) {
-        /* Need to do multiple sanity checks before we add IP options */
-        /* 1. Confirm we're the first protocol block*/
-        if ((*ud)->pblock_end != NULL) {
-            /* 2. Cannot specify a ptag */
-            if (ptag)
-                return luaL_error(L,
-                        "ptag cannot be specified when using IPv4 options");
-            /* 3. Ensure that we do not add the IP Options after the wrong block */
-            else if ((*ud)->pblock_end->type == LIBNET_PBLOCK_ETH_H
-                    || (*ud)->pblock_end->type == LIBNET_PBLOCK_IPV4_H
-                    || (*ud)->pblock_end->type == LIBNET_PBLOCK_IPO_H)
-                return luaL_error(L, "Unsupported usage of IPv4 options");
-        }
-        ip_options_tag = libnet_build_ipv4_options((uint8_t*) options,
-                optionsz, *ud, 0);
-        check_error(L, *ud, ip_options_tag);
+    if(ptag) {
+        /* Modifying exist IPv4 packet, so find the preceeding options block (we
+         * _always_ push an options block, perhaps empty, to make this easy).
+         */
+        libnet_pblock_t* p = libnet_pblock_find(*ud, ptag);
+
+        if(!p)
+            return check_error(L, *ud, -1);
+
+        options_ptag = p->prev->ptag;
     }
+
+#ifdef NET_DUMP
+    printf("  options_ptag %d optionsz %lu\n", options_ptag, optionsz);
+#endif
+
+    options_ptag = libnet_build_ipv4_options((uint8_t*) options,
+            optionsz, *ud, options_ptag);
+
+    check_error(L, *ud, options_ptag);
 
     ptag = libnet_build_ipv4(len, tos, id, offset, ttl, protocol, cksum, src_n,
             dst_n, (uint8_t*) payload, payloadsz, *ud, ptag);
