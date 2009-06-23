@@ -8,3 +8,6 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 
 DISTCLEANFILES = *~
+
+INCLUDES = -I$(top_srcdir)/include
+
