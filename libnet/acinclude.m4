@@ -205,7 +205,7 @@ AC_DEFUN([AC_LBL_UNALIGNED_ACCESS],
     AC_CACHE_VAL(ac_cv_lbl_unaligned_fail,
         [case "$target_cpu" in
 
-        alpha|hp*|mips|sparc)
+        alpha*|arm*|bfin*|hp*|mips*|sh*|sparc*|ia64|nv1)
                 ac_cv_lbl_unaligned_fail=yes
                 ;;
 
@@ -281,68 +281,13 @@ dnl     LIBNET_LIL_ENDIAN = 1
 dnl
 
 AC_DEFUN([AC_LIBNET_ENDIAN_CHECK],
-    [AC_MSG_CHECKING(machine endianess)
-
-    cat > conftest.c << EOF
-#       include <stdio.h>
-#       include <stdlib.h>
-
-        int main()
-        {
-            union
-            {
-                short s;
-                char c[[sizeof(short)]];
-            } un;
-
-            un.s = 0x0102;
-            if (sizeof (short) == 2)
-            {
-                if (un.c [[0]] == 1 && un.c [[1]] == 2)
-                {
-                    printf("B\n");
-                }
-                else
-                {
-                    if (un.c [[0]] == 2 && un.c [[1]] == 1)
-                    {
-                        printf("L\n");
-                    }
-                }
-            }
-            else
-            {
-                printf("?\n");
-            }
-            return (EXIT_SUCCESS);
-        }
-EOF
-        ${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.c $LIBS > /dev/null 2>&1
-        # Oopz 4.3 BSD doesn't have this.  Sorry.
-        if test ! -x conftest ; then
-dnl failed to compile for some reason
-            ac_cv_libnet_endianess=unknown
-        else
-            ./conftest > conftest.out
-            result=`cat conftest.out`
-            if test $result = "B"; then
-                ac_cv_libnet_endianess=big
-            elif test $result = "L"; then
-                ac_cv_libnet_endianess=lil
-            else
-                ac_cv_libnet_endianess=unknown
-            fi                                
-        fi
-        rm -f conftest* core core.conftest
-
-        AC_MSG_RESULT($ac_cv_libnet_endianess)
-
-        if test $ac_cv_libnet_endianess = big ; then
+    [AC_C_BIGENDIAN
+	if test $ac_cv_c_bigendian = big ; then
             AC_DEFINE(LIBNET_BIG_ENDIAN, 1,
                 [We are running on a big-endian machine.])
             ENDIANESS="LIBNET_BIG_ENDIAN"
             LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DLIBNET_BIG_ENDIAN"
-        elif test $ac_cv_libnet_endianess = lil ; then
+        else
             AC_DEFINE(LIBNET_LIL_ENDIAN, 1, 
                 [We are running on a little-endian machine.])
             ENDIANESS="LIBNET_LIL_ENDIAN"
