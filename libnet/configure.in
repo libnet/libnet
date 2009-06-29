@@ -10,6 +10,7 @@ AC_INIT(libnet, 1.1.4)
 AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([include/config.h])
 AM_MAINTAINER_MODE

@@ -6,6 +6,7 @@
 .libs
 Makefile
 Makefile.in
+a.out.dSYM
 aclocal.m4
 autom4te.cache/
 config.guess
@@ -29,6 +30,7 @@ libnet/doc/html/*.css
 libnet/doc/html/*.png
 libnet/doc/html/*.gif
 libnet/doc/man/man3/*.3
+libnet/m4
 libnet/sample/arp
 libnet/sample/bgp4_hdr
 libnet/sample/bgp4_notification

@@ -4,6 +4,10 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+
+    - Auto* changes to work on OS X from git checkout.
+
+
 - 1.1.4
     
     - Patch to libnet.h.in for compilation on HURD (David Paleino)

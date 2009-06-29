@@ -8,3 +8,6 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 
 DISTCLEANFILES = *~
+
+ACLOCAL_AMFLAGS=-I m4
+
