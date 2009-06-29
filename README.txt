@@ -12,22 +12,17 @@ Contact Sam Roberts <vieuxtech@gmail.com> if you have bugs or patches to contrib
 
 Complete:
 
-- debian patches merged to v1.1.2.1-fork
-- autotools from upstream v1.1.3-RC-01 merged to v1.1.2.1-fork
-- completed ip_offset patches being merged into ip_offset-patch
-- merge to master
-- completed ip4 options fixes
-- update changelog
-- get host for release tarballs: sourceforge
-- confirm installation works
-- re-release
+...
 
 
 In progresss:
 
+- lua bindings
+
+- debian packaging
+    dpkg-buildpackage -b -us -uc -rfakeroot -i -I.svn -I.swp
+
 
 Incomplete:
 
-- lua bindings
-- debian packaging
 

@@ -5,13 +5,18 @@
 ===============================================================================
 
 
-    - Auto* changes to work on OS X from git checkout.
+- 1.1.5
 
+    - Auto* changes to work on OS X from git checkout.
+    - Update autobuild endianness and unaligned checks. (Mike Frysinger)
+    - Adjust autobuild so libnet can build out-of-tree. (Robin Getz/Mike Frysinger)
 
 - 1.1.4
-    
-    - Patch to libnet.h.in for compilation on HURD (David Paleino)
 
+    - Strip CRLF from files not in win32/ (Robert Scheck)
+    - libnet was using HAVE_CONFIG_H in a public header in order to deal with platform types.
+      https://bugzilla.redhat.com/show_bug.cgi?id=501633
+    - Patch to libnet.h.in for compilation on HURD (David Paleino)
 
 - 1.1.3
 

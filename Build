@@ -4,4 +4,5 @@ set -x
 
 make -C doc doc
 make
+make dist && mv libnet-1*.tar.gz ..
 
