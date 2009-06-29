@@ -7,6 +7,8 @@
 
 - 1.1.5
 
+    - Pointers not cleared after free could lead to double deallocation. (Stefanos Harhalakis)
+      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=534437
     - Auto* changes to work on OS X from git checkout.
     - Update autobuild endianness and unaligned checks. (Mike Frysinger)
     - Adjust autobuild so libnet can build out-of-tree. (Robin Getz/Mike Frysinger)

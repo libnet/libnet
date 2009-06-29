@@ -423,6 +423,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
 
 err:
     free(*packet);
+    *packet = NULL;
     return (-1);
 }
 

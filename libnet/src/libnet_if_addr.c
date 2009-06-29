@@ -236,11 +236,9 @@ register char *errbuf)
             al->addr = ((struct sockaddr_in *)&nifr.ifr_addr)->sin_addr.s_addr;
         }
         
-        if (al->device)
-        {
-            /* fix memory leak */
-            free(al->device);
-        }
+        free(al->device);
+        al->device = NULL;
+
         if ((al->device = strdup(device)) == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
@@ -406,6 +404,7 @@ good:
     for (i = 0; i < c; i++)
     {
         free(al[i].device);
+        al[i].device = NULL;
     }
     return (1);
 
@@ -413,6 +412,7 @@ bad:
     for (i = 0; i < c; i++)
     {
         free(al[i].device);
+        al[i].device = NULL;
     }
     return (-1);
 }
