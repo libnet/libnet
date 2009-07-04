@@ -254,6 +254,12 @@ dnl
 
 esac
 
+
+AC_ARG_ENABLE([samples],
+    [AS_HELP_STRING([--enable-samples],[install the sample programs @<:@default=no@:>@])])
+
+AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
+
 AC_OUTPUT(Makefile src/Makefile win32/Makefile \
 	include/Makefile \
 	include/libnet/Makefile include/win32/Makefile \
