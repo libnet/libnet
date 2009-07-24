@@ -8,7 +8,7 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-sample_PROGRAMS = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
+samples = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   ieee isl ntp ospf_hello ospf_lsa ping_of_death stp synflood \
                   tcp1 tcp2 udp1 udp2 synflood6 icmp6_echoreq icmp_echo_cq \
                   smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
@@ -17,9 +17,9 @@ sample_PROGRAMS = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   synflood6_frag tftp ip_link ip_raw sebek hsrp \
                   test_ipv4 test_ipv6_icmpv4 test_ipv4_options
 if INSTALL_SAMPLES
-bin_PROGRAMS = $(sample_programs)
+bin_PROGRAMS = $(samples)
 else
-noinst_PROGRAMS = $(sample_programs)
+noinst_PROGRAMS = $(samples)
 endif
 
 arp_SOURCES             = arp.c
