@@ -37,6 +37,10 @@
 #include "../include/win32/libnet.h"
 #endif
 
+#ifndef STDOUT_FILENO
+#define STDOUT_FILENO 1
+#endif
+
 static const char banner[] = "libnet version "VERSION"";
 
 void
