@@ -52,9 +52,9 @@ struct libnet_port_list_chain
 struct libnet_stats
 {
 #if (!defined(__WIN32__) || (__CYGWIN__))
-    u_int64_t packets_sent;             /* packets sent */
-    u_int64_t packet_errors;            /* packets errors */
-    u_int64_t bytes_written;            /* bytes written */
+    uint64_t packets_sent;             /* packets sent */
+    uint64_t packet_errors;            /* packets errors */
+    uint64_t bytes_written;            /* bytes written */
 #else
     __int64 packets_sent;               /* packets sent */
     __int64 packet_errors;              /* packets errors */
