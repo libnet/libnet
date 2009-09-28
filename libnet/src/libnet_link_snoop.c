@@ -50,79 +50,78 @@
 #endif
 
 
-struct libnet_link_int *
-libnet_open_link_interface(int8_t *device, int8_t *ebuf)
+/**
+ *
+ */
+int
+libnet_open_link(libnet_t *l)
 {
     int fd;
     struct sockaddr_raw sr;
     u_int v;
-    struct libnet_link_int *l;
 
-    l = (struct libnet_link_int *)malloc(sizeof(*l));
-    if (l == NULL)
-    {
-        sprintf(ebuf, "malloc: %s", strerror(errno));
-        return (NULL);
+    if (l == NULL) { 
+            return -1;
     }
-    memset(l, 0, sizeof(*l));
+
     l->fd = socket(PF_RAW, SOCK_RAW, RAWPROTO_DRAIN);
     if (l->fd < 0)
     {
-        sprintf(ebuf, "drain socket: %s", strerror(errno));
+        sprintf(l->err_buf, "drain socket: %s", strerror(errno));
         goto bad;
     }
 
     memset(&sr, 0, sizeof(sr));
     sr.sr_family = AF_RAW;
-  	strncpy(sr.sr_ifname, device, sizeof(sr.sr_ifname) - 1);
-    sr.sr_name[sizeof(sr.sr_name) - 1] = '\0';
+  	strncpy(sr.sr_ifname, l->device, sizeof(sr.sr_ifname) - 1);
+    sr.sr_ifname[sizeof(sr.sr_ifname) - 1] = '\0';
 
     if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr)))
     {
-        sprintf(ebuf, "drain bind: %s", strerror(errno));
+        sprintf(l->err_buf, "drain bind: %s", strerror(errno));
         goto bad;
     }
 
     /*
      * XXX hack - map device name to link layer type
      */
-    if (strncmp("et", device, 2) == 0      ||    /* Challenge 10 Mbit */
-	    strncmp("ec", device, 2) == 0  ||    /* Indigo/Indy 10 Mbit, O2 10/100 */
-            strncmp("ef", device, 2) == 0 ||    /* O200/2000 10/100 Mbit */
-            strncmp("gfe", device, 3) == 0 ||   /* GIO 100 Mbit */
-            strncmp("fxp", device, 3) == 0 ||   /* Challenge VME Enet */
-            strncmp("ep", device, 2) == 0 ||    /* Challenge 8x10 Mbit EPLEX */
-            strncmp("vfe", device, 3) == 0 ||   /* Challenge VME 100Mbit */
-            strncmp("fa", device, 2) == 0 ||
-            strncmp("qaa", device, 3) == 0)
+    if (strncmp("et", l->device, 2) == 0      ||    /* Challenge 10 Mbit */
+	    strncmp("ec", l->device, 2) == 0  ||    /* Indigo/Indy 10 Mbit, O2 10/100 */
+            strncmp("ef", l->device, 2) == 0 ||    /* O200/2000 10/100 Mbit */
+            strncmp("gfe", l->device, 3) == 0 ||   /* GIO 100 Mbit */
+            strncmp("fxp", l->device, 3) == 0 ||   /* Challenge VME Enet */
+            strncmp("ep", l->device, 2) == 0 ||    /* Challenge 8x10 Mbit EPLEX */
+            strncmp("vfe", l->device, 3) == 0 ||   /* Challenge VME 100Mbit */
+            strncmp("fa", l->device, 2) == 0 ||
+            strncmp("qaa", l->device, 3) == 0)
     {
-        l->linktype = DLT_EN10MB;
+        l->link_type = DLT_EN10MB;
     }
-    else if (strncmp("ipg", device, 3) == 0 ||
-            strncmp("rns", device, 3) == 0 ||	/* O2/200/2000 FDDI */
-            strncmp("xpi", device, 3) == 0)
+    else if (strncmp("ipg", l->device, 3) == 0 ||
+            strncmp("rns", l->device, 3) == 0 ||	/* O2/200/2000 FDDI */
+            strncmp("xpi", l->device, 3) == 0)
         {
-            l->linktype = DLT_FDDI;
+            l->link_type = DLT_FDDI;
 	}
-    else if (strncmp("ppp", device, 3) == 0) {
-		l->linktype = DLT_RAW;
-	} else if (strncmp("lo", device, 2) == 0) {
-		l->linktype = DLT_NULL;
+    else if (strncmp("ppp", l->device, 3) == 0) {
+		l->link_type = DLT_RAW;
+	} else if (strncmp("lo", l->device, 2) == 0) {
+		l->link_type = DLT_NULL;
 	} else {
-		sprintf(ebuf, "drain: unknown physical layer type");
+		sprintf(l->err_buf, "drain: unknown physical layer type");
 		goto bad;
 	}
 
-	return (l);
+	return 1;
  bad:
 	close(fd);
 	free(l);
-	return (NULL);
+	return -1;
 }
 
 
 int
-libnet_close_link_interface(struct libnet_link_int *l)
+libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {
@@ -138,15 +137,14 @@ libnet_close_link_interface(struct libnet_link_int *l)
 
 
 int
-libnet_write_link_layer(struct libnet_link_int *l, const int8_t *device,
-            u_int8_t *buf, int len)
+libnet_write_link(libnet_t *l, u_int8_t *buf, u_int32_t len)
 {
     int c;
     struct ifreq ifr;
     struct ether_header *eh = (struct ether_header *)buf;
   
     memset(&ifr, 0, sizeof(ifr));
-    strncpy(ifr.ifr_name, device, sizeof(ifr.ifr_name));
+    strncpy(ifr.ifr_name, l->device, sizeof(ifr.ifr_name));
   
     if (ioctl(l->fd, SIOCGIFADDR, &ifr) == -1)
     {
@@ -163,4 +161,39 @@ libnet_write_link_layer(struct libnet_link_int *l, const int8_t *device,
     }
 
     return (len);
+}
+
+struct libnet_ether_addr *
+libnet_get_hwaddr(libnet_t *l)
+{
+        FILE *f = 0;
+        struct libnet_ether_addr *ret = 0;
+        /*
+         *  XXX - non-re-entrant!
+         */
+        static struct libnet_ether_addr ea;
+        int buf[6]; /* memory alignment stuff */
+        int c;
+
+        if (!(f = popen("/etc/nvram eaddr", "r"))) {
+                sprintf(l->err_buf, "/etc/nvram: unable to execute");
+                goto out;
+        }
+        if (6 != fscanf(f, "%x:%x:%x:%x:%x:%x",
+                        &buf[0],
+                        &buf[1],
+                        &buf[2],
+                        &buf[3],
+                        &buf[4],
+                        &buf[5])) {
+                sprintf(l->err_buf, "output of nvram eaddr not MAC address");
+                goto out;
+        }
+        for(c = 0; c < 6; c++) {
+                ea.ether_addr_octet[c] = buf[c];
+        }
+        ret = &ea;
+ out:
+        fclose(f);
+        return ret;
 }
