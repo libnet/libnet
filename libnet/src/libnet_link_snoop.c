@@ -194,6 +194,8 @@ libnet_get_hwaddr(libnet_t *l)
         }
         ret = &ea;
  out:
-        fclose(f);
+        if (f) {
+                fclose(f);
+        }
         return ret;
 }
