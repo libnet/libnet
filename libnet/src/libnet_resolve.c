@@ -39,6 +39,14 @@
 #include "../include/win32/libnet.h"
 #endif
 
+#ifndef HAVE_GETHOSTBYNAME2
+static struct hostent *
+gethostbyname2(const char *name, int af)
+{
+        return gethostbyname(name);
+}
+#endif
+
 char *
 libnet_addr2name4(u_int32_t in, u_int8_t use_name)
 {
