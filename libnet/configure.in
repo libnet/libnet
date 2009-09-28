@@ -25,6 +25,10 @@ dnl AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
 AC_CHECK_HEADERS(sys/sockio.h)
+AC_CHECK_FUNCS([gethostbyname2])
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
 
 dnl
 dnl And some custom things
