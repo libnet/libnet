@@ -18,7 +18,8 @@ config.sub
 configure
 install-sh
 libnet-config
-libnet-1.1.*
+libnet-1.1.?
+libnet-1.1.?.tar.gz
 libnet.h
 libtool
 ltmain.sh
