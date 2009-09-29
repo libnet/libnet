@@ -8,7 +8,7 @@
  *  All rights reserved.
  *
  * Copyright (c) 1993, 1994, 1995, 1996, 1997
- *	The Regents of the University of California.  All rights reserved.
+ * The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that: (1) source code distributions
@@ -61,23 +61,22 @@ libnet_open_link(libnet_t *l)
     u_int v;
 
     if (l == NULL) { 
-            return -1;
+        return -1;
     }
 
     l->fd = socket(PF_RAW, SOCK_RAW, RAWPROTO_DRAIN);
-    if (l->fd < 0)
-    {
+
+    if (l->fd < 0) {
         sprintf(l->err_buf, "drain socket: %s", strerror(errno));
         goto bad;
     }
 
     memset(&sr, 0, sizeof(sr));
     sr.sr_family = AF_RAW;
-  	strncpy(sr.sr_ifname, l->device, sizeof(sr.sr_ifname) - 1);
+    strncpy(sr.sr_ifname, l->device, sizeof(sr.sr_ifname) - 1);
     sr.sr_ifname[sizeof(sr.sr_ifname) - 1] = '\0';
 
-    if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr)))
-    {
+    if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr))) {
         sprintf(l->err_buf, "drain bind: %s", strerror(errno));
         goto bad;
     }
@@ -85,38 +84,36 @@ libnet_open_link(libnet_t *l)
     /*
      * XXX hack - map device name to link layer type
      */
-    if (strncmp("et", l->device, 2) == 0      ||    /* Challenge 10 Mbit */
-	    strncmp("ec", l->device, 2) == 0  ||    /* Indigo/Indy 10 Mbit, O2 10/100 */
-            strncmp("ef", l->device, 2) == 0 ||    /* O200/2000 10/100 Mbit */
+    if (strncmp("et", l->device, 2) == 0      ||   /* Challenge 10 Mbit */
+            strncmp("ec", l->device, 2) == 0  ||   /* Indigo/Indy 10 Mbit, O2 10/100 */
+            strncmp("ef", l->device, 2) == 0  ||   /* O200/2000 10/100 Mbit */
             strncmp("gfe", l->device, 3) == 0 ||   /* GIO 100 Mbit */
             strncmp("fxp", l->device, 3) == 0 ||   /* Challenge VME Enet */
-            strncmp("ep", l->device, 2) == 0 ||    /* Challenge 8x10 Mbit EPLEX */
+            strncmp("ep", l->device, 2) == 0  ||   /* Challenge 8x10 Mbit EPLEX */
             strncmp("vfe", l->device, 3) == 0 ||   /* Challenge VME 100Mbit */
-            strncmp("fa", l->device, 2) == 0 ||
-            strncmp("qaa", l->device, 3) == 0)
-    {
+            strncmp("fa", l->device, 2) == 0  ||
+            strncmp("qaa", l->device, 3) == 0) {
         l->link_type = DLT_EN10MB;
     }
     else if (strncmp("ipg", l->device, 3) == 0 ||
-            strncmp("rns", l->device, 3) == 0 ||	/* O2/200/2000 FDDI */
-            strncmp("xpi", l->device, 3) == 0)
-        {
-            l->link_type = DLT_FDDI;
-	}
+            strncmp("rns", l->device, 3) == 0 ||        /* O2/200/2000 FDDI */
+            strncmp("xpi", l->device, 3) == 0) {
+        l->link_type = DLT_FDDI;
+    }
     else if (strncmp("ppp", l->device, 3) == 0) {
-		l->link_type = DLT_RAW;
-	} else if (strncmp("lo", l->device, 2) == 0) {
-		l->link_type = DLT_NULL;
-	} else {
-		sprintf(l->err_buf, "drain: unknown physical layer type");
-		goto bad;
-	}
+        l->link_type = DLT_RAW;
+    } else if (strncmp("lo", l->device, 2) == 0) {
+        l->link_type = DLT_NULL;
+    } else {
+        sprintf(l->err_buf, "drain: unknown physical layer type");
+        goto bad;
+    }
 
-	return 1;
- bad:
-	close(fd);
-	free(l);
-	return -1;
+    return 1;
+bad:
+    close(fd);
+    free(l);
+    return -1;
 }
 
 
@@ -142,18 +139,18 @@ libnet_write_link(libnet_t *l, u_int8_t *buf, u_int32_t len)
     int c;
     struct ifreq ifr;
     struct ether_header *eh = (struct ether_header *)buf;
-  
+
     memset(&ifr, 0, sizeof(ifr));
     strncpy(ifr.ifr_name, l->device, sizeof(ifr.ifr_name));
-  
+
     if (ioctl(l->fd, SIOCGIFADDR, &ifr) == -1)
     {
         perror("ioctl SIOCGIFADDR");
         return (-1);
     }
-  
+
     memcpy(eh->ether_shost, ifr.ifr_addr.sa_data, sizeof(eh->ether_shost));
-  
+
     if (write(l->fd, buf, len) == -1)
     {
         /* err */
@@ -166,36 +163,36 @@ libnet_write_link(libnet_t *l, u_int8_t *buf, u_int32_t len)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-        FILE *f = 0;
-        struct libnet_ether_addr *ret = 0;
-        /*
-         *  XXX - non-re-entrant!
-         */
-        static struct libnet_ether_addr ea;
-        int buf[6]; /* memory alignment stuff */
-        int c;
+    FILE *f = 0;
+    struct libnet_ether_addr *ret = 0;
+    /*
+     *  XXX - non-re-entrant!
+     */
+    static struct libnet_ether_addr ea;
+    int buf[6]; /* memory alignment stuff */
+    int c;
 
-        if (!(f = popen("/etc/nvram eaddr", "r"))) {
-                sprintf(l->err_buf, "/etc/nvram: unable to execute");
-                goto out;
-        }
-        if (6 != fscanf(f, "%x:%x:%x:%x:%x:%x",
-                        &buf[0],
-                        &buf[1],
-                        &buf[2],
-                        &buf[3],
-                        &buf[4],
-                        &buf[5])) {
-                sprintf(l->err_buf, "output of nvram eaddr not MAC address");
-                goto out;
-        }
-        for(c = 0; c < 6; c++) {
-                ea.ether_addr_octet[c] = buf[c];
-        }
-        ret = &ea;
- out:
-        if (f) {
-                fclose(f);
-        }
-        return ret;
+    if (!(f = popen("/etc/nvram eaddr", "r"))) {
+        sprintf(l->err_buf, "/etc/nvram: unable to execute");
+        goto out;
+    }
+    if (6 != fscanf(f, "%x:%x:%x:%x:%x:%x",
+                &buf[0],
+                &buf[1],
+                &buf[2],
+                &buf[3],
+                &buf[4],
+                &buf[5])) {
+        sprintf(l->err_buf, "output of nvram eaddr not MAC address");
+        goto out;
+    }
+    for(c = 0; c < 6; c++) {
+        ea.ether_addr_octet[c] = buf[c];
+    }
+    ret = &ea;
+out:
+    if (f) {
+        fclose(f);
+    }
+    return ret;
 }
