@@ -4,13 +4,16 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
-
 - 1.1.5
 
+    - Fixed snoop-based backend. Works on IRIX. (Thomas Habets)
+    - Use uint64_t, not u_int64_t. (Thomas Habets, Sam Roberts)
+    - Define a gethostbyname2() if it's not defined. (Thomas Habets)
+    - Define STDOUT_FILENO if it's not defined. (Thomas Habets)
     - Configure switch to install samples (Mike Frysinger)
     - Pointers not cleared after free could lead to double deallocation. (Stefanos Harhalakis)
       http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=534437
-    - Auto* changes to work on OS X from git checkout.
+    - Auto* changes to work on OS X from git checkout. (Sam Roberts)
     - Update autobuild endianness and unaligned checks. (Mike Frysinger)
     - Adjust autobuild so libnet can build out-of-tree. (Robin Getz/Mike Frysinger)
 
