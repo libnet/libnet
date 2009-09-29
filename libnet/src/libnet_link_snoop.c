@@ -122,12 +122,10 @@ libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {
-        free(l);
         return (1);
     }
     else
     {
-        free(l);
         return (-1);
     }
 }
