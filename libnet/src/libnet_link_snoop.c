@@ -190,7 +190,13 @@ libnet_get_hwaddr(libnet_t *l)
     ret = &ea;
 out:
     if (f) {
-        fclose(f);
+        pclose(f);
     }
     return ret;
 }
+/* ---- Emacs Variables ----
+ * Local Variables:
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
