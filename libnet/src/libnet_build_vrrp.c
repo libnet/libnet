@@ -40,12 +40,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_vrrp(u_int8_t version, u_int8_t type, u_int8_t vrouter_id, 
-u_int8_t priority, u_int8_t ip_count, u_int8_t auth_type, u_int8_t advert_int,
-u_int16_t sum, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_vrrp(uint8_t version, uint8_t type, uint8_t vrouter_id, 
+uint8_t priority, uint8_t ip_count, uint8_t auth_type, uint8_t advert_int,
+uint16_t sum, uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_vrrp_hdr vrrp_hdr;
 
@@ -77,7 +77,7 @@ libnet_ptag_t ptag)
     vrrp_hdr.vrrp_advert_int = advert_int;
     vrrp_hdr.vrrp_sum        = (sum ? htons(sum) : 0);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&vrrp_hdr, LIBNET_VRRP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&vrrp_hdr, LIBNET_VRRP_H);
     if (n == -1)
     {
         goto bad;

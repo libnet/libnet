@@ -42,11 +42,11 @@
 
 /* TODO len - should be calculated if zero */
 libnet_ptag_t
-libnet_build_ipv4(u_int16_t ip_len, u_int8_t tos, u_int16_t id, u_int16_t frag,
-u_int8_t ttl, u_int8_t prot, u_int16_t sum, u_int32_t src, u_int32_t dst,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
+uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n = LIBNET_IPV4_H; /* size of memory block */
+    uint32_t n = LIBNET_IPV4_H; /* size of memory block */
     libnet_pblock_t *p, *p_data, *p_temp;
     struct libnet_ipv4_hdr ip_hdr;
     libnet_ptag_t ptag_data = 0; /* used if there is ipv4 payload */
@@ -97,7 +97,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ip_hdr.ip_src.s_addr = src;                       /* source ip */
     ip_hdr.ip_dst.s_addr = dst;                       /* destination ip */
     
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ip_hdr, LIBNET_IPV4_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H);
     if (n == -1)
     {
         goto bad;
@@ -248,10 +248,10 @@ bad:
 }
 
 libnet_ptag_t
-libnet_autobuild_ipv4(u_int16_t len, u_int8_t prot, u_int32_t dst, libnet_t *l)
+libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
 {
-    u_int32_t n, i, j, src;
-    u_int16_t h;
+    uint32_t n, i, j, src;
+    uint16_t h;
     libnet_pblock_t *p;
     libnet_ptag_t ptag;
     struct libnet_ipv4_hdr ip_hdr;
@@ -311,7 +311,7 @@ libnet_autobuild_ipv4(u_int16_t len, u_int8_t prot, u_int32_t dst, libnet_t *l)
     ip_hdr.ip_src.s_addr = src;                       /* source ip */
     ip_hdr.ip_dst.s_addr = dst;                       /* destination ip */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ip_hdr, LIBNET_IPV4_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H);
     if (n == -1)
     {
         goto bad;
@@ -333,11 +333,11 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv4_options(u_int8_t *options, u_int32_t options_s, libnet_t *l, 
+libnet_build_ipv4_options(uint8_t *options, uint32_t options_s, libnet_t *l, 
 libnet_ptag_t ptag)
 {
     int options_size_increase = 0; /* increase will be negative if it's a decrease */
-    u_int32_t n, adj_size;
+    uint32_t n, adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
 
@@ -397,7 +397,7 @@ libnet_ptag_t ptag)
     }
 
     /* append padding */
-    n = libnet_pblock_append(l, p, (u_int8_t*)"\0\0\0", adj_size - options_s);
+    n = libnet_pblock_append(l, p, (uint8_t*)"\0\0\0", adj_size - options_s);
     if (n == -1)
     {
         goto bad;
@@ -429,11 +429,11 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6(u_int8_t tc, u_int32_t fl, u_int16_t len, u_int8_t nh,
-u_int8_t hl, struct libnet_in6_addr src, struct libnet_in6_addr dst, 
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ipv6(uint8_t tc, uint32_t fl, uint16_t len, uint8_t nh,
+uint8_t hl, struct libnet_in6_addr src, struct libnet_in6_addr dst, 
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {   
-    u_int32_t n;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_ipv6_hdr ip_hdr;
 
@@ -472,7 +472,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ip_hdr.ip_src      = src;
     ip_hdr.ip_dst      = dst;
      
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ip_hdr, LIBNET_IPV6_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV6_H);
     if (n == -1)
     {
         goto bad;
@@ -495,12 +495,12 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_frag(u_int8_t nh, u_int8_t reserved, u_int16_t frag,
-u_int32_t id, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_ipv6_frag(uint8_t nh, uint8_t reserved, uint16_t frag,
+uint32_t id, uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n;
-    u_int16_t h;
+    uint32_t n;
+    uint16_t h;
     libnet_pblock_t *p;
     struct libnet_ipv6_frag_hdr ipv6_frag_hdr;
 
@@ -538,7 +538,7 @@ libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ipv6_frag_hdr,
+    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_frag_hdr,
         LIBNET_IPV6_FRAG_H);
     if (n == -1)
     {
@@ -561,12 +561,12 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_routing(u_int8_t nh, u_int8_t len, u_int8_t rtype, 
-u_int8_t segments, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_ipv6_routing(uint8_t nh, uint8_t len, uint8_t rtype, 
+uint8_t segments, uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n;
-    u_int16_t h;
+    uint32_t n;
+    uint16_t h;
     libnet_pblock_t *p;
     struct libnet_ipv6_routing_hdr ipv6_routing_hdr;
 
@@ -607,7 +607,7 @@ libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ipv6_routing_hdr,
+    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_routing_hdr,
         LIBNET_IPV6_ROUTING_H);
     if (n == -1)
     {
@@ -630,11 +630,11 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_destopts(u_int8_t nh, u_int8_t len, u_int8_t *payload,
-u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ipv6_destopts(uint8_t nh, uint8_t len, uint8_t *payload,
+uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n;
-    u_int16_t h;
+    uint32_t n;
+    uint16_t h;
     libnet_pblock_t *p;
     struct libnet_ipv6_destopts_hdr ipv6_destopts_hdr;
 
@@ -673,7 +673,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ipv6_destopts_hdr,
+    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_destopts_hdr,
         LIBNET_IPV6_DESTOPTS_H);
     if (n == -1)
     {
@@ -696,11 +696,11 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_hbhopts(u_int8_t nh, u_int8_t len, u_int8_t *payload,
-u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, uint8_t *payload,
+uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n;
-    u_int16_t h;
+    uint32_t n;
+    uint16_t h;
     libnet_pblock_t *p;
     struct libnet_ipv6_hbhopts_hdr ipv6_hbhopts_hdr;
 
@@ -739,7 +739,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ipv6_hbhopts_hdr,
+    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_hbhopts_hdr,
         LIBNET_IPV6_HBHOPTS_H);
     if (n == -1)
     {
@@ -762,7 +762,7 @@ bad:
 }
 
 libnet_ptag_t
-libnet_autobuild_ipv6(u_int16_t len, u_int8_t nh, struct libnet_in6_addr dst,
+libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
             libnet_t *l, libnet_ptag_t ptag)
 {
 

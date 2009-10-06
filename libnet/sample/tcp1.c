@@ -125,7 +125,7 @@ main(int argc, char *argv[])
     }
 
     t = libnet_build_tcp_options(
-        (u_int8_t*)"\003\003\012\001\002\004\001\011\010\012\077\077\077\077\000\000\000\000\000\000",
+        (uint8_t*)"\003\003\012\001\002\004\001\011\010\012\077\077\077\077\000\000\000\000\000\000",
         20,
         l,
         0);
@@ -145,7 +145,7 @@ main(int argc, char *argv[])
         0,                                          /* checksum */
         10,                                          /* urgent pointer */
         LIBNET_TCP_H + 20 + payload_s,              /* TCP packet size */
-	(u_int8_t*)payload,                         /* payload */
+	(uint8_t*)payload,                         /* payload */
         payload_s,                                  /* payload size */
         l,                                          /* libnet handle */
         0);                                         /* libnet id */

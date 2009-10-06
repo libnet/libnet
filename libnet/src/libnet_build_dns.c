@@ -41,14 +41,14 @@
 
 
 libnet_ptag_t
-libnet_build_dnsv4(u_int16_t h_len, u_int16_t id, u_int16_t flags,
-            u_int16_t num_q, u_int16_t num_anws_rr, u_int16_t num_auth_rr,
-            u_int16_t num_addi_rr, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
+            uint16_t num_q, uint16_t num_anws_rr, uint16_t num_auth_rr,
+            uint16_t num_addi_rr, uint8_t *payload, uint32_t payload_s,
             libnet_t *l, libnet_ptag_t ptag)
 {
 
-    u_int32_t n, h;
-    u_int offset;
+    uint32_t n, h;
+    uint offset;
     libnet_pblock_t *p;
     struct libnet_dnsv4_hdr dns_hdr;
 
@@ -98,7 +98,7 @@ libnet_build_dnsv4(u_int16_t h_len, u_int16_t id, u_int16_t flags,
      * but not in UDP packets. As they are the first 2 bytes of the header,
      * they are skipped if the packet is UDP...
      */
-    n = libnet_pblock_append(l, p, ((u_int8_t *)&dns_hdr) + offset, h_len);
+    n = libnet_pblock_append(l, p, ((uint8_t *)&dns_hdr) + offset, h_len);
     if (n == -1)
     {
         goto bad;

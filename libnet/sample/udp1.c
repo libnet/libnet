@@ -134,7 +134,7 @@ main(int argc, char *argv[])
             dst_prt + i,                            /* destination port */
             LIBNET_UDP_H + payload_s,               /* packet length */
             0,                                      /* checksum */
-            (u_int8_t*)payload,                     /* payload */
+            (uint8_t*)payload,                     /* payload */
             payload_s,                              /* payload size */
             l,                                      /* libnet handle */
             udp);                                   /* libnet id */

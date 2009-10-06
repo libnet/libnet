@@ -51,7 +51,7 @@ static libnet_cqd_t l_cqd = {0, CQ_LOCK_UNLOCKED, NULL};
 
 
 static int
-set_cq_lock(u_int x) 
+set_cq_lock(uint x) 
 {
     if (check_cq_lock(x))
     {
@@ -63,7 +63,7 @@ set_cq_lock(u_int x)
 }
 
 static int
-clear_cq_lock(u_int x) 
+clear_cq_lock(uint x) 
 {
     if (!check_cq_lock(x))
     {
@@ -390,13 +390,13 @@ libnet_cq_next()
     return (l_cqd.current ? l_cqd.current->context : NULL);
 }
 
-u_int32_t
+uint32_t
 libnet_cq_size()
 {
     return (l_cqd.node);
 }
 
-u_int32_t
+uint32_t
 libnet_cq_end_loop()
 {
     if (! clear_cq_lock(CQ_LOCK_WRITE))

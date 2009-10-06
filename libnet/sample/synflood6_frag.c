@@ -56,7 +56,7 @@ main(int argc, char **argv)
     char errbuf[LIBNET_ERRBUF_SIZE];
     int i, j, c, packet_amt, burst_int, burst_amt;
     char srcname[100], dstname[100];
-    u_int8_t payload[56];
+    uint8_t payload[56];
 
     packet_amt  = 0;
     burst_int   = 0;

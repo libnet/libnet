@@ -95,10 +95,10 @@ libnet_open_link(libnet_t *l)
 {
     struct ifreq ifr;
     struct bpf_version bv;
-    u_int v;
+    uint v;
 
 #if defined(BIOCGHDRCMPLT) && defined(BIOCSHDRCMPLT) && !(__APPLE__)
-    u_int spoof_eth_src = 1;
+    uint spoof_eth_src = 1;
 #endif
 
     if (l == NULL)
@@ -232,7 +232,7 @@ libnet_close_link(libnet_t *l)
 
 
 int
-libnet_write_link(libnet_t *l, u_int8_t *packet, u_int32_t size)
+libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
 {
     int c;
 

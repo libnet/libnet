@@ -41,11 +41,11 @@
 #endif
 
 libnet_ptag_t
-libnet_build_link(u_int8_t *dst, u_int8_t *src, u_int8_t *oui, u_int16_t type,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_link(uint8_t *dst, uint8_t *src, uint8_t *oui, uint16_t type,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
 {
-    u_int8_t org[3] = {0x00, 0x00, 0x00};
+    uint8_t org[3] = {0x00, 0x00, 0x00};
     switch (l->link_type)
     {
         /* add FDDI */
@@ -66,9 +66,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 }
 
 libnet_ptag_t
-libnet_autobuild_link(u_int8_t *dst, u_int8_t *oui, u_int16_t type, libnet_t *l)
+libnet_autobuild_link(uint8_t *dst, uint8_t *oui, uint16_t type, libnet_t *l)
 {
-	u_int8_t org[3] = {0x00, 0x00, 0x00};
+	uint8_t org[3] = {0x00, 0x00, 0x00};
     switch (l->link_type)
     {
        /* add FDDI */

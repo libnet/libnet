@@ -40,12 +40,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_isl(u_int8_t *dhost, u_int8_t type, u_int8_t user,
-u_int8_t *shost, u_int16_t len, u_int8_t *snap, u_int16_t vid,
-u_int16_t portindex, u_int16_t reserved, u_int8_t *payload,
-u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_isl(uint8_t *dhost, uint8_t type, uint8_t user,
+uint8_t *shost, uint16_t len, uint8_t *snap, uint16_t vid,
+uint16_t portindex, uint16_t reserved, uint8_t *payload,
+uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_isl_hdr isl_hdr;
 
@@ -78,7 +78,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     isl_hdr.isl_index   = htons(portindex);
     isl_hdr.isl_reserved= htons(reserved);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&isl_hdr, LIBNET_ISL_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&isl_hdr, LIBNET_ISL_H);
     if (n == -1)
     {
         goto bad;

@@ -40,11 +40,11 @@
 #endif
 
 libnet_ptag_t
-libnet_build_mpls(u_int32_t label, u_int8_t experimental, u_int8_t bos, 
-u_int8_t ttl, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_mpls(uint32_t label, uint8_t experimental, uint8_t bos, 
+uint8_t ttl, uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_mpls_hdr mpls_hdr;
 
@@ -72,7 +72,7 @@ libnet_ptag_t ptag)
                               ((bos & 0x01)          <<  8) |
                               ((ttl & 0xff))));
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&mpls_hdr, LIBNET_MPLS_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&mpls_hdr, LIBNET_MPLS_H);
     if (n == -1)
     {
         goto bad;
