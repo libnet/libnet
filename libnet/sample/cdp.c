@@ -54,8 +54,8 @@ main(int argc, char *argv[])
     u_char values[100];
     u_short tmp;
     char errbuf[LIBNET_ERRBUF_SIZE];
-    u_int8_t oui[3] = { 0x00, 0x00, 0x0c };
-    u_int8_t cdp_mac[6] = {0x01, 0x0, 0xc, 0xcc, 0xcc, 0xcc};
+    uint8_t oui[3] = { 0x00, 0x00, 0x0c };
+    uint8_t cdp_mac[6] = {0x01, 0x0, 0xc, 0xcc, 0xcc, 0xcc};
 
     if (argc != 3)
     {
@@ -127,7 +127,7 @@ main(int argc, char *argv[])
     /* build 802.3 header */ 
     t = libnet_build_802_3(
             cdp_mac,                           /* ethernet destination */
-            (u_int8_t *)libnet_get_hwaddr(l),  /* ethernet source */
+            (uint8_t *)libnet_get_hwaddr(l),  /* ethernet source */
             LIBNET_802_2_H + LIBNET_802_2SNAP_H + LIBNET_CDP_H,   /* packet len */
             NULL,                              /* payload */
             0,                                 /* payload size */

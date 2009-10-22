@@ -141,7 +141,7 @@ if ((payload && !payload_s) || (!payload && payload_s))                      \
 if (payload && payload_s)                                                    \
 {                                                                            \
     n = libnet_pblock_append(l, p, payload, payload_s);                      \
-    if (n == (u_int32_t) - 1)                                                \
+    if (n == (uint32_t) - 1)                                                \
     {                                                                        \
         goto bad;                                                            \
     }                                                                        \
@@ -154,13 +154,13 @@ if (payload && payload_s)                                                    \
 
 /* used interally for OSPF stuff */
 #define LIBNET_OSPF_AUTHCPY(x, y) \
-    memcpy((u_int8_t *)x, (u_int8_t *)y, sizeof(y))
+    memcpy((uint8_t *)x, (uint8_t *)y, sizeof(y))
 #define LIBNET_OSPF_CKSUMBUF(x, y) \
-    memcpy((u_int8_t *)x, (u_int8_t *)y, sizeof(y))  
+    memcpy((uint8_t *)x, (uint8_t *)y, sizeof(y))  
 
 /* used internally for NTP leap indicator, version, and mode */
 #define LIBNET_NTP_DO_LI_VN_MODE(li, vn, md) \
-    ((u_int8_t)((((li) << 6) & 0xc0) | (((vn) << 3) & 0x38) | ((md) & 0x7)))
+    ((uint8_t)((((li) << 6) & 0xc0) | (((vn) << 3) & 0x38) | ((md) & 0x7)))
 
 /* Not all systems have IFF_LOOPBACK */
 #ifdef IFF_LOOPBACK

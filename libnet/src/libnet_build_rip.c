@@ -40,12 +40,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_rip(u_int8_t cmd, u_int8_t version, u_int16_t rd, u_int16_t af,
-u_int16_t rt, u_int32_t addr, u_int32_t mask, u_int32_t next_hop,
-u_int32_t metric, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_rip(uint8_t cmd, uint8_t version, uint16_t rd, uint16_t af,
+uint16_t rt, uint32_t addr, uint32_t mask, uint32_t next_hop,
+uint32_t metric, uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_rip_hdr rip_hdr;
 
@@ -78,7 +78,7 @@ libnet_ptag_t ptag)
     rip_hdr.rip_next_hop = htonl(next_hop);
     rip_hdr.rip_metric   = htonl(metric);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&rip_hdr, LIBNET_RIP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&rip_hdr, LIBNET_RIP_H);
     if (n == -1)
     {
         goto bad;

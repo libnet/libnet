@@ -128,7 +128,7 @@ main(int argc, char **argv)
         0,                                          /* checksum */
         10,                                         /* urgent pointer */
         LIBNET_TCP_H + payload_s,                   /* TCP packet size */
-        (u_int8_t*)payload,                         /* payload */
+        (uint8_t*)payload,                         /* payload */
         payload_s,                                  /* payload size */
         l,                                          /* libnet handle */
         0);                                         /* libnet id */

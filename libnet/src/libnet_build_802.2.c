@@ -40,10 +40,10 @@
 #endif
 
 libnet_ptag_t
-libnet_build_802_2(u_int8_t dsap, u_int8_t ssap, u_int8_t control, 
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_802_2(uint8_t dsap, uint8_t ssap, uint8_t control, 
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_802_2_hdr _802_2_hdr;
 
@@ -70,8 +70,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     _802_2_hdr.llc_ssap = ssap;
     _802_2_hdr.llc_control = control;
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&_802_2_hdr, LIBNET_802_2_H);
-    if (n == (u_int32_t)-1)
+    n = libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2_H);
+    if (n == (uint32_t)-1)
     {
         goto bad;
     }
@@ -87,11 +87,11 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_802_2snap(u_int8_t dsap, u_int8_t ssap, u_int8_t control,
-u_int8_t *oui, u_int16_t type, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_802_2snap(uint8_t dsap, uint8_t ssap, uint8_t control,
+uint8_t *oui, uint16_t type, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_802_2snap_hdr _802_2_hdr;
 
@@ -120,7 +120,7 @@ libnet_t *l, libnet_ptag_t ptag)
     memcpy(_802_2_hdr.snap_oui, oui, 3);
     _802_2_hdr.snap_type = htons(type);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&_802_2_hdr, LIBNET_802_2SNAP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2SNAP_H);
     if (n == -1)
     {
         goto bad;

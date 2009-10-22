@@ -58,7 +58,7 @@ libnet_open_link(libnet_t *l)
 {
     int fd;
     struct sockaddr_raw sr;
-    u_int v;
+    uint v;
 
     if (l == NULL) { 
         return -1;
@@ -132,7 +132,7 @@ libnet_close_link(libnet_t *l)
 
 
 int
-libnet_write_link(libnet_t *l, u_int8_t *buf, u_int32_t len)
+libnet_write_link(libnet_t *l, uint8_t *buf, uint32_t len)
 {
     int c;
     struct ifreq ifr;

@@ -41,19 +41,19 @@
 
 /* FIXME - unit test these - 0 is debian's version, else is -RC1's */
 int
-libnet_in_cksum(u_int16_t *addr, int len)
+libnet_in_cksum(uint16_t *addr, int len)
 {
     int sum;
 #if 0
-    u_int16_t last_byte;
+    uint16_t last_byte;
 
     sum = 0;
     last_byte = 0;
 #else
     union
     {
-        u_int16_t s;
-        u_int8_t b[2];
+        uint16_t s;
+        uint8_t b[2];
     }pad;
 
     sum = 0;
@@ -67,12 +67,12 @@ libnet_in_cksum(u_int16_t *addr, int len)
 #if 0
     if (len == 1)
     {
-        *(u_int8_t *)&last_byte = *(u_int8_t *)addr;
+        *(uint8_t *)&last_byte = *(uint8_t *)addr;
         sum += last_byte;
 #else
     if (len == 1)
     {
-        pad.b[0] = *(u_int8_t *)addr;
+        pad.b[0] = *(uint8_t *)addr;
         pad.b[1] = 0;
         sum += pad.s;
 #endif
@@ -120,7 +120,7 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
 
 
 int
-libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
+libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
 {
     /* will need to update this for ipv6 at some point */
     struct libnet_ipv4_hdr *iph_p;
@@ -192,14 +192,14 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
             tcph_p->th_sum = 0;
             if (is_ipv6)
             {
-                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
             }
             else
             {
-                sum = libnet_in_cksum((u_int16_t *)&iph_p->ip_src, 8);
+                sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
             sum += ntohs(IPPROTO_TCP + len);
-            sum += libnet_in_cksum((u_int16_t *)tcph_p, len);
+            sum += libnet_in_cksum((uint16_t *)tcph_p, len);
             tcph_p->th_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -210,14 +210,14 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
             udph_p->uh_sum = 0;
             if (is_ipv6)
             {
-                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
             }
             else
             {
-                sum = libnet_in_cksum((u_int16_t *)&iph_p->ip_src, 8);
+                sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
             sum += ntohs(IPPROTO_UDP + len);
-            sum += libnet_in_cksum((u_int16_t *)udph_p, len);
+            sum += libnet_in_cksum((uint16_t *)udph_p, len);
             udph_p->uh_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -229,10 +229,10 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
             icmph_p->icmp_sum = 0;
             if (is_ipv6)
             {
-                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
                 sum += ntohs(IPPROTO_ICMP6 + len);
             }
-            sum += libnet_in_cksum((u_int16_t *)icmph_p, len);
+            sum += libnet_in_cksum((uint16_t *)icmph_p, len);
             icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -242,7 +242,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 (struct libnet_igmp_hdr *)(buf + ip_hl);
 
             igmph_p->igmp_sum = 0;
-            sum = libnet_in_cksum((u_int16_t *)igmph_p, len);
+            sum = libnet_in_cksum((uint16_t *)igmph_p, len);
             igmph_p->igmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -253,7 +253,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
              */
 	    struct libnet_gre_hdr *greh_p = 
 		(struct libnet_gre_hdr *)(buf + ip_hl);
-	    u_int16_t fv = ntohs(greh_p->flags_ver);
+	    uint16_t fv = ntohs(greh_p->flags_ver);
 	    if (!(fv & (GRE_CSUM|GRE_ROUTING | GRE_VERSION_0)) ||
                 !(fv & (GRE_CSUM|GRE_VERSION_1)))
 	    {
@@ -261,7 +261,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 "%s(): can't compute GRE checksum (wrong flags_ver bits: 0x%x )\n",  __func__, fv);
 		return (-1);
 	    }
-	    sum = libnet_in_cksum((u_int16_t *)greh_p, len);
+	    sum = libnet_in_cksum((uint16_t *)greh_p, len);
 	    greh_p->gre_sum = LIBNET_CKSUM_CARRY(sum);
 	    break;
 	}
@@ -271,7 +271,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 (struct libnet_ospf_hdr *)(buf + ip_hl);
 
             oh_p->ospf_sum = 0;
-            sum += libnet_in_cksum((u_int16_t *)oh_p, len);
+            sum += libnet_in_cksum((uint16_t *)oh_p, len);
             oh_p->ospf_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -284,7 +284,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 ip_hl + oh_p->ospf_len);
 
             lsa_p->lsa_sum = 0;
-            sum += libnet_in_cksum((u_int16_t *)lsa_p, len);
+            sum += libnet_in_cksum((uint16_t *)lsa_p, len);
             lsa_p->lsa_sum = LIBNET_CKSUM_CARRY(sum);
             break;
 #if 0
@@ -293,7 +293,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
              */
             int c0, c1;
             struct libnet_lsa_hdr *lsa_p = (struct libnet_lsa_hdr *)buf;
-            u_int8_t *p, *p1, *p2, *p3;
+            uint8_t *p, *p1, *p2, *p3;
 
             c0 = 0;
             c1 = 0;
@@ -343,7 +343,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
         case IPPROTO_IP:
         {
             iph_p->ip_sum = 0;
-            sum = libnet_in_cksum((u_int16_t *)iph_p, ip_hl);
+            sum = libnet_in_cksum((uint16_t *)iph_p, ip_hl);
             iph_p->ip_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -353,7 +353,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 (struct libnet_vrrp_hdr *)(buf + ip_hl);
 
             vrrph_p->vrrp_sum = 0;
-            sum = libnet_in_cksum((u_int16_t *)vrrph_p, len);
+            sum = libnet_in_cksum((uint16_t *)vrrph_p, len);
             vrrph_p->vrrp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -363,7 +363,7 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
                 (struct libnet_cdp_hdr *)buf;
 
             cdph_p->cdp_sum = 0;
-            sum = libnet_in_cksum((u_int16_t *)cdph_p, len);
+            sum = libnet_in_cksum((uint16_t *)cdph_p, len);
             cdph_p->cdp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -389,8 +389,8 @@ libnet_do_checksum(libnet_t *l, u_int8_t *buf, int protocol, int len)
 }
 
 
-u_int16_t
-libnet_ip_check(u_int16_t *addr, int len)
+uint16_t
+libnet_ip_check(uint16_t *addr, int len)
 {
     int sum;
 

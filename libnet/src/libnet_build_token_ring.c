@@ -39,11 +39,11 @@
 #endif
 
 libnet_ptag_t
-libnet_build_token_ring(u_int8_t ac, u_int8_t fc, u_int8_t *dst, u_int8_t *src, 
-u_int8_t dsap, u_int8_t ssap, u_int8_t cf, u_int8_t *org, u_int16_t type,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, uint8_t *src, 
+uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_token_ring_hdr token_ring_hdr;
 
@@ -87,7 +87,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(&token_ring_hdr.token_ring_llc_org_code, org, LIBNET_ORG_CODE_SIZE); 
     token_ring_hdr.token_ring_type              = htons(type);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&token_ring_hdr, 
+    n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
             LIBNET_TOKEN_RING_H);
     if (n == -1)
     {
@@ -106,11 +106,11 @@ bad:
 
 
 libnet_ptag_t
-libnet_autobuild_token_ring(u_int8_t ac, u_int8_t fc, u_int8_t *dst, 
-u_int8_t dsap, u_int8_t ssap, u_int8_t cf, u_int8_t *org, u_int16_t type, 
+libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, 
+uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type, 
 libnet_t *l)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     struct libnet_token_ring_addr *src;
     libnet_pblock_t *p;
     libnet_ptag_t ptag;
@@ -165,7 +165,7 @@ libnet_t *l)
     token_ring_hdr.token_ring_type              = htons(type);
 
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&token_ring_hdr, 
+    n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
             LIBNET_TOKEN_RING_H);
     if (n == -1)
     {

@@ -40,7 +40,7 @@
 #endif
 
 #ifndef HAVE_GETHOSTBYNAME2
-static struct hostent *
+struct hostent *
 gethostbyname2(const char *name, int af)
 {
         return gethostbyname(name);
@@ -48,12 +48,12 @@ gethostbyname2(const char *name, int af)
 #endif
 
 char *
-libnet_addr2name4(u_int32_t in, u_int8_t use_name)
+libnet_addr2name4(uint32_t in, uint8_t use_name)
 {
 	#define HOSTNAME_SIZE 512
     static char hostname[HOSTNAME_SIZE+1], hostname2[HOSTNAME_SIZE+1];
-    static u_int16_t which;
-    u_int8_t *p;
+    static uint16_t which;
+    uint8_t *p;
 
     struct hostent *host_ent = NULL;
     struct in_addr addr;
@@ -76,7 +76,7 @@ libnet_addr2name4(u_int32_t in, u_int8_t use_name)
     if (!host_ent)
     {
 
-        p = (u_int8_t *)&in;
+        p = (uint8_t *)&in;
    		snprintf(((which % 2) ? hostname : hostname2), HOSTNAME_SIZE,
                  "%d.%d.%d.%d",
                  (p[0] & 255), (p[1] & 255), (p[2] & 255), (p[3] & 255));
@@ -92,10 +92,10 @@ libnet_addr2name4(u_int32_t in, u_int8_t use_name)
 }
 
 void
-libnet_addr2name4_r(u_int32_t in, u_int8_t use_name, char *hostname,
+libnet_addr2name4_r(uint32_t in, uint8_t use_name, char *hostname,
         int hostname_len)
 {
-    u_int8_t *p;
+    uint8_t *p;
     struct hostent *host_ent = NULL;
     struct in_addr addr;
 
@@ -107,7 +107,7 @@ libnet_addr2name4_r(u_int32_t in, u_int8_t use_name, char *hostname,
     }
     if (!host_ent)
     {
-        p = (u_int8_t *)&in;
+        p = (uint8_t *)&in;
         snprintf(hostname, hostname_len, "%d.%d.%d.%d",
                 (p[0] & 255), (p[1] & 255), (p[2] & 255), (p[3] & 255));
     }
@@ -118,13 +118,13 @@ libnet_addr2name4_r(u_int32_t in, u_int8_t use_name, char *hostname,
     }
 }
 
-u_int32_t
-libnet_name2addr4(libnet_t *l, char *host_name, u_int8_t use_name)
+uint32_t
+libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
 {
     struct in_addr addr;
     struct hostent *host_ent; 
-    u_int32_t m;
-    u_int val;
+    uint32_t m;
+    uint val;
     int i;
 
     if (use_name == LIBNET_RESOLVE)
@@ -195,7 +195,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, u_int8_t use_name)
 }
 
 void
-libnet_addr2name6_r(struct libnet_in6_addr addr, u_int8_t use_name,
+libnet_addr2name6_r(struct libnet_in6_addr addr, uint8_t use_name,
             char *host_name, int host_name_len)
 {
     struct hostent *host_ent = NULL;
@@ -231,7 +231,7 @@ libnet_addr2name6_r(struct libnet_in6_addr addr, u_int8_t use_name,
 const struct libnet_in6_addr in6addr_error = IN6ADDR_ERROR_INIT;
 
 struct libnet_in6_addr
-libnet_name2addr6(libnet_t *l, char *host_name, u_int8_t use_name)
+libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name)
 {
 #if !defined (__WIN32__)
     struct libnet_in6_addr addr;
@@ -303,7 +303,7 @@ libnet_get_ipaddr6(libnet_t *l)
 }
 
 #if !defined(__WIN32__)
-u_int32_t
+uint32_t
 libnet_get_ipaddr4(libnet_t *l)
 {
     struct ifreq ifr;
@@ -352,7 +352,7 @@ libnet_get_ipaddr4(libnet_t *l)
 }
 #else
 #include <Packet32.h>
-u_int32_t
+uint32_t
 libnet_get_ipaddr4(libnet_t *l)
 {
     long npflen = 0;
@@ -371,10 +371,10 @@ libnet_get_ipaddr4(libnet_t *l)
 }
 #endif /* WIN32 */
 
-u_int8_t *
+uint8_t *
 libnet_hex_aton(const char *s, int *len)
 {
-    u_int8_t *buf;
+    uint8_t *buf;
     int i;
     int32_t l;
     char *pp;
@@ -411,7 +411,7 @@ libnet_hex_aton(const char *s, int *len)
             free(buf);
             return (NULL);
         }
-        buf[i] = (u_int8_t)l;
+        buf[i] = (uint8_t)l;
         s = pp + 1;
     }
     /* return int8_tacter after the octets ala strtol(3) */

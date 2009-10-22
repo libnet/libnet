@@ -271,13 +271,13 @@ register char *errbuf)
 #else
 /* From tcptraceroute, convert a numeric IP address to a string */
 #define IPTOSBUFFERS    12
-static int8_t *iptos(u_int32_t in)
+static int8_t *iptos(uint32_t in)
 {
     static int8_t output[IPTOSBUFFERS][ 3 * 4 + 3 + 1];
     static int16_t which;
-    u_int8_t *p;
+    uint8_t *p;
 
-    p = (u_int8_t *)&in;
+    p = (uint8_t *)&in;
     which = (which + 1 == IPTOSBUFFERS ? 0 : which + 1);
     snprintf(output[which], IPTOSBUFFERS, "%d.%d.%d.%d", 
             p[0], p[1], p[2], p[3]);
@@ -313,7 +313,7 @@ register char *errbuf)
     
 		/* XXX - strdup */
         ifaddrlist[i].device = strdup(d->name);
-        ifaddrlist[i].addr = (u_int32_t)
+        ifaddrlist[i].addr = (uint32_t)
                 strdup(iptos(((struct sockaddr_in *)
                 d->addresses->addr)->sin_addr.s_addr));
         ++i;
@@ -331,7 +331,7 @@ libnet_select_device(libnet_t *l)
     int c, i;
     char err_buf[LIBNET_ERRBUF_SIZE];
     struct libnet_ifaddr_list *address_list, *al;
-    u_int32_t addr;
+    uint32_t addr;
 
 
     if (l == NULL)

@@ -40,12 +40,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_tcp(u_int16_t sp, u_int16_t dp, u_int32_t seq, u_int32_t ack,
-u_int8_t control, u_int16_t win, u_int16_t sum, u_int16_t urg, u_int16_t len,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_tcp(uint16_t sp, uint16_t dp, uint32_t seq, uint32_t ack,
+uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t len,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     int n, offset;
-    u_int32_t i, j;
+    uint32_t i, j;
     libnet_pblock_t *p, *p_data, *p_temp;
     libnet_ptag_t ptag_hold, ptag_data;
     struct libnet_tcp_hdr tcp_hdr;
@@ -103,7 +103,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     tcp_hdr.th_sum     = (sum ? htons(sum) : 0);   /* checksum */ 
     tcp_hdr.th_urp     = htons(urg);          /* urgent pointer */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&tcp_hdr, LIBNET_TCP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&tcp_hdr, LIBNET_TCP_H);
     if (n == -1)
     {
         goto bad;
@@ -243,11 +243,11 @@ bad:
 
 
 libnet_ptag_t
-libnet_build_tcp_options(u_int8_t *options, u_int32_t options_s, libnet_t *l, 
+libnet_build_tcp_options(uint8_t *options, uint32_t options_s, libnet_t *l, 
 libnet_ptag_t ptag)
 {
     int offset, underflow;
-    u_int32_t i, j, n, adj_size;
+    uint32_t i, j, n, adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
     struct libnet_tcp_hdr *tcp_hdr;

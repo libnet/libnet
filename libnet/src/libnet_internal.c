@@ -40,13 +40,13 @@
 #endif
 
 void
-libnet_diag_dump_hex(u_int8_t *packet, u_int32_t len, int swap, FILE *stream)
+libnet_diag_dump_hex(uint8_t *packet, uint32_t len, int swap, FILE *stream)
 {
     int i, s_cnt;
-    u_int16_t *p;
+    uint16_t *p;
 
-    p     = (u_int16_t *)packet;
-    s_cnt = len / sizeof(u_int16_t);
+    p     = (uint16_t *)packet;
+    s_cnt = len / sizeof(uint16_t);
 
     fprintf(stream, "\t");
     for (i = 0; --s_cnt >= 0; i++)
@@ -67,7 +67,7 @@ libnet_diag_dump_hex(u_int8_t *packet, u_int32_t len, int swap, FILE *stream)
         {
             fprintf(stream, "\n%02x\t", (i * 2));
         }
-        fprintf(stream, "%02x ", *(u_int8_t *)p);
+        fprintf(stream, "%02x ", *(uint8_t *)p);
     }
     fprintf(stream, "\n");
 }
@@ -127,7 +127,7 @@ libnet_diag_dump_context(libnet_t *l)
 void
 libnet_diag_dump_pblock(libnet_t *l)
 {
-    u_int32_t n;
+    uint32_t n;
     libnet_pblock_t *p;
 
     for (p = l->protocol_blocks; p; p = p->next)
@@ -171,7 +171,7 @@ libnet_diag_dump_pblock(libnet_t *l)
 }
 
 char *
-libnet_diag_dump_pblock_type(u_int8_t type)
+libnet_diag_dump_pblock_type(uint8_t type)
 {
     static char buf[50];
     switch (type)

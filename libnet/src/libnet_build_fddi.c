@@ -39,12 +39,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_fddi(u_int8_t fc, u_int8_t *dst, u_int8_t *src, u_int8_t dsap,
-u_int8_t ssap, u_int8_t cf, u_int8_t *org, u_int16_t type, u_int8_t *payload,
-u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_fddi(uint8_t fc, uint8_t *dst, uint8_t *src, uint8_t dsap,
+uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type, uint8_t *payload,
+uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
-    u_int16_t protocol_type;
+    uint32_t n, h;
+    uint16_t protocol_type;
     libnet_pblock_t *p;
     struct libnet_fddi_hdr fddi_hdr;
 
@@ -90,7 +90,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));   /* Protocol Type */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&fddi_hdr, LIBNET_FDDI_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H);
     if (n == -1)
     {
         goto bad;
@@ -107,11 +107,11 @@ bad:
 
 
 libnet_ptag_t
-libnet_autobuild_fddi(u_int8_t fc, u_int8_t *dst, u_int8_t dsap, u_int8_t ssap,
-u_int8_t cf, u_int8_t *org, u_int16_t type, libnet_t *l)
+libnet_autobuild_fddi(uint8_t fc, uint8_t *dst, uint8_t dsap, uint8_t ssap,
+uint8_t cf, uint8_t *org, uint16_t type, libnet_t *l)
 {
-    u_int32_t n, h;
-    u_int16_t protocol_type;
+    uint32_t n, h;
+    uint16_t protocol_type;
     struct libnet_fddi_addr *src;
     libnet_pblock_t *p;
     libnet_ptag_t ptag;
@@ -164,7 +164,7 @@ u_int8_t cf, u_int8_t *org, u_int16_t type, libnet_t *l)
     protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&fddi_hdr, LIBNET_FDDI_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H);
     if (n == -1)
     {
         goto bad;

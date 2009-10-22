@@ -40,10 +40,10 @@
 #endif
 
 libnet_ptag_t
-libnet_build_802_1x(u_int8_t eap_ver, u_int8_t eap_type, u_int16_t length,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_802_1x(uint8_t eap_ver, uint8_t eap_type, uint16_t length,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_802_1x_hdr dot1x_hdr;
 
@@ -70,8 +70,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     dot1x_hdr.dot1x_type = eap_type;
     dot1x_hdr.dot1x_length = htons(length);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&dot1x_hdr, LIBNET_802_1X_H);
-    if (n == (u_int32_t)-1)
+    n = libnet_pblock_append(l, p, (uint8_t *)&dot1x_hdr, LIBNET_802_1X_H);
+    if (n == (uint32_t)-1)
     {
         goto bad;
     }

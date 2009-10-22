@@ -40,10 +40,10 @@
 #endif
 
 libnet_ptag_t
-libnet_build_igmp(u_int8_t type, u_int8_t code, u_int16_t sum, u_int32_t ip,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_igmp(uint8_t type, uint8_t code, uint16_t sum, uint32_t ip,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_igmp_hdr igmp_hdr;
 
@@ -71,7 +71,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     igmp_hdr.igmp_sum          = (sum ? htons(sum) : 0);  /* packet checksum */
     igmp_hdr.igmp_group.s_addr = htonl(ip);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&igmp_hdr, LIBNET_IGMP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&igmp_hdr, LIBNET_IGMP_H);
     if (n == -1)
     {
         goto bad;

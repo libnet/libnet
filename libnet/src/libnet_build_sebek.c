@@ -39,12 +39,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_sebek(u_int32_t magic, u_int16_t version, u_int16_t type, 
-u_int32_t counter, u_int32_t time_sec, u_int32_t time_usec, u_int32_t pid,
-u_int32_t uid, u_int32_t fd, u_int8_t cmd[SEBEK_CMD_LENGTH], u_int32_t length,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_sebek(uint32_t magic, uint16_t version, uint16_t type, 
+uint32_t counter, uint32_t time_sec, uint32_t time_usec, uint32_t pid,
+uint32_t uid, uint32_t fd, uint8_t cmd[SEBEK_CMD_LENGTH], uint32_t length,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_sebek_hdr sebek_hdr;
 
@@ -75,10 +75,10 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     sebek_hdr.pid       = htonl(pid);
     sebek_hdr.uid       = htonl(uid);
     sebek_hdr.fd        = htonl(fd);
-    memcpy(sebek_hdr.cmd, cmd, SEBEK_CMD_LENGTH*sizeof(u_int8_t));
+    memcpy(sebek_hdr.cmd, cmd, SEBEK_CMD_LENGTH*sizeof(uint8_t));
     sebek_hdr.length = htonl(length);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&sebek_hdr, LIBNET_SEBEK_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&sebek_hdr, LIBNET_SEBEK_H);
     if (n == -1)
     {
         goto bad;

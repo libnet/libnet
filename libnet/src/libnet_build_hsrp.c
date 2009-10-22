@@ -39,12 +39,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_hsrp(u_int8_t version, u_int8_t opcode, u_int8_t state, 
-u_int8_t hello_time, u_int8_t hold_time, u_int8_t priority, u_int8_t group,
-u_int8_t reserved, u_int8_t authdata[HSRP_AUTHDATA_LENGTH], u_int32_t virtual_ip,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_hsrp(uint8_t version, uint8_t opcode, uint8_t state, 
+uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group,
+uint8_t reserved, uint8_t authdata[HSRP_AUTHDATA_LENGTH], uint32_t virtual_ip,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_hsrp_hdr hsrp_hdr;
 
@@ -72,10 +72,10 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     hsrp_hdr.priority = priority;
     hsrp_hdr.group = group;
     hsrp_hdr.reserved = reserved;
-    memcpy(hsrp_hdr.authdata, authdata, HSRP_AUTHDATA_LENGTH*sizeof(u_int8_t));
+    memcpy(hsrp_hdr.authdata, authdata, HSRP_AUTHDATA_LENGTH*sizeof(uint8_t));
     hsrp_hdr.virtual_ip = virtual_ip;
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&hsrp_hdr, LIBNET_HSRP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&hsrp_hdr, LIBNET_HSRP_H);
     if (n == -1)
     {
         goto bad;

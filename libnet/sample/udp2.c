@@ -48,9 +48,9 @@ main(int argc, char **argv)
     char *payload;
     libnet_ptag_t t;
     struct libnet_stats ls;
-    u_int16_t payload_s;
-    u_int32_t src_ip, dst_ip;
-    u_int16_t bport, eport, cport;
+    uint16_t payload_s;
+    uint32_t src_ip, dst_ip;
+    uint16_t bport, eport, cport;
     libnet_plist_t plist, *plist_p;
     char errbuf[LIBNET_ERRBUF_SIZE];
 
