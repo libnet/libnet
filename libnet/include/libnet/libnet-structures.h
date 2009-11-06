@@ -109,6 +109,7 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_IPV4_H            0x0d    /* IP v4 header */
 #define LIBNET_PBLOCK_IPO_H             0x0e    /* IP v4 options */
 #define LIBNET_PBLOCK_IPDATA            0x0f    /* IP data */
+    /* SR - it's not clear why IP doesn't use generic data type */
 #define LIBNET_PBLOCK_OSPF_H            0x10    /* OSPF base header */
 #define LIBNET_PBLOCK_OSPF_HELLO_H      0x11    /* OSPF hello header */
 #define LIBNET_PBLOCK_OSPF_DBD_H        0x12    /* OSPF dbd header */
@@ -126,6 +127,7 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_TCP_H             0x1e    /* TCP header */
 #define LIBNET_PBLOCK_TCPO_H            0x1f    /* TCP options */
 #define LIBNET_PBLOCK_TCPDATA           0x20    /* TCP data */
+    /* SR - it's not clear why TCP doesn't use generic data type */
 #define LIBNET_PBLOCK_UDP_H             0x21    /* UDP header */
 #define LIBNET_PBLOCK_VRRP_H            0x22    /* VRRP header */
 #define LIBNET_PBLOCK_DATA_H            0x23    /* generic data */
