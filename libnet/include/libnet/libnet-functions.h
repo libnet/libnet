@@ -61,7 +61,7 @@
  * @return libnet context ready for use or NULL on error.
  */
 libnet_t *
-libnet_init(int injection_type, char *device, char *err_buf);
+libnet_init(int injection_type, const char *device, char *err_buf);
 
 /**
  * Shuts down the libnet session referenced by l. It closes the network 
