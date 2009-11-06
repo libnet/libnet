@@ -40,11 +40,11 @@
 #endif
 
 libnet_ptag_t
-libnet_build_bgp4_header(u_int8_t marker[LIBNET_BGP4_MARKER_SIZE],
-u_int16_t len, u_int8_t type, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_bgp4_header(uint8_t marker[LIBNET_BGP4_MARKER_SIZE],
+uint16_t len, uint8_t type, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_bgp4_header_hdr bgp4_hdr;
 
@@ -67,11 +67,11 @@ libnet_t *l, libnet_ptag_t ptag)
     }
 
     memset(&bgp4_hdr, 0, sizeof(bgp4_hdr));
-    memcpy(bgp4_hdr.marker, marker, LIBNET_BGP4_MARKER_SIZE * sizeof(u_int8_t));
+    memcpy(bgp4_hdr.marker, marker, LIBNET_BGP4_MARKER_SIZE * sizeof(uint8_t));
     bgp4_hdr.len = htons(len);
     bgp4_hdr.type = type;
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&bgp4_hdr, LIBNET_BGP4_HEADER_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr, LIBNET_BGP4_HEADER_H);
     if (n == -1)
     {
         goto bad;
@@ -88,13 +88,13 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_bgp4_open(u_int8_t version, u_int16_t src_as, u_int16_t hold_time,
-u_int32_t bgp_id, u_int8_t opt_len, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_bgp4_open(uint8_t version, uint16_t src_as, uint16_t hold_time,
+uint32_t bgp_id, uint8_t opt_len, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
-    u_int16_t val;
+    uint16_t val;
 
     if (l == NULL)
     { 
@@ -115,34 +115,34 @@ libnet_t *l, libnet_ptag_t ptag)
     }
 
     /* for memory alignment reason, we need to append each field separately */
-    n = libnet_pblock_append(l, p, (u_int8_t *)&version, sizeof (version));
+    n = libnet_pblock_append(l, p, (uint8_t *)&version, sizeof (version));
     if (n == -1)
     {
         goto bad;
     }
 
     val = htons(src_as);
-    n = libnet_pblock_append(l, p, (u_int8_t *)&val, sizeof(src_as));
+    n = libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(src_as));
     if (n == -1)
     {
         goto bad;
     }
 
     val = htons(hold_time);
-    n = libnet_pblock_append(l, p, (u_int8_t *)&val, sizeof(hold_time));
+    n = libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(hold_time));
     if (n == -1)
     {
         goto bad;
     }
 
     n = htonl(bgp_id);
-    n = libnet_pblock_append(l, p, (u_int8_t *)&n, sizeof(bgp_id));
+    n = libnet_pblock_append(l, p, (uint8_t *)&n, sizeof(bgp_id));
     if (n == -1)
     {
         goto bad;
     }
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&opt_len, sizeof(opt_len));
+    n = libnet_pblock_append(l, p, (uint8_t *)&opt_len, sizeof(opt_len));
     if (n == -1)
     {
         goto bad;
@@ -159,14 +159,14 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_bgp4_update(u_int16_t unfeasible_rt_len, u_int8_t *withdrawn_rt,
-u_int16_t total_path_attr_len, u_int8_t *path_attributes, u_int16_t info_len,
-u_int8_t *reachability_info, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_bgp4_update(uint16_t unfeasible_rt_len, uint8_t *withdrawn_rt,
+uint16_t total_path_attr_len, uint8_t *path_attributes, uint16_t info_len,
+uint8_t *reachability_info, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
-    u_int16_t length;
+    uint16_t length;
 
     if (l == NULL)
     { 
@@ -192,7 +192,7 @@ libnet_t *l, libnet_ptag_t ptag)
 
     /* for memory alignment reason, we need to append each field separately */
     length = htons(unfeasible_rt_len);
-    n = libnet_pblock_append(l, p, (u_int8_t *)&length,
+    n = libnet_pblock_append(l, p, (uint8_t *)&length,
         sizeof (unfeasible_rt_len));
     if (n == -1)
     {
@@ -209,7 +209,7 @@ libnet_t *l, libnet_ptag_t ptag)
     }
 
     length = htons(total_path_attr_len);
-    n = libnet_pblock_append(l, p, (u_int8_t *)&length,
+    n = libnet_pblock_append(l, p, (uint8_t *)&length,
             sizeof (total_path_attr_len));
     if (n == -1)
     {
@@ -245,10 +245,10 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_bgp4_notification(u_int8_t err_code, u_int8_t err_subcode,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_bgp4_notification(uint8_t err_code, uint8_t err_subcode,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_bgp4_notification_hdr bgp4_hdr;
 
@@ -274,7 +274,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     bgp4_hdr.err_code    = err_code;
     bgp4_hdr.err_subcode = err_subcode;
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&bgp4_hdr,
+    n = libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr,
             LIBNET_BGP4_NOTIFICATION_H);
     if (n == -1)
     {

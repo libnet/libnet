@@ -41,11 +41,11 @@
 
 
 libnet_ptag_t
-libnet_build_arp(u_int16_t hrd, u_int16_t pro, u_int8_t hln, u_int8_t pln,
-u_int16_t op, u_int8_t *sha, u_int8_t *spa, u_int8_t *tha, u_int8_t *tpa,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_arp(uint16_t hrd, uint16_t pro, uint8_t hln, uint8_t pln,
+uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha, uint8_t *tpa,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_arp_hdr arp_hdr;
 
@@ -74,7 +74,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     arp_hdr.ar_pln = pln;              /* protocol address length */
     arp_hdr.ar_op  = htons(op);        /* opcode command */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&arp_hdr, LIBNET_ARP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&arp_hdr, LIBNET_ARP_H);
     if (n == -1)
     {
         /* err msg set in libnet_pblock_append() */
@@ -115,8 +115,8 @@ bad:
 }
 
 libnet_ptag_t
-libnet_autobuild_arp(u_int16_t op, u_int8_t *sha, u_int8_t *spa, u_int8_t *tha,
-u_int8_t *tpa, libnet_t *l)
+libnet_autobuild_arp(uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha,
+uint8_t *tpa, libnet_t *l)
 {
     u_short hrd;
     

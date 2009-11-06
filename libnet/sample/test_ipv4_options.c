@@ -69,7 +69,7 @@ static void ptag_error(libnet_t* l, int ptag)
 
 static int build_ipo(libnet_t* l, libnet_ptag_t ptag, int payload_s)
 {
-    u_int8_t* payload = malloc(payload_s);
+    uint8_t* payload = malloc(payload_s);
     assert(payload);
     memset(payload, '\x88', payload_s);
 
@@ -86,7 +86,7 @@ static int build_ipv4(libnet_t* l, libnet_ptag_t ptag, int payload_s, int ip_len
 {
     u_long src_ip = 0xf101f1f1;
     u_long dst_ip = 0xf102f1f1;
-    u_int8_t* payload = malloc(payload_s);
+    uint8_t* payload = malloc(payload_s);
     assert(payload);
     memset(payload, '\x99', payload_s);
 
@@ -118,8 +118,8 @@ static int build_ipv4(libnet_t* l, libnet_ptag_t ptag, int payload_s, int ip_len
 
 static int build_ethernet(libnet_t* l, libnet_ptag_t ptag)
 {
-    u_int8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
-    u_int8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
+    uint8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
+    uint8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
 
     ptag = libnet_build_ethernet(
         enet_dst,                                   /* ethernet destination */
@@ -138,8 +138,8 @@ static int build_ethernet(libnet_t* l, libnet_ptag_t ptag)
 static
 void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
 {
-    u_int8_t* pkt1 = NULL;
-    u_int32_t pkt1_sz = 0;
+    uint8_t* pkt1 = NULL;
+    uint32_t pkt1_sz = 0;
     struct libnet_ipv4_hdr* h1;
     uint8_t* payload = NULL;
 
@@ -157,10 +157,10 @@ void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
     assert_eq(h1->ip_hl, ip_ihl); 
     assert_eq(ntohs(h1->ip_len), ip_len);
 
-    payload = ((u_int8_t*) h1) + ip_ihl * 4;
+    payload = ((uint8_t*) h1) + ip_ihl * 4;
     if(payload_s > 0) {
-        assert(payload[0] == (u_int8_t)'\x99');
-        assert(payload[payload_s-1] == (u_int8_t)'\x99');
+        assert(payload[0] == (uint8_t)'\x99');
+        assert(payload[payload_s-1] == (uint8_t)'\x99');
     }
 }
 

@@ -40,15 +40,15 @@
 #endif
 
 libnet_ptag_t
-libnet_build_ntp(u_int8_t leap_indicator, u_int8_t version, u_int8_t mode,
-u_int8_t stratum, u_int8_t poll, u_int8_t precision, u_int16_t delay_int,
-u_int16_t delay_frac, u_int16_t dispersion_int, u_int16_t dispersion_frac,
-u_int32_t reference_id, u_int32_t ref_ts_int, u_int32_t ref_ts_frac,
-u_int32_t orig_ts_int, u_int32_t orig_ts_frac, u_int32_t rec_ts_int,
-u_int32_t rec_ts_frac, u_int32_t xmt_ts_int, u_int32_t xmt_ts_frac,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ntp(uint8_t leap_indicator, uint8_t version, uint8_t mode,
+uint8_t stratum, uint8_t poll, uint8_t precision, uint16_t delay_int,
+uint16_t delay_frac, uint16_t dispersion_int, uint16_t dispersion_frac,
+uint32_t reference_id, uint32_t ref_ts_int, uint32_t ref_ts_frac,
+uint32_t orig_ts_int, uint32_t orig_ts_frac, uint32_t rec_ts_int,
+uint32_t rec_ts_frac, uint32_t xmt_ts_int, uint32_t xmt_ts_frac,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_ntp_hdr ntp_hdr;
 
@@ -90,7 +90,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ntp_hdr.ntp_xmt_ts.integer      = htonl(xmt_ts_int);
     ntp_hdr.ntp_xmt_ts.fraction     = htonl(xmt_ts_frac);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&ntp_hdr, LIBNET_NTP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&ntp_hdr, LIBNET_NTP_H);
     if (n == -1)
     {
         goto bad;

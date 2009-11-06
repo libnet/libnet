@@ -40,10 +40,10 @@
 #endif
 
 libnet_ptag_t
-libnet_build_ethernet(u_int8_t *dst, u_int8_t *src, u_int16_t type, 
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_ethernet(uint8_t *dst, uint8_t *src, uint16_t type, 
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_ethernet_hdr eth_hdr;
 
@@ -81,7 +81,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(eth_hdr.ether_shost, src, ETHER_ADDR_LEN);  /* source address */
     eth_hdr.ether_type = htons(type);                  /* packet type */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&eth_hdr, LIBNET_ETH_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&eth_hdr, LIBNET_ETH_H);
     if (n == -1)
     {
         goto bad;
@@ -98,9 +98,9 @@ bad:
 
 
 libnet_ptag_t
-libnet_autobuild_ethernet(u_int8_t *dst, u_int16_t type, libnet_t *l)
+libnet_autobuild_ethernet(uint8_t *dst, uint16_t type, libnet_t *l)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     struct libnet_ether_addr *src;
     libnet_pblock_t *p;
     libnet_ptag_t ptag;
@@ -146,7 +146,7 @@ libnet_autobuild_ethernet(u_int8_t *dst, u_int16_t type, libnet_t *l)
     memcpy(eth_hdr.ether_shost, src, ETHER_ADDR_LEN);  /* source address */
     eth_hdr.ether_type = htons(type);                  /* packet type */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&eth_hdr, LIBNET_ETH_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&eth_hdr, LIBNET_ETH_H);
     if (n == -1)
     {
         goto bad;

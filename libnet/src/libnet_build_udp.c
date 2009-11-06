@@ -40,10 +40,10 @@
 #endif
 
 libnet_ptag_t
-libnet_build_udp(u_int16_t sp, u_int16_t dp, u_int16_t len, u_int16_t sum,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_udp(uint16_t sp, uint16_t dp, uint16_t len, uint16_t sum,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_udp_hdr udp_hdr;
 
@@ -71,7 +71,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     udp_hdr.uh_ulen    = htons(h);              /* total length of UDP packet*/
     udp_hdr.uh_sum     = (sum ? htons(sum) : 0);/* checksum */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&udp_hdr, LIBNET_UDP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&udp_hdr, LIBNET_UDP_H);
     if (n == -1)
     {
         goto bad;

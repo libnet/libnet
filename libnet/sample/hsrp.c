@@ -42,15 +42,15 @@
 int
 main(int argc, char *argv[])
 {
-    u_int8_t version = LIBNET_HSRP_VERSION;
-    u_int8_t opcode = LIBNET_HSRP_TYPE_HELLO;
-    u_int8_t state = LIBNET_HSRP_STATE_ACTIVE;
-    u_int8_t hello_time = 3;
-    u_int8_t hold_time = 10;
-    u_int8_t priority = 1;
-    u_int8_t group = 1;
-    u_int8_t reserved = 0;
-    u_int8_t authdata[8];
+    uint8_t version = LIBNET_HSRP_VERSION;
+    uint8_t opcode = LIBNET_HSRP_TYPE_HELLO;
+    uint8_t state = LIBNET_HSRP_STATE_ACTIVE;
+    uint8_t hello_time = 3;
+    uint8_t hold_time = 10;
+    uint8_t priority = 1;
+    uint8_t group = 1;
+    uint8_t reserved = 0;
+    uint8_t authdata[8];
 
     libnet_t *l;
     char *device = NULL;

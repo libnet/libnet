@@ -43,12 +43,12 @@ int
 main(int argc, char *argv[])
 {
     int c;
-    u_int32_t i;
+    uint32_t i;
     libnet_t *l;
     libnet_ptag_t t;
     char *device = NULL;
-    u_int8_t *packet;
-    u_int32_t packet_s;
+    uint8_t *packet;
+    uint32_t packet_s;
     char errbuf[LIBNET_ERRBUF_SIZE];
 
     printf("libnet 1.1 packet shaping: ARP[link -- autobuilding ethernet]\n"); 
@@ -79,9 +79,9 @@ main(int argc, char *argv[])
             4,                                      /* protocol addr size */
             ARPOP_REPLY,                            /* operation type */
             enet_src,                               /* sender hardware addr */
-            (u_int8_t *)&i,                         /* sender protocol addr */
+            (uint8_t *)&i,                         /* sender protocol addr */
             enet_dst,                               /* target hardware addr */
-            (u_int8_t *)&i,                         /* target protocol addr */
+            (uint8_t *)&i,                         /* target protocol addr */
             NULL,                                   /* payload */
             0,                                      /* payload size */
             l,                                      /* libnet context */

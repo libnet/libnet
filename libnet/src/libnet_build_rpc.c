@@ -40,12 +40,12 @@
 #endif
 
 libnet_ptag_t
-libnet_build_rpc_call(u_int32_t rm, u_int32_t xid, u_int32_t prog_num, 
-u_int32_t prog_vers, u_int32_t procedure, u_int32_t cflavor, u_int32_t clength, 
-u_int8_t *cdata, u_int32_t vflavor, u_int32_t vlength, u_int8_t *vdata, 
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_rpc_call(uint32_t rm, uint32_t xid, uint32_t prog_num, 
+uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength, 
+uint8_t *cdata, uint32_t vflavor, uint32_t vlength, uint8_t *vdata, 
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_rpc_call_tcp_hdr rpc_hdr;
 
@@ -98,12 +98,12 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     if (rm)
     {
-        n = libnet_pblock_append(l, p, (u_int8_t *)&rpc_hdr, 
+        n = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr, 
                 LIBNET_RPC_CALL_TCP_H);
     }
     else
     {
-        n = libnet_pblock_append(l, p, (u_int8_t *)&rpc_hdr.rpc_common, 
+        n = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr.rpc_common, 
                 LIBNET_RPC_CALL_H);
     }
 

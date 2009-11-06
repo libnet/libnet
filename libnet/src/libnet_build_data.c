@@ -41,10 +41,10 @@
 
 
 libnet_ptag_t
-libnet_build_data(u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
+libnet_build_data(uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
 
     if (l == NULL)

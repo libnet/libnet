@@ -200,7 +200,7 @@ libnet_getdevice(libnet_t *l)
     return (l->device);
 }
 
-u_int8_t *
+uint8_t *
 libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag)
 {
     libnet_pblock_t *p;
@@ -222,7 +222,7 @@ libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag)
     }
 }
 
-u_int32_t
+uint32_t
 libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
 {
     libnet_pblock_t *p;
@@ -244,12 +244,12 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
     }
 }
 
-u_int32_t
+uint32_t
 libnet_getpacket_size(libnet_t *l)
 {
     // Why doesn't this return l->total_size?
     libnet_pblock_t *p;
-    u_int32_t n;
+    uint32_t n;
 
     if (l == NULL)
     { 

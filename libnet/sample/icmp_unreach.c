@@ -103,7 +103,7 @@ main(int argc, char **argv)
         ip_err = libnet_build_ipv4(
         LIBNET_IPV4_H + payload_s,              /* o length */
         IPTOS_LOWDELAY | IPTOS_THROUGHPUT,      /* o IP tos */
-        (u_int16_t)i,                           /* o IP ID */
+        (uint16_t)i,                           /* o IP ID */
         0,                                      /* o frag */
         64,                                     /* o TTL */
         IPPROTO_UDP,                            /* o protocol */
@@ -139,7 +139,7 @@ main(int argc, char **argv)
         LIBNET_IPV4_H + LIBNET_ICMPV4_UNREACH_H +
         LIBNET_IPV4_H + payload_s,                  /* length */
         IPTOS_LOWDELAY | IPTOS_THROUGHPUT,          /* TOS */
-        (u_int16_t)i + 1,                           /* IP ID */
+        (uint16_t)i + 1,                           /* IP ID */
         0,                                          /* IP Frag */
         64,                                         /* TTL */
         IPPROTO_ICMP,                               /* protocol */

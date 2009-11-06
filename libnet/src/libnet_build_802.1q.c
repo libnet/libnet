@@ -40,11 +40,11 @@
 #endif
 
 libnet_ptag_t
-libnet_build_802_1q(u_int8_t *dst, u_int8_t *src, u_int16_t tpi, 
-u_int8_t priority, u_int8_t cfi, u_int16_t vlan_id, u_int16_t len_proto,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_802_1q(uint8_t *dst, uint8_t *src, uint16_t tpi, 
+uint8_t priority, uint8_t cfi, uint16_t vlan_id, uint16_t len_proto,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_802_1q_hdr _802_1q_hdr;
 
@@ -74,8 +74,8 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             | (vlan_id & LIBNET_802_1Q_VIDMASK));
     _802_1q_hdr.vlan_len = htons(len_proto);
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&_802_1q_hdr, LIBNET_802_1Q_H);
-    if (n == (u_int32_t)-1)
+    n = libnet_pblock_append(l, p, (uint8_t *)&_802_1q_hdr, LIBNET_802_1Q_H);
+    if (n == (uint32_t)-1)
     {
         goto bad;
     }

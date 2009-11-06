@@ -100,7 +100,7 @@ static int send_request(int, int8_t *, int, int8_t *, int8_t *, int);
 static int strioctl(int, int, int, int8_t *);
 #endif
 #ifdef HAVE_HPUX9
-static int dlpi_kread(int, off_t, void *, u_int, int8_t *);
+static int dlpi_kread(int, off_t, void *, uint, int8_t *);
 #endif
 #ifdef HAVE_DEV_DLPI
 static int get_dlpi_ppa(int, const int8_t *, int, int8_t *);
@@ -277,7 +277,7 @@ libnet_open_link(libnet_t *l)
             break;
         default:
             sprintf(l->err_buf, "%s(): unknown mac type 0x%lu\n", __func__,
-                    (u_int32_t) infop->dl_mac_type);
+                    (uint32_t) infop->dl_mac_type);
             goto bad;
     }
 
@@ -491,7 +491,7 @@ register int8_t *ebuf)
     register dl_hp_ppa_ack_t *ap;
     register dl_hp_ppa_info_t *ip;
     register int i;
-    register u_int32_t majdev;
+    register uint32_t majdev;
     dl_hp_ppa_req_t	req;
     struct stat statbuf;
     bpf_u_int32 buf[MAXDLBUF];
@@ -514,14 +514,14 @@ register int8_t *ebuf)
     }
 
     ap = (dl_hp_ppa_ack_t *)buf;
-    ip = (dl_hp_ppa_info_t *)((u_int8_t *)ap + ap->dl_offset);
+    ip = (dl_hp_ppa_info_t *)((uint8_t *)ap + ap->dl_offset);
 
     for (i = 0; i < ap->dl_count; i++)
     {
         if (ip->dl_mjr_num == majdev && ip->dl_instance_num == unit)
         break;
 
-        ip = (dl_hp_ppa_info_t *)((u_int8_t *)ip + ip->dl_next_offset);
+        ip = (dl_hp_ppa_info_t *)((uint8_t *)ip + ip->dl_next_offset);
     }
 
     if (i == ap->dl_count)
@@ -618,7 +618,7 @@ get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
 
 static int
 dlpi_kread(register int fd, register off_t addr, register void *buf,
-register u_int len, register int8_t *ebuf)
+register uint len, register int8_t *ebuf)
 {
     register int cc;
 
@@ -646,7 +646,7 @@ register u_int len, register int8_t *ebuf)
 struct  EnetHeaderInfo
 {
     struct libnet_ether_addr   DestEtherAddr;
-    u_int16_t EtherFrameType;
+    uint16_t EtherFrameType;
 };
 
 
@@ -655,19 +655,17 @@ libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {
-        free(l);
         return (1);
     }
     else
     {
-        free(l);
         return (-1);
     }
 }
 
 #ifdef HAVE_HPUX11
 int 
-libnet_write_link(libnet_t *l, u_int8_t *packet, u_int32_t size)   
+libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)   
 {                                                             
     struct strbuf data, ctl;
     dl_hp_rawdata_req_t *rdata;
@@ -705,7 +703,7 @@ libnet_write_link(libnet_t *l, u_int8_t *packet, u_int32_t size)
 }   
 #else
 int
-libnet_write_link(libnet_t *l, u_int8_t *packet, u_int32_t size)
+libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
 {
     int c;
     struct strbuf data;

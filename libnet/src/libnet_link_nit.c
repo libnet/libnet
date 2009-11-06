@@ -107,7 +107,7 @@ libnet_close_link_interface(struct libnet_link_int *l)
 
 int
 write_link_layer(struct libnet_link_int *l, const int8_t *device,
-            u_int8_t *buf, int len)
+            uint8_t *buf, int len)
 {
     int c;
     struct sockaddr sa;

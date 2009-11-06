@@ -41,7 +41,7 @@
 #include <assert.h>
 
 libnet_pblock_t *
-libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
+libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t n, uint8_t type)
 {
     int offset;
     libnet_pblock_t *p;
@@ -112,7 +112,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
 }
 
 libnet_pblock_t *
-libnet_pblock_new(libnet_t *l, u_int32_t size)
+libnet_pblock_new(libnet_t *l, uint32_t size)
 {
     libnet_pblock_t *p;
     /*
@@ -253,8 +253,8 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag)
 }
 
 int
-libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, u_int8_t *buf,
-            u_int32_t len)
+libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, uint8_t *buf,
+            uint32_t len)
 {
     if (p->copied + len > p->b_len)
     {
@@ -268,14 +268,14 @@ libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, u_int8_t *buf,
 }
 
 void
-libnet_pblock_setflags(libnet_pblock_t *p, u_int8_t flags)
+libnet_pblock_setflags(libnet_pblock_t *p, uint8_t flags)
 {
     p->flags = flags;
 }
 
 libnet_ptag_t
-libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, u_int32_t h,
-u_int8_t type)
+libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h,
+uint8_t type)
 {
     p->type  =  type;
     p->ptag  =  ++(l->ptag_state);
@@ -286,10 +286,10 @@ u_int8_t type)
 }
 
 int
-libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
+libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
 {
     libnet_pblock_t *p, *q;
-    u_int32_t c, n;
+    uint32_t c, n;
 
     /*
      *  Determine the offset required to keep memory aligned (strict
@@ -463,7 +463,7 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p)
 }
 
 int
-libnet_pblock_p2p(u_int8_t type)
+libnet_pblock_p2p(uint8_t type)
 {
     /* for checksum; return the protocol number given a pblock type*/
     switch (type)
@@ -505,7 +505,7 @@ void
 libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
 {
     libnet_pblock_t *c;
-    u_int32_t ip_offset = 0;
+    uint32_t ip_offset = 0;
 
     assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
 

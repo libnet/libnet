@@ -40,13 +40,13 @@
 #endif
 
 libnet_ptag_t
-libnet_build_dhcpv4(u_int8_t opcode, u_int8_t htype, u_int8_t hlen, 
-u_int8_t hopcount, u_int32_t xid, u_int16_t secs, u_int16_t flags,
-u_int32_t cip, u_int32_t yip, u_int32_t sip, u_int32_t gip, u_int8_t *chaddr,
-u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen, 
+uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, uint8_t *chaddr,
+uint8_t *sname, uint8_t *file, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n, h;
     libnet_pblock_t *p; 
     struct libnet_dhcpv4_hdr dhcp_hdr;
 
@@ -112,7 +112,7 @@ libnet_t *l, libnet_ptag_t ptag)
     }
     dhcp_hdr.dhcp_magic = htonl(DHCP_MAGIC);    /* should this be tunable? */
 
-    n = libnet_pblock_append(l, p, (u_int8_t *)&dhcp_hdr, LIBNET_DHCPV4_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&dhcp_hdr, LIBNET_DHCPV4_H);
     if (n == -1)
     {
         goto bad;
@@ -142,10 +142,10 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_bootpv4(u_int8_t opcode, u_int8_t htype, u_int8_t hlen,
-u_int8_t hopcount, u_int32_t xid, u_int16_t secs, u_int16_t flags,
-u_int32_t cip, u_int32_t yip, u_int32_t sip, u_int32_t gip, u_int8_t *chaddr,
-u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
+libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
+uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, uint8_t *chaddr,
+uint8_t *sname, uint8_t *file, uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     return (libnet_build_dhcpv4(opcode, htype, hlen, hopcount, xid, secs,

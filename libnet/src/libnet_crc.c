@@ -41,7 +41,7 @@
 
 
 /* CRC routines based off of sample code in appendix of RFC 2083 */
-static u_int crc_table[256] =
+static uint crc_table[256] =
 {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
     0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
@@ -95,10 +95,10 @@ static u_int crc_table[256] =
  *  CRC generator G(x) is the sum of x^n for
  *      n = 32, 26, 23, 22, 16, 12, 11, 10, 8, 7, 5, 4, 2, 1, 0
  */
-u_int32_t
-libnet_compute_crc(u_int8_t *buf, u_int32_t len)
+uint32_t
+libnet_compute_crc(uint8_t *buf, uint32_t len)
 {
-    u_int32_t val;
+    uint32_t val;
 
     val = ~0;
     while (len--)

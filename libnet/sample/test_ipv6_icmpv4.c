@@ -86,7 +86,7 @@ main(int argc, char *argv[])
     /* 0x2000: RSO */
     icmp_ptag = libnet_build_icmpv4_echo(
             136,0,0,0x2000,0,
-            (u_int8_t *)payload,sizeof(payload), l, LIBNET_PTAG_INITIALIZER);
+            (uint8_t *)payload,sizeof(payload), l, LIBNET_PTAG_INITIALIZER);
     assert(icmp_ptag);
 
     ipv6_ptag = libnet_build_ipv6(
@@ -103,8 +103,8 @@ main(int argc, char *argv[])
     print_pblocks(l);
 
     {
-       u_int8_t* pkt1 = NULL;
-       u_int32_t pkt1_sz = 0;
+       uint8_t* pkt1 = NULL;
+       uint32_t pkt1_sz = 0;
        r = libnet_pblock_coalesce(l, &pkt1, &pkt1_sz);
        assert(r >= 0);
 

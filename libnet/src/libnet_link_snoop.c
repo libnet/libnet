@@ -58,7 +58,7 @@ libnet_open_link(libnet_t *l)
 {
     int fd;
     struct sockaddr_raw sr;
-    u_int v;
+    uint v;
 
     if (l == NULL) { 
         return -1;
@@ -122,19 +122,17 @@ libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {
-        free(l);
         return (1);
     }
     else
     {
-        free(l);
         return (-1);
     }
 }
 
 
 int
-libnet_write_link(libnet_t *l, u_int8_t *buf, u_int32_t len)
+libnet_write_link(libnet_t *l, uint8_t *buf, uint32_t len)
 {
     int c;
     struct ifreq ifr;
@@ -192,7 +190,13 @@ libnet_get_hwaddr(libnet_t *l)
     ret = &ea;
 out:
     if (f) {
-        fclose(f);
+        pclose(f);
     }
     return ret;
 }
+/* ---- Emacs Variables ----
+ * Local Variables:
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

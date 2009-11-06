@@ -40,7 +40,7 @@
 #endif
 
 int
-libnet_adv_cull_packet(libnet_t *l, u_int8_t **packet, u_int32_t *packet_s)
+libnet_adv_cull_packet(libnet_t *l, uint8_t **packet, uint32_t *packet_s)
 {
     *packet = NULL;
     *packet_s = 0;
@@ -57,8 +57,8 @@ libnet_adv_cull_packet(libnet_t *l, u_int8_t **packet, u_int32_t *packet_s)
 }
 
 int
-libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, u_int8_t **header,
-        u_int32_t *header_s)
+libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
+        uint32_t *header_s)
 {
     libnet_pblock_t *p;
 
@@ -86,7 +86,7 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, u_int8_t **header,
 }
 
 int
-libnet_adv_write_link(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
+libnet_adv_write_link(libnet_t *l, uint8_t *packet, uint32_t packet_s)
 {
     int c;
 
@@ -120,7 +120,7 @@ libnet_adv_write_link(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
 }
 
 int
-libnet_adv_write_raw_ipv4(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
+libnet_adv_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t packet_s)
 {
     int c;
 
@@ -154,7 +154,7 @@ libnet_adv_write_raw_ipv4(libnet_t *l, u_int8_t *packet, u_int32_t packet_s)
 }
 
 void
-libnet_adv_free_packet(libnet_t *l, u_int8_t *packet)
+libnet_adv_free_packet(libnet_t *l, uint8_t *packet)
 {
     /*
      *  Restore original pointer address so free won't complain about a

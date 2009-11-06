@@ -69,10 +69,10 @@ libnet_seed_prand(libnet_t *l)
 }
 
 
-u_int32_t
+uint32_t
 libnet_get_prand(int mod)
 {
-    u_int32_t n;  /* 0 to 4,294,967,295 */
+    uint32_t n;  /* 0 to 4,294,967,295 */
 #ifndef _WIN32
     n = random();
 #else
