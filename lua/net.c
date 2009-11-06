@@ -252,6 +252,71 @@ static int lnet_block(lua_State* L)
 }
 
 /*-
+- net:clear()
+
+Clears the current packet, clearing all pblocks.
+*/
+static int lnet_clear(lua_State* L)
+{
+    libnet_t** ud = luaL_checkudata(L, 1, L_NET_REGID);
+    luaL_argcheck(L, *ud, 1, "net has been destroyed");
+
+    libnet_clear_packet(*ud);
+}
+
+/*-
+- net:fd()
+
+Get the fileno of the underlying file descriptor.
+*/
+static int lnet_getfd(lua_State* L)
+{ 
+    libnet_t** ud = luaL_checkudata(L, 1, L_NET_REGID);
+    luaL_argcheck(L, *ud, 1, "net has been destroyed");
+
+    lua_pushinteger(L, libnet_getfd(*ud));
+    return 1;
+}
+
+/*-
+- net:device()
+
+Get the device name, maybe be nil.
+*/
+static int lnet_getdevice(lua_State* L)
+{ 
+    libnet_t** ud = luaL_checkudata(L, 1, L_NET_REGID);
+    luaL_argcheck(L, *ud, 1, "net has been destroyed");
+    const char* device = libnet_getdevice(*ud);
+    if(device)
+      lua_pushstring(L, libnet_getfd(*ud));
+    else
+      lua_pushnil(L);
+
+    return 1;
+}
+
+/*-
+- net:pbuf(ptag)
+*/
+static int lnet_pbuf(lua_State* L)
+{
+    libnet_t** ud = luaL_checkudata(L, 1, L_NET_REGID);
+    luaL_argcheck(L, *ud, 1, "net has been destroyed");
+    int ptag = luaL_checkint(L, 2);
+    void* pbuf = libnet_getpbuf(*ud, ptag);
+
+    if(!pbuf)
+      return net_error(L, *ud);
+
+    size_t pbufsz = libnet_getpbuf_size(*ud, ptag);
+
+    lua_pushlstring(*ud, pbuf, pbufsz);
+
+    return 1;
+}
+
+/*-
 - net:write()
 
 Write the packet (which must previously have been built up inside the context).
@@ -511,7 +576,8 @@ static int lnet_init(lua_State *L)
         LIBNET_LINK, LIBNET_LINK_ADV, LIBNET_RAW4, LIBNET_RAW4_ADV, LIBNET_RAW6, LIBNET_RAW6_ADV
     };
     char errbuf[LIBNET_ERRBUF_SIZE];
-    int type = injection_val[luaL_checkoption(L, 1, NULL, injection_opt)];
+    int type = injection_val[luaL_checkoption(L, 1, "link", injection_opt)];
+    // FIXME provide a default injection type
     const char *device = luaL_checkstring(L, 2);
 
     libnet_t** ud = lua_newuserdata(L, sizeof(*ud));
@@ -533,6 +599,7 @@ static const luaL_reg net_methods[] =
 {
   {"__gc", lnet_destroy},
   {"destroy", lnet_destroy},
+  {"clear", lnet_clear},
   {"write", lnet_write},
   {"udp", lnet_udp},
   {"ipv4", lnet_ipv4},
@@ -548,7 +615,6 @@ static const luaL_reg net[] =
   {"init", lnet_init},
   {"pton", lnet_pton},
   {"checksum", lnet_chksum},
-  {"nanosleep", lnet_nanosleep},
   {NULL, NULL}
 };
 
