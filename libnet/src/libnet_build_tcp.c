@@ -138,7 +138,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
 				    "%s(): TCP data pblock not found\n", __func__);
         }
-     }
+    }
 
     /* update ip_len if present */
     if (ptag_hold && p->next)
