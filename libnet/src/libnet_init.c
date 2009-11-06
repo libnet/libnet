@@ -40,7 +40,7 @@
 #endif
 
 libnet_t *
-libnet_init(int injection_type, char *device, char *err_buf)
+libnet_init(int injection_type, const char *device, char *err_buf)
 {
     libnet_t *l = NULL;
 
