@@ -8,6 +8,8 @@
 
 include $(top_srcdir)/Makefile.am.common
 
+EXTRA_DIST = libnet_dll.c
+
 lib_LTLIBRARIES = libnet.la
 
 libnet_la_SOURCES = libnet_asn1.c \
@@ -30,6 +32,7 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_build_ip.c \
 			libnet_build_ipsec.c \
 			libnet_build_isl.c \
+			libnet_build_link.c \
 			libnet_build_mpls.c \
 			libnet_build_ntp.c \
 			libnet_build_ospf.c \
