@@ -6,6 +6,7 @@
 
 - 1.1.5
 
+    - libnet_clear_packet() wasn't clearing all packet context (Sam Roberts)
     - Fixed snoop-based backend. Works on IRIX. (Thomas Habets)
     - Use uint64_t, not u_int64_t. (Thomas Habets, Sam Roberts)
     - Define a gethostbyname2() if it's not defined. (Thomas Habets)

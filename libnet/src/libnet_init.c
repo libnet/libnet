@@ -145,24 +145,18 @@ libnet_clear_packet(libnet_t *l)
     libnet_pblock_t *p;
     libnet_pblock_t *next;
 
-    if (l)
+    if (!l)
     {
-        p = l->protocol_blocks;
-        if (p)
-        {
-            for (; p; p = next)
-            {
-                next = p->next;
-                if (p->buf)
-                {
-                    free(p->buf);
-                }
-                free(p);
-            }
-        }
-        l->protocol_blocks = NULL;
-        l->total_size = 0;
+        return;
     }
+
+    while((p = l->protocol_blocks))
+    {
+        libnet_pblock_delete(l, p);
+    }
+
+    /* All pblocks are deleted, so start the tag count over from 1. */
+    l->ptag_state = 0;
 }
 
 void
