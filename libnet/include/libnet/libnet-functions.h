@@ -1435,7 +1435,8 @@ libnet_ptag_t ptag);
 /**
  * Builds a generic libnet protocol header. This is useful for including an
  * optional payload to a packet that might need to change repeatedly inside
- * of a loop.
+ * of a loop. This won't work for TCP or IP payload, they have special types
+ * (this is probably a bug).
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
