@@ -31,6 +31,8 @@
  *
  */
 
+#include <net/bpf.h>
+
 #if (HAVE_CONFIG_H)
 #include "../include/config.h"
 #endif

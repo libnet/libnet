@@ -32,6 +32,7 @@ libnet/doc/html/*.png
 libnet/doc/html/*.gif
 libnet/doc/man/man3/*.3
 libnet/m4
+libnet/include/libnet.h
 libnet/sample/arp
 libnet/sample/bgp4_hdr
 libnet/sample/bgp4_notification
