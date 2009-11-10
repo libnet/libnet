@@ -86,7 +86,7 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
 }
 
 int
-libnet_adv_write_link(libnet_t *l, uint8_t *packet, uint32_t packet_s)
+libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
     int c;
 
@@ -120,7 +120,7 @@ libnet_adv_write_link(libnet_t *l, uint8_t *packet, uint32_t packet_s)
 }
 
 int
-libnet_adv_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t packet_s)
+libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
     int c;
 

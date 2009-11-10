@@ -132,7 +132,7 @@ libnet_close_link(libnet_t *l)
 
 
 int
-libnet_write_link(libnet_t *l, uint8_t *buf, uint32_t len)
+libnet_write_link(libnet_t *l, const uint8_t *buf, uint32_t len)
 {
     int c;
     struct ifreq ifr;

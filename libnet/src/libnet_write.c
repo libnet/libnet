@@ -189,7 +189,7 @@ libnet_ptag_t ptag)
 }
 
 int
-libnet_win32_write_raw_ipv4(libnet_t *l, uint8_t *payload, uint32_t payload_s)
+libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payload_s)
 {    
     static BYTE dst[ETHER_ADDR_LEN];
     static BYTE src[ETHER_ADDR_LEN];

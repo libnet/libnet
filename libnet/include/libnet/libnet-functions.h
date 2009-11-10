@@ -1868,7 +1868,7 @@ uint32_t *header_s);
  * @return the number of bytes written, or -1 on failure
  */
 int
-libnet_adv_write_link(libnet_t *l, uint8_t *packet, uint32_t packet_s);
+libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
 
 /**
  * [Advanced Interface] 
@@ -1884,7 +1884,7 @@ libnet_adv_write_link(libnet_t *l, uint8_t *packet, uint32_t packet_s);
  * @return the number of bytes written, or -1 on failure
  */
 int
-libnet_adv_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t packet_s);
+libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
 
 /**
  * [Advanced Interface] 

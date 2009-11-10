@@ -51,7 +51,7 @@ libnet_close_link(libnet_t *l)
 
 
 int
-libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     return (-1);
 }

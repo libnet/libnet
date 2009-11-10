@@ -665,7 +665,7 @@ libnet_close_link(libnet_t *l)
 
 #ifdef HAVE_HPUX11
 int 
-libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)   
+libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)   
 {                                                             
     struct strbuf data, ctl;
     dl_hp_rawdata_req_t *rdata;
@@ -703,7 +703,7 @@ libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
 }   
 #else
 int
-libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     int c;
     struct strbuf data;

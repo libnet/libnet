@@ -194,7 +194,7 @@ get_iface_index(int fd, const char *device)
 
 
 int
-libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     int c;
 #if (HAVE_PACKET_SOCKET)
