@@ -1,13 +1,10 @@
 CWARNS = -Wall \
 	 -pedantic \
-        -Waggregate-return \
         -Wcast-align \
-        -Wmissing-prototypes \
         -Wnested-externs \
         -Wpointer-arith \
         -Wshadow \
-        -Wwrite-strings \
-        -Wcast-qual
+        -Wwrite-strings
 
 COPT = -O2 -DNDEBUG
 CFLAGS = $(CWARNS) -ansi -I$(LUADIR) -fno-common -bundle -undefined dynamic_lookup
