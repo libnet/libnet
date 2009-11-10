@@ -40,7 +40,7 @@
 #endif
 
 void
-libnet_diag_dump_hex(uint8_t *packet, uint32_t len, int swap, FILE *stream)
+libnet_diag_dump_hex(const uint8_t *packet, uint32_t len, int swap, FILE *stream)
 {
     int i, s_cnt;
     uint16_t *p;

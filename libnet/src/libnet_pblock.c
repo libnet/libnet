@@ -253,7 +253,7 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag)
 }
 
 int
-libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, uint8_t *buf,
+libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const uint8_t *buf,
             uint32_t len)
 {
     if (p->copied + len > p->b_len)

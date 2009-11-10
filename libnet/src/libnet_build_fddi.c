@@ -40,7 +40,7 @@
 
 libnet_ptag_t
 libnet_build_fddi(uint8_t fc, uint8_t *dst, uint8_t *src, uint8_t dsap,
-uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type, uint8_t *payload,
+uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

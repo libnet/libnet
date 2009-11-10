@@ -46,7 +46,7 @@ uint16_t delay_frac, uint16_t dispersion_int, uint16_t dispersion_frac,
 uint32_t reference_id, uint32_t ref_ts_int, uint32_t ref_ts_frac,
 uint32_t orig_ts_int, uint32_t orig_ts_frac, uint32_t rec_ts_int,
 uint32_t rec_ts_frac, uint32_t xmt_ts_int, uint32_t xmt_ts_frac,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;

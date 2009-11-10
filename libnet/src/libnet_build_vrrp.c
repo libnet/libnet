@@ -42,7 +42,7 @@
 libnet_ptag_t
 libnet_build_vrrp(uint8_t version, uint8_t type, uint8_t vrouter_id, 
 uint8_t priority, uint8_t ip_count, uint8_t auth_type, uint8_t advert_int,
-uint16_t sum, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint16_t sum, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;

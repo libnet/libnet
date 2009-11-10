@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_mpls(uint32_t label, uint8_t experimental, uint8_t bos, 
-uint8_t ttl, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint8_t ttl, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;

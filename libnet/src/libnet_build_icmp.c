@@ -73,7 +73,7 @@ do                                                                           \
 
 libnet_ptag_t
 libnet_build_icmpv4_echo(uint8_t type, uint8_t code, uint16_t sum,
-uint16_t id, uint16_t seq, uint8_t *payload, uint32_t payload_s,
+uint16_t id, uint16_t seq, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag) 
 {
     uint32_t n, h;
@@ -132,7 +132,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_icmpv4_mask(uint8_t type, uint8_t code, uint16_t sum,
-uint16_t id, uint16_t seq, uint32_t mask, uint8_t *payload,
+uint16_t id, uint16_t seq, uint32_t mask, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -193,7 +193,7 @@ bad:
 libnet_ptag_t
 libnet_build_icmpv4_timestamp(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, n_time otime, n_time rtime, n_time ttime,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -254,7 +254,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_icmpv4_unreach(uint8_t type, uint8_t code, uint16_t sum,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -301,7 +301,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_icmpv4_timeexceed(uint8_t type, uint8_t code, uint16_t sum,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -349,7 +349,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_icmpv4_redirect(uint8_t type, uint8_t code, uint16_t sum,
-uint32_t gateway, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint32_t gateway, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 
 {

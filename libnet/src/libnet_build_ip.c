@@ -44,7 +44,7 @@
 libnet_ptag_t
 libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
 uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n = LIBNET_IPV4_H; /* size of memory block */
     libnet_pblock_t *p, *p_data, *p_temp;
@@ -333,7 +333,7 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv4_options(uint8_t *options, uint32_t options_s, libnet_t *l, 
+libnet_build_ipv4_options(const uint8_t *options, uint32_t options_s, libnet_t *l, 
 libnet_ptag_t ptag)
 {
     int options_size_increase = 0; /* increase will be negative if it's a decrease */
@@ -431,7 +431,7 @@ bad:
 libnet_ptag_t
 libnet_build_ipv6(uint8_t tc, uint32_t fl, uint16_t len, uint8_t nh,
 uint8_t hl, struct libnet_in6_addr src, struct libnet_in6_addr dst, 
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {   
     uint32_t n;
     libnet_pblock_t *p;
@@ -496,7 +496,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ipv6_frag(uint8_t nh, uint8_t reserved, uint16_t frag,
-uint32_t id, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint32_t id, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n;
@@ -562,7 +562,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ipv6_routing(uint8_t nh, uint8_t len, uint8_t rtype, 
-uint8_t segments, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint8_t segments, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n;
@@ -630,7 +630,7 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_destopts(uint8_t nh, uint8_t len, uint8_t *payload,
+libnet_build_ipv6_destopts(uint8_t nh, uint8_t len, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
@@ -696,7 +696,7 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, uint8_t *payload,
+libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;

@@ -42,7 +42,7 @@
 libnet_ptag_t
 libnet_build_isl(uint8_t *dhost, uint8_t type, uint8_t user,
 uint8_t *shost, uint16_t len, uint8_t *snap, uint16_t vid,
-uint16_t portindex, uint16_t reserved, uint8_t *payload,
+uint16_t portindex, uint16_t reserved, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

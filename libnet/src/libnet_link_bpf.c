@@ -51,10 +51,10 @@
 #endif
 
 int
-libnet_bpf_open(int8_t *err_buf)
+libnet_bpf_open(char *err_buf)
 {
     int i, fd;
-    int8_t device[sizeof "/dev/bpf000"];
+    char device[] = "/dev/bpf000";
 
     /*
      *  Go through all the minors and find one that isn't in use.
@@ -113,7 +113,7 @@ libnet_open_link(libnet_t *l)
         goto bad;
     }
 
-    l->fd = libnet_bpf_open(l->err_buf);
+    l->fd = libnet_bpf_open((char*)l->err_buf);
     if (l->fd == -1)
     {
         goto bad;
@@ -232,7 +232,7 @@ libnet_close_link(libnet_t *l)
 
 
 int
-libnet_write_link(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     int c;
 

@@ -43,7 +43,7 @@
 
 libnet_ptag_t
 libnet_build_ipsec_esp_hdr(uint32_t spi, uint32_t seq, uint32_t iv,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -91,7 +91,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
-            uint8_t *payload, uint32_t payload_s, libnet_t *l,
+            const uint8_t *payload, uint32_t payload_s, libnet_t *l,
             libnet_ptag_t ptag)
 {
     /* XXX we need to know the size of auth */
@@ -141,7 +141,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ipsec_ah(uint8_t nh, uint8_t len, uint16_t res,
-uint32_t spi, uint32_t seq, uint32_t auth, uint8_t *payload,
+uint32_t spi, uint32_t seq, uint32_t auth, const uint8_t *payload,
 uint32_t payload_s,  libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

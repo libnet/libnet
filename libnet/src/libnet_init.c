@@ -85,12 +85,12 @@ libnet_init(int injection_type, const char *device, char *err_buf)
         case LIBNET_LINK_ADV:
             if (libnet_select_device(l) == -1)
             {
-                snprintf(err_buf, LIBNET_ERRBUF_SIZE, l->err_buf);
+                snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s", l->err_buf);
 		goto bad;
             }
             if (libnet_open_link(l) == -1)
             {
-                snprintf(err_buf, LIBNET_ERRBUF_SIZE, l->err_buf);
+                snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s", l->err_buf);
                 goto bad;
             }
             break;
@@ -98,7 +98,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
         case LIBNET_RAW4_ADV:
             if (libnet_open_raw4(l) == -1)
             {
-                snprintf(err_buf, LIBNET_ERRBUF_SIZE, l->err_buf);
+                snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s", l->err_buf);
                 goto bad;
             }
             break;
@@ -106,7 +106,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
         case LIBNET_RAW6_ADV:
             if (libnet_open_raw6(l) == -1)
             {
-                snprintf(err_buf, LIBNET_ERRBUF_SIZE, l->err_buf);
+                snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s", l->err_buf);
                 goto bad;
             }
             break;
@@ -143,7 +143,6 @@ void
 libnet_clear_packet(libnet_t *l)
 {
     libnet_pblock_t *p;
-    libnet_pblock_t *next;
 
     if (!l)
     {

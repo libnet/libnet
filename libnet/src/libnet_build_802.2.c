@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_802_2(uint8_t dsap, uint8_t ssap, uint8_t control, 
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -88,7 +88,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_802_2snap(uint8_t dsap, uint8_t ssap, uint8_t control,
-uint8_t *oui, uint16_t type, uint8_t *payload, uint32_t payload_s,
+uint8_t *oui, uint16_t type, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

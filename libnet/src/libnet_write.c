@@ -285,13 +285,13 @@ libnet_win32_write_raw_ipv4(libnet_t *l, uint8_t *payload, uint32_t payload_s)
 }
 
 int
-libnet_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     return (libnet_win32_write_raw_ipv4(l, packet, size));
 }
 
 int
-libnet_write_raw_ipv6(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     /* no difference in win32 */
     return (libnet_write_raw_ipv4(l, packet, size));
@@ -300,7 +300,7 @@ libnet_write_raw_ipv6(libnet_t *l, uint8_t *packet, uint32_t size)
 #else /* __WIN32__ */
 
 int
-libnet_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     int c;
     struct sockaddr_in sin;
@@ -376,7 +376,7 @@ libnet_write_raw_ipv4(libnet_t *l, uint8_t *packet, uint32_t size)
 }
 
 int
-libnet_write_raw_ipv6(libnet_t *l, uint8_t *packet, uint32_t size)
+libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
 #if defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support\n",

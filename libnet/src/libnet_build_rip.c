@@ -42,7 +42,7 @@
 libnet_ptag_t
 libnet_build_rip(uint8_t cmd, uint8_t version, uint16_t rd, uint16_t af,
 uint16_t rt, uint32_t addr, uint32_t mask, uint32_t next_hop,
-uint32_t metric, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint32_t metric, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;

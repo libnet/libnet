@@ -42,7 +42,7 @@
 libnet_ptag_t
 libnet_build_tcp(uint16_t sp, uint16_t dp, uint32_t seq, uint32_t ack,
 uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t len,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     int n, offset;
     uint32_t i, j;

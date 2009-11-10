@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_ethernet(uint8_t *dst, uint8_t *src, uint16_t type, 
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;

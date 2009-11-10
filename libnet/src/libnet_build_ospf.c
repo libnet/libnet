@@ -44,7 +44,7 @@
 
 libnet_ptag_t
 libnet_build_ospfv2(uint16_t len, uint8_t type, uint32_t rtr_id, 
-uint32_t area_id, uint16_t sum, uint16_t autype, uint8_t *payload, 
+uint32_t area_id, uint16_t sum, uint16_t autype, const uint8_t *payload, 
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -106,7 +106,7 @@ bad:
 libnet_ptag_t
 libnet_build_ospfv2_hello(uint32_t netmask, uint16_t interval, uint8_t opts, 
 uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -159,7 +159,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ospfv2_dbd(uint16_t dgram_len, uint8_t opts, uint8_t type,
-uint32_t seqnum, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint32_t seqnum, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -209,7 +209,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ospfv2_lsr(uint32_t type, uint lsid, uint32_t advrtr, 
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -256,7 +256,7 @@ bad:
 
 
 libnet_ptag_t
-libnet_build_ospfv2_lsu(uint32_t num, uint8_t *payload, uint32_t payload_s,
+libnet_build_ospfv2_lsu(uint32_t num, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -304,7 +304,7 @@ bad:
 libnet_ptag_t
 libnet_build_ospfv2_lsa(uint16_t age, uint8_t opts, uint8_t type, uint lsid,
 uint32_t advrtr, uint32_t seqnum, uint16_t sum, uint16_t len,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -367,7 +367,7 @@ bad:
 libnet_ptag_t
 libnet_build_ospfv2_lsa_rtr(uint16_t flags, uint16_t num, uint32_t id,
 uint32_t data, uint8_t type, uint8_t tos, uint16_t metric,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -420,7 +420,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ospfv2_lsa_net(uint32_t nmask, uint32_t rtrid,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -468,7 +468,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ospfv2_lsa_sum(uint32_t nmask, uint32_t metric, uint tos, 
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;
@@ -517,7 +517,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_ospfv2_lsa_as(uint32_t nmask, uint metric, uint32_t fwdaddr,
-uint32_t tag, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint32_t tag, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;

@@ -41,7 +41,7 @@
 
 /* FIXME this won't work with TCP or IPv4 data, which is probably a bug */
 libnet_ptag_t
-libnet_build_data(uint8_t *payload, uint32_t payload_s, libnet_t *l,
+libnet_build_data(const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n, h;

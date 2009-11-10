@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_bgp4_header(uint8_t marker[LIBNET_BGP4_MARKER_SIZE],
-uint16_t len, uint8_t type, uint8_t *payload, uint32_t payload_s,
+uint16_t len, uint8_t type, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -89,7 +89,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_bgp4_open(uint8_t version, uint16_t src_as, uint16_t hold_time,
-uint32_t bgp_id, uint8_t opt_len, uint8_t *payload, uint32_t payload_s,
+uint32_t bgp_id, uint8_t opt_len, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -161,7 +161,7 @@ bad:
 libnet_ptag_t
 libnet_build_bgp4_update(uint16_t unfeasible_rt_len, uint8_t *withdrawn_rt,
 uint16_t total_path_attr_len, uint8_t *path_attributes, uint16_t info_len,
-uint8_t *reachability_info, uint8_t *payload, uint32_t payload_s,
+uint8_t *reachability_info, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -246,7 +246,7 @@ bad:
 
 libnet_ptag_t
 libnet_build_bgp4_notification(uint8_t err_code, uint8_t err_subcode,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
     libnet_pblock_t *p;

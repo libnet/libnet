@@ -43,7 +43,7 @@
 libnet_ptag_t
 libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
             uint16_t num_q, uint16_t num_anws_rr, uint16_t num_auth_rr,
-            uint16_t num_addi_rr, uint8_t *payload, uint32_t payload_s,
+            uint16_t num_addi_rr, const uint8_t *payload, uint32_t payload_s,
             libnet_t *l, libnet_ptag_t ptag)
 {
 

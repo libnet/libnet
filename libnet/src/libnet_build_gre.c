@@ -174,7 +174,7 @@ libnet_getgre_length(uint16_t fv)
 libnet_ptag_t
 libnet_build_gre(uint16_t fv, uint16_t type, uint16_t sum, 
 uint16_t offset, uint32_t key, uint32_t seq, uint16_t len,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
     libnet_pblock_t *p;
@@ -271,7 +271,7 @@ bad:
 libnet_ptag_t
 libnet_build_egre(uint16_t fv, uint16_t type, uint16_t sum, 
 uint16_t offset, uint32_t key, uint32_t seq, uint16_t len,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     return (libnet_build_gre(fv, type, sum, offset, key, seq, len, 
            payload, payload_s, l, ptag));
@@ -297,7 +297,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
  */
 libnet_ptag_t
 libnet_build_gre_sre(uint16_t af, uint8_t offset, uint8_t length, 
-uint8_t *routing, uint8_t *payload, uint32_t payload_s, libnet_t *l,
+uint8_t *routing, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n;

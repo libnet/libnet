@@ -107,8 +107,7 @@ libnet_open_raw4(libnet_t *l)
     if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, nptr, sizeof(n)) == -1)
 #else
     n = TRUE;
-    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, (int8_t *)&n,
-            sizeof(n)) == -1)
+    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1)
 #endif
 
     {
