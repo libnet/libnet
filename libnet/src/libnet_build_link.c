@@ -31,7 +31,9 @@
  *
  */
 
-#include <net/bpf.h>
+/* OSX? #include <net/bpf.h> */
+
+#include <pcap.h>
 
 #if (HAVE_CONFIG_H)
 #include "../include/config.h"
