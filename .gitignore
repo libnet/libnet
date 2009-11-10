@@ -1,6 +1,7 @@
 *.a
 *.la
 *.lo
+*.loT
 *.o
 .*.swp
 .libs
