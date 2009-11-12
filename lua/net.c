@@ -240,6 +240,16 @@ static int lnet_dump(lua_State* L)
     return 1;
 }
 
+#ifdef NET_DUMP
+/* Call from inside gdb to see current state of libnet stack */
+void dump(lua_State* L) {
+  lnet_dump(L);
+  printf("%s\n", lua_tostring(L, -1));
+  lua_pop(L, 1);
+}
+#endif
+
+
 /*-
 - net = net:clear()
 
@@ -553,7 +563,7 @@ static int lnet_ipv4 (lua_State *L)
      *   - has final ip options bloc, or not
      */
 
-    if(!payload) {
+    if(!options) {
       libnet_pblock_delete(ud, oblock);
     } else {
       options_ptag = libnet_build_ipv4_options(options, optionsz, ud, options_ptag);
