@@ -523,6 +523,7 @@ static int lnet_ipv4 (lua_State *L)
     const uint8_t* options = checklbuffer(L, 2, "options", &optionsz);
     uint32_t src_n;
     uint32_t dst_n;
+    libnet_pblock_t* oblock = NULL;
 
 #ifdef NET_DUMP
     printf("net ipv4 src %s dst %s len %d payloadsz %lu ptag %d optionsz %lu\n", src, dst, len, payloadsz, ptag, optionsz);
@@ -531,30 +532,43 @@ static int lnet_ipv4 (lua_State *L)
     src_n = check_ip_pton(L, src, "src");
     dst_n = check_ip_pton(L, dst, "dst");
 
-    if(ptag) {
-        /* Modifying exist IPv4 packet, so find the preceeding options block (we
-         * _always_ push an options block, perhaps empty, to make this easy).
-         */
-        libnet_pblock_t* p = libnet_pblock_find(ud, ptag);
-
-        if(!p)
-            return check_error(L, ud, -1);
-
-        options_ptag = p->prev->ptag;
-    }
-
 #ifdef NET_DUMP
     printf("  options_ptag %d optionsz %lu\n", options_ptag, optionsz);
 #endif
 
-    options_ptag = libnet_build_ipv4_options(options, optionsz, ud, options_ptag);
-
-    check_error(L, ud, options_ptag);
-
     ptag = libnet_build_ipv4(len, tos, id, offset, ttl, protocol, cksum, src_n,
             dst_n, payload, payloadsz, ud, ptag);
     check_error(L, ud, ptag);
+
+    oblock = libnet_pblock_find(ud, ptag)->prev;
+
+    if(!oblock || oblock->type != LIBNET_PBLOCK_IPO_H)
+      oblock = NULL;
+    else
+      options_ptag = oblock->ptag;
+    
+    /* Two initial states possible:
+     *   - has prev ip options block, or not
+     * Two final states desired:
+     *   - has final ip options bloc, or not
+     */
+
+    if(!payload) {
+      libnet_pblock_delete(ud, oblock);
+    } else {
+      options_ptag = libnet_build_ipv4_options(options, optionsz, ud, options_ptag);
+
+      check_error(L, ud, options_ptag);
+
+      if(oblock) {
+	/* we replaced an existing block that was correctly placed */
+      } else {
+	libnet_pblock_insert_before(ud, ptag, options_ptag);
+      }
+    }
+
     lua_pushinteger(L, ptag);
+
     return 1;
 }
 
