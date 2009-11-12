@@ -7,11 +7,13 @@ do
   local iptag0 = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
   n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 
-  print("ipv4 initial", n:dump())
+  print("ipv4 initial", iptag0)
+  dump(n)
   local block0 = n:block()
 
   local iptag1 = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA", ptag=iptag0}
-  print("ipv4 final", n:dump())
+  print("ipv4 final", iptag1)
+  dump(n)
   local block1 = n:block()
   assert(iptag0 == iptag1)
   assert(block0 == block1)

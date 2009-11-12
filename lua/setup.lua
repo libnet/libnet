@@ -21,10 +21,10 @@ end
 function dump(n, size)
     local b = n:block()
     print(n:dump())
-    print("[["..q(b).."]]")
+    print("sz="..#b.." [["..q(b).."]]")
 
     if size then
-        assert(#b == size, "block's size is not correct")
+        assert(#b == size, "block's size is not expected, "..size)
     end
 end
 
