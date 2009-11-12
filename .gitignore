@@ -6,7 +6,8 @@
 .*.swp
 .libs
 Makefile.in
-a.out.dSYM
+*.out.dSYM
+*.so.dSYM
 aclocal.m4
 autom4te.cache/
 config.guess
