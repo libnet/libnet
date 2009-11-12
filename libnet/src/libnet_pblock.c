@@ -204,6 +204,27 @@ libnet_pblock_swap(libnet_t *l, libnet_ptag_t ptag1, libnet_ptag_t ptag2)
     return (1);
 }
 
+static void libnet_pblock_remove_from_list(libnet_t *l, libnet_pblock_t *p)
+{
+	if (p->prev) 
+	{
+		p->prev->next = p->next;
+	}
+	else
+	{
+		l->protocol_blocks = p->next;
+	}
+
+	if (p->next)
+	{
+		p->next->prev = p->prev;
+	}
+	else
+	{
+		l->pblock_end = p->prev;
+	}
+}
+
 int
 libnet_pblock_insert_before(libnet_t *l, libnet_ptag_t ptag1,
         libnet_ptag_t ptag2)
@@ -218,6 +239,13 @@ libnet_pblock_insert_before(libnet_t *l, libnet_ptag_t ptag1,
         return (-1);
     }
 
+	/* check for already present before */
+	if(p2->next == p1)
+		return 1;
+
+	libnet_pblock_remove_from_list(l, p2);
+
+    /* insert p2 into list */
     p2->prev = p1->prev;
     p2->next = p1;
     p1->prev = p2;
@@ -434,23 +462,8 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p)
     {
         l->total_size -= p->b_len;
         l->n_pblocks--;
-        if (p->prev) 
-        {
-            p->prev->next = p->next;
-        }
-        else
-        {
-            l->protocol_blocks = p->next;
-        }
 
-        if (p->next)
-        {
-            p->next->prev = p->prev;
-        }
-        else
-        {
-            l->pblock_end = p->prev;
-        }
+	libnet_pblock_remove_from_list(l, p);
 
         if (p->buf)
         {
