@@ -2181,7 +2181,7 @@ libnet_pblock_swap(libnet_t *l, libnet_ptag_t ptag1, libnet_ptag_t ptag2);
 
 /*
  * [Internal] 
- * Function inserts a pblock into the doubly linked list.
+ * Function inserts ptag2 before ptag1 in the doubly linked list.
  */
 int
 libnet_pblock_insert_before(libnet_t *l, libnet_ptag_t ptag1,
@@ -2205,14 +2205,21 @@ libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h,
 uint8_t type);
 
 
- /*
-  * [Internal]
-  * Checksums are a real pain in the <beep>!!!
-  * Function updates referer used to compute the checksum. All
-  * pblock need to know where is their referer (ie IP header).
-  * So, this function is called each time a new IP header is inserted.
-  * It updates the ip_offset field (referer) of each previous pblock.
-  */
+/*
+ * [Internal]
+ * Checksums are a real pain in the <beep>!!!
+ * Function updates referer used to compute the checksum. All
+ * pblock need to know where is their referer (ie IP header).
+ * So, this function is called each time a new IP header is inserted.
+ * It updates the ip_offset field (referer) of each previous pblock.
+ *
+ * FIXME - SR: this approach is fundamentally broken. Any change to any
+ * protocol blocks encapsulated in IP cause ip_offset to be invalidated, so
+ * essentially every modification of a pblock, if it doesn't search for the
+ * previous IP header and change all the offsets, will cause segfaults and
+ * other mayhem. Blocks that that need to find the IP header in order to
+ * calculate the checksum should do so at checksum calculation time.
+ */
 void
 libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p);
 
