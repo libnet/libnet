@@ -1,0 +1,102 @@
+diff --git a/libnet/src/libnet_pblock.c b/libnet/src/libnet_pblock.c
+index 4cec627..07d72a6 100644
+--- a/libnet/src/libnet_pblock.c
++++ b/libnet/src/libnet_pblock.c
+@@ -527,6 +527,16 @@ libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
+ 
+     for(c = p; c; c = c->prev)
+         c->ip_offset = ip_offset;
++
++    if(p->type == LIBNET_PBLOCK_IPV4_H) {
++	struct libnet_ipv4_hdr* hdr = (struct libnet_ipv4_hdr*)p->buf;
++	hdr->ip_len = htons(ip_offset);
++	hdr->ip_hl = LIBNET_IPV4_H;
++	if(p->prev && p->prev->type == LIBNET_PBLOCK_IPO_H) {
++	    hdr->ip_hl += p->prev->b_len;
++	}
++	hdr->ip_hl = htons(hdr->ip_hl / 4);
++    }
+ }
+ 
+ 
+diff --git a/lua/net.c b/lua/net.c
+index e466695..638df5e 100644
+--- a/lua/net.c
++++ b/lua/net.c
+@@ -577,6 +577,8 @@ static int lnet_ipv4 (lua_State *L)
+       }
+     }
+ 
++    libnet_pblock_record_ip_offset(ud, libnet_pblock_find(ud, ptag));
++
+     lua_pushinteger(L, ptag);
+ 
+     return 1;
+diff --git a/lua/setup.lua b/lua/setup.lua
+index 0c0854c..6cf7a81 100644
+--- a/lua/setup.lua
++++ b/lua/setup.lua
+@@ -17,11 +17,21 @@ function q(_)
+   return _
+ end
+ 
++function h(_)
++  local fmt = string.format
++  _ = string.gsub(_, ".", function (x)
++    return fmt("%02x",string.byte(x))
++  end)
++
++  return _
++end
+ 
+ function dump(n, size)
+     local b = n:block()
+     print(n:dump())
+-    print("sz="..#b.." [["..q(b).."]]")
++    print("size="..#b)
++    print("q=[["..q(b).."]]")
++    print("h=[["..h(b).."]]")
+ 
+     if size then
+         assert(#b == size, "block's size is not expected, "..size)
+diff --git a/lua/test-ipv4.lua b/lua/test-ipv4.lua
+index 77e043b..ce0c446 100644
+--- a/lua/test-ipv4.lua
++++ b/lua/test-ipv4.lua
+@@ -4,8 +4,8 @@ do
+   print"test: ipv4, replace with identical"
+ 
+   local n = net.init("link", DEV) 
+-  local iptag0 = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
+-  n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
++  local iptag0 = n:ipv4{src="1.2.3.4", dst="1.2.3.4", protocol=2, len=20+4, options="AAAA"}
++  n:eth{src="01:02:03:04:05:06", dst="01:02:03:04:05:06"}
+ 
+   print("ipv4 initial", iptag0)
+   dump(n)
+@@ -19,6 +19,8 @@ do
+   assert(block0 == block1)
+ end
+ 
++print""
++
+ do
+   print"test: ipv4, replace eth with ipv4"
+ 
+@@ -29,6 +31,8 @@ do
+   print("successfully failed", emsg)
+ end
+ 
++print""
++
+ do
+   local n = net.init("link", DEV) 
+   ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"})
+@@ -36,7 +40,6 @@ do
+   assert(ok, "net:ipv4 fails to construct ipv4 options correctly")
+ end
+ 
+-
+ print""
+ 
+ do
