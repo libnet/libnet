@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Wurldtech Security Technologies All rights reserved.
+Copyright (C) 2010 Wurldtech Security Technologies All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -179,6 +179,57 @@ static libnet_t* checkudata(lua_State* L)
     return *ud;
 }
 
+static libnet_pblock_t* checkpblock(lua_State* L, libnet_t* ud, int narg)
+{
+    int ptag = luaL_checkint(L, narg);
+    libnet_pblock_t* pblock = libnet_pblock_find(ud, ptag);
+    luaL_argcheck(L, pblock, narg, "ptag cannot be found");
+    return pblock;
+}
+
+static const uint8_t*
+checklbuffer(lua_State* L, int argt, const char* field, uint32_t* size)
+{
+    size_t payloadsz = 0;
+    const char* payload = v_arg_lstring(L, argt, field, &payloadsz, "");
+
+    if(payloadsz == 0) {
+        payload = NULL;
+    }
+
+    *size = payloadsz;
+
+    return (const uint8_t*) payload;
+}
+
+static const uint8_t*
+checkpayload(lua_State* L, int argt, uint32_t* size)
+{
+  return checklbuffer(L, argt, "payload", size);
+}
+
+static int pushtagornil(lua_State* L, libnet_pblock_t* pblock)
+{
+    if(pblock)
+        lua_pushinteger(L, pblock->ptag);
+    else
+        lua_pushnil(L);
+    return 1;
+}
+
+static const char* type_string(u_int8_t type)
+{
+    return libnet_diag_dump_pblock_type(type);
+/*
+    switch(type) {
+        case LIBNET_PBLOCK_ETH_H:  return "eth";
+        case LIBNET_PBLOCK_IPV4_H: return "ip4";
+        case LIBNET_PBLOCK_IPO_H:  return "ipo";
+        case LIBNET_PBLOCK_IPDATA: return "ipd";
+    }
+    return "?";
+*/
+}
 /*-
 - net:destroy()
 
@@ -198,59 +249,6 @@ static int lnet_destroy (lua_State *L)
 }
 
 /*-
-- net:dump()
-
-Write summary of protocol blocks to stdout.
-*/
-static const char* type_string(u_int8_t type)
-{
-    return libnet_diag_dump_pblock_type(type);
-/*
-    switch(type) {
-        case LIBNET_PBLOCK_ETH_H:  return "eth";
-        case LIBNET_PBLOCK_IPV4_H: return "ip4";
-        case LIBNET_PBLOCK_IPO_H:  return "ipo";
-        case LIBNET_PBLOCK_IPDATA: return "ipd";
-    }
-    return "?";
-*/
-}
-static int lnet_dump(lua_State* L)
-{
-    libnet_t* ud = checkudata(L);
-    libnet_pblock_t* p = ud->protocol_blocks;
-    int strings = 0;
-
-    while(p) {
-        /* h_len is header length for checksumming? "chksum length"? */
-        char str[1024];
-        sprintf(str, "tag %d flags %d type %s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %u\n",
-                p->ptag, p->flags, type_string(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
-        lua_pushstring(L, str);
-        p = p->next;
-        strings++;
-    }
-    lua_pushfstring(L, "link_offset %d aligner %d total_size %d nblocks %d\n",
-            ud->link_offset, ud->aligner, ud->total_size, ud->n_pblocks);
-    strings++;
-
-    lua_concat(L, strings);
-
-    return 1;
-}
-
-#ifdef NET_DUMP
-/* Call from inside gdb to see current state of libnet stack */
-void dump(lua_State* L) {
-  lnet_dump(L);
-  printf("%s\n", lua_tostring(L, -1));
-  lua_pop(L, 1);
-}
-#endif
-
-
-/*-
 - net = net:clear()
 
 Clear the current packet and all it's protocol blocks.
@@ -267,20 +265,93 @@ static int lnet_clear(lua_State* L)
     return 1;
 }
 
-static libnet_pblock_t* checkpblock(lua_State* L, libnet_t* ud, int narg)
+/*-
+- str = net:block([ptag])
+
+Coalesce the protocol blocks into a single chunk, and return.
+
+If a ptag is provided, just return data of that pblock (no checksums
+will be calculated).
+*/
+static int lnet_block(lua_State* L)
 {
-    int ptag = luaL_checkint(L, narg);
-    libnet_pblock_t* pblock = libnet_pblock_find(ud, ptag);
-    luaL_argcheck(L, pblock, narg, "ptag cannot be found");
-    return pblock;
+    libnet_t* ud = checkudata(L);
+
+    u_int32_t len;
+    u_int8_t *packet = NULL;
+    u_int8_t *block;
+    int r;
+
+    libnet_pblock_repair_lengths(ud);
+
+    r = libnet_pblock_coalesce(ud, &packet, &len);
+
+    check_error(L, ud, r);
+
+    block = packet;
+
+    if(!lua_isnoneornil(L, 2)) {
+        libnet_pblock_t* end = checkpblock(L, ud, 2);
+        libnet_pblock_t* p = ud->pblock_end;
+        while(p != end) {
+            block += p->b_len;
+            p = p->prev;
+        }
+        assert(p == end);
+        len = p->b_len;
+    }
+
+    lua_pushlstring(L, (char*) block, len);
+
+    libnet_adv_free_packet(ud, packet);
+
+    return 1;
 }
 
-static int pushtagornil(lua_State* L, libnet_pblock_t* pblock)
+/*-
+- net:pbuf(ptag)
+*/
+static int lnet_pbuf(lua_State* L)
 {
-    if(pblock)
-        lua_pushinteger(L, pblock->ptag);
-    else
-        lua_pushnil(L);
+    libnet_t* ud = checkudata(L);
+    int ptag = luaL_checkint(L, 2); /* checkpblock */
+    const char* pbuf = (const char*)libnet_getpbuf(ud, ptag);
+    size_t pbufsz = libnet_getpbuf_size(ud, ptag);
+
+    if(!pbuf)
+      return net_error(L, ud);
+
+    lua_pushlstring(L, pbuf, pbufsz);
+
+    return 1;
+}
+
+/*-
+- net:write()
+
+Write the packet (which must previously have been built up inside the context).
+*/
+static int lnet_write(lua_State *L)
+{
+    libnet_t* ud = checkudata(L);
+
+#ifdef NET_DUMP
+    lnet_dump(L);
+#endif
+
+    int r = libnet_write(ud);
+    check_error(L, ud, r);
+    lua_pushinteger(L, r);
+    return 1;
+}
+
+static int lnet_link (lua_State *L)
+{
+    libnet_t* ud = checkudata(L);
+    uint32_t payloadsz = 0;
+    const uint8_t* payload = checkpayload(L, 2, &payloadsz);
+    int size = libnet_write_link(ud, payload, payloadsz);
+    lua_pushinteger(L, size);
     return 1;
 }
 
@@ -337,46 +408,6 @@ static int lnet_tag_type(lua_State* L)
 }
 
 /*-
-- str = net:block([ptag])
-
-Coalesce the protocol blocks into a single chunk, and return.
-
-If a ptag is provided, just return data of that pblock (no checksums
-will be calculated).
-*/
-static int lnet_block(lua_State* L)
-{
-    libnet_t* ud = checkudata(L);
-
-    u_int32_t len;
-    u_int8_t *packet = NULL;
-    u_int8_t *block;
-
-    int r = libnet_pblock_coalesce(ud, &packet, &len);
-
-    check_error(L, ud, r);
-
-    block = packet;
-
-    if(!lua_isnoneornil(L, 2)) {
-        libnet_pblock_t* end = checkpblock(L, ud, 2);
-        libnet_pblock_t* p = ud->pblock_end;
-        while(p != end) {
-            block += p->b_len;
-            p = p->prev;
-        }
-        assert(p == end);
-        len = p->b_len;
-    }
-
-    lua_pushlstring(L, (char*) block, len);
-
-    libnet_adv_free_packet(ud, packet);
-
-    return 1;
-}
-
-/*-
 - net:fd()
 
 Get the fileno of the underlying file descriptor.
@@ -403,64 +434,6 @@ static int lnet_getdevice(lua_State* L)
       lua_pushnil(L);
 
     return 1;
-}
-
-/*-
-- net:pbuf(ptag)
-*/
-static int lnet_pbuf(lua_State* L)
-{
-    libnet_t* ud = checkudata(L);
-    int ptag = luaL_checkint(L, 2); /* checkpblock */
-    const char* pbuf = (const char*)libnet_getpbuf(ud, ptag);
-    size_t pbufsz = libnet_getpbuf_size(ud, ptag);
-
-    if(!pbuf)
-      return net_error(L, ud);
-
-    lua_pushlstring(L, pbuf, pbufsz);
-
-    return 1;
-}
-
-/*-
-- net:write()
-
-Write the packet (which must previously have been built up inside the context).
-*/
-static int lnet_write(lua_State *L)
-{
-    libnet_t* ud = checkudata(L);
-
-#ifdef NET_DUMP
-    lnet_dump(L);
-#endif
-
-    int r = libnet_write(ud);
-    check_error(L, ud, r);
-    lua_pushinteger(L, r);
-    return 1;
-}
-
-static const uint8_t*
-checklbuffer(lua_State* L, int argt, const char* field, uint32_t* size)
-{
-    size_t payloadsz = 0;
-    const char* payload = v_arg_lstring(L, argt, field, &payloadsz, "");
-
-    if(payloadsz == 0) {
-        payload = NULL;
-    }
-
-    *size = payloadsz;
-
-    return (const uint8_t*) payload;
-}
-
-static const uint8_t*
-checkpayload(lua_State* L, int argt, uint32_t* size)
-{
-  return checklbuffer(L, argt, "payload", size);
 }
 
 /*-
@@ -516,7 +489,6 @@ options is optional
 static int lnet_ipv4 (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
-    int len = v_arg_integer(L, 2, "len"); /* FIXME - should be optional! */
     int tos = 0;
     int id = 0;
     int offset = 0;
@@ -546,7 +518,9 @@ static int lnet_ipv4 (lua_State *L)
     printf("  options_ptag %d optionsz %lu\n", options_ptag, optionsz);
 #endif
 
-    ptag = libnet_build_ipv4(len, tos, id, offset, ttl, protocol, cksum, src_n,
+    ptag = libnet_build_ipv4(
+	0, /* ip_len is calculated */
+	tos, id, offset, ttl, protocol, cksum, src_n,
             dst_n, payload, payloadsz, ud, ptag);
     check_error(L, ud, ptag);
 
@@ -576,6 +550,8 @@ static int lnet_ipv4 (lua_State *L)
 	libnet_pblock_insert_before(ud, ptag, options_ptag);
       }
     }
+
+    libnet_pblock_record_ip_offset(ud, libnet_pblock_find(ud, ptag));
 
     lua_pushinteger(L, ptag);
 
@@ -616,15 +592,139 @@ static int lnet_eth (lua_State *L)
     return 1;
 }
 
-static int lnet_link (lua_State *L)
+/* TODO - merge these into libnet */
+/* FIXME - below code has NO error checking and will segv on bad input */
+static int libnet_decode_udp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
+{
+    const struct libnet_udp_hdr* udp_hdr = (const struct libnet_udp_hdr*) pkt;
+    const uint8_t* payload = pkt + LIBNET_UDP_H;
+    size_t payload_s = pkt + pkt_s - payload;
+    int ptag = libnet_build_data(payload, payload_s, l, 0);
+    int utag;
+
+    if(ptag < 0) {
+        return ptag;
+    }
+
+    assert(payload_s == 1);
+    assert(l->ptag_end->b_len == 1);
+
+    utag = libnet_build_udp(
+            ntohs(udp_hdr->uh_sport),
+            ntohs(udp_hdr->uh_dport),
+            ntohs(udp_hdr->uh_ulen),
+            0, /* recalculate checksum */
+            NULL, 0,
+            l, 0);
+
+    return ptag;
+}
+
+static int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
+{
+    const struct libnet_ipv4_hdr* ip_hdr = (const struct libnet_ipv4_hdr*) pkt;
+    const uint8_t* payload = pkt + ip_hdr->ip_hl * 4;
+    size_t payload_s = pkt + pkt_s - payload;
+    int ptag = 0; /* payload tag */
+    int otag = 0; /* options tag */
+    int itag = 0; /* ip tag */
+
+    /* This could be table-based */
+    switch(ip_hdr->ip_p) {
+        case IPPROTO_UDP:
+            ptag = libnet_decode_udp(payload, payload_s, l);
+            break;
+#if 0
+        case IPPROTO_TCP:
+            ptag = libnet_decode_tcp(payload, payload_s, l, 0);
+            break;
+#endif
+        default:
+            ptag = libnet_build_data((void*)payload, payload_s, l, 0);
+            break;
+    }
+
+    if(ptag < 0) return ptag;
+
+    if(ip_hdr->ip_hl > 5) {
+        payload = pkt + LIBNET_TCP_H;
+        payload_s = ip_hdr->ip_hl * 4 - LIBNET_TCP_H;
+        otag = libnet_build_ipv4_options((void*)payload, payload_s, l, 0);
+        if(otag < 0) {
+            /* FIXME - remove blocks from ptag until end */
+            return otag;
+        }
+    }
+
+    itag = libnet_build_ipv4(
+            ntohs(ip_hdr->ip_len),
+            ip_hdr->ip_tos,
+            ntohs(ip_hdr->ip_id),
+            ntohs(ip_hdr->ip_off),
+            ip_hdr->ip_ttl,
+            ip_hdr->ip_p,
+            0, /* checksum, 0 to recalculate */
+            ip_hdr->ip_src.s_addr,
+            ip_hdr->ip_dst.s_addr,
+            NULL, 0, /* payload already pushed */
+            l, 0
+            );
+
+    return itag;
+}
+
+static int lnet_decode_ipv4(lua_State* L)
 {
     libnet_t* ud = checkudata(L);
-    uint32_t payloadsz = 0;
-    const uint8_t* payload = checkpayload(L, 2, &payloadsz);
-    int size = libnet_write_link(ud, payload, payloadsz);
-    lua_pushinteger(L, size);
+    size_t pkt_s = 0;
+    const char* pkt = luaL_checklstring(L, 2, &pkt_s);
+    int ptag = 0;
+
+    ptag = libnet_decode_ipv4((void*)pkt, pkt_s, ud);
+
+    lua_pushinteger(L, ptag);
+
     return 1;
 }
+
+/*-
+- net:dump()
+
+Write summary of protocol blocks to stdout.
+*/
+static int lnet_dump(lua_State* L)
+{
+    libnet_t* ud = checkudata(L);
+    libnet_pblock_t* p = ud->protocol_blocks;
+    int strings = 0;
+
+    while(p) {
+        /* h_len is header length for checksumming? "chksum length"? */
+        char str[1024];
+        sprintf(str, "tag %d flags %d type %s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %u\n",
+                p->ptag, p->flags, type_string(p->type), p->type,
+                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
+        lua_pushstring(L, str);
+        p = p->next;
+        strings++;
+    }
+    lua_pushfstring(L, "link_offset %d aligner %d total_size %d nblocks %d\n",
+            ud->link_offset, ud->aligner, ud->total_size, ud->n_pblocks);
+    strings++;
+
+    lua_concat(L, strings);
+
+    return 1;
+}
+
+#ifdef NET_DUMP
+/* Called from inside gdb to see current state of libnet stack */
+void dump(lua_State* L) {
+  lnet_dump(L);
+  printf("%s\n", lua_tostring(L, -1));
+  lua_pop(L, 1);
+}
+#endif
 
 /*-
 - network = net.pton(presentation)
@@ -726,7 +826,7 @@ static int lnet_gettimeofday(lua_State *L)
 }
 
 /*-
-- net.new(injection, device)
+- net.init(injection, device)
 
 injection is one of "link", "raw", ...
 device is "eth0", ...
@@ -759,131 +859,37 @@ static int lnet_init(lua_State *L)
     return 1;
 }
 
-/* TODO - merge these into libnet */
-/* FIXME - below code has NO error checking and will segv on bad input */
-static int libnet_decode_udp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
-{
-    const struct libnet_udp_hdr* udp_hdr = (const struct libnet_udp_hdr*) pkt;
-    const uint8_t* payload = pkt + LIBNET_UDP_H;
-    size_t payload_s = pkt + pkt_s - payload;
-    int ptag = libnet_build_data(payload, payload_s, l, 0);
-    int utag;
-
-    if(ptag < 0) {
-        return ptag;
-    }
-
-    assert(payload_s == 1);
-    assert(l->ptag_end->b_len == 1);
-
-    utag = libnet_build_udp(
-            ntohs(udp_hdr->uh_sport),
-            ntohs(udp_hdr->uh_dport),
-            ntohs(udp_hdr->uh_ulen),
-            0, /* recalculate checksum */
-            NULL, 0,
-            l, 0);
-
-    return ptag;
-}
-
-static int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
-{
-    const struct libnet_ipv4_hdr* ip_hdr = (const struct libnet_ipv4_hdr*) pkt;
-    const uint8_t* payload = pkt + ip_hdr->ip_hl * 4;
-    size_t payload_s = pkt + pkt_s - payload;
-    int ptag = 0; /* payload tag */
-    int otag = 0; /* options tag */
-    int itag = 0; /* ip tag */
-
-    /* This could be table-based */
-    switch(ip_hdr->ip_p) {
-        case IPPROTO_UDP:
-            ptag = libnet_decode_udp(payload, payload_s, l);
-            break;
-#if 0
-        case IPPROTO_TCP:
-            ptag = libnet_decode_tcp(payload, payload_s, l, 0);
-            break;
-#endif
-        default:
-            ptag = libnet_build_data((void*)payload, payload_s, l, 0);
-            break;
-    }
-
-    if(ptag < 0) return ptag;
-
-    if(ip_hdr->ip_hl > 5) {
-        payload = pkt + LIBNET_TCP_H;
-        payload_s = ip_hdr->ip_hl * 4 - LIBNET_TCP_H;
-        otag = libnet_build_ipv4_options((void*)payload, payload_s, l, 0);
-        if(otag < 0) {
-            /* FIXME - remove blocks from ptag until end */
-            return otag;
-        }
-    }
-
-    itag = libnet_build_ipv4(
-            ntohs(ip_hdr->ip_len),
-            ip_hdr->ip_tos,
-            ntohs(ip_hdr->ip_id),
-            ntohs(ip_hdr->ip_off),
-            ip_hdr->ip_ttl,
-            ip_hdr->ip_p,
-            0, /* checksum, 0 to recalculate */
-            ip_hdr->ip_src.s_addr,
-            ip_hdr->ip_dst.s_addr,
-            NULL, 0, /* payload already pushed */
-            l, 0
-            );
-
-    return itag;
-}
-
-static int lnet_decode_ipv4(lua_State* L)
-{
-    libnet_t* ud = checkudata(L);
-    size_t pkt_s = 0;
-    const char* pkt = luaL_checklstring(L, 2, &pkt_s);
-    int ptag = 0;
-
-    ptag = libnet_decode_ipv4((void*)pkt, pkt_s, ud);
-
-    lua_pushinteger(L, ptag);
-
-    return 1;
-}
 
 static const luaL_reg net_methods[] =
 {
   {"__gc", lnet_destroy},
   {"destroy", lnet_destroy},
   {"clear", lnet_clear},
-  {"write", lnet_write},
-  {"data", lnet_data},
-  {"udp", lnet_udp},
-  {"ipv4", lnet_ipv4},
-  {"eth", lnet_eth},
-  {"write_link", lnet_link},
   {"block", lnet_block},
-  {"dump", lnet_dump},
-  {"fd", lnet_getfd},
   {"pbuf", lnet_pbuf},
+  {"write", lnet_write},
+  {"write_link", lnet_link},
+  {"fd", lnet_getfd},
   {"device", lnet_getdevice},
   {"tag_below", lnet_tag_below},
   {"tag_above", lnet_tag_above},
   {"tag_type", lnet_tag_type},
+  {"data", lnet_data},
+  {"udp", lnet_udp},
+  {"ipv4", lnet_ipv4},
+  {"eth", lnet_eth},
   {"decode_ipv4", lnet_decode_ipv4},
+  {"dump", lnet_dump},
   {NULL, NULL}
 };
 
 static const luaL_reg net[] =
 {
-  {"init", lnet_init},
   {"pton", lnet_pton},
   {"checksum", lnet_chksum},
   {"nanosleep", lnet_nanosleep},
   {"gettimeofday", lnet_gettimeofday},
+  {"init", lnet_init},
   {NULL, NULL}
 };
 

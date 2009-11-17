@@ -53,7 +53,6 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_UDP_H + payload_s;               /* size of memory block */
-    h = len;                                    /* header length (for cksum) */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -68,7 +67,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memset(&udp_hdr, 0, sizeof(udp_hdr));
     udp_hdr.uh_sport   = htons(sp);             /* source port */
     udp_hdr.uh_dport   = htons(dp);             /* destination port */
-    udp_hdr.uh_ulen    = htons(h);              /* total length of UDP packet*/
+    udp_hdr.uh_ulen    = htons(len);            /* total length of UDP packet*/
     udp_hdr.uh_sum     = (sum ? htons(sum) : 0);/* checksum */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&udp_hdr, LIBNET_UDP_H);
@@ -89,7 +88,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
          */
         libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
     }
-    return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_UDP_H));
+    return (ptag ? ptag : libnet_pblock_update(l, p, len, LIBNET_PBLOCK_UDP_H));
 bad:
     libnet_pblock_delete(l, p);
     return (-1);

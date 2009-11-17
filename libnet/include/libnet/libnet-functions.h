@@ -2261,6 +2261,13 @@ libnet_pblock_p2p(uint8_t type);
 int
 libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size);
 
+/*
+ * [Internal]
+ * Repair lengths in protocol headers, so checksumming doesn't seg fault.
+ */
+void
+libnet_pblock_repair_lengths(libnet_t* l);
+
 #if !(__WIN32__)
 /*
  * [Internal] 

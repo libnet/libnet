@@ -1,3 +1,13 @@
+print"============================================"
+
+local keepgoing = nil
+
+for _,v in ipairs(arg) do
+  if v == "-k" then
+    keepgoing = true
+  end
+end
+
 require"net"
 
 DEV="en0"
@@ -17,15 +27,40 @@ function q(_)
   return _
 end
 
+function h(_)
+  local fmt = string.format
+  _ = string.gsub(_, ".", function (x)
+    return fmt("%02x",string.byte(x))
+  end)
 
-function dump(n, size)
-    local b = n:block()
-    print(n:dump())
-    print("sz="..#b.." [["..q(b).."]]")
-
-    if size then
-        assert(#b == size, "block's size is not expected, "..size)
-    end
+  return _
 end
 
+function dump(n, size)
+  local b = n:block()
+  print(">")
+  print(n:dump())
+  print("size="..#b)
+  --print("q=[["..q(b).."]]")
+  print("h=[["..h(b).."]]")
+
+  if size then
+    assert(#b == size, "block's size is not expected, "..size)
+  end
+end
+
+function test(n, f)
+  print""
+  print""
+  print("=test: "..n)
+
+  if not keepgoing then
+    f()
+  else
+    local ok, emsg = pcall(f)
+    if not ok then
+      print("! FAIL: "..n)
+    end
+  end
+end
 

@@ -527,7 +527,39 @@ libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
 
     for(c = p; c; c = c->prev)
         c->ip_offset = ip_offset;
+
 }
 
+void
+libnet_pblock_repair_lengths(libnet_t* l)
+{
+  libnet_pblock_t* p = l->protocol_blocks;
+  uint32_t datasz = 0;
+
+  while(p) {
+    switch(p->type) {
+      case LIBNET_PBLOCK_UDP_H: {
+	  struct libnet_udp_hdr* hdr = (struct libnet_udp_hdr*)p->buf;
+	  hdr->uh_ulen = htons(p->b_len + datasz);
+	  /* FIXME - repair p->h_len? For UDP, I "think" h_len is same as uh_len, and is used for cksum */
+	} break;
+      /* FIXME - do TCP */
+      /* FIXME - do IPv6 */
+      case LIBNET_PBLOCK_IPV4_H: {
+	  struct libnet_ipv4_hdr* hdr = (struct libnet_ipv4_hdr*)p->buf;
+	  uint32_t ip_hl = LIBNET_IPV4_H;
+	  hdr->ip_len = htons(p->b_len + datasz);
+	  if(p->prev && p->prev->type == LIBNET_PBLOCK_IPO_H) {
+	      ip_hl += p->prev->b_len;
+	  }
+	  hdr->ip_hl = ip_hl / 4;
+
+	  libnet_pblock_record_ip_offset(l, p);
+	} break;
+    }
+    datasz += p->b_len;
+    p = p->next;
+  }
+}
 
 /* EOF */
