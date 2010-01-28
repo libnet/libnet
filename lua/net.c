@@ -31,7 +31,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <time.h>
 
-/* TODO - remove dependence on dnet */
+/* TODO - remove dependence on dnet? */
 #include <dnet.h>
 #include <libnet.h>
 
@@ -230,6 +230,7 @@ static const char* type_string(u_int8_t type)
     return "?";
 */
 }
+
 /*-
 - net:destroy()
 
@@ -574,18 +575,14 @@ static int lnet_eth (lua_State *L)
     const uint8_t* payload = checkpayload(L, 2, &payloadsz);
     int ptag = lnet_arg_ptag(L, 2);
 
-    if(payloadsz == 0) {
-        payload = NULL;
-    }
-
 #ifdef NET_DUMP
     printf("net eth src %s dst %s type %d payloadsz %lu ptag %d\n", src, dst, type, payloadsz, ptag);
 #endif
 
     {
-      eth_addr_t src_n = check_eth_pton(L, src, "src");
-      eth_addr_t dst_n = check_eth_pton(L, dst, "dst");
-      ptag = libnet_build_ethernet(dst_n.data, src_n.data, type, payload, payloadsz, ud, ptag);
+        eth_addr_t src_n = check_eth_pton(L, src, "src");
+        eth_addr_t dst_n = check_eth_pton(L, dst, "dst");
+        ptag = libnet_build_ethernet(dst_n.data, src_n.data, type, payload, payloadsz, ud, ptag);
     }
     check_error(L, ud, ptag);
     lua_pushinteger(L, ptag);
@@ -743,10 +740,10 @@ static int lnet_pton(lua_State *L)
     }
 
     {
-      int size = dst.addr_bits;
-      void* addr = &dst.__addr_u;
+        int size = dst.addr_bits;
+        void* addr = &dst.__addr_u;
 
-      lua_pushlstring(L, addr, size/8);
+        lua_pushlstring(L, addr, size/8);
     }
 
     return 1;
@@ -760,7 +757,7 @@ Checksum the series of strings passed in.
 static int lnet_chksum(lua_State *L)
 {
     int interm = 0;
-    u_int16_t chks = 0;
+    uint16_t chks = 0;
 
     int i;
     int top = lua_gettop(L);
@@ -830,6 +827,8 @@ static int lnet_gettimeofday(lua_State *L)
 
 injection is one of "link", "raw", ...
 device is "eth0", ...
+
+Switch order of args? injection we can give a default (link), device we can't default.
 */
 static int lnet_init(lua_State *L)
 {
@@ -841,7 +840,6 @@ static int lnet_init(lua_State *L)
     };
     char errbuf[LIBNET_ERRBUF_SIZE];
     int type = injection_val[luaL_checkoption(L, 1, "link", injection_opt)];
-    /* FIXME provide a default injection type */
     const char *device = luaL_checkstring(L, 2);
 
     libnet_t** ud = lua_newuserdata(L, sizeof(*ud));
@@ -858,7 +856,6 @@ static int lnet_init(lua_State *L)
 
     return 1;
 }
-
 
 static const luaL_reg net_methods[] =
 {
