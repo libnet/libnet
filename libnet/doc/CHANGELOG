@@ -4,9 +4,7 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
-- 1.1.5
-
-    ...
+- ...
 
     - Begin implementation and tests for repairing pblocks after an update. (Sam Roberts)
     - libnet_pblock_insert_before() didn't remove ptag2 from old location (Sam Roberts)
