@@ -369,16 +369,12 @@ libnet_ptag_t ptag)
         {
             options_size_increase = adj_size - p_temp->b_len;
         }
-        else
-        {
-            /* 
-             * XXX - When this completes successfully, libnet errbuf contains 
-             * an error message so to come correct, we'll clear it.
-             */ 
-            memset(l->err_buf, 0, sizeof (l->err_buf));
-        }
     }
-
+    /* If we aren't modifying an options block, we are pushing a new one, and
+     * since it must be pushed before the IPv4 block is pushed, there is no
+     * need to remember that options size has "increased".
+     */
+    
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.

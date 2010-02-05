@@ -78,22 +78,31 @@ struct libnet_protocol_block
 {
     uint8_t *buf;                      /* protocol buffer */
     uint32_t b_len;                    /* length of buf */
-    uint16_t h_len;                    /* header length (for checksumming) */
-       /* Unused for IPV4_H block types.
+    uint16_t h_len;                    /* header length */
+       /* Passed as last argument to libnet_do_checksum(). Not necessarily used
+        * by that function, it is essentially a pblock specific number, passed
+        * from _builder to the _do_checksum
+        *
+        * Unused for IPV4_H block types.
         * For protocols that sit on top of IP, it should be the the amount of
         * buf that is the header, and will be included in the checksum.
         */
-    uint32_t ip_offset;                /* offset from end of pkt to beginning of IP header for csums */
+    uint32_t ip_offset;                /* offset from end of pkt to beginning of IP header */
        /* Unused for IPV4_H block types.
         * For protocols that sit on top of IP (UDP, ICMP, ...), they often
         * include some information from the IP header (in the form of a "pseudo
         * header") in their own checksum calculation. To build that
-        * pseudo-header, thet need to find the real header.
+        * pseudo-header, they need to find the IP header.
+        *
+        * Note that this mechanism is so fragile, it is essentially a bug, and
+        * the main cause of reported segmentaion faults. The IP header should
+        * be found by traversing the pblock chain.
         */
     uint32_t copied;                   /* bytes copied - the amount of data copied into buf */
        /* Used and updated by libnet_pblock_append(). */
     uint8_t type;                      /* type of pblock */
 /* this needs to be updated every time a new packet builder is added */
+/* libnet_diag_dump_pblock_type() also needs updating for every new pblock tag */
 #define LIBNET_PBLOCK_ARP_H             0x01    /* ARP header */
 #define LIBNET_PBLOCK_DHCPV4_H          0x02    /* DHCP v4 header */
 #define LIBNET_PBLOCK_DNSV4_H           0x03    /* DNS v4 header */
@@ -109,7 +118,6 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_IPV4_H            0x0d    /* IP v4 header */
 #define LIBNET_PBLOCK_IPO_H             0x0e    /* IP v4 options */
 #define LIBNET_PBLOCK_IPDATA            0x0f    /* IP data */
-    /* SR - it's not clear why IP doesn't use generic data type */
 #define LIBNET_PBLOCK_OSPF_H            0x10    /* OSPF base header */
 #define LIBNET_PBLOCK_OSPF_HELLO_H      0x11    /* OSPF hello header */
 #define LIBNET_PBLOCK_OSPF_DBD_H        0x12    /* OSPF dbd header */
@@ -127,7 +135,6 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_TCP_H             0x1e    /* TCP header */
 #define LIBNET_PBLOCK_TCPO_H            0x1f    /* TCP options */
 #define LIBNET_PBLOCK_TCPDATA           0x20    /* TCP data */
-    /* SR - it's not clear why TCP doesn't use generic data type */
 #define LIBNET_PBLOCK_UDP_H             0x21    /* UDP header */
 #define LIBNET_PBLOCK_VRRP_H            0x22    /* VRRP header */
 #define LIBNET_PBLOCK_DATA_H            0x23    /* generic data */
@@ -163,6 +170,10 @@ struct libnet_protocol_block
     uint8_t flags;                             /* control flags */
 #define LIBNET_PBLOCK_DO_CHECKSUM       0x01    /* needs a checksum */
     libnet_ptag_t ptag;                 /* protocol block tag */
+    /* Chains are built from highest level protocol, towards the link level, so
+     * prev traverses away from link level, and next traverses towards the
+     * link level.
+     */
     struct libnet_protocol_block *next; /* next pblock */
     struct libnet_protocol_block *prev; /* prev pblock */
 };
@@ -192,6 +203,7 @@ struct libnet_context
 #define LIBNET_RAW6_ADV 0x0a            /* advanced mode raw socket (ipv6) */
 #define LIBNET_ADV_MASK 0x08            /* mask to determine adv mode */
 
+    /* _blocks is the highest level, and _end is closest to link-level */
     libnet_pblock_t *protocol_blocks;   /* protocol headers / data */
     libnet_pblock_t *pblock_end;        /* last node in list */
     uint32_t n_pblocks;                /* number of pblocks */

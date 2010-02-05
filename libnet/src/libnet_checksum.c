@@ -118,7 +118,7 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
     }
 }
 
-
+/* len is the pblock->h_len */
 int
 libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
 {
