@@ -468,10 +468,10 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p)
         if (p->buf)
         {
           free(p->buf);
+          p->buf = NULL;
         }
 
         free(p);
-        p = NULL;
     }
 }
 
