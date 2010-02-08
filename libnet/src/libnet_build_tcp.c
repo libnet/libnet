@@ -40,33 +40,29 @@
 #endif
 
 libnet_ptag_t
-libnet_build_tcp(uint16_t sp, uint16_t dp, uint32_t seq, uint32_t ack,
-uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t len,
-const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_tcp(
+            uint16_t sp, uint16_t dp, uint32_t seq, uint32_t ack,
+            uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t h_len,
+            const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     int n, offset;
-    uint32_t i, j;
-    libnet_pblock_t *p, *p_data, *p_temp;
-    libnet_ptag_t ptag_hold, ptag_data;
+    libnet_pblock_t *p = NULL;
+    libnet_ptag_t ptag_data = 0;
     struct libnet_tcp_hdr tcp_hdr;
-    struct libnet_ipv4_hdr *ip_hdr;
 
     if (l == NULL)
-    { 
-        return (-1);
-    } 
+        return -1;
 
-    ptag_data = 0;                      /* for possible options */
+    if (payload_s && !payload)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+			    "%s(): payload inconsistency\n", __func__);
+        return -1;
+    }
 
-    /*
-     *  Find the existing protocol block if a ptag is specified, or create
-     *  a new one.
-     */
     p = libnet_pblock_probe(l, ptag, LIBNET_TCP_H, LIBNET_PBLOCK_TCP_H);
     if (p == NULL)
-    {
-        return (-1);
-    }
+        return -1;
 
     memset(&tcp_hdr, 0, sizeof(tcp_hdr));
     tcp_hdr.th_sport   = htons(sp);    /* source port */
@@ -78,25 +74,10 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     tcp_hdr.th_off     = 5;            /* 20 byte header */
 
     /* check to see if there are TCP options to include */
-    if (p->prev)
+    if (p->prev && p->prev->type == LIBNET_PBLOCK_TCPO_H)
     {
-        p_temp = p->prev;
-        while ((p_temp->prev) && (p_temp->type != LIBNET_PBLOCK_TCPO_H))
-        {
-            p_temp = p_temp->prev;
-        }
-        if (p_temp->type == LIBNET_PBLOCK_TCPO_H)
-        {
-            /*
-             *  Count up number of 32-bit words in options list, padding if
-             *  neccessary.
-             */
-            for (i = 0, j = 0; i < p_temp->b_len; i++)
-            {
-                (i % 4) ? j : j++;
-            }
-            tcp_hdr.th_off += j;
-        }
+        /* Note that the tcp options pblock is already padded */
+        tcp_hdr.th_off += (p->prev->b_len/4);
     }
 
     tcp_hdr.th_win     = htons(win);   /* window size */
@@ -109,69 +90,57 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    ptag_hold = ptag;
     if (ptag == LIBNET_PTAG_INITIALIZER)
     {
-        ptag = libnet_pblock_update(l, p, len, LIBNET_PBLOCK_TCP_H);
+        libnet_pblock_update(l, p, h_len, LIBNET_PBLOCK_TCP_H);
     }
 
-    /* find and set the appropriate ptag, or else use the default of 0 */
     offset = payload_s;
-    if (ptag_hold && p->prev)
-    {
-        p_temp = p->prev;
-        while (p_temp->prev &&
-              (p_temp->type != LIBNET_PBLOCK_TCPDATA) &&
-              (p_temp->type != LIBNET_PBLOCK_TCP_H))
-        {
-           p_temp = p_temp->prev;
-        }
 
-        if (p_temp->type == LIBNET_PBLOCK_TCPDATA)
+    /* If we are going to modify a TCP data block, find it, and figure out the
+     * "offset", the possibly negative amount by which we are increasing the ip
+     * data length. */
+    if (ptag)
+    {
+        libnet_pblock_t* datablock = p->prev;
+
+        if (datablock && datablock->type == LIBNET_PBLOCK_TCPO_H)
+            datablock = datablock->prev;
+
+        if (datablock && datablock->type == LIBNET_PBLOCK_TCPDATA)
         {
-            ptag_data = p_temp->ptag;
-            offset -=  p_temp->b_len;
-            p->h_len += offset;
+            ptag_data = datablock->ptag;
+            offset -=  datablock->b_len;
         }
-        else
-        {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-				    "%s(): TCP data pblock not found\n", __func__);
-        }
+        p->h_len += offset;
     }
 
-    /* update ip_len if present */
-    if (ptag_hold && p->next)
+    /* If we are modifying a TCP block, we should look forward and apply the offset
+     * to our IPv4 header, if we have one.
+     */
+    if (p->next)
     {
-        p_temp = p->next;
-        while (p_temp->next && (p_temp->type != LIBNET_PBLOCK_IPV4_H))
-        {
-            p_temp = p_temp->next;
-        }
-        if (p_temp->type == LIBNET_PBLOCK_IPV4_H)
-        {
-            ip_hdr = (struct libnet_ipv4_hdr *)p_temp->buf;
-            n = ntohs(ip_hdr->ip_len) + offset;
-            ip_hdr->ip_len = htons(n);
-        }
-    }
+        libnet_pblock_t* ipblock = p->next;
 
-    if ((payload && !payload_s) || (!payload && payload_s))
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			    "%s(): payload inconsistency\n", __func__);
-        goto bad;
+        if(ipblock->type == LIBNET_PBLOCK_IPO_H)
+            ipblock = ipblock->next;
+
+        if(ipblock && ipblock->type == LIBNET_PBLOCK_IPV4_H)
+        {
+            struct libnet_ipv4_hdr * ip_hdr = (struct libnet_ipv4_hdr *)ipblock->buf;
+            int ip_len = ntohs(ip_hdr->ip_len) + offset;
+            ip_hdr->ip_len = htons(ip_len);
+        }
     }
 
     /* if there is a payload, add it in the context */
-    if (payload && payload_s)
+    if (payload_s)
     {
         /* update ptag_data with the new payload */
-        p_data = libnet_pblock_probe(l, ptag_data, payload_s,
-                LIBNET_PBLOCK_TCPDATA);
-        if (p_data == NULL) 
+        libnet_pblock_t* p_data = libnet_pblock_probe(l, ptag_data, payload_s, LIBNET_PBLOCK_TCPDATA);
+        if (!p_data)
         {
-            return (-1);
+            goto bad;
         }
 
         if (libnet_pblock_append(l, p_data, payload, payload_s) == -1)
@@ -181,49 +150,22 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
         if (ptag_data == LIBNET_PTAG_INITIALIZER)
         {
-            if (p_data->prev->type == LIBNET_PBLOCK_TCP_H)
-            {
-                libnet_pblock_update(l, p_data, payload_s,
-                        LIBNET_PBLOCK_TCPDATA);
-                /* swap pblocks to correct the protocol order */
-                libnet_pblock_swap(l, p->ptag, p_data->ptag);
-            }
-            else
-            {
-                /* update without setting this as the final pblock */
-                p_data->type  =  LIBNET_PBLOCK_TCPDATA;
-                p_data->ptag  =  ++(l->ptag_state);
-                p_data->h_len =  payload_s;
+            int insertbefore = p->ptag;
 
-                /* Adjust h_len for checksum. */
-                p->h_len += payload_s;
+            /* Then we created it, and we need to shuffle it back until it's before
+             * the tcp header and options. */
+            libnet_pblock_update(l, p_data, payload_s, LIBNET_PBLOCK_TCPDATA);
 
-                /* data was added after the initial construction */
-                for (p_temp = l->protocol_blocks;
-                        p_temp->type == LIBNET_PBLOCK_TCP_H ||
-                        p_temp->type == LIBNET_PBLOCK_TCPO_H;
-                        p_temp = p_temp->next)
-                {
-                    libnet_pblock_insert_before(l, p_temp->ptag, p_data->ptag);
-                    break;
-                }
-                /* The end block needs to have its next pointer cleared. */
-                l->pblock_end->next = NULL;
-            }
+            if(p->prev->type == LIBNET_PBLOCK_TCPO_H)
+                insertbefore = p->prev->ptag;
 
-            if (p_data->prev && p_data->prev->type == LIBNET_PBLOCK_TCPO_H)
-            {
-                libnet_pblock_swap(l, p_data->prev->ptag, p_data->ptag);
-            }
+            libnet_pblock_insert_before(l, insertbefore, p_data->ptag);
         }
     }
     else
     {
-        p_data = libnet_pblock_find(l, ptag_data);
-        if (p_data) 
-        {
-            libnet_pblock_delete(l, p_data);
-        }
+        libnet_pblock_t* p_data = libnet_pblock_find(l, ptag_data);
+        libnet_pblock_delete(l, p_data);
     }
 
     if (sum == 0)
@@ -241,13 +183,13 @@ bad:
     return (-1);
 }
 
-
 libnet_ptag_t
-libnet_build_tcp_options(uint8_t *options, uint32_t options_s, libnet_t *l, 
+libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l, 
 libnet_ptag_t ptag)
 {
+    static const uint8_t padding[] = { 0 };
     int offset, underflow;
-    uint32_t i, j, n, adj_size;
+    uint32_t i, j, adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
     struct libnet_tcp_hdr *tcp_hdr;
@@ -303,11 +245,8 @@ libnet_ptag_t ptag)
         return (-1);
     }
 	
-    n = libnet_pblock_append(l, p, options, adj_size);
-    if (n == -1)
-    {
-        goto bad;
-    }
+    libnet_pblock_append(l, p, options, options_s);
+    libnet_pblock_append(l, p, padding, adj_size - options_s);
 	
     if (ptag && p->next)
     {
@@ -357,9 +296,6 @@ libnet_ptag_t ptag)
 
     return (ptag ? ptag : libnet_pblock_update(l, p, adj_size,
             LIBNET_PBLOCK_TCPO_H));
-bad:
-    libnet_pblock_delete(l, p);
-    return (-1);
 }
 
 /* EOF */

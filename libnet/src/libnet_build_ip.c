@@ -40,7 +40,7 @@
 #endif
 
 
-/* TODO len - should be calculated if zero */
+/* TODO len - should be calculated if -1 */
 libnet_ptag_t
 libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
 uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,

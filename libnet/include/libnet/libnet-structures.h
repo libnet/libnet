@@ -84,8 +84,10 @@ struct libnet_protocol_block
         * from _builder to the _do_checksum
         *
         * Unused for IPV4_H block types.
+        *
         * For protocols that sit on top of IP, it should be the the amount of
-        * buf that is the header, and will be included in the checksum.
+        * buf that will be included in the checksum, starting from the beginning
+        * of the header.
         */
     uint32_t ip_offset;                /* offset from end of pkt to beginning of IP header */
        /* Unused for IPV4_H block types.

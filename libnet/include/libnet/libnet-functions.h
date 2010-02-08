@@ -619,7 +619,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_tcp_options(uint8_t *options, uint32_t options_s, libnet_t *l,
+libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
@@ -649,7 +649,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ttl time to live (time information should be cached by recipient)
  * @param sum checksum (0 for libnet to autofill)
  * @param type type of data contained in value
- * @param len length of value arugment
+ * @param value_s length of value argument
  * @param value the CDP information string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -659,7 +659,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_cdp(uint8_t version, uint8_t ttl, uint16_t sum, uint16_t type,
-uint16_t len, uint8_t *value, const uint8_t* payload, uint32_t payload_s,
+uint16_t value_s, const uint8_t *value, const uint8_t* payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -2161,7 +2161,7 @@ libnet_in_cksum(uint16_t *addr, int len);
  * and return a pointer to it.
  */
 libnet_pblock_t *
-libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t n, 
+libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, 
 uint8_t type);
 
 /*
@@ -2170,7 +2170,7 @@ uint8_t type);
  * an entry to the doubly linked list.
  */
 libnet_pblock_t *
-libnet_pblock_new(libnet_t *l, uint32_t size);
+libnet_pblock_new(libnet_t *l, uint32_t b_len);
 
 /*
  * [Internal] 
@@ -2201,8 +2201,7 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p);
  * pblock has a succesively increasing ptag identifier.
  */
 libnet_ptag_t
-libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, 
-uint8_t type);
+libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, uint8_t type);
 
 
 /*
