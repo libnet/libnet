@@ -386,22 +386,22 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
         /*
            From top to bottom, go through pblocks pairwise:
 
-           q, p   q is prev to p, where prev is "later in the buffer"
-           n      offset from start of packet to beginning of block we are writing
+           p   is the currently being copied pblock, and steps through every block
+           q   is the prev pblock to p that needs checksumming, it will
+               not step through every block as p does, it will skip any that do not
+               need checksumming.
+           n   offset from start of packet to beginning of block we are writing
 
            q is NULL on first iteration
            p is NULL on last iteration
 
-           It seems that checksums are done on q, I "think" this might be because
-           tcp/udp need to have the ip header written so they can read it for
-           their checksum.
+           Checksums are done on q, to give p a chance to be copied over, since
+           checksumming q can require a lower-level header to be encoded, in the
+           case of IP protocols (which are the only kinds handled by libnet's
+           checksum implementation).
 
-           ===> But, when there is an IP options block, how would that work? The
-           tcp checksum will be built before the ip header has been written, and
-           will use the wrong ip header ip_src... it will be just random data.
-
-           I need to prove this... and then rewrite this to be two loops, once copying
-           pblocks across, another writing the checksums.
+           This is very obscure, or would be much more clear if it was done in
+           two loops.
            */
         libnet_pblock_t *q = NULL;
         libnet_pblock_t *p = NULL;
@@ -419,6 +419,38 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                 /* copy over the packet chunk */
                 memcpy(*packet + n, p->buf, p->b_len);
             }
+#if 0
+            printf("-- n %d/%d cksum? %d\n", n, l->aligner + l->total_size,
+                    q &&
+                    (p == NULL || (p->flags & LIBNET_PBLOCK_DO_CHECKSUM)) &&
+                    (q->flags & LIBNET_PBLOCK_DO_CHECKSUM));
+            if(q)
+            {
+                printf(" iph %d/%d offset -%d\n",
+                        (l->total_size + l->aligner) - q->ip_offset,
+                        l->total_size + l->aligner,
+                        q->ip_offset
+                      );
+            }
+            if (p)
+            {
+                printf("p %p ptag %d b_len %d h_len %d cksum? %d type %s\n",
+                        p, p->ptag,
+                        p->b_len, p->h_len,
+                        p->flags & LIBNET_PBLOCK_DO_CHECKSUM,
+                        libnet_diag_dump_pblock_type(p->type)
+                      );
+            }
+            if (q)
+            {
+                printf("q %p ptag %d b_len %d h_len %d cksum? %d type %s\n",
+                        q, q->ptag,
+                        q->b_len, q->h_len,
+                        q->flags & LIBNET_PBLOCK_DO_CHECKSUM,
+                        libnet_diag_dump_pblock_type(q->type)
+                      );
+            }
+#endif
             if (q)
             {
                 if (p == NULL || (p->flags & LIBNET_PBLOCK_DO_CHECKSUM))
@@ -426,11 +458,12 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                     if (q->flags & LIBNET_PBLOCK_DO_CHECKSUM)
                     {
                         uint32_t c;
-                        /* offset is from beg of packet, forward to the IP header (
-                         * ip_offset is from end of packet) */
-                        int offset = (l->total_size + l->aligner) - q->ip_offset;
-                        c = libnet_do_checksum(l, *packet + offset,
-                                libnet_pblock_p2p(q->type), q->h_len);
+                        uint8_t* end = *packet + l->aligner + l->total_size;
+                        uint8_t* beg = *packet + n;
+                        uint8_t* iph = end - q->ip_offset;
+                        c = libnet_do_checksum(l, iph,
+                                libnet_pblock_p2p(q->type), q->h_len,
+                                beg, end);
                         if (c == -1)
                         {
                             /* err msg set in libnet_do_checksum() */

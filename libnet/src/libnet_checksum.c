@@ -118,6 +118,24 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
     }
 }
 
+static int check_ip_payload_size(libnet_t*l, uint8_t *iphdr, int ip_hl, int h_len, uint8_t* end, const char* func)
+{
+    if((iphdr+ip_hl+h_len) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): ip payload not inside packet\n", func);
+        return -1;
+    }
+
+    return 0;
+}
+
+#define CHECK_IP_PAYLOAD_SIZE() do { \
+    int e=check_ip_payload_size(l,iphdr,ip_hl, h_len, end, __func__);\
+    if(e) return e;\
+} while(0)
+
+
 /*
  * We are checksumming pblock "q"
  *
@@ -126,42 +144,55 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
  * len is the h_len from "q"
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, uint8_t *beg, uint8_t* end)
 {
     /* will need to update this for ipv6 at some point */
-    struct libnet_ipv4_hdr *iph_p;
-    struct libnet_ipv6_hdr *ip6h_p;
-    int is_ipv6;
-    int ip_hl;
-    int sum;
-
-    is_ipv6 = 0;    /* default to not using IPv6 */
-    sum     = 0;
-    iph_p   = NULL;
-    ip6h_p  = NULL;
+    struct libnet_ipv4_hdr *iph_p = (struct libnet_ipv4_hdr *)iphdr;
+    struct libnet_ipv6_hdr *ip6h_p = NULL; /* default to not using IPv6 */
+    int ip_hl   = 0;
+    int sum     = 0;
+    int is_ipv6 = 0; /* TODO - remove this, it is redundant with ip6h_p */
 
     if (h_len == 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
             "%s(): header length can't be zero\n", __func__);
-        return (-1);
+        return -1;
+    }
+    /* Check for memory under/over reads/writes. */
+    if(iphdr < beg || (uint8_t*)(iph_p+1) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): ipv4 hdr not inside packet\n", __func__);
+        return -1;
     }
 
     /*
      *  Figure out which IP version we're dealing with.  We'll assume v4
      *  and overlay a header structure to yank out the version.
      */
-    iph_p = (struct libnet_ipv4_hdr *)iphdr;
     if (iph_p->ip_v == 6)
     {
         ip6h_p = (struct libnet_ipv6_hdr *)iph_p;
-        is_ipv6 = 1;
+        iph_p = NULL;
         ip_hl   = 40;
+        if((uint8_t*)(ip6h_p+1) > end)
+        {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                    "%s(): ipv6 hdr not inside packet\n", __func__);
+            return -1;
+        }
     }
     else
     {
-        is_ipv6 = 0;
         ip_hl = iph_p->ip_hl << 2;
+    }
+
+    if((iphdr+ip_hl) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): ip hdr len not inside packet\n", __func__);
+        return -1;
     }
 
     /*
@@ -174,6 +205,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
         {
             struct libnet_tcp_hdr *tcph_p =
                 (struct libnet_tcp_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
 
 #if (STUPID_SOLARIS_CHECKSUM_BUG)
             tcph_p->th_sum = tcph_p->th_off << 2;
@@ -195,7 +228,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
              * ip src
              * ip dst
              * tcp protocol (IPPROTO_TCP)
-             * tcp length (??)
+             * tcp length, including the header
              * + the TCP header (with checksum set to zero) and data
              */
             tcph_p->th_sum = 0;
@@ -219,6 +252,9 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
         {
             struct libnet_udp_hdr *udph_p =
                 (struct libnet_udp_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
+
             udph_p->uh_sum = 0;
             if (is_ipv6)
             {
@@ -238,6 +274,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
             struct libnet_icmpv4_hdr *icmph_p =
                 (struct libnet_icmpv4_hdr *)(iphdr + ip_hl);
 
+            CHECK_IP_PAYLOAD_SIZE();
+
             icmph_p->icmp_sum = 0;
             if (is_ipv6)
             {
@@ -253,6 +291,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
             struct libnet_igmp_hdr *igmph_p =
                 (struct libnet_igmp_hdr *)(iphdr + ip_hl);
 
+            CHECK_IP_PAYLOAD_SIZE();
+
             igmph_p->igmp_sum = 0;
             sum = libnet_in_cksum((uint16_t *)igmph_p, h_len);
             igmph_p->igmp_sum = LIBNET_CKSUM_CARRY(sum);
@@ -266,6 +306,9 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
 	    struct libnet_gre_hdr *greh_p = 
 		(struct libnet_gre_hdr *)(iphdr + ip_hl);
 	    uint16_t fv = ntohs(greh_p->flags_ver);
+
+            CHECK_IP_PAYLOAD_SIZE();
+
 	    if (!(fv & (GRE_CSUM|GRE_ROUTING | GRE_VERSION_0)) ||
                 !(fv & (GRE_CSUM|GRE_VERSION_1)))
 	    {
@@ -282,6 +325,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
             struct libnet_ospf_hdr *oh_p =
                 (struct libnet_ospf_hdr *)(iphdr + ip_hl);
 
+            CHECK_IP_PAYLOAD_SIZE();
+
             oh_p->ospf_sum = 0;
             sum += libnet_in_cksum((uint16_t *)oh_p, h_len);
             oh_p->ospf_sum = LIBNET_CKSUM_CARRY(sum);
@@ -295,6 +340,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
                 (struct libnet_lsa_hdr *)(iphdr + 
                 ip_hl + oh_p->ospf_len);
 
+            /* FIXME need additional length check, to account for ospf_len */
             lsa_p->lsa_sum = 0;
             sum += libnet_in_cksum((uint16_t *)lsa_p, h_len);
             lsa_p->lsa_sum = LIBNET_CKSUM_CARRY(sum);
@@ -363,6 +409,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
         {
             struct libnet_vrrp_hdr *vrrph_p =
                 (struct libnet_vrrp_hdr *)(iphdr + ip_hl);
+            CHECK_IP_PAYLOAD_SIZE();
 
             vrrph_p->vrrp_sum = 0;
             sum = libnet_in_cksum((uint16_t *)vrrph_p, h_len);
@@ -372,12 +419,22 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
         case LIBNET_PROTO_CDP:
         {   /* XXX - Broken: how can we easily get the entire packet size? */
             /* FIXME - Basically, non-IP protocols are not handled by libnet's
-             * checksumming, so this is impossible. Whether this could work
-             * even a little bit would depend on build_cdp() setting the
-             * ip_offset in the pblock to the start of the CDP header.
+             * checksumming, so this is impossible. FYI, whether this could
+             * work even a little bit would depend on build_cdp() setting the
+             * ip_offset in the pblock to the start of what should be
+             * checksummed in the CDL header, and the h_len to the length of
+             * what should be summed. Should probably just be done when the CDP
+             * header is built.
              */
             struct libnet_cdp_hdr *cdph_p =
                 (struct libnet_cdp_hdr *)iphdr;
+
+            if((iphdr+h_len) > end)
+            {
+                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                        "%s(): cdp payload not inside packet\n", __func__);
+                return -1;
+            }
 
             cdph_p->cdp_sum = 0;
             sum = libnet_in_cksum((uint16_t *)cdph_p, h_len);

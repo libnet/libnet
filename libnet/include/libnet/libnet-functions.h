@@ -2133,7 +2133,7 @@ libnet_close_link(libnet_t *l);
  * [Internal] 
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *packet, int protocol, int len);
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, uint8_t *beg, uint8_t* end);
 
 /*
  * [Internal] 

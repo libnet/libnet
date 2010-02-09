@@ -156,7 +156,7 @@ libnet_build_tcp(
              * the tcp header and options. */
             libnet_pblock_update(l, p_data, payload_s, LIBNET_PBLOCK_TCPDATA);
 
-            if(p->prev->type == LIBNET_PBLOCK_TCPO_H)
+            if(p->prev && p->prev->type == LIBNET_PBLOCK_TCPO_H)
                 insertbefore = p->prev->ptag;
 
             libnet_pblock_insert_before(l, insertbefore, p_data->ptag);
