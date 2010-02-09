@@ -177,7 +177,7 @@ libnet_build_tcp(
          */
         libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
     }
-    return (ptag);
+    return (p->ptag);
 bad:
     libnet_pblock_delete(l, p);
     return (-1);
