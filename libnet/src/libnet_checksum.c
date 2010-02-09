@@ -40,11 +40,21 @@
 #endif
 
 /* FIXME - unit test these - 0 is debian's version, else is -RC1's */
+/* Note about aliasing warning:
+ *
+ *   http://mail.opensolaris.org/pipermail/tools-gcc/2005-August/000047.html
+ *
+ * See RFC 1071, and:
+ *
+ *   http://mathforum.org/library/drmath/view/54379.html
+ */
+#undef DEBIAN
+/* Note: len is in bytes, not 16-bit words! */
 int
 libnet_in_cksum(uint16_t *addr, int len)
 {
     int sum;
-#if 0
+#ifdef DEBIAN
     uint16_t last_byte;
 
     sum = 0;
@@ -64,7 +74,7 @@ libnet_in_cksum(uint16_t *addr, int len)
         sum += *addr++;
         len -= 2;
     }
-#if 0
+#ifdef DEBIAN
     if (len == 1)
     {
         *(uint8_t *)&last_byte = *(uint8_t *)addr;
@@ -238,14 +248,19 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, uint8_t
             }
             else
             {
-                // http://mail.opensolaris.org/pipermail/tools-gcc/2005-August/000047.html
+                /* 8 = src and dst */
                 sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
-            /* FIXME - where is the IP destination address? */
-            sum += ntohs(IPPROTO_TCP + h_len);
+            sum += ntohs(iph_p->ip_p + h_len);
             sum += libnet_in_cksum((uint16_t *)tcph_p, h_len);
             tcph_p->th_sum = LIBNET_CKSUM_CARRY(sum);
-            // http://mathforum.org/library/drmath/view/54379.html
+#if 0
+            printf("tcp sum calculated: %#x/%d h_len %d\n",
+                    ntohs(tcph_p->th_sum),
+                    ntohs(tcph_p->th_sum),
+                    h_len
+                  );
+#endif
             break;
         }
         case IPPROTO_UDP:
