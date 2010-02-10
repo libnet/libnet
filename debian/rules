@@ -60,6 +60,7 @@ build-stamp: configure-stamp
 	dh_testdir
 	$(MAKE) -C doc doc
 	$(MAKE)
+	$(MAKE) -C ../lua
 	touch $@
 
 clean: unpatch
@@ -79,6 +80,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) $(MAKE_FLAGS) DESTDIR=$(DESTDIR) install
+	$(MAKE) -C ../lua DESTDIR=$(DESTDIR) install prefix=$(PREFIX)
 	dh_install --sourcedir=$(DESTDIR) --list-missing
 
 binary-indep: build install

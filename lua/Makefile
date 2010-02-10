@@ -18,9 +18,9 @@ BINDING += nfq.so
 
 build: $(BINDING)
 
-PREFIX=/usr/local
+prefix=/usr/local
 
-SODIR = $(DESTDIR)$(PREFIX)/lib/lua/5.1/
+SODIR = $(DESTDIR)$(prefix)/lib/lua/5.1/
 
 .PHONY: install
 install: $(BINDING)
@@ -66,6 +66,7 @@ CC.SO := $(CC) $(COPT) $(CFLAGS)
 
 net.so: net.c
 pcap.so: pcap.c
+pcap.so: LDLIBS+=-lpcap
 nfq.so: nfq.c
 nfq.so: LDLIBS+=-lnetfilter_queue
 

@@ -8,6 +8,13 @@ Build-Depends: debhelper, sharutils, libpcap-dev, quilt,
 Standards-Version: 3.8.0
 Homepage: http://www.packetfactory.net/libnet
 
+Package: libnet1-lua
+Architecture: any
+Section: libdevel
+Depends: libc6-dev, libnet1 (= ${binary:Version})
+Description: lua bindings for libnet, pcap, and nfq
+ lua bindings for libnet, pcap, and nfq
+
 Package: libnet1
 Architecture: any
 Section: libs
