@@ -1,0 +1,42 @@
+#!/usr/bin/env lua
+
+-- binary to hex
+function h(s)
+    local function hex(s)
+        return string.format("%02x", string.byte(s))
+    end
+    return "["..#s.."] "..string.gsub(s, ".", hex)
+end
+
+require"pcap"
+require"net"
+require"tostring"
+
+cap = assert(pcap.open_offline(arg[1]))
+n = net.init()
+
+local i = 0;
+for pkt, time, len in cap.next, cap do
+    if pkt then
+        i = i + 1
+        print("packet", i, "wirelen", len, "timestamp", time, os.date("!%c", time))
+        print("snap", h(pkt))
+
+        n:clear()
+        assert(n:decode_eth(pkt))
+        local tag = n:tag_above()
+        while tag do
+            --print(n:pblock(tag))
+            tag = n:tag_below(tag)
+        end
+        local block = n:block()
+        if block ~= pkt then
+            print("=> reencoding failed!")
+            print("pkt", h(pkt))
+            print("out", h(block))
+        end
+    else
+        print(pkt, time)
+    end
+end
+
