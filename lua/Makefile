@@ -10,8 +10,9 @@ CC = MACOSX_DEPLOYMENT_TARGET="10.3" gcc
 LDFLAGS = -fno-common -bundle -undefined dynamic_lookup
 
 # Linux
-CC = gcc `libnet-config --cflags --defines` `dnet-config --cflags`
-LDFLAGS = -fPIC -fno-common -shared `dnet-config --libs` `libnet-config --libs` -llua5.1
+CC = gcc
+LDFLAGS = -fPIC -fno-common -shared
+
 
 BINDING += nfq.so
 
@@ -52,10 +53,11 @@ CWARNS = -Wall \
   -Wshadow \
   -Wwrite-strings
 
-COPT = -O2 -DNDEBUG -g
-LUADIR = /usr/include/lua5.1
-CFLAGS = $(CWARNS) -I$(LUADIR) $(LDFLAGS)
-LDLIBS=-ldnet -lnet
+CDEFS=`sh ../libnet/libnet-config --cflags --defines` `dnet-config --cflags`
+COPT=-O2 -DNDEBUG -g
+CLUA=-I/usr/include/lua5.1
+CFLAGS=$(CWARNS) $(CDEFS) $(CLUA) $(LDFLAGS) -I../libnet/include -L../libnet/src/.libs/
+LDLIBS=`dnet-config --libs` `sh ../libnet/libnet-config --libs` -llua5.1
 
 CC.SO := $(CC) $(COPT) $(CFLAGS)
 
