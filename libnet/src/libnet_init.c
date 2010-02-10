@@ -45,7 +45,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
     libnet_t *l = NULL;
 
 #if !defined(__WIN32__)
-    if (getuid() && geteuid())
+    if ((injection_type != LIBNET_NONE) && getuid() && geteuid())
     {
         snprintf(err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): UID or EUID of 0 required\n", __func__);
@@ -81,6 +81,8 @@ libnet_init(int injection_type, const char *device, char *err_buf)
 
     switch (l->injection_type)
     {
+        case LIBNET_NONE:
+            break;
         case LIBNET_LINK:
         case LIBNET_LINK_ADV:
             if (libnet_select_device(l) == -1)

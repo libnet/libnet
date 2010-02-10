@@ -40,7 +40,7 @@
 #endif
 
 libnet_ptag_t
-libnet_build_ethernet(uint8_t *dst, uint8_t *src, uint16_t type, 
+libnet_build_ethernet(const uint8_t *dst, const uint8_t *src, uint16_t type, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -98,7 +98,7 @@ bad:
 
 
 libnet_ptag_t
-libnet_autobuild_ethernet(uint8_t *dst, uint16_t type, libnet_t *l)
+libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l)
 {
     uint32_t n, h;
     struct libnet_ether_addr *src;

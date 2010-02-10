@@ -128,7 +128,7 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
     }
 }
 
-static int check_ip_payload_size(libnet_t*l, uint8_t *iphdr, int ip_hl, int h_len, uint8_t* end, const char* func)
+static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, int h_len, const uint8_t * end, const char* func)
 {
     if((iphdr+ip_hl+h_len) > end)
     {
@@ -154,7 +154,7 @@ static int check_ip_payload_size(libnet_t*l, uint8_t *iphdr, int ip_hl, int h_le
  * len is the h_len from "q"
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, uint8_t *beg, uint8_t* end)
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
 {
     /* will need to update this for ipv6 at some point */
     struct libnet_ipv4_hdr *iph_p = (struct libnet_ipv4_hdr *)iphdr;

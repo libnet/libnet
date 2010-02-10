@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_stp_conf(uint16_t id, uint8_t version, uint8_t bpdu_type,
-uint8_t flags, uint8_t *root_id, uint32_t root_pc, uint8_t *bridge_id,
+uint8_t flags, const uint8_t *root_id, uint32_t root_pc, const uint8_t *bridge_id,
 uint16_t port_id, uint16_t message_age, uint16_t max_age,
 uint16_t hello_time, uint16_t f_delay, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)

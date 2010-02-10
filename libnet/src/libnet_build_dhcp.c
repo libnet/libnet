@@ -42,8 +42,8 @@
 libnet_ptag_t
 libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen, 
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
-uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, uint8_t *chaddr,
-uint8_t *sname, uint8_t *file, const uint8_t *payload, uint32_t payload_s,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -118,14 +118,14 @@ libnet_t *l, libnet_ptag_t ptag)
         goto bad;
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
+    if (payload_s && !payload)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "%s(): payload inconsistency\n", __func__);
         goto bad;
     }
  
-    if (payload && payload_s)
+    if (payload_s)
     {
         n = libnet_pblock_append(l, p, payload, payload_s);
         if (n == -1)
@@ -144,8 +144,8 @@ bad:
 libnet_ptag_t
 libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
-uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, uint8_t *chaddr,
-uint8_t *sname, uint8_t *file, const uint8_t *payload, uint32_t payload_s,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     return (libnet_build_dhcpv4(opcode, htype, hlen, hopcount, xid, secs,

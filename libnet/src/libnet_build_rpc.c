@@ -42,7 +42,7 @@
 libnet_ptag_t
 libnet_build_rpc_call(uint32_t rm, uint32_t xid, uint32_t prog_num, 
 uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength, 
-uint8_t *cdata, uint32_t vflavor, uint32_t vlength, uint8_t *vdata, 
+uint8_t *cdata, uint32_t vflavor, uint32_t vlength, const uint8_t *vdata, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

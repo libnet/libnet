@@ -195,7 +195,8 @@ struct libnet_context
 #else
     int fd;                             /* file descriptor of packet device */
 #endif
-    int injection_type;                 /* raw (ipv4 or ipv6) or link */
+    int injection_type;                 /* one of: */
+#define LIBNET_NONE     0xf8            /* no injection type, only construct packets */
 #define LIBNET_LINK     0x00            /* link-layer interface */
 #define LIBNET_RAW4     0x01            /* raw socket interface (ipv4) */
 #define LIBNET_RAW6     0x02            /* raw socket interface (ipv6) */

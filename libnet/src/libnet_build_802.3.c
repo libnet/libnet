@@ -40,7 +40,7 @@
 #endif
 
 libnet_ptag_t
-libnet_build_802_3(uint8_t *dst, uint8_t *src, uint16_t len, 
+libnet_build_802_3(const uint8_t *dst, const uint8_t *src, uint16_t len, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;

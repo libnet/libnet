@@ -42,7 +42,7 @@
 
 libnet_ptag_t
 libnet_build_arp(uint16_t hrd, uint16_t pro, uint8_t hln, uint8_t pln,
-uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha, uint8_t *tpa,
+uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha, const uint8_t *tpa,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -115,7 +115,7 @@ bad:
 }
 
 libnet_ptag_t
-libnet_autobuild_arp(uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha,
+libnet_autobuild_arp(uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha,
 uint8_t *tpa, libnet_t *l)
 {
     u_short hrd;
