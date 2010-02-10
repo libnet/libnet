@@ -58,6 +58,7 @@ configure-stamp: $(QUILT_STAMPFN)
 build: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
+	$(MAKE) -C doc doc
 	$(MAKE)
 	touch $@
 
