@@ -9,7 +9,7 @@ Makefile.in
 *.out.dSYM
 *.so.dSYM
 aclocal.m4
-autom4te.cache/
+autom4te.cache
 config.guess
 config.h
 config.h.in
