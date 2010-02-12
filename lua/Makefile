@@ -1,5 +1,4 @@
-
-.PHONY: default build
+.PHONY: default build test
 
 default: build
 
@@ -72,4 +71,7 @@ nfq.so: LDLIBS+=-lnetfilter_queue
 
 test: test.lua net.so
 	lua test.lua
+
+test-pcap: pcap.so
+	./pcap-test
 
