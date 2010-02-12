@@ -40,7 +40,7 @@
 #endif
 
 
-/* TODO len - should be calculated if zero */
+/* TODO len - should be calculated if -1 */
 libnet_ptag_t
 libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
 uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,
@@ -140,14 +140,14 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         }
     }
 
-    if ((payload && !payload_s) || (!payload && payload_s))
+    if (payload_s && !payload)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "%s(): payload inconsistency\n", __func__);
         goto bad;
     }
 
-    if (payload && payload_s)
+    if (payload_s)
     {
         /* update ptag_data with the new payload */
         // on create:
@@ -369,16 +369,12 @@ libnet_ptag_t ptag)
         {
             options_size_increase = adj_size - p_temp->b_len;
         }
-        else
-        {
-            /* 
-             * XXX - When this completes successfully, libnet errbuf contains 
-             * an error message so to come correct, we'll clear it.
-             */ 
-            memset(l->err_buf, 0, sizeof (l->err_buf));
-        }
     }
-
+    /* If we aren't modifying an options block, we are pushing a new one, and
+     * since it must be pushed before the IPv4 block is pushed, there is no
+     * need to remember that options size has "increased".
+     */
+    
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.

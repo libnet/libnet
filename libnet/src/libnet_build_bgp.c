@@ -159,8 +159,8 @@ bad:
 }
 
 libnet_ptag_t
-libnet_build_bgp4_update(uint16_t unfeasible_rt_len, uint8_t *withdrawn_rt,
-uint16_t total_path_attr_len, uint8_t *path_attributes, uint16_t info_len,
+libnet_build_bgp4_update(uint16_t unfeasible_rt_len, const uint8_t *withdrawn_rt,
+uint16_t total_path_attr_len, const uint8_t *path_attributes, uint16_t info_len,
 uint8_t *reachability_info, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {

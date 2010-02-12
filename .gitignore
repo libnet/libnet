@@ -9,7 +9,7 @@ Makefile.in
 *.out.dSYM
 *.so.dSYM
 aclocal.m4
-autom4te.cache/
+autom4te.cache
 config.guess
 config.h
 config.h.in
@@ -21,6 +21,8 @@ install-sh
 libnet-config
 libnet-1.1.?
 libnet-1.1.?.tar.gz
+libnet*.deb
+libnet*.changes
 libtool
 ltmain.sh
 missing
@@ -28,6 +30,8 @@ stamp-*
 tags
 version.h
 lua/net.so
+libnet/*-stamp
+libnet/debian
 libnet/doc/html/*.html
 libnet/doc/html/*.css
 libnet/doc/html/*.png

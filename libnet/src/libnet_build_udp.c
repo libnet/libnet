@@ -43,7 +43,7 @@ libnet_ptag_t
 libnet_build_udp(uint16_t sp, uint16_t dp, uint16_t len, uint16_t sum,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_udp_hdr udp_hdr;
 

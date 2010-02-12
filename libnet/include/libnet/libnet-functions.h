@@ -354,7 +354,7 @@ libnet_plist_chain_free(libnet_plist_t *plist);
  * - Building another protocol header that is not available from a libnet 
  *   interface
  * To employ the interface, the application programmer should construct the i
- * payload data and pass a uint8_t * to this data and its size to the desired
+ * payload data and pass a const uint8_t * to this data and its size to the desired
  * libnet_build() function. Libnet handles the rest.
  *
  * It is important to note that some functions (notably the IPv6 builders) do
@@ -400,7 +400,7 @@ libnet_plist_chain_free(libnet_plist_t *plist);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_802_1q(uint8_t *dst, uint8_t *src, uint16_t tpi,
+libnet_build_802_1q(const uint8_t *dst, const uint8_t *src, uint16_t tpi,
 uint8_t priority, uint8_t cfi, uint16_t vlan_id, uint16_t len_proto,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
@@ -468,7 +468,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_802_3(uint8_t *dst, uint8_t *src, uint16_t len, 
+libnet_build_802_3(const uint8_t *dst, const uint8_t *src, uint16_t len, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -487,7 +487,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ethernet(uint8_t *dst, uint8_t *src, uint16_t type, 
+libnet_build_ethernet(const uint8_t *dst, const uint8_t *src, uint16_t type, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -502,7 +502,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_autobuild_ethernet(uint8_t *dst, uint16_t type, libnet_t *l);
+libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l);
 
 /**
  * Builds a Fiber Distributed Data Interface (FDDI) header.
@@ -521,8 +521,8 @@ libnet_autobuild_ethernet(uint8_t *dst, uint16_t type, libnet_t *l);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_fddi(uint8_t fc, uint8_t *dst, uint8_t *src, uint8_t dsap,
-uint8_t ssap, uint8_t cf, uint8_t *oui, uint16_t type, const uint8_t* payload,
+libnet_build_fddi(uint8_t fc, const uint8_t *dst, const uint8_t *src, uint8_t dsap,
+uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -538,8 +538,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_autobuild_fddi(uint8_t fc, uint8_t *dst, uint8_t dsap, uint8_t ssap,
-uint8_t cf, uint8_t *oui, uint16_t type, libnet_t *l);
+libnet_autobuild_fddi(uint8_t fc, const uint8_t *dst, uint8_t dsap, uint8_t ssap,
+uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
 
 /**
  * Builds an Address Resolution Protocol (ARP) header.  Depending on the op 
@@ -562,7 +562,7 @@ uint8_t cf, uint8_t *oui, uint16_t type, libnet_t *l);
  */
 libnet_ptag_t
 libnet_build_arp(uint16_t hrd, uint16_t pro, uint8_t hln, uint8_t pln,
-uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha, uint8_t *tpa,
+uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha, const uint8_t *tpa,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -578,7 +578,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_autobuild_arp(uint16_t op, uint8_t *sha, uint8_t *spa, uint8_t *tha,
+libnet_autobuild_arp(uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha,
 uint8_t *tpa, libnet_t *l);
 
 /**
@@ -619,7 +619,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_tcp_options(uint8_t *options, uint32_t options_s, libnet_t *l,
+libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
@@ -649,7 +649,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ttl time to live (time information should be cached by recipient)
  * @param sum checksum (0 for libnet to autofill)
  * @param type type of data contained in value
- * @param len length of value arugment
+ * @param value_s length of value argument
  * @param value the CDP information string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -659,7 +659,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_cdp(uint8_t version, uint8_t ttl, uint16_t sum, uint16_t type,
-uint16_t len, uint8_t *value, const uint8_t* payload, uint32_t payload_s,
+uint16_t value_s, const uint8_t *value, const uint8_t* payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -981,7 +981,7 @@ libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_isl(uint8_t *dhost, uint8_t type, uint8_t user,
-uint8_t *shost, uint16_t len, uint8_t *snap, uint16_t vid,
+uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
 uint16_t portindex, uint16_t reserved, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
@@ -1104,7 +1104,7 @@ libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_rpc_call(uint32_t rm, uint32_t xid, uint32_t prog_num,
 uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength,
-uint8_t *cdata, uint32_t vflavor, uint32_t vlength, uint8_t *vdata,
+uint8_t *cdata, uint32_t vflavor, uint32_t vlength, const uint8_t *vdata,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1131,7 +1131,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_stp_conf(uint16_t id, uint8_t version, uint8_t bpdu_type,
-uint8_t flags, uint8_t *root_id, uint32_t root_pc, uint8_t *bridge_id,
+uint8_t flags, const uint8_t *root_id, uint32_t root_pc, const uint8_t *bridge_id,
 uint16_t port_id, uint16_t message_age, uint16_t max_age, 
 uint16_t hello_time, uint16_t f_delay, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1171,8 +1171,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, uint8_t *src,
-uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *oui, uint16_t type,
+libnet_build_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, const uint8_t *src,
+uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1189,8 +1189,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, 
-uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *oui, uint16_t type,
+libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, 
+uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type,
 libnet_t *l);
 
 /**
@@ -1471,8 +1471,8 @@ libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
-uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, uint8_t *chaddr,
-uint8_t *sname, uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
+uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1499,8 +1499,8 @@ libnet_t *l, libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
-uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, uint8_t *chaddr,
-uint8_t *sname, uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
+uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1650,8 +1650,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_bgp4_update(uint16_t unfeasible_rt_len, uint8_t *withdrawn_rt,
-uint16_t total_path_attr_len, uint8_t *path_attributes, uint16_t info_len,
+libnet_build_bgp4_update(uint16_t unfeasible_rt_len, const uint8_t *withdrawn_rt,
+uint16_t total_path_attr_len, const uint8_t *path_attributes, uint16_t info_len,
 uint8_t *reachability_info, const uint8_t* payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
@@ -1738,7 +1738,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_link(uint8_t *dst, uint8_t *src, uint8_t *oui, uint16_t type, 
+libnet_build_link(const uint8_t *dst, const uint8_t *src, const uint8_t *oui, uint16_t type, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1752,7 +1752,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_autobuild_link(uint8_t *dst, uint8_t *oui, uint16_t type,
+libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type,
 libnet_t *l);
 
 /**
@@ -2133,7 +2133,7 @@ libnet_close_link(libnet_t *l);
  * [Internal] 
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *packet, int protocol, int len);
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end);
 
 /*
  * [Internal] 
@@ -2161,7 +2161,7 @@ libnet_in_cksum(uint16_t *addr, int len);
  * and return a pointer to it.
  */
 libnet_pblock_t *
-libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t n, 
+libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, 
 uint8_t type);
 
 /*
@@ -2170,7 +2170,7 @@ uint8_t type);
  * an entry to the doubly linked list.
  */
 libnet_pblock_t *
-libnet_pblock_new(libnet_t *l, uint32_t size);
+libnet_pblock_new(libnet_t *l, uint32_t b_len);
 
 /*
  * [Internal] 
@@ -2201,8 +2201,7 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p);
  * pblock has a succesively increasing ptag identifier.
  */
 libnet_ptag_t
-libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, 
-uint8_t type);
+libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, uint8_t type);
 
 
 /*

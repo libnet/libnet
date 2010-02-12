@@ -40,11 +40,21 @@
 #endif
 
 /* FIXME - unit test these - 0 is debian's version, else is -RC1's */
+/* Note about aliasing warning:
+ *
+ *   http://mail.opensolaris.org/pipermail/tools-gcc/2005-August/000047.html
+ *
+ * See RFC 1071, and:
+ *
+ *   http://mathforum.org/library/drmath/view/54379.html
+ */
+#undef DEBIAN
+/* Note: len is in bytes, not 16-bit words! */
 int
 libnet_in_cksum(uint16_t *addr, int len)
 {
     int sum;
-#if 0
+#ifdef DEBIAN
     uint16_t last_byte;
 
     sum = 0;
@@ -64,7 +74,7 @@ libnet_in_cksum(uint16_t *addr, int len)
         sum += *addr++;
         len -= 2;
     }
-#if 0
+#ifdef DEBIAN
     if (len == 1)
     {
         *(uint8_t *)&last_byte = *(uint8_t *)addr;
@@ -118,44 +128,81 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
     }
 }
 
+static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, int h_len, const uint8_t * end, const char* func)
+{
+    if((iphdr+ip_hl+h_len) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): ip payload not inside packet\n", func);
+        return -1;
+    }
 
+    return 0;
+}
+
+#define CHECK_IP_PAYLOAD_SIZE() do { \
+    int e=check_ip_payload_size(l,iphdr,ip_hl, h_len, end, __func__);\
+    if(e) return e;\
+} while(0)
+
+
+/*
+ * We are checksumming pblock "q"
+ *
+ * iphdr is the pointer to it's iphdr, based on q->ip_offset
+ * protocol describes the type of "q", expressed as an IPPROTO_ value
+ * len is the h_len from "q"
+ */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
 {
     /* will need to update this for ipv6 at some point */
-    struct libnet_ipv4_hdr *iph_p;
-    struct libnet_ipv6_hdr *ip6h_p;
-    int is_ipv6;
-    int ip_hl;
-    int sum;
+    struct libnet_ipv4_hdr *iph_p = (struct libnet_ipv4_hdr *)iphdr;
+    struct libnet_ipv6_hdr *ip6h_p = NULL; /* default to not using IPv6 */
+    int ip_hl   = 0;
+    int sum     = 0;
+    int is_ipv6 = 0; /* TODO - remove this, it is redundant with ip6h_p */
 
-    is_ipv6 = 0;    /* default to not using IPv6 */
-    sum     = 0;
-    iph_p   = NULL;
-    ip6h_p  = NULL;
-
-    if (len == 0)
+    if (h_len == 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
             "%s(): header length can't be zero\n", __func__);
-        return (-1);
+        return -1;
+    }
+    /* Check for memory under/over reads/writes. */
+    if(iphdr < beg || (uint8_t*)(iph_p+1) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): ipv4 hdr not inside packet\n", __func__);
+        return -1;
     }
 
     /*
      *  Figure out which IP version we're dealing with.  We'll assume v4
      *  and overlay a header structure to yank out the version.
      */
-    iph_p = (struct libnet_ipv4_hdr *)buf;
-    if (iph_p && iph_p->ip_v == 6)
+    if (iph_p->ip_v == 6)
     {
-        ip6h_p = (struct libnet_ipv6_hdr *)buf;
-        is_ipv6 = 1;
+        ip6h_p = (struct libnet_ipv6_hdr *)iph_p;
+        iph_p = NULL;
         ip_hl   = 40;
+        if((uint8_t*)(ip6h_p+1) > end)
+        {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                    "%s(): ipv6 hdr not inside packet\n", __func__);
+            return -1;
+        }
     }
     else
     {
-        is_ipv6 = 0;
         ip_hl = iph_p->ip_hl << 2;
+    }
+
+    if((iphdr+ip_hl) > end)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): ip hdr len not inside packet\n", __func__);
+        return -1;
     }
 
     /*
@@ -164,14 +211,12 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
      */
     switch (protocol)
     {
-        /*
-         *  Style note: normally I don't advocate declaring variables inside
-         *  blocks of control, but it makes good sense here. -- MDS
-         */
         case IPPROTO_TCP:
         {
             struct libnet_tcp_hdr *tcph_p =
-                (struct libnet_tcp_hdr *)(buf + ip_hl);
+                (struct libnet_tcp_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
 
 #if (STUPID_SOLARIS_CHECKSUM_BUG)
             tcph_p->th_sum = tcph_p->th_off << 2;
@@ -185,10 +230,17 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
                  *  the size of the TCP payload (only for raw sockets).
                  */
                 tcph_p->th_sum = (tcph_p->th_off << 2) +
-                        (len - (tcph_p->th_off << 2));
+                        (h_len - (tcph_p->th_off << 2));
                 return (1); 
             }
 #endif
+            /* TCP checksum is over the IP pseudo header:
+             * ip src
+             * ip dst
+             * tcp protocol (IPPROTO_TCP)
+             * tcp length, including the header
+             * + the TCP header (with checksum set to zero) and data
+             */
             tcph_p->th_sum = 0;
             if (is_ipv6)
             {
@@ -196,17 +248,28 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
             }
             else
             {
+                /* 8 = src and dst */
                 sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
-            sum += ntohs(IPPROTO_TCP + len);
-            sum += libnet_in_cksum((uint16_t *)tcph_p, len);
+            sum += ntohs(iph_p->ip_p + h_len);
+            sum += libnet_in_cksum((uint16_t *)tcph_p, h_len);
             tcph_p->th_sum = LIBNET_CKSUM_CARRY(sum);
+#if 0
+            printf("tcp sum calculated: %#x/%d h_len %d\n",
+                    ntohs(tcph_p->th_sum),
+                    ntohs(tcph_p->th_sum),
+                    h_len
+                  );
+#endif
             break;
         }
         case IPPROTO_UDP:
         {
             struct libnet_udp_hdr *udph_p =
-                (struct libnet_udp_hdr *)(buf + ip_hl);
+                (struct libnet_udp_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
+
             udph_p->uh_sum = 0;
             if (is_ipv6)
             {
@@ -216,33 +279,37 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
             {
                 sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
-            sum += ntohs(IPPROTO_UDP + len);
-            sum += libnet_in_cksum((uint16_t *)udph_p, len);
+            sum += ntohs(IPPROTO_UDP + h_len);
+            sum += libnet_in_cksum((uint16_t *)udph_p, h_len);
             udph_p->uh_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
         case IPPROTO_ICMP:
         {
             struct libnet_icmpv4_hdr *icmph_p =
-                (struct libnet_icmpv4_hdr *)(buf + ip_hl);
+                (struct libnet_icmpv4_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
 
             icmph_p->icmp_sum = 0;
             if (is_ipv6)
             {
                 sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
-                sum += ntohs(IPPROTO_ICMP6 + len);
+                sum += ntohs(IPPROTO_ICMP6 + h_len);
             }
-            sum += libnet_in_cksum((uint16_t *)icmph_p, len);
+            sum += libnet_in_cksum((uint16_t *)icmph_p, h_len);
             icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
         case IPPROTO_IGMP:
         {
             struct libnet_igmp_hdr *igmph_p =
-                (struct libnet_igmp_hdr *)(buf + ip_hl);
+                (struct libnet_igmp_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
 
             igmph_p->igmp_sum = 0;
-            sum = libnet_in_cksum((uint16_t *)igmph_p, len);
+            sum = libnet_in_cksum((uint16_t *)igmph_p, h_len);
             igmph_p->igmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
@@ -252,8 +319,11 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
              * in the multiple RFC version of the protocol ... ouf !!!
              */
 	    struct libnet_gre_hdr *greh_p = 
-		(struct libnet_gre_hdr *)(buf + ip_hl);
+		(struct libnet_gre_hdr *)(iphdr + ip_hl);
 	    uint16_t fv = ntohs(greh_p->flags_ver);
+
+            CHECK_IP_PAYLOAD_SIZE();
+
 	    if (!(fv & (GRE_CSUM|GRE_ROUTING | GRE_VERSION_0)) ||
                 !(fv & (GRE_CSUM|GRE_VERSION_1)))
 	    {
@@ -261,30 +331,33 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
                 "%s(): can't compute GRE checksum (wrong flags_ver bits: 0x%x )\n",  __func__, fv);
 		return (-1);
 	    }
-	    sum = libnet_in_cksum((uint16_t *)greh_p, len);
+	    sum = libnet_in_cksum((uint16_t *)greh_p, h_len);
 	    greh_p->gre_sum = LIBNET_CKSUM_CARRY(sum);
 	    break;
 	}
         case IPPROTO_OSPF:
         {
             struct libnet_ospf_hdr *oh_p =
-                (struct libnet_ospf_hdr *)(buf + ip_hl);
+                (struct libnet_ospf_hdr *)(iphdr + ip_hl);
+
+            CHECK_IP_PAYLOAD_SIZE();
 
             oh_p->ospf_sum = 0;
-            sum += libnet_in_cksum((uint16_t *)oh_p, len);
+            sum += libnet_in_cksum((uint16_t *)oh_p, h_len);
             oh_p->ospf_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
         case IPPROTO_OSPF_LSA:
         {
             struct libnet_ospf_hdr *oh_p =
-                (struct libnet_ospf_hdr *)(buf + ip_hl);
+                (struct libnet_ospf_hdr *)(iphdr + ip_hl);
             struct libnet_lsa_hdr *lsa_p =
-                (struct libnet_lsa_hdr *)(buf + 
+                (struct libnet_lsa_hdr *)(iphdr + 
                 ip_hl + oh_p->ospf_len);
 
+            /* FIXME need additional length check, to account for ospf_len */
             lsa_p->lsa_sum = 0;
-            sum += libnet_in_cksum((uint16_t *)lsa_p, len);
+            sum += libnet_in_cksum((uint16_t *)lsa_p, h_len);
             lsa_p->lsa_sum = LIBNET_CKSUM_CARRY(sum);
             break;
 #if 0
@@ -350,20 +423,36 @@ libnet_do_checksum(libnet_t *l, uint8_t *buf, int protocol, int len)
         case IPPROTO_VRRP:
         {
             struct libnet_vrrp_hdr *vrrph_p =
-                (struct libnet_vrrp_hdr *)(buf + ip_hl);
+                (struct libnet_vrrp_hdr *)(iphdr + ip_hl);
+            CHECK_IP_PAYLOAD_SIZE();
 
             vrrph_p->vrrp_sum = 0;
-            sum = libnet_in_cksum((uint16_t *)vrrph_p, len);
+            sum = libnet_in_cksum((uint16_t *)vrrph_p, h_len);
             vrrph_p->vrrp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
         case LIBNET_PROTO_CDP:
         {   /* XXX - Broken: how can we easily get the entire packet size? */
+            /* FIXME - Basically, non-IP protocols are not handled by libnet's
+             * checksumming, so this is impossible. FYI, whether this could
+             * work even a little bit would depend on build_cdp() setting the
+             * ip_offset in the pblock to the start of what should be
+             * checksummed in the CDL header, and the h_len to the length of
+             * what should be summed. Should probably just be done when the CDP
+             * header is built.
+             */
             struct libnet_cdp_hdr *cdph_p =
-                (struct libnet_cdp_hdr *)buf;
+                (struct libnet_cdp_hdr *)iphdr;
+
+            if((iphdr+h_len) > end)
+            {
+                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                        "%s(): cdp payload not inside packet\n", __func__);
+                return -1;
+            }
 
             cdph_p->cdp_sum = 0;
-            sum = libnet_in_cksum((uint16_t *)cdph_p, len);
+            sum = libnet_in_cksum((uint16_t *)cdph_p, h_len);
             cdph_p->cdp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }

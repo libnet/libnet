@@ -39,8 +39,8 @@
 #endif
 
 libnet_ptag_t
-libnet_build_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, uint8_t *src, 
-uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type,
+libnet_build_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, const uint8_t *src, 
+uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *org, uint16_t type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n, h;
@@ -106,8 +106,8 @@ bad:
 
 
 libnet_ptag_t
-libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, uint8_t *dst, 
-uint8_t dsap, uint8_t ssap, uint8_t cf, uint8_t *org, uint16_t type, 
+libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, 
+uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *org, uint16_t type, 
 libnet_t *l)
 {
     uint32_t n, h;

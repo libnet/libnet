@@ -132,16 +132,16 @@
 
 /* used internally for packet builders */
 #define LIBNET_DO_PAYLOAD(l, p)                                              \
-if ((payload && !payload_s) || (!payload && payload_s))                      \
+if (payload_s && !payload)                                                   \
 {                                                                            \
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,                                 \
             "%s(): payload inconsistency\n", __func__);                      \
     goto bad;                                                                \
 }                                                                            \
-if (payload && payload_s)                                                    \
+if (payload_s)                                                               \
 {                                                                            \
     n = libnet_pblock_append(l, p, payload, payload_s);                      \
-    if (n == (uint32_t) - 1)                                                \
+    if (n == (uint32_t) - 1)                                                 \
     {                                                                        \
         goto bad;                                                            \
     }                                                                        \

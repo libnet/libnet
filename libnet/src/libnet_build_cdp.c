@@ -41,7 +41,7 @@
 
 libnet_ptag_t
 libnet_build_cdp(uint8_t version, uint8_t ttl, uint16_t sum, uint16_t type,
-uint16_t len, uint8_t *value, const uint8_t *payload, uint32_t payload_s,
+uint16_t len, const uint8_t *value, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n,h;

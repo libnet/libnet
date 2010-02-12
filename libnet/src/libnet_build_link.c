@@ -45,7 +45,7 @@
 #endif
 
 libnet_ptag_t
-libnet_build_link(uint8_t *dst, uint8_t *src, uint8_t *oui, uint16_t type,
+libnet_build_link(const uint8_t *dst, const uint8_t *src, const uint8_t *oui, uint16_t type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
 {
@@ -70,7 +70,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 }
 
 libnet_ptag_t
-libnet_autobuild_link(uint8_t *dst, uint8_t *oui, uint16_t type, libnet_t *l)
+libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, libnet_t *l)
 {
 	uint8_t org[3] = {0x00, 0x00, 0x00};
     switch (l->link_type)

@@ -173,138 +173,138 @@ libnet_diag_dump_pblock(libnet_t *l)
 char *
 libnet_diag_dump_pblock_type(uint8_t type)
 {
-    static char buf[50];
     switch (type)
     {
+        /* below text can be regenerated using map-pblock-typs */
         case LIBNET_PBLOCK_ARP_H:
-            return ("arp header");
+            return ("arp");
         case LIBNET_PBLOCK_DHCPV4_H:
-            return ("dhcpv4 header");
+            return ("dhcpv4");
         case LIBNET_PBLOCK_DNSV4_H:
-            return ("dnsv4 header");
+            return ("dnsv4");
         case LIBNET_PBLOCK_ETH_H:
-            return ("ethernet header");
+            return ("eth");
         case LIBNET_PBLOCK_ICMPV4_H:
-            return ("icmpv4 header");
+            return ("icmpv4");
         case LIBNET_PBLOCK_ICMPV4_ECHO_H:
-            return ("icmpv4 echo header");
+            return ("icmpv4_echo");
         case LIBNET_PBLOCK_ICMPV4_MASK_H:
-            return ("icmpv4 mask header");
+            return ("icmpv4_mask");
         case LIBNET_PBLOCK_ICMPV4_UNREACH_H:
-            return ("icmpv4 unreachable header");
+            return ("icmpv4_unreach");
         case LIBNET_PBLOCK_ICMPV4_TIMXCEED_H:
-            return ("icmpv4 time exceeded header");
+            return ("icmpv4_timxceed");
         case LIBNET_PBLOCK_ICMPV4_REDIRECT_H:
-            return ("icmpv4 redirect header");
+            return ("icmpv4_redirect");
         case LIBNET_PBLOCK_ICMPV4_TS_H:
-            return ("icmpv4 timestamp header");
+            return ("icmpv4_ts");
         case LIBNET_PBLOCK_IGMP_H:
-            return ("igmp header");
+            return ("igmp");
         case LIBNET_PBLOCK_IPV4_H:
-            return ("ipv4 header");
+            return ("ipv4");
         case LIBNET_PBLOCK_IPO_H:
-            return ("ip options header");
+            return ("ipo");
         case LIBNET_PBLOCK_IPDATA:
-            return ("ip data");
+            return ("ipdata");
         case LIBNET_PBLOCK_OSPF_H:
-            return ("ospf header");
+            return ("ospf");
         case LIBNET_PBLOCK_OSPF_HELLO_H:
-            return ("ospf hello header");
+            return ("ospf_hello");
         case LIBNET_PBLOCK_OSPF_DBD_H:
-            return ("ospf dbd header");
+            return ("ospf_dbd");
         case LIBNET_PBLOCK_OSPF_LSR_H:
-            return ("ospf lsr header");
+            return ("ospf_lsr");
         case LIBNET_PBLOCK_OSPF_LSU_H:
-            return ("ospf lsu header");
+            return ("ospf_lsu");
         case LIBNET_PBLOCK_OSPF_LSA_H:
-            return ("ospf lsa header");
+            return ("ospf_lsa");
         case LIBNET_PBLOCK_OSPF_AUTH_H:
-            return ("ospf authentication header");
+            return ("ospf_auth");
         case LIBNET_PBLOCK_OSPF_CKSUM:
-            return ("ospf checksum");
+            return ("ospf_cksum");
         case LIBNET_PBLOCK_LS_RTR_H:
-            return ("ospf ls rtr header");
+            return ("ls_rtr");
         case LIBNET_PBLOCK_LS_NET_H:
-            return ("ospf ls net header");
+            return ("ls_net");
         case LIBNET_PBLOCK_LS_SUM_H:
-            return ("ospf ls sum header");
+            return ("ls_sum");
         case LIBNET_PBLOCK_LS_AS_EXT_H:
-            return ("ospf ls as extension header");
+            return ("ls_as_ext");
         case LIBNET_PBLOCK_NTP_H:
-            return ("ntp header");
+            return ("ntp");
         case LIBNET_PBLOCK_RIP_H:
-            return ("rip header");
+            return ("rip");
         case LIBNET_PBLOCK_TCP_H:
-            return ("tcp header");
+            return ("tcp");
         case LIBNET_PBLOCK_TCPO_H:
-            return ("tcp options header");
+            return ("tcpo");
         case LIBNET_PBLOCK_TCPDATA:
-            return ("tcp data");
+            return ("tcpdata");
         case LIBNET_PBLOCK_UDP_H:
-            return ("udp header");
+            return ("udp");
         case LIBNET_PBLOCK_VRRP_H:
-            return ("vrrp header");
+            return ("vrrp");
         case LIBNET_PBLOCK_DATA_H:
             return ("data");
         case LIBNET_PBLOCK_CDP_H:
-            return ("cdp header");
+            return ("cdp");
         case LIBNET_PBLOCK_IPSEC_ESP_HDR_H:
-            return ("ipsec esp header");
+            return ("ipsec_esp_hdr");
         case LIBNET_PBLOCK_IPSEC_ESP_FTR_H:
-            return ("ipsec esp footer");
+            return ("ipsec_esp_ftr");
         case LIBNET_PBLOCK_IPSEC_AH_H:
-            return ("ipsec authentication header");
+            return ("ipsec_ah");
         case LIBNET_PBLOCK_802_1Q_H:
-            return ("802.1q header");
+            return ("802_1q");
         case LIBNET_PBLOCK_802_2_H:
-            return ("802.2 header");
+            return ("802_2");
         case LIBNET_PBLOCK_802_2SNAP_H:
-            return ("802.2SNAP header");
+            return ("802_2snap");
         case LIBNET_PBLOCK_802_3_H:
-            return ("802.3 header");
+            return ("802_3");
         case LIBNET_PBLOCK_STP_CONF_H:
-            return ("stp configuration header");
+            return ("stp_conf");
         case LIBNET_PBLOCK_STP_TCN_H:
-            return ("stp tcn header");
+            return ("stp_tcn");
         case LIBNET_PBLOCK_ISL_H:
-            return ("isl header");
+            return ("isl");
         case LIBNET_PBLOCK_IPV6_H:
-            return ("ipv6 header");
+            return ("ipv6");
         case LIBNET_PBLOCK_802_1X_H:
-            return ("802.1x header");
+            return ("802_1x");
         case LIBNET_PBLOCK_RPC_CALL_H:
-            return ("rpc call header");
+            return ("rpc_call");
         case LIBNET_PBLOCK_MPLS_H:
-            return ("mlps header");
+            return ("mpls");
         case LIBNET_PBLOCK_FDDI_H:
-            return ("fddi header");
+            return ("fddi");
         case LIBNET_PBLOCK_TOKEN_RING_H:
-            return ("token ring header");
+            return ("token_ring");
         case LIBNET_PBLOCK_BGP4_HEADER_H:
-            return ("bgp header");
+            return ("bgp4_header");
         case LIBNET_PBLOCK_BGP4_OPEN_H:
-            return ("bgp open header");
+            return ("bgp4_open");
         case LIBNET_PBLOCK_BGP4_UPDATE_H:
-            return ("bgp update header");
+            return ("bgp4_update");
         case LIBNET_PBLOCK_BGP4_NOTIFICATION_H:
-            return ("bgp notification header");
+            return ("bgp4_notification");
         case LIBNET_PBLOCK_GRE_H:
-            return ("gre header");
+            return ("gre");
         case LIBNET_PBLOCK_GRE_SRE_H:
-            return ("gre sre header");
+            return ("gre_sre");
         case LIBNET_PBLOCK_IPV6_FRAG_H:
-            return ("ipv6 fragmentation header");
+            return ("ipv6_frag");
         case LIBNET_PBLOCK_IPV6_ROUTING_H:
-            return ("ipv6 routing header");
+            return ("ipv6_routing");
         case LIBNET_PBLOCK_IPV6_DESTOPTS_H:
-            return ("ipv6 destination options header");
+            return ("ipv6_destopts");
         case LIBNET_PBLOCK_IPV6_HBHOPTS_H:
-            return ("ipv6 hop by hop options header");
-        default:
-            snprintf(buf, sizeof(buf),
-                    "%s(): unknown pblock type: %d", __func__, type);
-            return (buf);
+            return ("ipv6_hbhopts");
+        case LIBNET_PBLOCK_SEBEK_H:
+            return ("sebek");
+        case LIBNET_PBLOCK_HSRP_H:
+            return ("hsrp");
     }
-    return ("unreachable code");
+    return ("unrecognized pblock");
 }
 /* EOF */

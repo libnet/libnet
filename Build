@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+set -e
 
 make -C doc doc
 make

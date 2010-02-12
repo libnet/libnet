@@ -49,14 +49,14 @@ do                                                                           \
         goto bad;                                                            \
     }                                                                        \
                                                                              \
-    if ((payload && !payload_s) || (!payload && payload_s))                  \
+    if (payload_s && !payload)                                               \
     {                                                                        \
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,                             \
                 "%s(): payload inconsistency\n", __func__);                  \
         goto bad;                                                            \
     }                                                                        \
                                                                              \
-    if (payload && payload_s)                                                \
+    if (payload_s)                                                           \
     {                                                                        \
         n = libnet_pblock_append(l, p, payload, payload_s);                  \
         if (n == -1)                                                         \
