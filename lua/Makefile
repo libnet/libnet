@@ -4,16 +4,9 @@ default: build
 
 BINDING=net.so pcap.so
 
-# OS X
-CC = MACOSX_DEPLOYMENT_TARGET="10.3" gcc
-LDFLAGS = -fno-common -bundle -undefined dynamic_lookup
+UNAME=$(shell uname)
 
-# Linux
-CC = gcc
-LDFLAGS = -fPIC -fno-common -shared
-
-
-BINDING += nfq.so
+include $(UNAME).mak
 
 build: $(BINDING)
 
@@ -24,7 +17,7 @@ SODIR = $(DESTDIR)$(prefix)/lib/lua/5.1/
 .PHONY: install
 install: $(BINDING)
 	mkdir -p $(SODIR)
-	install -t $(SODIR) $(BINDING)
+	../libnet/install-sh -t $(SODIR) $(BINDING)
 
 .PHONY: net pcap nfq
 
@@ -52,20 +45,25 @@ CWARNS = -Wall \
   -Wshadow \
   -Wwrite-strings
 
-CDEFS=`sh ../libnet/libnet-config --cflags --defines` `dnet-config --cflags`
+CDEFS=$(shell sh ../libnet/libnet-config --cflags --defines) $(shell dnet-config --cflags)
 COPT=-O2 -DNDEBUG -g
-CLUA=-I/usr/include/lua5.1
 CFLAGS=$(CWARNS) $(CDEFS) $(CLUA) $(LDFLAGS) -I../libnet/include -L../libnet/src/.libs/
-LDLIBS=`dnet-config --libs` `sh ../libnet/libnet-config --libs` -llua5.1
+LDLIBS=$(LLUA)
+
+LDDNET=$(shell dnet-config --libs)
+LDLNET=$(shell sh ../libnet/libnet-config --libs)
 
 CC.SO := $(CC) $(COPT) $(CFLAGS)
 
 %.so: %.c
-	$(CC.SO) -o $@ $< $(LDLIBS)
+	$(CC.SO) -o $@ $^ $(LDLIBS)
 
-net.so: net.c
+net.so: net.c libnet_decode.c
+net.so: LDLIBS+=$(LDDNET) $(LDLNET)
+
 pcap.so: pcap.c
 pcap.so: LDLIBS+=-lpcap
+
 nfq.so: nfq.c
 nfq.so: LDLIBS+=-lnetfilter_queue
 

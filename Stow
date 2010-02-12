@@ -1,10 +1,9 @@
 #!/bin/sh
 
-set -v
+set -x
 set -e
 
 (cd /usr/local/stow && sudo stow -D libnet)
-find /usr/local -name libnet\* | grep -v /usr/local/stow/libnet
 sudo rm -rf /usr/local/stow/libnet
 sudo mkdir -p /usr/local/stow/libnet
 
