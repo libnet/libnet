@@ -518,16 +518,19 @@ void
 libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
 {
     libnet_pblock_t *c;
-    uint32_t ip_offset = 0;
+    p->ip_offset = 0;
 
     assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
 
     for(c = p; c; c = c->prev)
-        ip_offset += c->b_len;
+        p->ip_offset += c->b_len;
 
-    for(c = p; c; c = c->prev)
-        c->ip_offset = ip_offset;
-
+    for(c = p->prev; c; c = c->prev) {
+        /* Deal with encapsulation of IP protocols by not setting ip_offset past a IP header */
+        if(c->type  == LIBNET_PBLOCK_IPV4_H || c->type == LIBNET_PBLOCK_IPV6_H)
+	  break;
+        c->ip_offset = p->ip_offset;
+    }
 }
 
 void
