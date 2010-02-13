@@ -6,7 +6,7 @@ require"netutil"
 hex_dump = h
 
 local function check_ipv4()
- 	local n = net.init("link", "eth0") 
+ 	local n = net.init()
  	n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
 	n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 
@@ -15,20 +15,20 @@ local function check_ipv4()
 end
 
 local function check_ptag()
-	local n = net.init("link", "eth0") 
+	local n = net.init()
 	eth = n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 	ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA", ptag = eth})
 	assert(not ok, "net:ipv4 fails to detect specifying a ptag when creating IPv4 options")
 end
 
 local function check_first()
-	local n = net.init("link", "eth0") 
+	local n = net.init()
  	ok=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"})
 	eth = n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
  	assert(ok, "net:ipv4 fails to construct ipv4 options correctly")
 end
 
-n = net.init("link", "eth0")
+n = net.init()
 
 print(q(net.pton("01:02:03:04:05:06")))
 print(q(net.pton("1.2.3.4")))
@@ -39,8 +39,6 @@ ipv4 = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, len=20+8+3}
 n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 
 print(n:dump())
-
-n:write()
 
 b1 = n:block()
 print(#b1, q(b1))
@@ -65,7 +63,7 @@ check_first()
 do
     print"\n\n# decode ipv4"
 
-    local n = net.init("raw4", "eth0") 
+    local n = net.init()
 
     n:udp{src=1, dst=2, payload=" "}
     n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, len=20+4, options="AAAA"}
@@ -127,7 +125,7 @@ end
 do
     print"\n\n# pblock dump"
 
-    local n = net.init("raw4", "eth0") 
+    local n = net.init()
 
     n:udp{src=1, dst=2, payload=" "}
     n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, len=20+4, options="AAAA"}
