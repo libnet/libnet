@@ -10,13 +10,11 @@ local function gc()
 end
 
 function assertfail(...)
-    print("assertfail", ...)
+    --print("assertfail", ...)
     local ok, emsg = pcall(...)
-    print("pcall", ok, emsg)
-
+    --print("pcall", ok, emsg)
     assert(ok == false, tostring(ok)..","..tostring(emsg))
     assert(emsg)
-
     return emsg
 end
 
