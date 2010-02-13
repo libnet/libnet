@@ -135,7 +135,6 @@ libnet_diag_dump_pblock(libnet_t *l)
         fprintf(stderr, "pblock type:\t%s\n", 
                 libnet_diag_dump_pblock_type(p->type));
         fprintf(stderr, "ptag number:\t%d\n", p->ptag);
-        fprintf(stderr, "IP offset:\t%d\n", p->ip_offset);
         fprintf(stderr, "pblock address:\t%p\n", p);
         fprintf(stderr, "next pblock\t%p ", p->next);
         if (p->next)

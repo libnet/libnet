@@ -298,6 +298,33 @@ libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h_len, uint8_t ty
     return (p->ptag);
 }
 
+static int pblock_is_ip(libnet_pblock_t* p)
+{
+    return p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H;
+}
+
+/* q is either an ip hdr, or is followed  by an ip hdr. return the offset
+ * from end of packet. if there is no offset, we'll return the total size,
+ * and things will break later
+ */
+static int calculate_ip_offset(libnet_t* l, libnet_pblock_t* q)
+{
+    int ip_offset = 0;
+    libnet_pblock_t* p = l->protocol_blocks;
+    for(; p && p != q; p = p->next) {
+	ip_offset += p->b_len;
+    }
+    assert(p == q); /* if not true, then q is not a pblock! */
+
+    for(; p; p = p->next) {
+	ip_offset += p->b_len;
+	if(pblock_is_ip(p))
+	    break;
+    }
+
+    return ip_offset;
+}
+
 int
 libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
 {
@@ -460,7 +487,14 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                         uint32_t c;
                         uint8_t* end = *packet + l->aligner + l->total_size;
                         uint8_t* beg = *packet + n;
-                        uint8_t* iph = end - q->ip_offset;
+                        int ip_offset = calculate_ip_offset(l, q);
+                        uint8_t* iph = end - ip_offset;
+#if 0
+			printf("p %d/%s q %d/%s offset calculated %d\n",
+				p ? p->ptag : -1, p ? libnet_diag_dump_pblock_type(p->type) : "nil",
+				q->ptag, libnet_diag_dump_pblock_type(q->type),
+				ip_offset);
+#endif
                         c = libnet_do_checksum(l, iph,
                                 libnet_pblock_p2p(q->type), q->h_len,
                                 beg, end);
@@ -559,25 +593,6 @@ libnet_pblock_p2p(uint8_t type)
 }
 
 void
-libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
-{
-    libnet_pblock_t *c;
-    p->ip_offset = 0;
-
-    assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
-
-    for(c = p; c; c = c->prev)
-        p->ip_offset += c->b_len;
-
-    for(c = p->prev; c; c = c->prev) {
-        /* Deal with encapsulation of IP protocols by not setting ip_offset past a IP header */
-        if(c->type  == LIBNET_PBLOCK_IPV4_H || c->type == LIBNET_PBLOCK_IPV6_H)
-	  break;
-        c->ip_offset = p->ip_offset;
-    }
-}
-
-void
 libnet_pblock_repair_lengths(libnet_t* l)
 {
   libnet_pblock_t* p = l->protocol_blocks;
@@ -600,8 +615,6 @@ libnet_pblock_repair_lengths(libnet_t* l)
 	      ip_hl += p->prev->b_len;
 	  }
 	  hdr->ip_hl = ip_hl / 4;
-
-	  libnet_pblock_record_ip_offset(l, p);
 	} break;
     }
     datasz += p->b_len;

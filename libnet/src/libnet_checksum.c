@@ -133,7 +133,8 @@ static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, in
     if((iphdr+ip_hl+h_len) > end)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): ip payload not inside packet\n", func);
+                "%s(): ip payload not inside packet (pktsz %d, iphsz %d, payloadsz %d)\n", func,
+		(int)(end - iphdr), ip_hl, h_len);
         return -1;
     }
 
@@ -149,7 +150,7 @@ static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, in
 /*
  * We are checksumming pblock "q"
  *
- * iphdr is the pointer to it's iphdr, based on q->ip_offset
+ * iphdr is the pointer to it's encapsulating IP header
  * protocol describes the type of "q", expressed as an IPPROTO_ value
  * len is the h_len from "q"
  */
@@ -170,10 +171,11 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
         return -1;
     }
     /* Check for memory under/over reads/writes. */
-    if(iphdr < beg || (uint8_t*)(iph_p+1) > end)
+    if(iphdr < beg || (iphdr+sizeof(*iph_p)) > end)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): ipv4 hdr not inside packet\n", __func__);
+            "%s(): ipv4 hdr not inside packet (where %d, size %d)\n", __func__,
+	    (int)(iphdr-beg), (int)(end-beg));
         return -1;
     }
 
@@ -215,6 +217,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
         {
             struct libnet_tcp_hdr *tcph_p =
                 (struct libnet_tcp_hdr *)(iphdr + ip_hl);
+
+	    h_len = end - (uint8_t*) tcph_p; /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -267,6 +271,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
         {
             struct libnet_udp_hdr *udph_p =
                 (struct libnet_udp_hdr *)(iphdr + ip_hl);
+
+	    h_len = end - (uint8_t*) udph_p; /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -433,14 +439,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
         }
         case LIBNET_PROTO_CDP:
         {   /* XXX - Broken: how can we easily get the entire packet size? */
-            /* FIXME - Basically, non-IP protocols are not handled by libnet's
-             * checksumming, so this is impossible. FYI, whether this could
-             * work even a little bit would depend on build_cdp() setting the
-             * ip_offset in the pblock to the start of what should be
-             * checksummed in the CDL header, and the h_len to the length of
-             * what should be summed. Should probably just be done when the CDP
-             * header is built.
-             */
+	    /* FIXME you can't, checksumming non-IP protocols was not supported by libnet */
             struct libnet_cdp_hdr *cdph_p =
                 (struct libnet_cdp_hdr *)iphdr;
 

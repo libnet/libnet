@@ -128,10 +128,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
         if (p_temp->type == LIBNET_PBLOCK_IPDATA)
         {
-            int offset = payload_s;
-
             ptag_data = p_temp->ptag;
-            offset -=  p_temp->b_len;
         }
         else
         {
@@ -239,8 +236,6 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
     }
 
-    libnet_pblock_record_ip_offset(l, p);
-
     return (ptag);
 bad:
     libnet_pblock_delete(l, p);
@@ -320,11 +315,6 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
     libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
     ptag = libnet_pblock_update(l, p, LIBNET_IPV4_H, LIBNET_PBLOCK_IPV4_H);
 
-    /*
-     * FREDRAYNAL: as we insert a new IP header, all checksums for headers
-     * placed after this one will refer to here.
-     */
-    libnet_pblock_record_ip_offset(l, p);
     return (ptag);
 
 bad:
@@ -411,9 +401,6 @@ libnet_ptag_t ptag)
             ip_hdr->ip_len = htons(ntohs(ip_hdr->ip_len) + options_size_increase);
 
             p_temp->h_len = ip_hdr->ip_hl * 4; /* Dead code, h_len isn't used for IPv4 block */
-
-	    /* Correct the ip_offsets of the rest of the chain. */
-	    libnet_pblock_record_ip_offset(l, p_temp);
         }
     }
 
@@ -480,8 +467,6 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     /* no checksum for IPv6 */
     ptag = ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
             LIBNET_PBLOCK_IPV6_H);
-
-    libnet_pblock_record_ip_offset(l, p);
 
     return ptag;
 

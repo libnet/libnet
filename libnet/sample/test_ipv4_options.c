@@ -48,10 +48,10 @@ static void print_pblocks(libnet_t* l)
     libnet_pblock_t* p = l->protocol_blocks;
 
     while(p) {
-        printf("  tag %2d flags %d type %20s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %2u\n",
+        printf("  tag %2d flags %d type %20s/%#x buf %p b_len %2u h_len %2u copied %2u\n",
                 p->ptag, p->flags,
                 libnet_diag_dump_pblock_type(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
+                p->buf, p->b_len, p->h_len, p->copied);
         p = p->next;
     }
     printf("  link_offset %d aligner %d total_size %u nblocks %d\n",

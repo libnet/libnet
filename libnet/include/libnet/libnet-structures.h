@@ -89,17 +89,6 @@ struct libnet_protocol_block
         * buf that will be included in the checksum, starting from the beginning
         * of the header.
         */
-    uint32_t ip_offset;                /* offset from end of pkt to beginning of IP header */
-       /* Unused for IPV4_H block types.
-        * For protocols that sit on top of IP (UDP, ICMP, ...), they often
-        * include some information from the IP header (in the form of a "pseudo
-        * header") in their own checksum calculation. To build that
-        * pseudo-header, they need to find the IP header.
-        *
-        * Note that this mechanism is so fragile, it is essentially a bug, and
-        * the main cause of reported segmentaion faults. The IP header should
-        * be found by traversing the pblock chain.
-        */
     uint32_t copied;                   /* bytes copied - the amount of data copied into buf */
        /* Used and updated by libnet_pblock_append(). */
     uint8_t type;                      /* type of pblock */
