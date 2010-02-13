@@ -44,6 +44,23 @@ function build_tcp()
     return n:block()
 end
 
+local function countdiff(s0, s1)
+  assert(#s0 == #s1)
+  local count = 0
+  for i=1,#s0 do
+    if string.byte(s0, i) ~= string.byte(s1, i) then
+      count = count + 1
+    end
+  end
+  return count
+end
+
+local function assertmostlyeql(threshold, s0, s1)
+  assert(#s0 == #s1)
+  local diff = countdiff(s0, s1)
+  assert(diff <= threshold, diff)
+end
+
 -- Build packets:
 
 udp = build_udp()
@@ -52,7 +69,47 @@ tcp = build_tcp()
 
 igmp = ""
 
-function _()
+do
+  print("test: decode truncated data")
+  local ethip = "000000111111\8\0"
+
+  local function roundtrip(input)
+    local n = net.init()
+
+    print("input", h(input))
+
+    assert(n:decode_eth(input))
+
+    print(n:dump())
+
+    local output = n:block()
+
+    print("output", h(output))
+    print(n:dump())
+
+    assert(#output == #input)
+    assertmostlyeql(4, output, input) -- strings are allowed to differ in the 4 checksum bytes
+
+    n:destroy()
+  end
+
+  local function truncate_eth(eth)
+    for i=#eth,0,-1 do
+      print("decode "..i.."/"..#eth)
+      roundtrip(string.sub(eth, 1,i))
+    end
+  end
+
+  local function ip(pkt)
+    assert(#ethip == (6+6+2))
+    truncate_eth(ethip..pkt)
+  end
+
+  ip(udp)
+  ip(tcp)
+end
+
+do
     print("test: udp reencoding")
 
     n = net.init()

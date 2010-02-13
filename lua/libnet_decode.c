@@ -30,20 +30,30 @@ THE POSSIBILITY OF SUCH DAMAGE.
 int libnet_decode_tcp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 {
     const struct libnet_tcp_hdr* tcp_hdr = (const struct libnet_tcp_hdr*) pkt;
-    const uint8_t* payload = pkt + tcp_hdr->th_off * 4;
-    size_t payload_s = pkt + pkt_s - payload;
-    const uint8_t* options = pkt + LIBNET_TCP_H;
-    size_t options_s = payload - options;
+    size_t th_off = 0;
+    const uint8_t* payload = NULL;
+    size_t payload_s = 0;
     int otag;
     int ptag;
 
-    if(options_s == 0)
-        options = 0;
+    if(pkt_s < sizeof(*tcp_hdr))
+      return libnet_build_data(pkt, pkt_s, l, 0);
 
-    otag = libnet_build_tcp_options(options, options_s, l, 0);
+    th_off = tcp_hdr->th_off * 4;
 
-    if(otag < 0)
-        return otag;
+    if(pkt_s < th_off)
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
+    payload = pkt + th_off;
+    payload_s = pkt + pkt_s - payload;
+
+    if(th_off > LIBNET_TCP_H) {
+	const uint8_t* options = pkt + LIBNET_TCP_H;
+	size_t options_s = th_off - LIBNET_TCP_H;
+	otag = libnet_build_tcp_options(options, options_s, l, 0);
+	if(otag < 0)
+	    return otag;
+    }
 
     ptag = libnet_build_tcp(
             ntohs(tcp_hdr->th_sport),
@@ -71,6 +81,9 @@ int libnet_decode_udp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     size_t payload_s = pkt + pkt_s - payload;
     int ptag;
 
+    if(pkt_s < sizeof(*udp_hdr))
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
     ptag = libnet_build_udp(
             ntohs(udp_hdr->uh_sport),
             ntohs(udp_hdr->uh_dport),
@@ -88,31 +101,41 @@ int libnet_decode_udp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 {
     const struct libnet_ipv4_hdr* ip_hdr = (const struct libnet_ipv4_hdr*) pkt;
-    const uint8_t* payload = pkt + ip_hdr->ip_hl * 4;
-    size_t payload_s = pkt + pkt_s - payload;
+    size_t ip_hl = 0;
+    const uint8_t* payload = NULL;
+    size_t payload_s = 0;
     int ptag = 0; /* payload tag */
     int otag = 0; /* options tag */
     int itag = 0; /* ip tag */
 
-    /* This could be table-based */
+    if(pkt_s < sizeof(*ip_hdr))
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
+    ip_hl = ip_hdr->ip_hl * 4;
+
+    if(pkt_s < ip_hl)
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
+    payload = pkt + ip_hl;
+    payload_s = pkt + pkt_s - payload;
+
     switch(ip_hdr->ip_p) {
         case IPPROTO_UDP:
             ptag = libnet_decode_udp(payload, payload_s, l);
+	    payload_s = 0;
             break;
         case IPPROTO_TCP:
             ptag = libnet_decode_tcp(payload, payload_s, l);
-            break;
-        default:
-            ptag = libnet_build_data((void*)payload, payload_s, l, 0);
+	    payload_s = 0;
             break;
     }
 
     if(ptag < 0) return ptag;
 
-    if(ip_hdr->ip_hl > 5) {
-        payload = pkt + LIBNET_TCP_H;
-        payload_s = ip_hdr->ip_hl * 4 - LIBNET_TCP_H;
-        otag = libnet_build_ipv4_options((void*)payload, payload_s, l, 0);
+    if(ip_hl > LIBNET_IPV4_H) {
+        const uint8_t* options = pkt + LIBNET_IPV4_H;
+        size_t options_s = ip_hl - LIBNET_IPV4_H;
+        otag = libnet_build_ipv4_options(options, options_s, l, 0);
         if(otag < 0) {
             return otag;
         }
@@ -128,7 +151,7 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
             ntohs(ip_hdr->ip_sum),
             ip_hdr->ip_src.s_addr,
             ip_hdr->ip_dst.s_addr,
-            NULL, 0, /* payload already pushed */
+            payload, payload_s,
             l, 0
             );
 
@@ -142,13 +165,16 @@ int libnet_decode_ip(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 {
     const struct libnet_ipv4_hdr* ip_hdr = (const struct libnet_ipv4_hdr*) pkt;
 
+    if(pkt_s < sizeof(*ip_hdr))
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
     switch(ip_hdr->ip_v) {
         case 4:
             return libnet_decode_ipv4(pkt, pkt_s, l);
         /* TODO - IPv6 */
     }
 
-    return libnet_build_data((void*)pkt, pkt_s, l, 0);
+    return libnet_build_data(pkt, pkt_s, l, 0);
 }
 
 int libnet_decode_eth(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
@@ -159,9 +185,12 @@ int libnet_decode_eth(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     int ptag = 0; /* payload tag */
     int etag = 0; /* eth tag */
 
+    if(pkt_s < sizeof(*hdr))
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
     switch(ntohs(hdr->ether_type)) {
         case ETHERTYPE_IP:
-            ptag = libnet_decode_ipv4(payload, payload_s, l);
+            ptag = libnet_decode_ip(payload, payload_s, l);
             payload_s = 0;
             break;
     }
