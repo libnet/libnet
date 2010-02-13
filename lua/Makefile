@@ -19,24 +19,6 @@ install: $(BINDING)
 	mkdir -p $(SODIR)
 	../libnet/install-sh -t $(SODIR) $(BINDING)
 
-.PHONY: net pcap nfq
-
-net: net.so
-	./recoding-test
-	sudo ./net-test
-
-pcap: pcap.so
-	#./pcap-test
-
-nfq: nfq.so
-	#sudo ./nfq-test
-
-# Example:
-# cc -Wall -Werror -g -I wurldtech/rst `libnet-config --cflags --defines`
-# `dnet-config --cflags` -O0 -DNDEBUG -fPIC -fno-common -shared
-# -I/usr/include/lua5.1 -o wurldtech/lgram/net.so wurldtech/lgram/net.c -lrt
-#  -lm `dnet-config --libs` `libnet-config --libs` -llua5.1
-
 CWARNS = -Wall \
   -pedantic \
   -Wcast-align \
@@ -67,9 +49,9 @@ pcap.so: LDLIBS+=-lpcap
 nfq.so: nfq.c
 nfq.so: LDLIBS+=-lnetfilter_queue
 
-test: test.lua net.so
-	lua test.lua
+test: net.test pcap.test
 
-test-pcap: pcap.so
-	./pcap-test
+%.test: %-test %.so
+	lua $<
+	touch $@
 
