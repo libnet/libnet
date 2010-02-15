@@ -1057,7 +1057,6 @@ static void pushpblock(lua_State* L, libnet_pblock_t* pblock)
     setlstringfield(L, tindex, "buf", pblock->buf, pblock->b_len);
     setintfield(L, tindex, "b_len", pblock->b_len);
     setintfield(L, tindex, "h_len", pblock->h_len);
-    setintfield(L, tindex, "ip_offset", pblock->ip_offset);
     setintfield(L, tindex, "copied", pblock->copied);
     setstringfield(L, tindex, "type", libnet_diag_dump_pblock_type(pblock->type));
     setintfield(L, tindex, "flags", pblock->flags);
@@ -1095,9 +1094,9 @@ static int lnet_dump(lua_State* L)
     while(p) {
         /* h_len is header length for checksumming? "chksum length"? */
         char str[1024];
-        sprintf(str, "tag %d flags %d type %s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %u prev %d next %d\n",
+        sprintf(str, "tag %d flags %d type %s/%#x buf %p b_len %2u h_len %2u copied %u prev %d next %d\n",
                 p->ptag, p->flags, type_string(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied,
+                p->buf, p->b_len, p->h_len, p->copied,
                 p->prev ? p->prev->ptag : -1,
                 p->next ? p->next->ptag : -1
                 );
