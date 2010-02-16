@@ -589,7 +589,8 @@ checkptype(lua_State* L, libnet_t* l, uint8_t type)
 {
     libnet_pblock_t* pblock = libnet_pblock_by_type(l, type, NULL);
     if(!pblock)
-        luaL_error(L, "pblock type %s not found", pushistring(L, "%#x", type));
+        luaL_error(L, "pblock type %s (%s) not found",
+                pushistring(L, "%#x", type), libnet_diag_dump_pblock_type(type));
     return pblock;
 }
 
