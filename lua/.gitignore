@@ -1,3 +1,4 @@
 *.so
 *.test
+_*
 cap0.pcap
