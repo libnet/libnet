@@ -345,7 +345,13 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
         l->aligner = 0;
     }
 
-    *packet = malloc(l->aligner + l->total_size);
+    if(!l->total_size && !l->aligner) {
+        /* Avoid allocating zero bytes of memory, it perturbs electric fence. */
+        *packet = malloc(1);
+        **packet =1;
+    } else {
+        *packet = malloc(l->aligner + l->total_size);
+    }
     if (*packet == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s\n",
