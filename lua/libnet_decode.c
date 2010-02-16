@@ -27,6 +27,17 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <libnet.h>
 
+/* push data pblock, if there is any data to push */
+static int pushdata(const uint8_t* pkt, size_t pkt_s, libnet_t *l, int ptag)
+{
+    (void) ptag;
+
+    if(pkt_s)
+      return libnet_build_data(pkt, pkt_s, l, 0);
+
+    return 0;
+}
+
 int libnet_decode_tcp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 {
     const struct libnet_tcp_hdr* tcp_hdr = (const struct libnet_tcp_hdr*) pkt;
@@ -37,12 +48,12 @@ int libnet_decode_tcp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     int ptag;
 
     if(pkt_s < sizeof(*tcp_hdr))
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     th_off = tcp_hdr->th_off * 4;
 
     if(pkt_s < th_off)
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     payload = pkt + th_off;
     payload_s = pkt + pkt_s - payload;
@@ -82,7 +93,7 @@ int libnet_decode_udp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     int ptag;
 
     if(pkt_s < sizeof(*udp_hdr))
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     ptag = libnet_build_udp(
             ntohs(udp_hdr->uh_sport),
@@ -109,12 +120,12 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     int itag = 0; /* ip tag */
 
     if(pkt_s < sizeof(*ip_hdr))
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     ip_hl = ip_hdr->ip_hl * 4;
 
     if(pkt_s < ip_hl)
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     payload = pkt + ip_hl;
     payload_s = pkt + pkt_s - payload;
@@ -122,11 +133,11 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     switch(ip_hdr->ip_p) {
         case IPPROTO_UDP:
             ptag = libnet_decode_udp(payload, payload_s, l);
-	    payload_s = 0;
+            payload_s = 0;
             break;
         case IPPROTO_TCP:
             ptag = libnet_decode_tcp(payload, payload_s, l);
-	    payload_s = 0;
+            payload_s = 0;
             break;
     }
 
@@ -166,7 +177,7 @@ int libnet_decode_ip(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     const struct libnet_ipv4_hdr* ip_hdr = (const struct libnet_ipv4_hdr*) pkt;
 
     if(pkt_s < sizeof(*ip_hdr))
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     switch(ip_hdr->ip_v) {
         case 4:
@@ -174,7 +185,7 @@ int libnet_decode_ip(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
         /* TODO - IPv6 */
     }
 
-    return libnet_build_data(pkt, pkt_s, l, 0);
+    return pushdata(pkt, pkt_s, l, 0);
 }
 
 int libnet_decode_eth(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
@@ -186,7 +197,7 @@ int libnet_decode_eth(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     int etag = 0; /* eth tag */
 
     if(pkt_s < sizeof(*hdr))
-      return libnet_build_data(pkt, pkt_s, l, 0);
+      return pushdata(pkt, pkt_s, l, 0);
 
     switch(ntohs(hdr->ether_type)) {
         case ETHERTYPE_IP:
