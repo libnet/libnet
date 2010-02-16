@@ -100,13 +100,19 @@ do
     end
   end
 
-  local function ip(pkt)
+  local function truncate(pkt)
     assert(#ethip == (6+6+2))
     truncate_eth(ethip..pkt)
   end
 
-  ip(udp)
-  ip(tcp)
+  truncate(udp)
+  truncate(tcp)
+  -- empty_udp:
+  truncate"000e08dadb3f000c29a2eb6908004500002e00000000ff11a5b40a00010a0a00010113c413c4001ac227"
+  -- empty_ip:
+  truncate"000e08dadb3f000c29a2eb6908004500001400000000ff11a5b40a00010a0a000101"
+  -- empty_eth:
+  truncate"000e08dadb3f000c29a2eb690800"
 end
 
 do
@@ -273,7 +279,9 @@ end
 -- expect, but it does not always get the results I find in pcaps, and that
 -- wireshark claims is correct.
 local function ip_pseudo(ip)
-    assert(ip:sub(10, 10) == "\6") -- it's tcp!
+    if ip:sub(10, 10) ~= "\6" then -- it's not tcp!
+        return nil, "not tcp"
+    end
     return table.concat{
         ip:sub(20-8+1, 20), -- src,dst
         "\0", ip:sub(10, 10),
@@ -291,6 +299,10 @@ end
 
 local function sum(ip0, nodst)
     local ip = ip_pseudo(ip0, nodst)
+    if not ip then
+        print "> Can't redo the checksum for non-tcp!"
+        return
+    end
     local tcp = tcp_pseudo(ip0:sub(21))
     print("_ip", h(ip))
     print("tcp", h(tcp), "pseudolen", ip:sub(-1):byte())
@@ -300,21 +312,46 @@ end
 local function roundtrip_ipv4_from_eth(name, pkt0, checksum_bug)
     print""
     print("test: roundtrip", name)
+    local eth0 = b(pkt0)
+    local n = net.init()
+    assert(n:decode_eth(eth0))
+    local eth1 = n:block()
+
+    print("eth0", h(eth0))
+    print("eth1", h(eth1))
+
+    local etht = n:get_eth()
+    assert(etht)
+    assert(not etht.payload)
+
     local ip0 = string.sub(b(pkt0), 15) -- skip 14 bytes of eth header
     local n = net.init()
+
     assert(n:decode_ipv4(ip0))
+
     local ip1 = n:block()
     --print(n:dump())
 
     print("ip0", h(ip0))
     print("ip1", h(ip1))
 
+    local ptag = n:tag_above()
+    while ptag do
+        print("pblock", n:pblock(ptag))
+        ptag = n:tag_below(ptag)
+    end
+
     sum(ip0)
 
-    print(n:get_tcp())
-    print(n:get_ipv4())
+    ipv4t = n:get_ipv4()
 
-    print("pblock", n:pblock(n:get_tcp().ptag))
+    print("ipv4", ipv4t)
+
+    if ipv4t.protocol == 17 then
+        print(n:get_udp())
+    elseif ipv4t.protocol == 6 then
+        print(n:get_tcp())
+    end
 
     if not checksum_bug then
         assert(ip0 == ip1)
@@ -343,4 +380,7 @@ roundtrip_ipv4_from_eth("tcp rst",
 roundtrip_ipv4_from_eth("modbus response", 
     "00e0ed11c7f000005413e6b00800450000310000000040063373c0a86302c0a8630101f6c3a60001850c3a18c8dd50180108157c000001b800000003ff8f0300",
     true)
+
+roundtrip_ipv4_from_eth("snmp_packet",
+"08003715e6bc00123f4a33d2080045000052aa1a0000801111c3ac1f1336ac1f13493e2d00a1003e8d4d303402010004067075626c6963a027020127020100020100301c300c06082b060102010105000500300c06082b060102010106000500")
 
