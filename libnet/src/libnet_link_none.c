@@ -36,31 +36,40 @@
 #include "../include/win32/libnet.h"
 #endif
 
+static void nosupport(libnet_t* l)
+{
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): no link support on this platform\n", __func__);
+}
+
 int
 libnet_open_link(libnet_t *l)
 {
-    return (NULL);
+    nosupport(l);
+    return -1;
 }
 
 
 int
 libnet_close_link(libnet_t *l)
 {
-    return (-1);
+    nosupport(l);
+    return -1;
 }
 
 
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    return (-1);
+    nosupport(l);
+    return -1;
 }
 
 
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    return (NULL);
+    nosupport(l);
+    return NULL;
 }
 
-/* EOF */
