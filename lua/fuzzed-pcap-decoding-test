@@ -8,6 +8,10 @@ function h(s)
     return "["..#s.."] "..string.gsub(s, ".", hex)
 end
 
+local function debug(...)
+    --print(...)
+end
+
 require"pcap"
 require"net"
 require"tostring"
@@ -20,20 +24,24 @@ for pkt, time, len in cap.next, cap do
     if pkt then
         i = i + 1
         print("packet", i, "wirelen", len, "timestamp", time, os.date("!%c", time))
-        print("snap", h(pkt))
+        debug("snap", h(pkt))
 
-        n:clear()
+        assert(n:clear())
         assert(n:decode_eth(pkt))
-        local tag = n:tag_above()
-        while tag do
-            --print(n:pblock(tag))
-            tag = n:tag_below(tag)
-        end
-        local block = n:block()
+
+        local block = assert(n:block())
         if block ~= pkt then
             print("=> reencoding failed!")
+	    local tag = n:tag_above()
+	    while tag do
+		print(n:pblock(tag))
+		tag = n:tag_below(tag)
+	    end
             print("pkt", h(pkt))
             print("out", h(block))
+	    print("udp", n:get_udp())
+	    print("eth", n:get_eth())
+	    os.exit(1)
         end
     else
         print(pkt, time)
