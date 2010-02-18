@@ -32,6 +32,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
+#include <math.h>
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -46,8 +47,20 @@ static double tv2secs(struct timeval* tv)
 
 static struct timeval* secs2tv(double secs, struct timeval* tv)
 {
-    tv->tv_sec  = (time_t) secs;
-    tv->tv_usec = (suseconds_t) ((secs - tv->tv_sec) * 1000000);
+    double ipart = 0.0;
+    double fpart = 0.0;
+
+    fpart = modf(secs, &ipart);
+
+    tv->tv_sec  = (time_t) ipart;
+
+    fpart = modf(fpart * 1000000.0, &ipart);
+
+    tv->tv_usec = (suseconds_t) ipart;
+
+    if(fpart > 0.5)
+        tv->tv_usec += 1;
+
     return tv;
 }
 
@@ -361,6 +374,28 @@ static int lpcap_open_dead(lua_State *L)
     return checkpcapopen(L, cap, "open dead failed for unknown reason");
 }
 
+/* These don't need to be external, but are useful to test timeval conversion from lua. */
+static int lpcap_tv2secs(lua_State* L)
+{
+    struct timeval tv;
+    tv.tv_sec = luaL_checknumber(L, 1);
+    tv.tv_usec = luaL_checknumber(L, 2);
+
+    lua_pushnumber(L, tv2secs(&tv));
+    return 1;
+}
+
+static int lpcap_secs2tv(lua_State* L)
+{
+    struct timeval tv;
+    double secs = luaL_checknumber(L, 1);
+
+    secs2tv(secs, &tv);
+    lua_pushnumber(L, tv.tv_sec);
+    lua_pushnumber(L, tv.tv_usec);
+    return 2;
+}
+
 static const luaL_reg dumper_methods[] =
 {
   {"__gc", lpcap_dump_destroy},
@@ -383,6 +418,8 @@ static const luaL_reg pcap_module[] =
 {
   {"open_offline", lpcap_open_offline},
   {"open_dead", lpcap_open_dead},
+  {"tv2secs", lpcap_tv2secs},
+  {"secs2tv", lpcap_secs2tv},
   {NULL, NULL}
 };
 

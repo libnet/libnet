@@ -32,6 +32,26 @@ end
 
 assert(pcap)
 
+print"test: tv to secs conversions"
+
+for _, tvsecs in ipairs{0, 1, 2, 3, 4, 5, 100, 788964454} do
+    for tvusecs=0,1000 do
+        local secs = pcap.tv2secs(tvsecs, tvusecs)
+        local _tvsecs, _tvusecs = pcap.secs2tv(secs)
+        if tvusecs ~= _tvusecs or tvsecs ~= _tvsecs then
+            if tvsecs == 0 then
+                print("tv in", tvsecs, tvusecs, "secs", string.format("%.8f", secs), "tv out", _tvsecs, _tvusecs)
+            end
+        end
+        assert(tvsecs == _tvsecs)
+        assert(tvusecs == _tvusecs, "diff is "..(tvusecs - _tvusecs))
+    end
+end
+
+print"+ok"
+
+print"pcap test"
+
 cap = assert(pcap.open_dead())
 dmp = assert(cap:dump_open("cap0.pcap"))
 
