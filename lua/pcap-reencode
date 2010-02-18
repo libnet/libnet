@@ -1,28 +1,6 @@
 #!/usr/bin/env lua
 
--- binary to hex
-function h(s)
-    local function hex(s)
-        return string.format("%02x", string.byte(s))
-    end
-    return "["..#s.."] "..string.gsub(s, ".", hex)
-end
+require"netutil"
 
-require"pcap"
-require"net"
-require"tostring"
-
-cap = assert(pcap.open_offline(arg[1]))
-dmp = assert(cap:dump_open(arg[2]))
-
-n = net.init()
-
-local i = 0;
-for pkt, time, len in cap.next, cap do
-    i = i + 1
-    print("packet", i, "wirelen", len, "timestamp", time, os.date("!%c", time))
-    assert(n:clear())
-    assert(n:decode_eth(pkt))
-    assert(dmp:dump(n:block(), time, len))
-end
+pcapreencode(arg[1], arg[2])
 

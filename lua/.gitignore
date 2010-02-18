@@ -1,4 +1,5 @@
 *.so
 *.test
 _*
+reencoded-*.pcap
 cap0.pcap

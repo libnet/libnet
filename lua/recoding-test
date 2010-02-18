@@ -44,23 +44,6 @@ function build_tcp()
     return n:block()
 end
 
-local function countdiff(s0, s1)
-  assert(#s0 == #s1)
-  local count = 0
-  for i=1,#s0 do
-    if string.byte(s0, i) ~= string.byte(s1, i) then
-      count = count + 1
-    end
-  end
-  return count
-end
-
-local function assertmostlyeql(threshold, s0, s1)
-  assert(#s0 == #s1)
-  local diff = countdiff(s0, s1)
-  assert(diff <= threshold, diff)
-end
-
 -- Build packets:
 
 udp = build_udp()
@@ -383,4 +366,37 @@ roundtrip_ipv4_from_eth("modbus response",
 
 roundtrip_ipv4_from_eth("snmp_packet",
 "08003715e6bc00123f4a33d2080045000052aa1a0000801111c3ac1f1336ac1f13493e2d00a1003e8d4d303402010004067075626c6963a027020127020100020100301c300c06082b060102010105000500300c06082b060102010106000500")
+
+
+do
+    print("test: reencode")
+
+    local function reencode_invalid_packets(infile, threshold)
+        print("infile", infile)
+        local outfile = pcapreencode(infile)
+        print("outfile", outfile)
+        assertpcapsimilar(threshold or 0, infile, outfile)
+    end
+
+    -- dhcp0 actually has invalid ip checksums, must have been captured on a local host
+    reencode_invalid_packets"dhcp.pcap"
+
+    --[[
+    reencode_invalid_packets"1266367426.00000000.pcap"
+    reencode_invalid_packets"1266367426.00000001.pcap"
+    reencode_invalid_packets"1266367426.00000002.pcap"
+    reencode_invalid_packets"1266367426.00000003.pcap"
+    reencode_invalid_packets"1266367426.00000004.pcap"
+    reencode_invalid_packets"1266367426.00000005.pcap"
+    reencode_invalid_packets"1266367426.00000006.pcap"
+    reencode_invalid_packets"1266367426.00000007.pcap"
+    reencode_invalid_packets"1266367426.00000008.pcap"
+    reencode_invalid_packets"1266367426.00000009.pcap"
+    reencode_invalid_packets"1266367426.00000010.pcap"
+    reencode_invalid_packets"1266367426.00000011.pcap"
+    reencode_invalid_packets"1266367426.00000012.pcap"
+    reencode_invalid_packets"1266368836.00000000.pcap"
+    reencode_invalid_packets"1266368836.00000001.pcap"
+    --]]
+end
 
