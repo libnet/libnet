@@ -252,6 +252,12 @@ setintfield(lua_State* L, int tindex, const char* field, int i)
     lua_pushinteger(L, i);
     lua_setfield(L, tindex, field);
 }
+static void
+setui32field(lua_State* L, int tindex, const char* field, uint32_t i)
+{
+    lua_pushnumber(L, i);
+    lua_setfield(L, tindex, field);
+}
 
 static void
 setnsintfield(lua_State* L, int tindex, const char* field, uint16_t i)
@@ -262,7 +268,7 @@ setnsintfield(lua_State* L, int tindex, const char* field, uint16_t i)
 static void
 setnlintfield(lua_State* L, int tindex, const char* field, uint32_t i)
 {
-    setintfield(L, tindex, field, ntohl(i));
+    setui32field(L, tindex, field, ntohl(i));
 }
 
 static void
@@ -746,10 +752,9 @@ static int lnet_get_tcp (lua_State *L)
     if(dblock && dblock->type != LIBNET_PBLOCK_TCPDATA) {
         dblock = NULL;
     }
-
     lua_newtable(L);
     setintfield(L, 2, "ptag", pblock->ptag);
-    setnsintfield(L, 2, "src", hdr->th_sport);
+    setnsintfield(L, 2, "src", hdr->th_sport); 
     setnsintfield(L, 2, "dst", hdr->th_dport);
     setnlintfield(L, 2, "seq", hdr->th_seq);
     setnlintfield(L, 2, "ack", hdr->th_ack);
@@ -761,22 +766,13 @@ static int lnet_get_tcp (lua_State *L)
     setnsintfield(L, 2, "urg", hdr->th_urp);
 
     if(oblock) {
-        lua_pushlstring(L, (const char*)oblock->buf, (size_t)oblock->b_len);
+        setlstringfield(L, 2, "options", (const char*)oblock->buf, (size_t)oblock->b_len);
     } else {
-        lua_pushstring(L, "");
+        setlstringfield(L, 2, "options", "", 0);
     }
-    lua_setfield(L, 2, "options");
 
-    /* TODO
-        If the payload exists as raw TCP payload, we can return it here. Otherwise,
-        we'd have do special stuff.
-
-        See comments about IPV4, except raw TCP payload is more common than
-        raw IPV4 payload.
-    */
     if(dblock) {
-        lua_pushlstring(L, (const char*)dblock->buf, (size_t)dblock->b_len);
-        lua_setfield(L, 2, "payload");
+        setlstringfield(L, 2, "payload", (const char*)dblock->buf, (size_t)dblock->b_len);
     }
 
     return 1;
