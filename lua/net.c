@@ -761,22 +761,14 @@ static int lnet_get_tcp (lua_State *L)
     setnsintfield(L, 2, "urg", hdr->th_urp);
 
     if(oblock) {
-        lua_pushlstring(L, (const char*)oblock->buf, (size_t)oblock->b_len);
+        setlstringfield(L, 2, "options", (const char*)oblock->buf, (size_t)oblock->b_len);
     } else {
-        lua_pushstring(L, "");
+        setlstringfield(L, 2, "options", "", 0);
     }
     lua_setfield(L, 2, "options");
 
-    /* TODO
-        If the payload exists as raw TCP payload, we can return it here. Otherwise,
-        we'd have do special stuff.
-
-        See comments about IPV4, except raw TCP payload is more common than
-        raw IPV4 payload.
-    */
     if(dblock) {
-        lua_pushlstring(L, (const char*)dblock->buf, (size_t)dblock->b_len);
-        lua_setfield(L, 2, "payload");
+        setlstringfield(L, 2, "payload", (const char*)dblock->buf, (size_t)dblock->b_len);
     }
 
     return 1;
