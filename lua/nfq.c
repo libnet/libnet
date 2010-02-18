@@ -196,6 +196,11 @@ struct nfq_data *checkudata(lua_State*L)
     return nfqdata;
 }
 
+/*-
+ * str = nfq.get_payload(cbctx)
+ *
+ * str is the IP payload, it has been stripped of link-layer headers!
+ */
 static int get_payload(lua_State* L)
 {
     struct nfq_data *nfqdata = checkudata(L);
@@ -208,63 +213,10 @@ static int get_payload(lua_State* L)
     return 1;
 }
 
-/*-
-- offset = nfq.data_offset(payload, type)
-
-payload is from nfq
-type is ip, udp, or tcp, which indicates the type of data required (ip
-gives offset to point after ip header, udp gives offset to after udp
-header, etc.).
-
-TODO replace with some kind of libnet support, this is an awful way of
-decoding packets!
-*/
-static int data_offset(lua_State* L)
-{
-    static const char* type_opt[] = {
-        "ip", "udp", "tcp", NULL
-    };
-
-    size_t payloadsz = 0;
-    const char* payload = lua_tolstring(L, 1, &payloadsz);
-    const char* offset = payload;
-    int type = luaL_checkoption(L, 2, NULL, type_opt);
-
-    const struct iphdr* iphdr = (void*)payload;
-
-    luaL_argcheck(L, iphdr->version == 4, 2, "payload is not ipv4");
-
-    offset += iphdr->ihl * 4;
-
-    switch(type) {
-        case 0:
-            break;
-
-        case 1:
-            luaL_argcheck(L, iphdr->protocol == IPPROTO_UDP, 2, "payload is not udp");
-            offset += 8;
-            break;
-
-        case 2:
-            luaL_argcheck(L, iphdr->protocol == IPPROTO_TCP, 2, "payload is not tcp");
-            offset += ((struct tcphdr*) offset)->th_off * 4;
-            break;
-
-        default:
-            return luaL_error(L, "%s", "should never happen, type option was not checked");
-    }
-
-    lua_pushinteger(L, offset - payload + 1);
-
-    return 1;
-}
-
 static const luaL_reg nfq[] =
 {
   {"loop", loop},
-
   {"get_payload", get_payload},
-  {"data_offset", data_offset},
   {NULL, NULL}
 };
 
