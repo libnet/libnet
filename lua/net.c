@@ -660,7 +660,7 @@ static int lnet_tcp (lua_State *L)
     int flags = v_arg_integer(L, 2, "flags");
     int win = v_arg_integer(L, 2, "win");
     int urg = v_arg_integer(L, 2, "urg");
-    int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_IPV4_H);
+    int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_TCP_H);
     uint32_t payloadsz = 0;
     const uint8_t* payload = checkpayload(L, 2, &payloadsz);
     int options_ptag = 0;
