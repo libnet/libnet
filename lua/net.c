@@ -192,8 +192,11 @@ static int lnet_arg_ptag(lua_State* L, libnet_t* ud, int targ, int type)
         luaL_argcheck(L, pblock, targ,
                 lua_pushfstring(L, "ptag %d cannot be found", ptag));
         luaL_argcheck(L, pblock->type == type, targ,
-                lua_pushfstring(L, "ptag %d of type %s is not %s",
-                ptag, pushistring(L, "%#x", pblock->type), pushistring(L, "%#x", type)));
+                lua_pushfstring(L, "ptag %d of type %s/%s is not %s/%s",
+                ptag,
+                pushistring(L, "%#x", pblock->type), libnet_diag_dump_pblock_type(pblock->type),
+                pushistring(L, "%#x", type), libnet_diag_dump_pblock_type(type)
+                ));
     }
 
     return ptag;
