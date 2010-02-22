@@ -164,12 +164,6 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
     int sum     = 0;
     int is_ipv6 = 0; /* TODO - remove this, it is redundant with ip6h_p */
 
-    if (h_len == 0)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): header length can't be zero\n", __func__);
-        return -1;
-    }
     /* Check for memory under/over reads/writes. */
     if(iphdr < beg || (iphdr+sizeof(*iph_p)) > end)
     {
@@ -295,6 +289,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
             struct libnet_icmpv4_hdr *icmph_p =
                 (struct libnet_icmpv4_hdr *)(iphdr + ip_hl);
 
+            h_len = end - (uint8_t*) icmph_p; /* ignore h_len, sum the packet we've coalesced */
+
             CHECK_IP_PAYLOAD_SIZE();
 
             icmph_p->icmp_sum = 0;
@@ -311,6 +307,8 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
         {
             struct libnet_igmp_hdr *igmph_p =
                 (struct libnet_igmp_hdr *)(iphdr + ip_hl);
+
+	    h_len = end - (uint8_t*) igmph_p; /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
