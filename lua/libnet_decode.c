@@ -52,7 +52,7 @@ int libnet_decode_tcp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 
     th_off = tcp_hdr->th_off * 4;
 
-    if(pkt_s < th_off)
+    if(pkt_s < th_off || th_off < LIBNET_TCP_H)
       return pushdata(pkt, pkt_s, l, 0);
 
     payload = pkt + th_off;
@@ -78,6 +78,14 @@ int libnet_decode_tcp(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
             pkt_s,
             payload, payload_s,
             l, 0);
+
+    if(ptag > 0) {
+        /* Patch the reserved flags to equal those in the original packet. Even
+         * though they should usually be zero.
+         */
+        struct libnet_tcp_hdr* hdr = (struct libnet_tcp_hdr*) libnet_pblock_find(l, ptag)->buf;
+        hdr->th_x2 = tcp_hdr->th_x2;
+    }
 
     if(ptag > 0)
         libnet_pblock_setflags(libnet_pblock_find(l, ptag), LIBNET_PBLOCK_DO_CHECKSUM);
@@ -124,7 +132,7 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 
     ip_hl = ip_hdr->ip_hl * 4;
 
-    if(pkt_s < ip_hl)
+    if(pkt_s < ip_hl || ip_hl < LIBNET_IPV4_H)
       return pushdata(pkt, pkt_s, l, 0);
 
     payload = pkt + ip_hl;
