@@ -282,7 +282,7 @@ dnl
 
 AC_DEFUN([AC_LIBNET_ENDIAN_CHECK],
     [AC_C_BIGENDIAN
-	if test $ac_cv_c_bigendian = big ; then
+	if test $ac_cv_c_bigendian = yes ; then
             AC_DEFINE(LIBNET_BIG_ENDIAN, 1,
                 [We are running on a big-endian machine.])
             ENDIANESS="LIBNET_BIG_ENDIAN"
