@@ -2,5 +2,5 @@
 
 require"netutil"
 
-pcapreencode(arg[1], arg[2])
+pcaprecode(arg[1], arg[2])
 

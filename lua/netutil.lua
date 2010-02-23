@@ -58,14 +58,23 @@ function countdiff(s0, s1)
 end
 
 function assertmostlyeql(threshold, s0, s1)
+  if #s0 ~= #s1 then
+      print("s0", h(s0))
+      print("s1", h(s1))
+  end
   assert(#s0 == #s1)
+
   local diff = countdiff(s0, s1)
-  assert(diff <= threshold, diff)
+  if diff > threshold then
+      print("s0", h(s0))
+      print("s1", h(s1))
+  end
+  assert(diff <= threshold, diff.." is less than threshold "..threshold)
 end
 
-function pcapreencode(incap, outcap)
+function pcaprecode(incap, outcap)
     if not outcap then
-        outcap = "reencoded-"..incap
+        outcap = "recoded-"..incap
     end
     os.remove(outcap)
 
@@ -79,8 +88,8 @@ function pcapreencode(incap, outcap)
         assert(n:clear())
         assert(n:decode_eth(pkt))
         assert(dmp:dump(n:block(), time, len))
+        --print(n:dump())
     end
-    -- FIXME assert(i > 0)
     dmp:close()
     cap:close()
     n:destroy()
@@ -97,12 +106,28 @@ function assertpcapsimilar(threshold, file0, file1)
         local pkt1, time1, len1 = assert(cap1:next())
         i = i + 1
 
-        print("packet0", i, "wirelen", len0, "timestamp", time0, os.date("!%c", time0))
-        print("packet1", i, "wirelen", len1, "timestamp", time1, os.date("!%c", time1))
+        print("        "..file0, i, "wirelen", len0, "timestamp", time0, os.date("!%c", time0))
+        print(file1, i, "wirelen", len1, "timestamp", time1, os.date("!%c", time1))
 
         assert(len0 == len1)
         assert(time0 == time1, string.format("%.7f ~= %.7f", time0, time1))
-        assertmostlyeql(threshold, pkt0, pkt1)
+
+        local _threshold = threshold
+        if type(threshold) == "table" then
+            if threshold[file0] then
+                if type(threshold[file0]) == "table" then
+                    if threshold[file0][i] then
+                        _threshold = threshold[file0][i]
+                    end
+                else
+                    _threshold = threshold[file0]
+                end
+            else
+                _threshold = 0
+            end
+        end
+
+        assertmostlyeql(_threshold, pkt0, pkt1)
     end
     assert(cap1:next() == nil)
     n0:destroy()
