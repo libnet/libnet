@@ -2236,18 +2236,11 @@ libnet_pblock_p2p(uint8_t type);
 
 /*
  * [Internal] 
- * Function assembles the packet for subsequent writing.  Function makes two
- * passes through the pblock list:
+ * Function assembles the protocol blocks into a packet, checksums are
+ * calculated if that was requested.
  */
 int
 libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size);
-
-/*
- * [Internal]
- * Repair lengths in protocol headers, so checksumming doesn't seg fault.
- */
-void
-libnet_pblock_repair_lengths(libnet_t* l);
 
 #if !(__WIN32__)
 /*
