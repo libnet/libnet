@@ -59,52 +59,59 @@ dnl Get link-layer interface type
 dnl
 AC_ARG_WITH(
 	[link-layer],
-	[AS_HELP_STRING([--with-link-layer],[select link layer to use @<:@autodetect@:>@])]
+	[AS_HELP_STRING([--with-link-layer],[when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])]
 )
 
 AC_MSG_CHECKING(link-layer packet interface type)
 
 if test -n "${with_link_layer}"; then
-    # AC_LIBOBJ does not get ${x}?
-    case "${with_layer}" in
-       bpf) AC_LIBOBJ([libnet_link_bpf]) ;;
-	snit) AC_LIBOBJ([libnet_link_snit]) ;;
-	*) AC_MSG_ERROR([Invalid link type]) ;;
+    case "${with_link_layer}" in
+        bpf)   AC_LIBOBJ([libnet_link_bpf]) ;;
+        pf)    AC_LIBOBJ([libnet_link_pf]) ;;
+        snit)  AC_LIBOBJ([libnet_link_snit]) ;;
+        nit)   AC_LIBOBJ([libnet_link_nit]) ;;
+        snoop) AC_LIBOBJ([libnet_link_snoop]) ;;
+        dlpi)  AC_LIBOBJ([libnet_link_dlpi]) ;;
+        linux) AC_LIBOBJ([libnet_link_linux])
+	       AC_LIBNET_CHECK_PF_PACKET
+	       AC_LIBNET_LINUX_PROCFS ;;
+        none) AC_LIBOBJ([libnet_link_none]) ;;
+        *) AC_MSG_ERROR([Invalid link type "${with_link_layer}"]) ;;
     esac
-    AC_MSG_RESULT(forced ${with_layer})
+    AC_MSG_RESULT(forced link layer to ${with_link_layer})
 elif test -r /dev/bpf0 ; then
     AC_LIBOBJ([libnet_link_bpf])
-    AC_MSG_RESULT(found bpf)
+    AC_MSG_RESULT(found link layer bpf)
 elif test -r /usr/include/net/pfilt.h ; then
     AC_LIBOBJ([libnet_link_pf])
-    AC_MSG_RESULT(found pf)
+    AC_MSG_RESULT(found link layer pf)
 elif test -r /dev/nit ; then
     AC_LIBOBJ([libnet_link_snit])
-    AC_MSG_RESULT(found snit)
+    AC_MSG_RESULT(found link layer snit)
 elif test -r /usr/include/sys/net/nit.h ; then
     AC_LIBOBJ([libnet_link_nit])
-    AC_MSG_RESULT(found nit)
+    AC_MSG_RESULT(found link layer nit)
 elif test -r /usr/include/net/raw.h; then
     AC_LIBOBJ([libnet_link_snoop])
-    AC_MSG_RESULT(found snoop)
+    AC_MSG_RESULT(found link layer snoop)
 elif test -r /usr/include/sys/dlpi.h ; then
     AC_LIBOBJ([libnet_link_dlpi])
-    AC_MSG_RESULT(found dlpi)
+    AC_MSG_RESULT(found link layer dlpi)
     AC_DEFINE(HAVE_DLPI, 1, [Define if the <sys/dlpi.h> header exists.])
 elif test -r /usr/include/linux/socket.h ; then
     AC_LIBOBJ([libnet_link_linux])
-    AC_MSG_RESULT(found linux primitives)
+    AC_MSG_RESULT(found link layer linux)
     AC_LIBNET_CHECK_PF_PACKET
     AC_LIBNET_LINUX_PROCFS
 elif test -c /dev/bpf0 ; then           # check again in case not readable
     AC_LIBOBJ([libnet_link_bpf])
-    AC_MSG_RESULT(found bpf)
+    AC_MSG_RESULT(found link layer bpf)
 elif test -c /dev/nit ; then            # check again in case not readable
     AC_LIBOBJ([libnet_link_snit])
-    AC_MSG_RESULT(found snit)
+    AC_MSG_RESULT(found link layer snit)
 elif test "$target_os" = "cygwin" ; then
-     AC_LIBOBJ([libnet_link_win32])
-     AC_MSG_RESULT(found win32 wpcap)
+    AC_LIBOBJ([libnet_link_win32])
+    AC_MSG_RESULT(found link layer win32 wpcap)
 else
     AC_LIBOBJ([libnet_link_none])
     AC_MSG_WARN(could not find a link-layer packet interface)
