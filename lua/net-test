@@ -66,25 +66,29 @@ do
     local n = net.init()
 
     n:udp{src=1, dst=2, payload=" "}
-    n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, len=20+4, options="AAAA"}
+    n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, options="AAAA"}
 
     local b0 = n:block()
 
     print"= constructed:"
     print(n:dump())
-    hex_dump(b0)
+    print("b0", h(b0))
 
     n:clear()
+
     print(n:dump())
 
     print"= decoded:"
+
     assert(n:decode_ipv4(b0))
 
     local ip1 = n:block(n:tag_below())
     local b1 = n:block()
-    print(n:dump())
-    hex_dump(b1)
-    print""
+
+    if b0 ~= b1 then
+        print(n:dump())
+        print("b1", h(b1))
+    end
 
     assert(b0 == b1)
 
@@ -191,6 +195,16 @@ udp = build_udp()
 tcp = build_tcp()
 
 igmp = ""
+
+do
+    print("test: trailing garbage")
+
+    local n = net.init()
+    assert(n:decode_ip(tcp.."X"))
+    local t = n:get_tcp()
+    assert(t.payload == "xxxxx")
+    print("+ok")
+end
 
 do
   print("test: decode truncated data")

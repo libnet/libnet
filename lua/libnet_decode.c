@@ -135,6 +135,14 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
     if(pkt_s < ip_hl || ip_hl < LIBNET_IPV4_H)
       return pushdata(pkt, pkt_s, l, 0);
 
+    /* pcaps often contain trailing garbage after the IP packet, drop that, but not the ip hdr
+     * no matter how damaged the ip_len field is */
+    if(pkt_s > ntohs(ip_hdr->ip_len))
+        pkt_s = ntohs(ip_hdr->ip_len);
+
+    if(pkt_s < ip_hl)
+        pkt_s = ip_hl;
+
     payload = pkt + ip_hl;
     payload_s = pkt + pkt_s - payload;
 
