@@ -49,9 +49,23 @@ pcap.so: LDLIBS+=-lpcap
 nfq.so: nfq.c
 nfq.so: LDLIBS+=-lnetfilter_queue
 
-test: net.test pcap.test
+TNET=$(wildcard test-*.lua)
+TOUT=$(TNET:.lua=.test)
+
+echo:
+	echo $(TOUT)
+
+test: net.test pcap.test recoding.test $(TOUT)
+
+%.test: %.lua net.so
+	lua $<
+	touch $@
 
 %.test: %-test %.so
+	lua $<
+	touch $@
+
+%.test: %-test net.so
 	lua $<
 	touch $@
 

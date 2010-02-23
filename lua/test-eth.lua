@@ -1,7 +1,7 @@
 dofile"setup.lua"
 
 test("+eth", function()
-  local n = net.init("link_adv", DEV)
+  local n = net.init()
   local datat={payload="xxx"}
   local etht = {src="01:02:03:01:02:03", dst="04:05:06:04:05:06"}
   local pkt = "0405060405060102030102030800787878"

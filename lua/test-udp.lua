@@ -1,7 +1,7 @@
 dofile"setup.lua"
 
 test("+udp", function()
-  local n = net.init("link_adv", DEV)
+  local n = net.init()
   local datat = {payload="xxx"}
   local udpt = {spo="xxx"}
   local ipt = {src="1.2.3.4", dst="5.6.7.8", protocol=17, options="AAA"}
@@ -106,7 +106,7 @@ test("+udp", function()
   assert(pkt == h(b), h(b))
 
   local pkt = "0405060405060102030102030800".. -- eth
-              "450000170000000040116ac30102030405060708"..
+              "4500001a0000000040116ac00102030405060708"..
               "787878" -- payload
 
   ipt.options = nil
@@ -124,7 +124,7 @@ test("+udp", function()
 end)
 
 test("+ipv4, replace eth with ipv4", function()
-  local n = net.init("link", DEV) 
+  local n = net.init()
   local eth = n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
   local ok,emsg=pcall(n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA", ptag = eth})
   assert(not ok, emsg)
@@ -133,7 +133,7 @@ end)
 
 
 test("+ipv4 w/options mutation", function()
-  local n = net.init("link", DEV) 
+  local n = net.init()
   local ptag = n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+4, options="AAAA"}
   n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 
@@ -155,7 +155,7 @@ end)
 
 test("-ipv4 with invalid ptag", function()
 
-    local n = net.init("link", DEV) 
+    local n = net.init()
     assert(not pcall(
         n.ipv4, n, {src="1.2.3.1", dst="1.2.3.2", protocol=2, len=20+8, options="DDDDD", ptag=999}
         )

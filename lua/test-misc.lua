@@ -1,6 +1,6 @@
 dofile"setup.lua"
 
-n = net.init("link", DEV)
+n = net.init()
 
 print(q(net.pton("01:02:03:04:05:06")))
 print(q(net.pton("1.2.3.4")))
@@ -12,9 +12,8 @@ n:eth{src="01:02:03:04:05:01", dst="01:02:03:04:05:02"}
 
 print(n:dump())
 
-n:write()
-
 b1 = n:block()
+
 print(#b1, q(b1))
 
 n:ipv4{src="1.2.3.1", dst="1.2.3.2", protocol=17, len=20+8+3, ptag=ipv4}

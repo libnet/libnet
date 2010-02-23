@@ -50,17 +50,24 @@ function dump(n, size)
 end
 
 function test(n, f)
-  print""
-  print""
-  print("=test: "..n)
+    print""
+    print""
+    print("=test: "..n)
 
-  if not keepgoing then
-    f()
-  else
-    local ok, emsg = pcall(f)
-    if not ok then
-      print("! FAIL: "..n)
+    if not keepgoing then
+        f()
+        print("+pass: "..n)
+    else
+        local ok, emsg = pcall(f)
+        if not ok then
+            print("! FAIL: "..n)
+        else
+            print("+pass: "..n)
+        end
     end
-  end
+end
+
+function hex_dump(s)
+    print(h(s))
 end
 
