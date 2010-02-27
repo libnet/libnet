@@ -44,8 +44,9 @@ AC_DEFUN([AC_LIBNET_CHECK_PF_PACKET],
 
         [case "$target_os" in
 
-        linux)
-                libnet_cv_have_packet_socket = no
+        linux*)
+                libnet_cv_have_packet_socket=no
+		AC_MSG_RESULT(no)
                 ;;
         *)
 
