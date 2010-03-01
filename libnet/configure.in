@@ -22,7 +22,11 @@ AC_PROG_CC
 AC_PROG_INSTALL
 dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
-AC_PROG_LIBTOOL
+ifdef(
+      [LT_INIT],
+      [LT_INIT],
+      [AC_PROG_LIBTOOL]
+)
 
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
