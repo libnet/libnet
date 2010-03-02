@@ -575,10 +575,15 @@ libnet_pblock_p2p(uint8_t type)
         case LIBNET_PBLOCK_ICMPV4_REDIRECT_H:
         case LIBNET_PBLOCK_ICMPV4_TS_H:
             return (IPPROTO_ICMP);
+        case LIBNET_PBLOCK_ICMPV6_H:
+        case LIBNET_PBLOCK_ICMPV6_UNREACH_H:
+            return (IPPROTO_ICMPV6);
         case LIBNET_PBLOCK_IGMP_H:
             return (IPPROTO_IGMP);
         case LIBNET_PBLOCK_IPV4_H:
             return (IPPROTO_IP);
+        case LIBNET_PBLOCK_IPV6_H:
+            return (IPPROTO_IPV6);
         case LIBNET_ISL_H:
             return (LIBNET_PROTO_ISL);
         case LIBNET_PBLOCK_OSPF_H:

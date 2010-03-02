@@ -54,6 +54,7 @@ libnet/sample/get_addr
 libnet/sample/gre
 libnet/sample/hsrp
 libnet/sample/icmp6_echoreq
+libnet/sample/icmp6_unreach
 libnet/sample/icmp_echo_cq
 libnet/sample/icmp_redirect
 libnet/sample/icmp_timeexceed

@@ -10,7 +10,10 @@ include $(top_srcdir)/Makefile.am.common
 
 samples = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   ieee isl ntp ospf_hello ospf_lsa ping_of_death stp synflood \
-                  tcp1 tcp2 udp1 udp2 synflood6 icmp6_echoreq icmp_echo_cq \
+                  tcp1 tcp2 udp1 udp2 synflood6 \
+                  icmp6_echoreq \
+                  icmp6_unreach \
+                  icmp_echo_cq \
                   smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
                   fddi_tcp1 fddi_tcp2 tring_tcp1 tring_tcp2 icmp_redirect \
                   bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
@@ -54,6 +57,7 @@ tftp_SOURCES            = tftp.c
 udp1_SOURCES            = udp1.c
 udp2_SOURCES            = udp2.c
 icmp6_echoreq_SOURCES   = icmp6_echoreq.c
+icmp6_unreach_SOURCES   = icmp6_unreach.c
 smurf_SOURCES           = smurf.c
 synflood6_SOURCES       = synflood6.c
 synflood6_frag_SOURCES  = synflood6_frag.c

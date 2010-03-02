@@ -174,7 +174,7 @@ libnet_diag_dump_pblock_type(uint8_t type)
 {
     switch (type)
     {
-        /* below text can be regenerated using map-pblock-typs */
+        /* below text can be regenerated using ./map-pblock-types */
         case LIBNET_PBLOCK_ARP_H:
             return ("arp");
         case LIBNET_PBLOCK_DHCPV4_H:
@@ -303,7 +303,11 @@ libnet_diag_dump_pblock_type(uint8_t type)
             return ("sebek");
         case LIBNET_PBLOCK_HSRP_H:
             return ("hsrp");
+        case LIBNET_PBLOCK_ICMPV6_H:
+            return ("icmpv6");
+        case LIBNET_PBLOCK_ICMPV6_UNREACH_H:
+            return ("icmpv6_unreach");
     }
     return ("unrecognized pblock");
 }
-/* EOF */
+

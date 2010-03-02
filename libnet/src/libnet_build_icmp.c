@@ -395,4 +395,46 @@ bad:
     return (-1);
 }
 
+
+libnet_ptag_t
+libnet_build_icmpv6_unreach(u_int8_t type, u_int8_t code, u_int16_t sum,
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+{
+    u_int32_t n, h;
+    libnet_pblock_t *p;
+    struct libnet_icmpv6_hdr icmp_hdr;
+
+    if (l == NULL)
+    { 
+        return (-1);
+    } 
+
+    n = LIBNET_ICMPV6_UNREACH_H + payload_s;        /* size of memory block */
+
+    /*
+     *  Find the existing protocol block if a ptag is specified, or create
+     *  a new one.
+     */
+    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_UNREACH_H);
+    if (p == NULL)
+    {
+        return (-1);
+    }
+
+    memset(&icmp_hdr, 0, sizeof(icmp_hdr));
+    icmp_hdr.icmp_type = type;          /* packet type */
+    icmp_hdr.icmp_code = code;          /* packet code */
+    icmp_hdr.icmp_sum  = (sum ? htons(sum) : 0);  /* checksum */
+    icmp_hdr.id   = 0;             /* must be 0 */
+    icmp_hdr.seq  = 0;             /* must be 0 */
+
+    LIBNET_BUILD_ICMP_ERR_FINISH(LIBNET_ICMPV6_UNREACH_H);
+
+    return (ptag ? ptag : libnet_pblock_update(l, p, h,
+            LIBNET_PBLOCK_ICMPV6_UNREACH_H));
+bad:
+    libnet_pblock_delete(l, p);
+    return (-1);
+}
+
 /* EOF */

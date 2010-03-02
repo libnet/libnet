@@ -294,12 +294,34 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const u
             CHECK_IP_PAYLOAD_SIZE();
 
             icmph_p->icmp_sum = 0;
+            /* Hm, is this valid? Is the checksum algorithm for ICMPv6 encapsulated in IPv4
+             * actually defined?
+             */
             if (is_ipv6)
             {
                 sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
                 sum += ntohs(IPPROTO_ICMP6 + h_len);
             }
             sum += libnet_in_cksum((uint16_t *)icmph_p, h_len);
+            icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
+            break;
+        }
+        case IPPROTO_ICMPV6:
+        {
+            struct libnet_icmpv6_hdr *icmph_p =
+                (struct libnet_icmpv6_hdr *)(iphdr + ip_hl);
+
+            h_len = end - (uint8_t*) icmph_p; /* ignore h_len, sum the packet we've coalesced */
+
+            CHECK_IP_PAYLOAD_SIZE();
+
+            icmph_p->icmp_sum = 0;
+            if (is_ipv6)
+            {
+                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum += ntohs(IPPROTO_ICMP6 + h_len);
+            }
+            sum += libnet_in_cksum((u_int16_t *)icmph_p, h_len);
             icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }

@@ -778,6 +778,23 @@ uint16_t id, uint16_t seq, n_time otime, n_time rtime, n_time ttime,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP)
+ * unreachable header. The IP header that caused the error message should be 
+ * built by a previous call to libnet_build_ipv6().
+ * @param type type of ICMP packet (should be ICMP6_UNREACH)
+ * @param code code of ICMP packet (should be one of the 5 unreachable codes)
+ * @param sum checksum (0 for libnet to autofill)
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t
+libnet_build_icmpv6_unreach(u_int8_t type, u_int8_t code, u_int16_t sum,
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
+/**
  * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.
  * @param type packet type
  * @param code packet code (should be 0)

@@ -10,6 +10,15 @@ I forked from packetfactory.net and am maintaining and rereleasing libnet.
 Contact Sam Roberts <vieuxtech@gmail.com> if you have bugs or patches to contribute.
 
 
+Todo:
+
+- redo error handling in net binding
+- cross-target patches
+- icmpv6 patches: cksum is wrong
+- cksum bug? generally, I don't trust the checksums are correct
+- unit test framework
+
+
 In progress:
 
 - lua bindings, to libnet, libpcap, and libnfq: these will allow construction,
