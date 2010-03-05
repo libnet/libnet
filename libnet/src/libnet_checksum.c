@@ -468,9 +468,13 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         }
         case IPPROTO_IP:
         {
-            iph_p->ip_sum = 0;
-            sum = libnet_in_cksum((uint16_t *)iph_p, ip_hl);
-            iph_p->ip_sum = LIBNET_CKSUM_CARRY(sum);
+            if(!iph_p) {
+                /* IPv6 doesn't have a checksum */
+            } else {
+                iph_p->ip_sum = 0;
+                sum = libnet_in_cksum((uint16_t *)iph_p, ip_hl);
+                iph_p->ip_sum = LIBNET_CKSUM_CARRY(sum);
+            }
             break;
         }
         case IPPROTO_VRRP:
