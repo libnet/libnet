@@ -2147,10 +2147,33 @@ int
 libnet_close_link(libnet_t *l);
 
 /*
- * [Internal] 
+ * [Internal]
+ *   THIS FUNCTION IS BROKEN. IT WILL SEGFAULT OR CORRUPT MEMORY, OR JUST SILENTLY DO THE
+ *   WRONG THING IF NOT CALLED CORRECTLY, AND CALLING IT CORRECTLY IS UNDOCUMENTED, AND
+ *   ALMOST IMPOSSIBLE. YOU HAVE BEEN WARNED.
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end);
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len);
+
+/* Calculate internet checksums.
+ *
+ * IP (TCP, UDP, IGMP, ICMP, etc...) checksums usually need information from
+ * the IP header to construct the "pseudo header", this function takes a
+ * pointer to that header, the buffer boundaries, the "h_len" (see pblock_t for
+ * a description, it is increasinly unused, though, and I'm trying to remove it
+ * altogether), and the protocol number for the protocol that is to be
+ * checksummed.
+ *
+ * Finding that protocol requires that the IP header be well-formed... so this
+ * won't work well for invalid packets. But then, what is the valid checksum
+ * for a valid packet, anyhow?
+ *
+ * This doesn't work well for non-inet checksums, sorry, that's an original design
+ * flaw. pblock_t needs a pointer in it, to a packet assembly function that can be
+ * called at runtime to do assembly and checksumming.
+ */
+int
+libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end);
 
 /*
  * [Internal] 

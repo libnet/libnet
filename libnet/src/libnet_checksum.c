@@ -141,6 +141,23 @@ static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, in
     return 0;
 }
 
+
+/*
+ * For backwards binary compatibility. The calculations done here can easily
+ * result in buffer overreads and overwrites. You have been warned. And no, it
+ * is not possible to fix, the API contains no information on the buffer's
+ * boundary. libnet itself calls the safe function, libnet_inet_checksum(). So
+ * should you.
+ */
+int
+libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
+{
+    return libnet_inet_checksum(l, iphdr, protocol, h_len,
+            iphdr, iphdr + LIBNET_IPV4_H + h_len
+            );
+}
+
+
 #define CHECK_IP_PAYLOAD_SIZE() do { \
     int e=check_ip_payload_size(l,iphdr,ip_hl, h_len, end, __func__);\
     if(e) return e;\
@@ -155,7 +172,7 @@ static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, in
  * len is the h_len from "q"
  */
 int
-libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
+libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
 {
     /* will need to update this for ipv6 at some point */
     struct libnet_ipv4_hdr *iph_p = (struct libnet_ipv4_hdr *)iphdr;

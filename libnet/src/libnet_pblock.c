@@ -501,7 +501,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
 				q->ptag, libnet_diag_dump_pblock_type(q->type),
 				ip_offset);
 #endif
-                        c = libnet_do_checksum(l, iph,
+                        c = libnet_inet_checksum(l, iph,
                                 libnet_pblock_p2p(q->type), q->h_len,
                                 beg, end);
                         if (c == -1)
