@@ -156,10 +156,10 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
     struct libnet_ipv4_hdr* ip4 = (struct libnet_ipv4_hdr *)iphdr;
     struct libnet_ipv6_hdr* ip6 = (struct libnet_ipv6_hdr *)iphdr;
 
-    if(ip4->ip_v == 4) {
-        ip_len = ntohs(ip4->ip_len);
-    } else {
+    if(ip4->ip_v == 6) {
         ip_len = ntohs(ip6->ip_len);
+    } else {
+        ip_len = ntohs(ip4->ip_len);
     }
 
     return libnet_inet_checksum(l, iphdr, protocol, h_len,
