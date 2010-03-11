@@ -152,7 +152,7 @@ void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
     libnet_diag_dump_hex(pkt1, 14, 1, stdout);
     libnet_diag_dump_hex(pkt1+14, pkt1_sz-14, 1, stdout);
 
-    // check ip IHL value, total ip pkt length, and options value
+    /* check ip IHL value, total ip pkt length, and options value */
     h1 = (struct libnet_ipv4_hdr*) (pkt1+14);
     assert_eq(h1->ip_hl, ip_ihl); 
     assert_eq(ntohs(h1->ip_len), ip_len);

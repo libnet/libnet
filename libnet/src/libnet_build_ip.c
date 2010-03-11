@@ -83,9 +83,10 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             ip_hdr.ip_hl += p->prev->b_len / 4;
         }
     }
-    // Note that p->h_len is not adjusted. This seems a bug, but it is because
-    // it is not used!  libnet_do_checksum() is passed the h_len (as `len'),
-    // but for IPPROTO_IP it is ignored in favor of the ip_hl.
+    /* Note that p->h_len is not adjusted. This seems a bug, but it is because
+     * it is not used!  libnet_do_checksum() is passed the h_len (as `len'),
+     * but for IPPROTO_IP it is ignored in favor of the ip_hl.
+     */
 
     ip_hdr.ip_tos        = tos;                       /* IP tos */
     ip_hdr.ip_len        = htons(ip_len);             /* total length */
@@ -147,16 +148,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (payload_s)
     {
         /* update ptag_data with the new payload */
-        // on create:
-        //    b_len = payload_s
-        //    l->total_size += b_len
-        //    h_len = 0
-        // on update:
-        //    b_len = payload_s
-        //    h_len += <diff in size between new b_len and old b_len>
-        //      increments if if b_len goes up, down if it goes down
-        // in either case:
-        //    copied = 0
+        /* on create:
+         *    b_len = payload_s
+         *    l->total_size += b_len
+         *    h_len = 0
+         * on update:
+         *    b_len = payload_s
+         *    h_len += <diff in size between new b_len and old b_len>
+         *      increments if if b_len goes up, down if it goes down
+         * in either case:
+         *    copied = 0
+	 */
         p_data = libnet_pblock_probe(l, ptag_data, payload_s,
                 LIBNET_PBLOCK_IPDATA);
         if (p_data == NULL)
@@ -171,7 +173,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
         if (ptag_data == LIBNET_PTAG_INITIALIZER)
         {
-            // IPDATA's h_len gets set to payload_s in both branches
+            /* IPDATA's h_len gets set to payload_s in both branches */
             if (p_data->prev->type == LIBNET_PBLOCK_IPV4_H)
             {
                 libnet_pblock_update(l, p_data, payload_s,
@@ -181,9 +183,10 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             }
             else
             {
-                // SR - I'm not sure how to reach this code. Maybe if the first
-                // time we added an ipv4 block, there was no payload, but when
-                // we modify the block the next time, we have payload?
+                /* SR - I'm not sure how to reach this code. Maybe if the first
+                 * time we added an ipv4 block, there was no payload, but when
+                 * we modify the block the next time, we have payload?
+		 */
 
                 /* update without setting this as the final pblock */
                 p_data->type  =  LIBNET_PBLOCK_IPDATA;

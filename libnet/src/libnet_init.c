@@ -243,7 +243,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
 uint32_t
 libnet_getpacket_size(libnet_t *l)
 {
-    // Why doesn't this return l->total_size?
+    /* Why doesn't this return l->total_size? */
     libnet_pblock_t *p;
     uint32_t n;
 

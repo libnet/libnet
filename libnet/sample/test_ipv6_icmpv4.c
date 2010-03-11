@@ -91,7 +91,7 @@ main(int argc, char *argv[])
 
     ipv6_ptag = libnet_build_ipv6(
             0, 0,
-            LIBNET_ICMPV6_H + sizeof(payload), // ICMPV6_H == ICMPV4_H, luckily
+            LIBNET_ICMPV6_H + sizeof(payload), /* ICMPV6_H == ICMPV4_H, luckily */
             IPPROTO_ICMP6,
             255,
             *(struct libnet_in6_addr*)&src_ip,

@@ -36,7 +36,7 @@
 #include "../include/config.h"
 #endif
 #include <winsock2.h>
-#include <iphlpapi.h> // From the Microsoft Platform SDK 
+#include <iphlpapi.h> /* From the Microsoft Platform SDK */
 #include "../include/win32/libnet.h"
 #include <assert.h>
 #include <Packet32.h>
@@ -234,7 +234,7 @@ libnet_get_hwaddr(libnet_t *l)
 
 struct hostent *gethostbyname2(const int8_t *name, int af) 
 {
-   // XXX not implemented
+   /* XXX not implemented */
    return(NULL);
 }
 
@@ -312,7 +312,7 @@ BYTE * libnet_win32_read_arp_table(DWORD DestIP)
 
 	if(status == NO_ERROR)
 	{
-		// set current interface
+		/* set current interface */
 		ci = pIpNetTable->table[0].dwIndex;
 
 		for (i = 0; i < pIpNetTable->dwNumEntries; ++i)
@@ -320,7 +320,7 @@ BYTE * libnet_win32_read_arp_table(DWORD DestIP)
 			if (pIpNetTable->table[i].dwIndex != ci)
 			    ci = pIpNetTable->table[i].dwIndex;
 
-			if(pIpNetTable->table[i].dwAddr == DestIP) // found IP in arp cache
+			if(pIpNetTable->table[i].dwAddr == DestIP) /* found IP in arp cache */
 			{
 				memcpy(buffMAC, pIpNetTable->table[i].bPhysAddr, sizeof(buffMAC));
 				free(pIpNetTable);
