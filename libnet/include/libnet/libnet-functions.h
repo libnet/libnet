@@ -774,7 +774,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_icmpv4_timestamp(uint8_t type, uint8_t code, uint16_t sum,
-uint16_t id, uint16_t seq, n_time otime, n_time rtime, n_time ttime,
+uint16_t id, uint16_t seq, uint32_t otime, uint32_t rtime, uint32_t ttime,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**

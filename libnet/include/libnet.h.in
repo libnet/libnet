@@ -59,57 +59,52 @@
 extern "C" {
 #endif
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
+
 #if !defined(__WIN32__)
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
 #endif /* __WIN32__ */
+
 #if defined(HAVE_SYS_SOCKIO_H) && !defined(SIOCGIFADDR)
-#include <sys/sockio.h>
+# include <sys/sockio.h>
 #endif
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <ctype.h>
+
 #if !defined(__WIN32__)
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/in_systm.h>
-#include <netinet/ip.h>
-#include <net/if.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <net/if.h>
 #else /* __WIN32__ */
-#if (__CYGWIN__)
-#include <sys/socket.h>
-#endif
-#include <ws2tcpip.h>
-#include <windows.h>
-#include <winsock2.h>
-#include <win32/in_systm.h>
+# if (__CYGWIN__)
+#  include <sys/socket.h>
+# endif
+# include <ws2tcpip.h>
+# include <windows.h>
+# include <winsock2.h>
+# include <win32/in_systm.h>
 #endif /* __WIN32__ */
+
 #if !(__linux__) && !(__WIN32__) && !(__APPLE__) && !(__CYGWIN__) && !(__GNU__)
-#include <netinet/ip_var.h>
 #else   /* __linux__ */
-#if (HAVE_NET_ETHERNET_H)
-#include <net/ethernet.h>
-#endif  /* HAVE_NET_ETHERNET_H */
+# if (HAVE_NET_ETHERNET_H)
+#  include <net/ethernet.h>
+# endif  /* HAVE_NET_ETHERNET_H */
 #endif  /* __linux__ */
+
 #if !defined(__WIN32__)
-#include <netinet/tcp.h>
-#include <netinet/udp.h>
-#if (__linux__) && !(__GLIBC__)
-/* we get multiple definitions of IGMP_AGE_THRESHOLD if we include netinet */
-#include <linux/igmp.h>
-#else
-#include <netinet/igmp.h>
-#endif
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <netdb.h>
+# include <arpa/inet.h>
+# include <sys/time.h>
+# include <netdb.h>
 #endif /* __WIN32__ */
+
 #include <errno.h>
 #include <stdarg.h>
 

@@ -20,6 +20,7 @@ dnl Check for the usual programs
 dnl
 AC_PROG_CC
 AC_PROG_INSTALL
+AC_USE_SYSTEM_EXTENSIONS
 dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
 ifdef(
@@ -67,6 +68,7 @@ AC_ARG_WITH(
 )
 
 AC_CHECK_HEADERS([net/pfilt.h sys/net/nit.h net/raw.h sys/dlpi.h linux/socket.h])
+AC_CHECK_HEADERS([net/bpf.h])
 
 AC_MSG_CHECKING(link-layer packet interface type)
 
