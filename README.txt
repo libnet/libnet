@@ -17,17 +17,11 @@ Releases are at:
 
   http://sourceforge.net/projects/libnet-dev/
 
-Todo:
-
-- redo error handling in net binding
-- cross-target patches
-- icmpv6 patches: cksum is wrong
-- cksum bug? generally, I don't trust the checksums are correct
-- unit test framework
-
-
 In progress:
 
+- confirm AIX fixes worked for Alon
+- add me and up-to-date links to copyright and docs
+- rerelease
 - lua bindings, to libnet, libpcap, and libnfq: these will allow construction,
   capture, modification, injection and reinjection of packets (as well as unit
   testing libnet)
@@ -35,6 +29,10 @@ In progress:
 
 Incomplete:
 
+- redo error handling in net binding
+- icmpv6 patches: cksum is wrong
+- cksum bug? generally, I don't trust the checksums are correct
+- unit test framework
 - Rework the internal data structures, they have so much redundancy in their
   internal linking that keeping them correct as pblocks get updated isn't
   possible. Specifically, get rid of ip_offset and h_len, and have pblocks
