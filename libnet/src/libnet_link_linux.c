@@ -52,8 +52,9 @@
 #endif
 #endif  /* HAVE_PACKET_SOCKET */
 
-#include "../include/bpf.h"
 #include "../include/libnet.h"
+
+#include <pcap.h>
 
 #include "../include/gnuc.h"
 #ifdef HAVE_OS_PROTO_H
