@@ -43,8 +43,10 @@
 #include <sys/sysctl.h>
 #include <net/route.h>
 #include <net/if_dl.h>
+#include <net/if_types.h>
 #include "../include/gnuc.h"
-#include "../include/bpf.h"
+
+#include <bpf.h>
 
 #ifdef HAVE_OS_PROTO_H
 #include "../include/os-proto.h"
@@ -308,9 +310,13 @@ libnet_get_hwaddr(libnet_t *l)
     for (next = buf ; next < end ; next += ifm->ifm_msglen)
     {
         ifm = (struct if_msghdr *)next;
+        if (ifm->ifm_version != RTM_VERSION)
+            continue;
         if (ifm->ifm_type == RTM_IFINFO)
         {
             sdl = (struct sockaddr_dl *)(ifm + 1);
+            if (sdl->sdl_type != IFT_ETHER)
+                continue;
             if (strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
             {
                 if (!(ea = malloc(sizeof(struct libnet_ether_addr))))
