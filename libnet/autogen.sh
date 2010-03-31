@@ -12,12 +12,16 @@ set -x
 set -e
 
 rm -fr autom4te.cache
-libtoolize --force
-aclocal -I . -I /sw/share/aclocal || aclocal -I .
-autoheader
-automake --foreign --force --add-missing --copy
+autoreconf -ivf -I . -I /sw/share/aclocal
+
+# Above should obsolete the below:
+# libtoolize --force
+# aclocal -I . -I /sw/share/aclocal || aclocal -I .
+# autoheader
+# automake --foreign --force --add-missing --copy
 #libtoolize --force
-autoconf
+# autoconf
+
 rm -fr autom4te.cache
 
 set +e
