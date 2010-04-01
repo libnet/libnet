@@ -41,10 +41,10 @@
 #include "../include/win32/libnet.h"
 #endif
 
-#include <pcap.h>
-
 #ifdef HAVE_NET_BPF_H
-#include <net/bpf.h>
+# include <net/bpf.h>
+#else
+# include <pcap.h>
 #endif
 
 libnet_ptag_t

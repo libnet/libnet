@@ -203,7 +203,7 @@ struct libnet_context
     libnet_pblock_t *pblock_end;        /* last node in list */
     uint32_t n_pblocks;                /* number of pblocks */
 
-    int link_type;                      /* link-layer type */
+    int link_type;                      /* link-layer type, a DLT_ value. */
     int link_offset;                    /* link-layer header size */
     int aligner;                        /* used to align packets */
     char *device;                       /* device name */
