@@ -40,7 +40,6 @@ dnl And some custom things
 dnl
 
 AC_LIBNET_ENDIAN_CHECK
-AC_LBL_UNALIGNED_ACCESS
 dnl AC_LBL_LIBRARY_NET
 
 AC_SUBST(ENDIANESS)
@@ -281,7 +280,7 @@ dnl
 *)
     AC_MSG_WARN(apparently your OS is not officially supported yet)
     AC_MSG_WARN(this may not work)
-    AC_MSG_RESULT(please send diffs to mike@infonexus.com)
+    AC_MSG_RESULT(please send diffs to vieuxtech@gmail.com)
     ;;
 
 esac

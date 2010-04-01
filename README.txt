@@ -19,9 +19,11 @@ Releases are at:
 
 In progress:
 
-- confirm AIX fixes worked for Alon
 - add me and up-to-date links to copyright and docs
+- add contributors to docs
+- make list of people who want to know about releases, or make a mailing list
 - rerelease
+
 - lua bindings, to libnet, libpcap, and libnfq: these will allow construction,
   capture, modification, injection and reinjection of packets (as well as unit
   testing libnet)
