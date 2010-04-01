@@ -54,7 +54,14 @@
 
 #include "../include/libnet.h"
 
-#include <pcap.h>
+/* These should not vary across linux systems, and are only defined in
+ * <pcap-bpf.h>, included from <pcap.h>, but since we have no other dependency
+ * on libpcap right now, define locally. I'm not sure if this is a good idea,
+ * but we'll try.
+ */
+#define DLT_PRONET	4	/* Proteon ProNET Token Ring */
+#define DLT_FDDI	10	/* FDDI */
+#define DLT_RAW		12	/* raw IP */
 
 #include "../include/gnuc.h"
 #ifdef HAVE_OS_PROTO_H

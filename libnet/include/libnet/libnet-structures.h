@@ -204,6 +204,19 @@ struct libnet_context
     uint32_t n_pblocks;                /* number of pblocks */
 
     int link_type;                      /* link-layer type, a DLT_ value. */
+    /* These are the only values used by libnet (see libnet_build_arp and
+     * libnet_build_link).  Other values are assigned by the various
+     * libnet_link_*.c OS support functions, but are not yet used or supported,
+     * they are effectively dead code. <pcap.h> claims these two are invariant
+     * across operating systems... hopefully it is correct!
+     */
+#ifndef DLT_EN10MB
+# define DLT_EN10MB      1       /* Ethernet (10Mb) */
+#endif
+#ifndef DLT_IEEE802
+# define DLT_IEEE802     6       /* IEEE 802 Networks */
+#endif
+
     int link_offset;                    /* link-layer header size */
     int aligner;                        /* used to align packets */
     char *device;                       /* device name */

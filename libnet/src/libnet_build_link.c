@@ -41,12 +41,6 @@
 #include "../include/win32/libnet.h"
 #endif
 
-#ifdef HAVE_NET_BPF_H
-# include <net/bpf.h>
-#else
-# include <pcap.h>
-#endif
-
 libnet_ptag_t
 libnet_build_link(const uint8_t *dst, const uint8_t *src, const uint8_t *oui, uint16_t type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
@@ -57,25 +51,23 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     {
         /* add FDDI */
         case DLT_EN10MB:
-            return (libnet_build_ethernet(dst, src, type, payload, payload_s, l,
-                    ptag));
+            return libnet_build_ethernet(dst, src, type, payload, payload_s, l,
+                    ptag);
         case DLT_IEEE802:
-            return (libnet_build_token_ring(LIBNET_TOKEN_RING_FRAME,
+            return libnet_build_token_ring(LIBNET_TOKEN_RING_FRAME,
                     LIBNET_TOKEN_RING_LLC_FRAME, dst, src, LIBNET_SAP_SNAP,
                     LIBNET_SAP_SNAP, 0x03, org, type, payload, payload_s,
-                    l, ptag));
-        default:
-            break;
+                    l, ptag);
     }
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
             "%s(): linktype %d not supported\n", __func__, l->link_type);
-    return (-1);
+    return -1;
 }
 
 libnet_ptag_t
 libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, libnet_t *l)
 {
-	uint8_t org[3] = {0x00, 0x00, 0x00};
+    uint8_t org[3] = {0x00, 0x00, 0x00};
     switch (l->link_type)
     {
        /* add FDDI */
@@ -85,13 +77,9 @@ libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, lib
             return (libnet_autobuild_token_ring(LIBNET_TOKEN_RING_FRAME,
                    LIBNET_TOKEN_RING_LLC_FRAME, dst, LIBNET_SAP_SNAP,
                    LIBNET_SAP_SNAP, 0x03, org, TOKEN_RING_TYPE_IP, l));
-        default:
-            break;
     }
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
             "%s(): linktype %d not supported\n", __func__, l->link_type);
     return (-1);
 }
-
-/* EOF */
 

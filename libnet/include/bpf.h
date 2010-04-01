@@ -1,3 +1,8 @@
+/*
+It's not clear what purpose including this file with libnet serves. Is it just
+for the DLT_ values? On systems with bpf, it should be present in the system
+headers! Also, it's definitions have conflicted with the system's on AIX.
+*/
 /*-
  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997
  *	The Regents of the University of California.  All rights reserved.
