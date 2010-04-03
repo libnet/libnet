@@ -29,6 +29,9 @@
 
 #include <sys/param.h>
 #include <sys/file.h>
+#include <netinet/in.h>
+#include <netinet/udp.h>
+#include <netinet/tcp.h>
 
 #if (HAVE_CONFIG_H)
 #include "../include/config.h"
@@ -161,38 +164,41 @@ libnet_write_link(libnet_t *l, const uint8_t *buf, uint32_t len)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    FILE *f = 0;
-    struct libnet_ether_addr *ret = 0;
-    /*
-     *  XXX - non-re-entrant!
-     */
-    static struct libnet_ether_addr ea;
-    int buf[6]; /* memory alignment stuff */
-    int c;
+    struct ifreq ifdat;
+    int s = -1;
+    struct libnet_ether_addr *ea = NULL;
 
-    if (!(f = popen("/etc/nvram eaddr", "r"))) {
-        sprintf(l->err_buf, "/etc/nvram: unable to execute");
-        goto out;
+    if (-1 == (s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP))) {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "socket(): %s", strerror(errno));
+        goto errout;
     }
-    if (6 != fscanf(f, "%x:%x:%x:%x:%x:%x",
-                &buf[0],
-                &buf[1],
-                &buf[2],
-                &buf[3],
-                &buf[4],
-                &buf[5])) {
-        sprintf(l->err_buf, "output of nvram eaddr not MAC address");
-        goto out;
+    memset(&ifdat, 0, sizeof(struct ifreq));
+    strncpy(ifdat.ifr_name, l->device, IFNAMSIZ);
+    if (ioctl(s, SIOCGIFADDR, &ifdat)) {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "SIOCGIFADDR: %s", strerror(errno));
+        goto errout;
     }
-    for(c = 0; c < 6; c++) {
-        ea.ether_addr_octet[c] = buf[c];
+    if (!(ea = malloc(sizeof(struct libnet_ether_addr)))) {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "malloc(): %s", strerror(errno));
+        goto errout;
     }
-    ret = &ea;
-out:
-    if (f) {
-        pclose(f);
+    memcpy(ea, &ifdat.ifr_addr.sa_data, ETHER_ADDR_LEN);
+    close(s);
+    s = -1;
+    return ea;
+
+ errout:
+    if (s > 0) {
+        close(s);
     }
-    return ret;
+    if (ea) {
+        free(ea);
+        ea = 0;
+    }
+    return 0;
 }
 /* ---- Emacs Variables ----
  * Local Variables:
