@@ -381,7 +381,7 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-#if defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6
+#if (defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6) || (defined(HAVE_IRIX) && !defined(HAVE_IRIX_IPV6))
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support\n",
             __func__, strerror(errno));
     return (-1);
