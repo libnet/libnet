@@ -32,6 +32,9 @@
  *
  */
 
+#include <netinet/in.h>
+#include <netinet/udp.h>
+
 #if (HAVE_CONFIG_H)
 #include "../include/config.h"
 #endif
