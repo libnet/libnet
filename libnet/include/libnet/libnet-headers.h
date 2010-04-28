@@ -659,11 +659,11 @@ struct libnet_gre_sre_hdr
 struct libnet_ipv4_hdr
 {
 #if (LIBNET_LIL_ENDIAN)
-    unsigned ip_hl:4,      /* header length */
+    uint8_t ip_hl:4,      /* header length */
            ip_v:4;         /* version */
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    unsigned ip_v:4,       /* version */
+    uint8_t ip_v:4,       /* version */
            ip_hl:4;        /* header length */
 #endif
     uint8_t ip_tos;       /* type of service */
