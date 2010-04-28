@@ -659,11 +659,11 @@ struct libnet_gre_sre_hdr
 struct libnet_ipv4_hdr
 {
 #if (LIBNET_LIL_ENDIAN)
-    unsigned ip_hl:4,      /* header length */
+    uint8_t ip_hl:4,      /* header length */
            ip_v:4;         /* version */
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    unsigned ip_v:4,       /* version */
+    uint8_t ip_v:4,       /* version */
            ip_hl:4;        /* header length */
 #endif
     uint8_t ip_tos;       /* type of service */
@@ -1119,11 +1119,11 @@ struct libnet_isl_hdr
 {
     uint8_t isl_dhost[5];    /* destination address "01:00:0c:00:00" */
 #if (LIBNET_LIL_ENDIAN)
-    unsigned isl_type:4,      /* type of frame */
+    uint8_t isl_type:4,      /* type of frame */
            isl_user:4;      /* user defined bits */
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    unsigned isl_user:4,      /* user defined bits */
+    uint8_t isl_user:4,      /* user defined bits */
            isl_type:4;      /* type of frame */
 #endif
     uint8_t isl_shost[6];    /* source address */
@@ -1555,12 +1555,12 @@ struct libnet_tcp_hdr
     uint32_t th_seq;          /* sequence number */
     uint32_t th_ack;          /* acknowledgement number */
 #if (LIBNET_LIL_ENDIAN)
-    unsigned th_x2:4,         /* (unused) */
-           th_off:4;        /* data offset */
+    uint8_t  th_x2:4,         /* (unused) */
+             th_off:4;        /* data offset */
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    unsigned th_off:4,        /* data offset */
-           th_x2:4;         /* (unused) */
+    uint8_t  th_off:4,        /* data offset */
+             th_x2:4;         /* (unused) */
 #endif
     uint8_t  th_flags;       /* control flags */
 #ifndef TH_FIN
@@ -1666,12 +1666,12 @@ struct libnet_sebek_hdr
 struct libnet_vrrp_hdr
 {
 #if (LIBNET_LIL_ENDIAN)
-    unsigned vrrp_v:4,        /* protocol version */
-           vrrp_t:4;        /* packet type */
+    uint8_t vrrp_v:4,        /* protocol version */
+            vrrp_t:4;        /* packet type */
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    unsigned vrrp_t:4,        /* packet type */
-           vrrp_v:4;        /* protocol version */
+    uint8_t vrrp_t:4,        /* packet type */
+            vrrp_v:4;        /* protocol version */
 #endif
 #define LIBNET_VRRP_VERSION_01  0x1
 #define LIBNET_VRRP_VERSION_02  0x2
