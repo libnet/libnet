@@ -87,8 +87,15 @@ libnet_open_link(libnet_t *l)
 #endif
     if (l->fd == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "socket: %s", strerror(errno));
+        if (errno == EPERM) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "%s(): UID/EUID 0 or capability CAP_NET_RAW required",
+                     __func__);
+
+        } else {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "socket: %s", strerror(errno));
+        }
         goto bad;
     }
 
@@ -299,5 +306,11 @@ bad:
     return (NULL);
 }
 
+/* ---- Emacs Variables ----
+ * Local Variables:
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
 
 /* EOF */
