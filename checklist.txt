@@ -20,7 +20,7 @@ Update LDFLAGS' version-info.
 
 - tag it
 
-> git tag -a libnet-x.y.z -m libnet-x.y.z
+> git tag -fa libnet-x.y.z -m libnet-x.y.z
 > git push --tags
 
 Post-release:
