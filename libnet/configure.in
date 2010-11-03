@@ -6,7 +6,7 @@ dnl All rights reserved.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libnet, 1.1.4)
+AC_INIT(libnet, 1.1.5)
 AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])

@@ -1,9 +1,32 @@
 Release Checklist
 =================
 
-Modify version number in:
+Pre-release:
 
-- doc/libnet/doxygen.conf
 - doc/CHANGELOG
+
+Use ../ChangeLog to update changelog.
+
+
 - configure.in
+
+Update version.
+
+
+- src/Makefile.am
+
+Update LDFLAGS' version-info.
+
+
+- tag it
+
+> git tag -a libnet-x.y.z -m libnet-x.y.z
+
+
+Post-release:
+
+- Post tarball to source forge.
+
+- Announce release on libnet-dev-announce
+
 
