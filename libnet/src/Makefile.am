@@ -62,7 +62,6 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_write.c
 
 libnet_la_LIBADD = @LTLIBOBJS@
-libnet_la_LDFLAGS = -version-info 8:0:6 -Wl
 
 # Note: this version-info should NOT simply be the version of the libnet
 # package. See:
@@ -80,5 +79,7 @@ libnet_la_LDFLAGS = -version-info 8:0:6 -Wl
 # 1.1.2.1-fork is 5:0:4
 # 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
 # 1.1.4 was 6:0:5 -> probably an error on my part
-# 1.1.5 is 8:0:6 -> leaves the hole where 1.1.4 should have been
+# 1.1.5 is 7:0:6 -> new APIs, backwards compat
+
+libnet_la_LDFLAGS = -version-info 7:0:6 -Wl
 
