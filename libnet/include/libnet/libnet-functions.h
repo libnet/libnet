@@ -791,8 +791,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_icmpv6_unreach(u_int8_t type, u_int8_t code, u_int16_t sum,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.
