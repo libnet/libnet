@@ -345,10 +345,10 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             icmph_p->icmp_sum = 0;
             if (is_ipv6)
             {
-                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
                 sum += ntohs(IPPROTO_ICMP6 + h_len);
             }
-            sum += libnet_in_cksum((u_int16_t *)icmph_p, h_len);
+            sum += libnet_in_cksum((uint16_t *)icmph_p, h_len);
             icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }
