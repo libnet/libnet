@@ -27,6 +27,17 @@ Post-release:
 
 - Post tarball to source forge.
 
+Go to:
+
+    http://sourceforge.net/projects/libnet-dev/
+
+Login as ras_u_ras_t
+
+Go to:
+
+    https://sourceforge.net/projects/libnet-dev/files_beta/
+
+
 - Announce release on libnet-dev-announce
 
 
