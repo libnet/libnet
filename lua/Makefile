@@ -2,7 +2,7 @@
 
 default: build
 
-BINDING=net.so pcap.so
+BINDING=net.so pcap.so nfq.so
 
 UNAME=$(shell uname)
 
@@ -27,7 +27,8 @@ CWARNS = -Wall \
   -Wshadow \
   -Wwrite-strings
 
-CDEFS=$(shell sh ../libnet/libnet-config --cflags --defines) $(shell dnet-config --cflags)
+DNETDEFS=$(shell dnet-config --cflags)
+LNETDEFS=$(shell sh ../libnet/libnet-config --cflags --defines) 
 COPT=-O2 -DNDEBUG -g
 CFLAGS=$(CWARNS) $(CDEFS) $(CLUA) $(LDFLAGS) -I../libnet/include -L../libnet/src/.libs/
 LDLIBS=$(LLUA)
@@ -42,12 +43,16 @@ CC.SO := $(CC) $(COPT) $(CFLAGS)
 
 net.so: net.c libnet_decode.c
 net.so: LDLIBS+=$(LDDNET) $(LDLNET)
+net.so: CDEFS=$(DNETDEFS) $(LNETDEFS)
 
 pcap.so: pcap.c
 pcap.so: LDLIBS+=-lpcap
 
 nfq.so: nfq.c
 nfq.so: LDLIBS+=-lnetfilter_queue
+
+nfct.so: nfct.c
+nfct.so: LDLIBS+=-lnetfilter_conntrack
 
 TNET=$(wildcard test-*.lua)
 TOUT=$(TNET:.lua=.test)
