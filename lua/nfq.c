@@ -197,10 +197,10 @@ struct nfq_data *checkudata(lua_State*L)
 }
 
 /*-
- * str = nfq.get_payload(cbctx)
- *
- * str is the IP payload, it has been stripped of link-layer headers!
- */
+str = nfq.get_payload(cbctx)
+
+str is the IP payload, it has been stripped of link-layer headers!
+*/
 static int get_payload(lua_State* L)
 {
     struct nfq_data *nfqdata = checkudata(L);
@@ -215,15 +215,15 @@ static int get_payload(lua_State* L)
 
 static const luaL_reg nfq[] =
 {
-  {"loop", loop},
-  {"get_payload", get_payload},
-  {NULL, NULL}
+    {"loop", loop},
+    {"get_payload", get_payload},
+    {NULL, NULL}
 };
 
 LUALIB_API int luaopen_nfq (lua_State *L)
 {
-  luaL_register(L, "nfq", nfq);
+    luaL_register(L, "nfq", nfq);
 
-  return 1;
+    return 1;
 }
 
