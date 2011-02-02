@@ -25,6 +25,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*-
+** nfct - a binding to netfilter's conntrack subsystem
+
+NOTE I know its confusing that the nfct module has functions that should be
+called on a conntrack handle and a conntrack context mixed together, but unless
+I make full userdata out of one or both of them, thats what it has to be. Don't
+confuse them, or you will segfault!
+*/
+
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -181,58 +190,57 @@ static int fd(lua_State* L)
     return 1;
 }
 
-/*-
-- nfct.loop(cthandle, ctmsgtype, function cbfn(ctmsgtype, ct))
-
-Set the callback on the conntrack handle, catch notifications from the
-conntrack subsystem, then unregister the callback and return.
-
-ctmsgtype is the ... and can be one of .....
-
-cbfn is the callback function, and will be called with a ctmsgtype and
-conntrack context (NOT a handle!) as arguments. Only one callback
-can be registered at a time. The callback can return any of "failure", "stop",
-"continue", or "stolen" (the default is "continue").
-
-Return is the cthandle on success, and nil,emsg,errno on failure.
-*/
-/* TODO this should be broken into a cthandle:register_callback() and a
- * cthandle:watch(), but that means making the cthandle a full userdata, which
- * I don't have time or need for that right now.
- */
-
 static int cb(
         enum nf_conntrack_msg_type type,
         struct nf_conntrack *ct,
         void *data
         )
 {
-    static const char* verdict_opt[] = {
+    static const char* verdict_opts[] = {
         "failure", "stop", "continue", "stolen", NULL
     };
-    static int verdict_val[] = {
+    static int verdict_vals[] = {
         NFCT_CB_FAILURE, NFCT_CB_STOP, NFCT_CB_CONTINUE, NFCT_CB_STOLEN
     };
-    const char* typestring = ctmsg_type_string(type);
+    int verdict_val = 0;
+
     lua_State* L = data;
 
-    /* Return will be:
-     *   [2] one of the strings in verdict_opt, default is "continue"
-     *   [3] string, the replacement packet, default is 0,NULL
+    /* We expect stack to look like:
+     *   [1] cthandle
+     *   [2] cbfn
      */
 
-    lua_settop(L, 1); /* Leave only the cb fn on the stack */
-    lua_pushvalue(L, 1); /* Push copy of fn */
-    lua_pushstring(L, typestring);
-    lua_pushlightuserdata(L, ct);
-    lua_call(L, 1, 2);
+    luaL_checktype(L, 2, LUA_TFUNCTION);
 
-    return verdict_val[
-        luaL_checkoption(L, 2, "continue", verdict_opt)
-        ];
+    lua_pushvalue(L, 2); /* Push copy of fn */
+    lua_pushstring(L, ctmsg_type_string(type));
+    lua_pushlightuserdata(L, ct);
+
+    lua_call(L, 2, 1);
+
+    verdict_val = verdict_vals[
+            luaL_checkoption(L, 3, "continue", verdict_opts)
+            ];
+
+    /* Reset stack, chopping any return value. */
+    lua_settop(L, 2);
+
+    return verdict_val;
 }
 
-static int loop(lua_State* L)
+
+/*-
+- cthandle = nfct.callback_register(cthandle, ctmsgtype)
+
+ctmsgtype is one of "new", "update", "destroy", or "all" (default is "all").
+
+Only one registration can be active at a time, the latest call replaces
+any previous ones.
+
+Returns cthandle on success, nil,emsg,errno on failure.
+*/
+static int callback_register(lua_State* L)
 {
     struct nfct_handle* cthandle = check_cthandle(L);
     static const char* msgtype_opts[] = {
@@ -241,12 +249,11 @@ static int loop(lua_State* L)
     static enum nf_conntrack_msg_type msgtype_vals[] = {
         NFCT_T_NEW, NFCT_T_UPDATE, NFCT_T_DESTROY, NFCT_T_ALL, NFCT_T_ERROR,
     };
-    int msgtype_opt = luaL_checkoption(L, 2, NULL, msgtype_opts);
+    int msgtype_opt = luaL_checkoption(L, 2, "all", msgtype_opts);
     enum nf_conntrack_msg_type msgtype_val = msgtype_vals[msgtype_opt];
     int ret;
    
     /* Clear any current handler to avoid memory leaks. */
-
     nfct_callback_unregister(cthandle);
 
     ret = nfct_callback_register(cthandle, msgtype_val, cb, L);
@@ -256,10 +263,56 @@ static int loop(lua_State* L)
         return 3;
     }
 
+    lua_pushvalue(L, 1);
+
+    return 1;
+}
+
+/*-
+- cthandle = nfct.catch(cthandle, cbfn)
+
+cbfn is the callback function, and will be called as
+
+  function cbfn(ctmsgtype, ct) ...
+
+with a ctmsgtype and conntrack context (NOT a handle!) as arguments.
+
+The callback can return any of "failure", "stop", "continue", or "stolen" (the
+default is "continue"):
+
+  "failure" will stop the loop,
+  "continue" will continue with the next message, and
+  "stolen" is like continue, except the conntrack context will
+    not be destroyed (the user must destroy ct later with nfct.destroy() or
+    resources will be leaked)
+
+Note that cbfn is optional and will NOT be called unless
+nfct.register_callback() was previously called to indicate what msg types are
+of interest (in which case cbfn must be provided).
+
+Return is the callback verdict on success ("stop", "continue", or "stolen") and
+nil,emsg,errno on failure.
+*/
+/* TODO - will "failure" cause errno to be set? What will really happen? */
+static int catch(lua_State* L)
+{
+    struct nfct_handle* cthandle = check_cthandle(L);
+    int ret;
+
+    /* Ensure that the callbacks expectations about the stack are met. */
+    if(lua_isnoneornil(L, 2)) {
+        /* There is no cbfn, chop the stack so it contains only the handle. */
+        lua_settop(L, 1);
+    } else {
+        /* Otherwise, ensure stack contains only cthandle,cbfn */
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_settop(L, 2);
+    }
+
     ret = nfct_catch(cthandle);
 
     if(ret < 0) {
-        /* Replace whatevers on the return stack with nil, emsg, errno. */
+        /* Replace whatever is on the return stack with nil, emsg, errno. */
         lua_settop(L, 0);
         push_error(L);
     } else {
@@ -267,9 +320,33 @@ static int loop(lua_State* L)
         lua_settop(L, 1);
     }
 
-    nfct_callback_unregister(cthandle);
-
     return lua_gettop(L);
+}
+
+/*-
+- nfct.loop(cthandle, ctmsgtype, cbfn)
+
+Equivalent to
+
+  nfct.callback_register(cthandle, ctmsgtype)
+  return nfct.catch(cthandle, cbfn)
+
+Registering callbacks repeatedly is unnecessarily slow, so this is best used on
+blocking netlink sockets for scripts that do nothing but use the conntrack
+subsystem.
+*/
+static int loop(lua_State* L)
+{
+    int nret = callback_register(L);
+
+    if(nret > 1) {
+        return nret;
+    }
+
+    /* Remove ctmsgtype so stack is (cthandle, cbfn), as expected by catch. */
+    lua_remove(L, 2);
+
+    return catch(L);
 }
 
 /*-
@@ -613,18 +690,14 @@ static int cthtons(lua_State* L)
     return 1;
 }
 
-/* NOTE I know its confusing that the nfct module has functions
- * that should be called on a conntrack handle and a conntrack context
- * mixed together, but unless I make full userdata out of one or
- * both of them, thats what it has to be. Don't confuse them, or
- * you will segfault!
- */
 static const luaL_reg nfct[] =
 {
     /* return or operate on cthandle */
     {"open",            open},
     {"close",           gc},
     {"fd",              fd},
+    {"callback_register", callback_register},
+    {"catch",           catch},
     {"loop",            loop},
 
     /* return or operate on ct */
