@@ -2,8 +2,9 @@
 CC = gcc
 LDFLAGS = -fPIC -fno-common -shared
 BINDING += nfq.so
-CLUA=-I/usr/include/lua5.1
-LLUA=-llua5.1
+LUA = lua5.1
+CLUA=$(shell pkg-config --cflags ${LUA})
+LLUA=$(shell pkg-config --libs ${LUA})
 
 # Example:
 # cc -Wall -Werror -g -I wurldtech/rst `libnet-config --cflags --defines`
