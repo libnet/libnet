@@ -863,6 +863,58 @@ static int lnet_ipv4 (lua_State *L)
     }
 
     /* If len unspecified, rewrite it to be len of ipv4 pblock + previous blocks. */
+    /* FIXME I don't think defaulting to end is correct
+
+-- libnet doesn't have a generic icmp construction api, see bug#1373
+local function build_icmp(n, icmp)
+    local typecode = string.char(assert(icmp.type), assert(icmp.code))
+    local data = icmp.data or ""
+    local checksum = net.checksum(typecode, "\0\0", data)
+    local packet = typecode..checksum..data
+
+    return n:ipv4{
+        src      = arg.localip,
+        dst      = arg.dutip,
+        protocol = 1, -- ICMP is protocol 1 FIXME get from iana.ip.types.icmp
+        payload  = packet,
+        len      = 20 + #packet,
+        ptag     = icmp.ptag
+    }
+end
+
+getmetatable(n).icmp = build_icmp
+
+-- set up the pblock stack, top to bottom
+local ptag = n:icmp{type=0, code=0}
+n:eth{src=arg.localmac, dst=arg.dutmac}
+
+   n:icmp{ptag=ptag, type=type, code=code, payload=data}
+
+print(n:dump())
+print(n:get_ipv4())
+
+
+~/w/wt/achilles-engine/data/Plugins/Grammar % sudo ./icmp-data-grammar-l2 dutip=1.1.1.1 localdev=lo localip=2.2.2.2 dutmac=11:11:11:11:11:11 localmac=22:22:22:22:22:22 pcap=pc.pcap
+tag 2 flags 0 type ipdata/0xf buf 0x6541e0 b_len  4 h_len  4 copied 4 prev -1 next 1
+tag 1 flags 1 type ipv4/0xd buf 0x6582f0 b_len 20 h_len 20 copied 20 prev 2 next 3
+tag 3 flags 0 type eth/0x4 buf 0x647580 b_len 14 h_len  0 copied 14 prev 1 next -1
+link_offset 14 aligner 0 total_size 38 nblocks 3
+
+Total:1
+Subtest 1: ICMP type 0 code 1 with payload size 1
+tag 2 flags 0 type ipdata/0xf buf 0x6541e0 b_len  4 h_len  4 copied 4 prev -1 next 1
+tag 1 flags 1 type ipv4/0xd buf 0x6582f0 b_len 20 h_len 20 copied 20 prev 2 next 3
+tag 3 flags 0 type eth/0x4 buf 0x647580 b_len 14 h_len  0 copied 14 prev 1 next -1
+link_offset 14 aligner 0 total_size 38 nblocks 3
+
+{
+ptag = 1, protocol = 1, _iphl = 5, id = 0, options = "", dst = "1.1.1.1", src = "2.2.2.2", _sum = 0, _ipv = 4, tos = 0, _len = 28, ttl = 64, frag = 0
+}
+
+
+============>> note that _len is 28, it should be 24
+    
+    */
     if(len < 0) {
         libnet_pblock_t* p = ptag ? libnet_pblock_find(ud, ptag)->prev : ud->pblock_end;
 
@@ -913,6 +965,15 @@ static int lnet_get_ipv4 (lua_State *L)
     setintfield(L, 2, "_len", ntohs(ip->ip_len));
     setintfield(L, 2, "id", ntohs(ip->ip_id));
     setintfield(L, 2, "frag", ntohs(ip->ip_off));
+    /* FIXME
+    Only if non-zero, or flags are set:
+    setintfield(L, 2, "_fragoffset", ntohs(ip->ip_off) & 0xd0);
+    Only if non-zero:
+    setintfield(L, 2, "_fragflags",  ntohs(ip->ip_off) & 0x1f);
+                 , 2, "_fragmore",                           ;
+                 , 2, "_fragdont",                           ;
+                 , 2, "_fragrsv",                           ;
+    */
     setintfield(L, 2, "ttl", ip->ip_ttl);
     setintfield(L, 2, "protocol", ip->ip_p);
     setintfield(L, 2, "_sum", ntohs(ip->ip_sum));
@@ -1188,7 +1249,8 @@ static int lnet_chksum(lua_State *L)
 
     chks = LIBNET_CKSUM_CARRY(interm);
 
-    lua_pushlstring(L, (char *)&chks, 2);
+    lua_pushlstring(L, (char *)&chks, 2); /* FIXME intel specific? */
+
     return 1;
 }
 
