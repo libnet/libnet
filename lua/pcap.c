@@ -25,6 +25,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+/*-
+** pcap - a binding to libpcap
+*/
+/* TODO merge with https://github.com/javierguerragiraldez/pcaplua/blob/master/pcaplua.c ? */
+
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -108,7 +114,7 @@ static pcap_dumper_t* checkdumper(lua_State* L)
 }
 
 /*-
-- dumper:destroy()
+-- dumper:destroy()
 
 Manually destroy a dumper object, freeing it's resources (this will happen on
 garbage collection if not done explicitly).
@@ -211,7 +217,7 @@ static pcap_t* checkpcap(lua_State* L)
 }
 
 /*-
-- dumper = cap:dump_open([fname])
+-- dumper = cap:dump_open([fname])
 
 fname defaults to "-", stdout.
 
@@ -241,7 +247,7 @@ static int lpcap_dump_open(lua_State *L)
 }
 
 /*-
-- cap:destroy()
+-- cap:destroy()
 
 Manually destroy a cap object, freeing it's resources (this will happen on
 garbage collection if not done explicitly).
@@ -268,7 +274,14 @@ static int pushpkt(lua_State* L, struct pcap_pkthdr* pkt_header, const u_char* p
 }
 
 /*-
-- cap:next()
+-- capdata, timestamp, wirelen = cap:next()
+
+Example:
+
+for capdata, timestamp, wirelen in cap.next, cap do
+  print(timestamp, wirelen, #capdata)
+end
+
 
 Returns:
   capdata, timestamp, wirelen
@@ -328,11 +341,14 @@ static int checkpcapopen(lua_State* L, pcap_t** cap, const char* errbuf)
 
 
 /*-
-- cap = pcap.open_offline([fname])
+-- cap = pcap.open_offline([fname])
 
-fname defaults to "-", stdin
+fname defaults to "-", stdin.
 
 Open a savefile to read packets from.
+
+FIXME - in retrospect, fname defaulting to stdin causes unsuspecting users to
+think this API is hanging, when they don't actually have a pcap on stdin...
 */
 static int lpcap_open_offline(lua_State *L)
 {
@@ -344,7 +360,7 @@ static int lpcap_open_offline(lua_State *L)
 }
 
 /*-
-- cap = pcap.open_dead([linktype, [caplen]])
+-- cap = pcap.open_dead([linktype, [caplen]])
 
 linktype is one of the DLT_ numbers, and defaults to 1 ("DLT_EN10MB")
 caplen is the maximum size of packet, and defaults to ...
