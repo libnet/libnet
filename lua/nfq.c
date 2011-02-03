@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2010 Wurldtech Security Technologies All rights reserved.
+Copyright (C) 2011 Wurldtech Security Technologies All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -25,7 +25,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
+/*-
+** nfq - a binding to netfilter's queue subsystem
+
 
 list rules:
 
@@ -42,7 +44,6 @@ sudo iptables -t filter -I INPUT 1 -p udp -j QUEUE
 replace input rule 1:
 
 sudo iptables -t filter -R INPUT 1 -p udp -j QUEUE
-
 */
 
 
@@ -66,7 +67,36 @@ sudo iptables -t filter -R INPUT 1 -p udp -j QUEUE
 
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
+#include "nflua.h"
+
 #define NFQ_REGID "wt.nfq"
+
+static struct nfq_handle *check_handle(lua_State*L)
+{
+    struct nfq_handle* h = lua_touserdata(L, 1);
+
+    luaL_argcheck(L, h, 1, "handle not provided");
+
+    return h;
+}
+
+static struct nfq_q_handle *check_queue(lua_State*L)
+{
+    struct nfq_q_handle* q = lua_touserdata(L, 1);
+
+    luaL_argcheck(L, q, 1, "queue not provided");
+
+    return q;
+}
+
+static struct nfq_data *check_qdata(lua_State*L)
+{
+    struct nfq_data *qdata = lua_touserdata(L, 1);
+
+    luaL_argcheck(L, qdata, 1, "qdata not provided");
+
+    return qdata;
+}
 
 static int cb(
         struct nfq_q_handle *qh,
@@ -75,6 +105,8 @@ static int cb(
         void *data
         )
 {
+    /* TODO - should have an option "delay", to explicitly avoid
+       offering a verdict right away */
     static const char* verdict_opt[] = {
         "accept", "drop", NULL
     };
@@ -113,16 +145,167 @@ static int cb(
     }
 }
 
+
+
 /*-
-- nfq.loop(cb, copy)
+-- handle = nfq.open()
 
-cb - a function called for every queued packet, it returns 
-"accept" or "drop" meaning to do that to the packet. For
-no return value, the default is "accept". If it returns a second
-argument, it must be a string, and replaces the current
-packet.
+Return an nfqueue handle on success, or nil,emsg,errno on failure.
+*/
+static int open(lua_State* L)
+{
+    struct nfq_handle *h = nfq_open();
 
-copy - "none", "meta", "packet", default to "packet"
+    if(!h) {
+        return push_error(L);
+    }
+
+    lua_pushlightuserdata(L, h);
+
+    return 1;
+}
+
+/*-
+-- nfq.close(handle)
+
+Close the handle, freeing its resources.
+*/
+static int gc(lua_State* L)
+{
+    struct nfq_handle* h = check_handle(L);
+    nfq_close(h);
+    return 0;
+}
+
+/*-
+- fd = nfq.fd(handle)
+
+Return the underlying fd used by the handle, useful for
+selecting on.
+*/
+static int fd(lua_State* L)
+{
+    struct nfq_handle* h = check_handle(L);
+    lua_pushinteger(L, nfq_fd(h));
+    return 1;
+}
+
+static int check_pf(lua_State* L, int narg)
+{
+    /* TODO ... other values from /usr/include/bits/socket.h */
+    static const char* pf_opts[] = {
+        "inet",
+        "inet6",
+        NULL
+    };
+    static int pf_vals[] = {
+        PF_INET,
+        PF_INET6,
+    };
+    int pf_opt = luaL_checkoption(L, narg, NULL, pf_opts);
+    int pf_val = pf_vals[pf_opt];
+
+    return pf_val;
+}
+
+/*-
+-- handle = nfq.unbind_pf(handle, family)
+
+Protocol family is one of "inet", "inet6".
+
+Return is handle on success and nil,emsg,errno on failure.
+*/
+static int unbind_pf(lua_State* L)
+{
+    struct nfq_handle* h = check_handle(L);
+    int pf = check_pf(L, 2);
+
+    if (nfq_unbind_pf(h, pf) < 0) {
+        return push_error(L);
+    }
+    return 1;
+}
+
+/*-
+-- handle = nfq.bind_pf(handle, family)
+
+Protocol family is one of "inet", "inet6".
+
+Note that sample code seems to always unbind before binding, I've no idea why,
+and there is no indication of whether its possible to bind to multiple address
+families.
+
+Return is handle on success and nil,emsg,errno on failure.
+*/
+static int bind_pf(lua_State* L)
+{
+    struct nfq_handle* h = check_handle(L);
+    int pf = check_pf(L, 2);
+
+    if (nfq_bind_pf(h, pf) < 0) {
+        return push_error(L);
+    }
+    return 1;
+}
+
+/*-
+-- handle = nfq.catch(handle, cbfn)
+-- verdict = cbfn(qdata)
+
+cbfn - a function called for every queued packet with one argument, qdata. It
+returns "accept" or "drop" meaning to do that to the packet. For no return
+value, the default is "accept".  If it returns a second argument, it must be a
+string, and replaces the current packet.
+
+Return handle on success and nil,emsg,errno on failure.
+*/
+/* TODO we allow only one cbfn for all the queues, which differs from
+   the underlying library which allows a cbfn per queue. To do that I'd have to
+   build a table to map the queues to their lua cbfns, which is possible, but I
+   don't have the time for right now.
+   */
+static int catch(lua_State *L)
+{
+    struct nfq_handle* h = check_handle(L);
+    int nffd = nfq_fd(h);
+    char buf[4096] __attribute__ ((aligned));
+    ssize_t bufsz;
+
+    while ((bufsz = recv(nffd, buf, sizeof(buf), 0)) > 0) {
+        if(nfq_handle_packet(h, buf, bufsz) < 0) {
+            return push_error(L);
+        }
+    }
+
+    /* If we get here bufsz is <= 0, so either the netlink socket
+       closed (possible?), would block, or some other error occurred. */
+    if(bufsz == 0) {
+        lua_pushnil(L);
+        lua_pushstring(L, "closed");
+        return 2;
+    }
+
+    return push_error(L);
+}
+
+/*-
+-- loop = nfq.loop(cb, copy)
+
+A one shot way to catch on queue zero, the equivalent of:
+
+  h = nfq.open()
+  nfq.unbind_pf(h, "inet")
+  nfq.bind_pf(h, "inet")
+  q = nfq.create_queue(h, 0)
+  nfq.set_mode(q, copy, 0xffff)
+  ... = nfq.catch(h, cb)
+  nfq.destroy_queue(q)
+  nfq.close(h)
+  return ...
+
+DEPRECATED - don't use it in new code, it will be deleted as soon as
+the existing users of it have been updated.
+
 */
 static int loop(lua_State *L)
 {
@@ -136,7 +319,7 @@ static int loop(lua_State *L)
     int af = AF_INET; /* Could be an argument, if we ever did non-INET. */
     struct nfq_handle *h = NULL;
     struct nfq_q_handle *qh = NULL;
-    int fd = -1;
+    int nlfd = -1;
     int nreturn = 0;
     char buf[4096] __attribute__ ((aligned));
     ssize_t recvsz;
@@ -160,9 +343,9 @@ static int loop(lua_State *L)
     if (nfq_set_mode(qh, copy, 0xffff /* larger than an ethernet frame */) < 0)
         goto err;
 
-    fd = nfq_fd(h);
+    nlfd = nfq_fd(h);
 
-    while ((recvsz = recv(fd, buf, sizeof(buf), 0)) >= 0) {
+    while ((recvsz = recv(nlfd, buf, sizeof(buf), 0)) >= 0) {
         nfq_handle_packet(h, buf, recvsz);
     }
 
@@ -185,25 +368,87 @@ cleanup:
         nfq_close(h);
 
     return nreturn;
+
 }
 
-struct nfq_data *checkudata(lua_State*L)
+
+/*-
+-- queue = nfq.create_queue(handle, queuenum)
+
+queuenum is number of the queue to bind to.
+
+Return a queue on success, or nil,emsg,errno on failure.
+*/
+static int create_queue(lua_State* L)
 {
-    struct nfq_data *nfqdata = lua_touserdata(L, 1);
+    struct nfq_handle* h = check_handle(L);
+    int num = luaL_checkint(L, 2);
+    struct nfq_q_handle *q = nfq_create_queue(h, num, cb, L);
 
-    luaL_argcheck(L, nfqdata, 1, "nfqdata not provided");
+    if(!q) {
+        return push_error(L);
+    }
 
-    return nfqdata;
+    lua_pushlightuserdata(L, q);
+
+    return 1;
 }
 
 /*-
-str = nfq.get_payload(cbctx)
+-- nfq.destroy_queue(queue)
 
-str is the IP payload, it has been stripped of link-layer headers!
+Close the queue, freeing its resources.
+*/
+static int destroy_queue(lua_State* L)
+{
+    struct nfq_q_handle* q = check_queue(L);
+    nfq_destroy_queue(q);
+    return 0;
+}
+
+/*-
+-- queue = nfq.set_mode(queue, copy, range)
+
+queue is a queue handle returned by nfq.create_queue().
+
+copy is one of "none" (a no-op, don't use it), "meta" (copy just packet
+metadata), or "packet" (copy the full packet) (default is currently "packet").
+
+range is the size of the packet to copy, and is optional (it defaults to
+0xffff, larger than any ethernet packet can be, and larger than any link
+layer packet I'm aware of).
+
+Returns the queue on success and nil,emsg,errno on failure.
+*/
+static int set_mode(lua_State* L)
+{
+    static const char* copy_opts[] = {
+        "none", "meta", "packet", NULL
+    };
+    static int copy_vals[] = {
+        NFQNL_COPY_NONE, NFQNL_COPY_META, NFQNL_COPY_PACKET
+    };
+    struct nfq_q_handle *q = check_queue(L);
+    int copy_opt = luaL_checkoption(L, 2, "packet", copy_opts);
+    int copy_val = copy_vals[copy_opt];
+    int range = luaL_optint(L, 3, 0xffff);
+
+    if (nfq_set_mode(q, copy_val, range) < 0) {
+        return push_error(L);
+    }
+
+    return 1;
+}
+
+/* FIXME - need to reimplement loop... for backwards compatibility! */
+/*-
+-- str = nfq.get_payload(cbctx)
+
+str is the IP payload, it has been stripped of link-layer headers.
 */
 static int get_payload(lua_State* L)
 {
-    struct nfq_data *nfqdata = checkudata(L);
+    struct nfq_data *nfqdata = check_qdata(L);
     char* data = NULL;
     int datasz = nfq_get_payload(nfqdata, &data);
     luaL_argcheck(L, datasz >= 0, 1, "nfqdata not available");
@@ -215,7 +460,22 @@ static int get_payload(lua_State* L)
 
 static const luaL_reg nfq[] =
 {
+    /* return or operate on handle */
+    {"open", open},
+    {"close", gc},
+    {"fd", fd},
+    {"unbind_pf", unbind_pf},
+    {"bind_pf", bind_pf},
+    {"catch", catch},
     {"loop", loop},
+
+    /* return or operate on a queue */
+    {"create_queue", create_queue},
+    {"destroy_queue", destroy_queue},
+    {"set_mode", set_mode},
+
+
+
     {"get_payload", get_payload},
     {NULL, NULL}
 };

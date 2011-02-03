@@ -34,6 +34,7 @@ I make full userdata out of one or both of them, thats what it has to be. Don't
 confuse them, or you will segfault!
 */
 
+
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -55,15 +56,10 @@ confuse them, or you will segfault!
 
 #include <libnetfilter_conntrack/libnetfilter_conntrack.h>
 
+#include "nflua.h"
+
 #define NFCT_REGID "wt.nfct"
 
-
-static void push_error(lua_State* L)
-{
-    lua_pushnil(L);
-    lua_pushstring(L, strerror(errno));
-    lua_pushinteger(L, errno);
-}
 
 static struct nf_conntrack* check_ct(lua_State*L)
 {
@@ -96,7 +92,7 @@ static const char* ctmsg_type_string(enum nf_conntrack_msg_type type)
 
 
 /*-
-- cthandle = nfct.open(subsys, [subscription...])
+-- cthandle = nfct.open(subsys, [subscription...])
 
 subsys is "track" or "expect"
 
@@ -166,7 +162,7 @@ static int open(lua_State *L)
 }
 
 /*-
-- nfct.close(cthandle)
+-- nfct.close(cthandle)
 
 Close the conntrack handle, freeing its resources.
 */
@@ -178,7 +174,7 @@ static int gc(lua_State* L)
 }
 
 /*-
-- fd = nfct.fd(cthandle)
+-- fd = nfct.fd(cthandle)
 
 Return the underlying fd used by the conntrack handle, useful for
 selecting on.
@@ -231,7 +227,7 @@ static int cb(
 
 
 /*-
-- cthandle = nfct.callback_register(cthandle, ctmsgtype)
+-- cthandle = nfct.callback_register(cthandle, ctmsgtype)
 
 ctmsgtype is one of "new", "update", "destroy", or "all" (default is "all").
 
@@ -269,9 +265,10 @@ static int callback_register(lua_State* L)
 }
 
 /*-
-- cthandle = nfct.catch(cthandle, cbfn)
+-- cthandle = nfct.catch(cthandle, cbfn)
+-- verdict = cbfn(ctmsgtype, ct)
 
-cbfn is the callback function, and will be called as
+cbfn - the callback function, and will be called as
 
   function cbfn(ctmsgtype, ct) ...
 
@@ -324,7 +321,7 @@ static int catch(lua_State* L)
 }
 
 /*-
-- nfct.loop(cthandle, ctmsgtype, cbfn)
+-- nfct.loop(cthandle, ctmsgtype, cbfn)
 
 Equivalent to
 
@@ -332,8 +329,7 @@ Equivalent to
   return nfct.catch(cthandle, cbfn)
 
 Registering callbacks repeatedly is unnecessarily slow, so this is best used on
-blocking netlink sockets for scripts that do nothing but use the conntrack
-subsystem.
+blocking netlink sockets by scripts that use only the conntrack subsystem.
 */
 static int loop(lua_State* L)
 {
@@ -350,7 +346,7 @@ static int loop(lua_State* L)
 }
 
 /*-
-- ct = nfct.new()
+-- ct = nfct.new()
 
 Create a new conntrack context (NOT a conntrack handle).
 
@@ -373,7 +369,7 @@ static int new(lua_State* L)
 }
 
 /*-
-- nfct.destroy(ct)
+-- nfct.destroy(ct)
 
 Destroy a conntrack context.
 
@@ -389,7 +385,7 @@ static int destroy(lua_State* L)
 }
 
 /*-
-- ct = nfct.setobjopt(ct, option)
+-- ct = nfct.setobjopt(ct, option)
 
 Sets an option on a conntrack context, option is one of:
     "undo-snat",
@@ -561,9 +557,9 @@ static enum nf_conntrack_attr check_attr(lua_State* L)
 }
 
 /*-
-- value = nfct.get_attr_u8(ct, attr)
-- value = nfct.get_attr_u16(ct, attr)
-- value = nfct.get_attr_u32(ct, attr)
+-- value = nfct.get_attr_u8(ct, attr)
+-- value = nfct.get_attr_u16(ct, attr)
+-- value = nfct.get_attr_u32(ct, attr)
 
 No error checking is done, values of zero will be returned for
 attributes that aren't present, and undefined values will be returned
@@ -638,9 +634,9 @@ See enum nf_conntrack_attr (the aliases are not supported)
 /* TODO this could have a much better API, but I've no time for this now. */
 
 /*-
-- ct = nfct.set_attr_u8(ct, attr, value)
-- ct = nfct.set_attr_u16(ct, attr, value)
-- ct = nfct.set_attr_u32(ct, attr, value)
+-- ct = nfct.set_attr_u8(ct, attr, value)
+-- ct = nfct.set_attr_u16(ct, attr, value)
+-- ct = nfct.set_attr_u32(ct, attr, value)
 
 No error checking is done, value will be cast to the necessary type, and who
 knows what will happen for values that aren't actually of the correct type for
@@ -672,8 +668,8 @@ ATTR_UX(u16)
 ATTR_UX(u32)
 
 /*-
-- h = nfct.ntohs(n)
-- n = nfct.htons(h)
+-- h = nfct.ntohs(n)
+-- n = nfct.htons(h)
 
 Convert a short between network and host byte order.  No error or bounds
 checking on the numbers is done.
