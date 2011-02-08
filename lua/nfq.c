@@ -52,6 +52,7 @@ sudo iptables -t filter -R INPUT 1 -p udp -j QUEUE
 #include "lualib.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,7 +76,7 @@ static struct nfq_handle *check_handle(lua_State*L)
 {
     struct nfq_handle* h = lua_touserdata(L, 1);
 
-    luaL_argcheck(L, h, 1, "handle not provided");
+    luaL_argcheck(L, h, 1, "qhandle not provided");
 
     return h;
 }
@@ -124,22 +125,31 @@ static int cb(
         id = ntohl(ph->packet_id);
     }
 
-    /* Return will be:
-     *   [2] "accept", "drop", ..., default is accept
-     *   [3] string, the replacement packet, default is 0,NULL
+    /* We expect stack to look like:
+     *   [1] qhandle
+     *   [2] cbfn
      */
+    check_handle(L);
+    luaL_checktype(L, 2, LUA_TFUNCTION);
 
-    lua_settop(L, 1); /* Leave only the cb fn on the stack */
-    lua_pushvalue(L, 1); /* Push copy of fn */
+    lua_pushvalue(L, 2); /* Push copy of fn */
     lua_pushlightuserdata(L, nfqdata);
     lua_call(L, 1, 2);
 
+    /* Return will be:
+     *   [3] "accept", "drop", ..., default is accept
+     *   [4] string, the replacement packet, default is 0,NULL
+     */
+
     {
-        int verdict = luaL_checkoption(L, 2, "accept", verdict_opt);
+        int verdict = luaL_checkoption(L, 3, "accept", verdict_opt);
         size_t replacesz = 0;
-        const char* replace = lua_tolstring(L, 3, &replacesz);
+        const char* replace = lua_tolstring(L, 4, &replacesz);
 
         /*printf("verdict %s data %p data_len %zd\n", verdict_opt[verdict], replace, replacesz);*/
+
+        /* Reset stack, chopping any return values. */
+        lua_settop(L, 2);
 
         return nfq_set_verdict(qh, id, verdict_val[verdict], replacesz, (void*)replace);
     }
@@ -148,11 +158,11 @@ static int cb(
 
 
 /*-
--- handle = nfq.open()
+-- qhandle = nfq.open()
 
-Return an nfqueue handle on success, or nil,emsg,errno on failure.
+Return an nfqueue qhandle on success, or nil,emsg,errno on failure.
 */
-static int open(lua_State* L)
+static int lnfqopen(lua_State* L)
 {
     struct nfq_handle *h = nfq_open();
 
@@ -166,9 +176,9 @@ static int open(lua_State* L)
 }
 
 /*-
--- nfq.close(handle)
+-- nfq.close(qhandle)
 
-Close the handle, freeing its resources.
+Close the qhandle, freeing its resources.
 */
 static int gc(lua_State* L)
 {
@@ -178,15 +188,45 @@ static int gc(lua_State* L)
 }
 
 /*-
-- fd = nfq.fd(handle)
+- fd = nfq.fd(qhandle)
 
-Return the underlying fd used by the handle, useful for
+Return the underlying fd used by the qhandle, useful for
 selecting on.
 */
 static int fd(lua_State* L)
 {
     struct nfq_handle* h = check_handle(L);
     lua_pushinteger(L, nfq_fd(h));
+    return 1;
+}
+
+/*-
+-- qhandle = nfq.setblocking(qhandle, [blocking])
+
+blocking is true to set blocking, and false to set non-blocking (default is false)
+
+Return is qhandle on success, or nil,emsg,errno on failure.
+*/
+static int setblocking(lua_State* L)
+{
+    struct nfq_handle* h = check_handle(L);
+    int set = lua_toboolean(L, 2);
+    long flags = fcntl(nfq_fd(h), F_GETFL, 0);
+    if(flags < 0) {
+        return push_error(L);
+    }
+    if(set) {
+        flags |= O_NONBLOCK;
+    } else {
+        flags &= ~O_NONBLOCK;
+
+    }
+    if(fcntl(nfq_fd(h), F_SETFL, flags) < 0) {
+        return push_error(L);
+    }
+
+    lua_settop(L, 1);
+
     return 1;
 }
 
@@ -209,11 +249,11 @@ static int check_pf(lua_State* L, int narg)
 }
 
 /*-
--- handle = nfq.unbind_pf(handle, family)
+-- qhandle = nfq.unbind_pf(qhandle, family)
 
 Protocol family is one of "inet", "inet6".
 
-Return is handle on success and nil,emsg,errno on failure.
+Return is qhandle on success and nil,emsg,errno on failure.
 */
 static int unbind_pf(lua_State* L)
 {
@@ -223,11 +263,14 @@ static int unbind_pf(lua_State* L)
     if (nfq_unbind_pf(h, pf) < 0) {
         return push_error(L);
     }
+
+    lua_settop(L, 1);
+
     return 1;
 }
 
 /*-
--- handle = nfq.bind_pf(handle, family)
+-- qhandle = nfq.bind_pf(qhandle, family)
 
 Protocol family is one of "inet", "inet6".
 
@@ -235,7 +278,7 @@ Note that sample code seems to always unbind before binding, I've no idea why,
 and there is no indication of whether its possible to bind to multiple address
 families.
 
-Return is handle on success and nil,emsg,errno on failure.
+Return is qhandle on success and nil,emsg,errno on failure.
 */
 static int bind_pf(lua_State* L)
 {
@@ -245,11 +288,14 @@ static int bind_pf(lua_State* L)
     if (nfq_bind_pf(h, pf) < 0) {
         return push_error(L);
     }
+
+    lua_settop(L, 1);
+
     return 1;
 }
 
 /*-
--- handle = nfq.catch(handle, cbfn)
+-- qhandle = nfq.catch(qhandle, cbfn)
 -- verdict = cbfn(qdata)
 
 cbfn - a function called for every queued packet with one argument, qdata. It
@@ -257,7 +303,7 @@ returns "accept" or "drop" meaning to do that to the packet. For no return
 value, the default is "accept".  If it returns a second argument, it must be a
 string, and replaces the current packet.
 
-Return handle on success and nil,emsg,errno on failure.
+Return qhandle on success and nil,emsg,errno on failure.
 */
 /* TODO we allow only one cbfn for all the queues, which differs from
    the underlying library which allows a cbfn per queue. To do that I'd have to
@@ -270,6 +316,13 @@ static int catch(lua_State *L)
     int nffd = nfq_fd(h);
     char buf[4096] __attribute__ ((aligned));
     ssize_t bufsz;
+
+    lua_settop(L, 2);
+
+    /* Stack when cb from nfq occurs will be:
+     *   [1] qhandle
+     *   [2] cbfn
+     */
 
     while ((bufsz = recv(nffd, buf, sizeof(buf), 0)) > 0) {
         if(nfq_handle_packet(h, buf, bufsz) < 0) {
@@ -373,7 +426,7 @@ cleanup:
 
 
 /*-
--- queue = nfq.create_queue(handle, queuenum)
+-- queue = nfq.create_queue(qhandle, queuenum)
 
 queuenum is number of the queue to bind to.
 
@@ -409,7 +462,7 @@ static int destroy_queue(lua_State* L)
 /*-
 -- queue = nfq.set_mode(queue, copy, range)
 
-queue is a queue handle returned by nfq.create_queue().
+queue is returned by nfq.create_queue().
 
 copy is one of "none" (a no-op, don't use it), "meta" (copy just packet
 metadata), or "packet" (copy the full packet) (default is currently "packet").
@@ -437,10 +490,11 @@ static int set_mode(lua_State* L)
         return push_error(L);
     }
 
+    lua_settop(L, 1);
+
     return 1;
 }
 
-/* FIXME - need to reimplement loop... for backwards compatibility! */
 /*-
 -- str = nfq.get_payload(cbctx)
 
@@ -460,10 +514,11 @@ static int get_payload(lua_State* L)
 
 static const luaL_reg nfq[] =
 {
-    /* return or operate on handle */
-    {"open", open},
+    /* return or operate on qhandle */
+    {"open", lnfqopen},
     {"close", gc},
     {"fd", fd},
+    {"setblocking", setblocking},
     {"unbind_pf", unbind_pf},
     {"bind_pf", bind_pf},
     {"catch", catch},
@@ -474,9 +529,9 @@ static const luaL_reg nfq[] =
     {"destroy_queue", destroy_queue},
     {"set_mode", set_mode},
 
-
-
+    /* operate on a callback context */
     {"get_payload", get_payload},
+
     {NULL, NULL}
 };
 

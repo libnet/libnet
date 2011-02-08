@@ -422,6 +422,9 @@ int setobjopt(lua_State* L)
         push_error(L);
         return 3;
     }
+
+    lua_settop(L, 1);
+
     return 1;
 }
 
