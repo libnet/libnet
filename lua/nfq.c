@@ -215,10 +215,11 @@ static int setblocking(lua_State* L)
     if(flags < 0) {
         return push_error(L);
     }
+    /* to SET blocking, we CLEAR O_NONBLOCK */
     if(set) {
-        flags |= O_NONBLOCK;
-    } else {
         flags &= ~O_NONBLOCK;
+    } else {
+        flags |= O_NONBLOCK;
 
     }
     if(fcntl(nfq_fd(h), F_SETFL, flags) < 0) {
@@ -260,7 +261,7 @@ static int unbind_pf(lua_State* L)
     struct nfq_handle* h = check_handle(L);
     int pf = check_pf(L, 2);
 
-    if (nfq_unbind_pf(h, pf) < 0) {
+    if(nfq_unbind_pf(h, pf) < 0) {
         return push_error(L);
     }
 
@@ -285,7 +286,7 @@ static int bind_pf(lua_State* L)
     struct nfq_handle* h = check_handle(L);
     int pf = check_pf(L, 2);
 
-    if (nfq_bind_pf(h, pf) < 0) {
+    if(nfq_bind_pf(h, pf) < 0) {
         return push_error(L);
     }
 
@@ -324,7 +325,7 @@ static int catch(lua_State *L)
      *   [2] cbfn
      */
 
-    while ((bufsz = recv(nffd, buf, sizeof(buf), 0)) > 0) {
+    while((bufsz = recv(nffd, buf, sizeof(buf), 0)) > 0) {
         if(nfq_handle_packet(h, buf, bufsz) < 0) {
             return push_error(L);
         }
@@ -382,10 +383,10 @@ static int loop(lua_State *L)
     if(!h)
         goto err;
 
-    if (nfq_unbind_pf(h, af) < 0)
+    if(nfq_unbind_pf(h, af) < 0)
         goto err;
 
-    if (nfq_bind_pf(h, af) < 0)
+    if(nfq_bind_pf(h, af) < 0)
         goto err;
 
     qh = nfq_create_queue(h,  0, &cb, L);
@@ -393,12 +394,12 @@ static int loop(lua_State *L)
     if(!qh)
         goto err;
 
-    if (nfq_set_mode(qh, copy, 0xffff /* larger than an ethernet frame */) < 0)
+    if(nfq_set_mode(qh, copy, 0xffff /* larger than an ethernet frame */) < 0)
         goto err;
 
     nlfd = nfq_fd(h);
 
-    while ((recvsz = recv(nlfd, buf, sizeof(buf), 0)) >= 0) {
+    while((recvsz = recv(nlfd, buf, sizeof(buf), 0)) >= 0) {
         nfq_handle_packet(h, buf, recvsz);
     }
 
