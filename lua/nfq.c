@@ -46,29 +46,10 @@ replace input rule 1:
 sudo iptables -t filter -R INPUT 1 -p udp -j QUEUE
 */
 
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
-#include <netinet/udp.h>
-
-#include <linux/netfilter.h>
-#include <linux/types.h>
+#include "nflua.h"
 
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
-#include "nflua.h"
 
 #define NFQ_REGID "wt.nfq"
 
@@ -162,7 +143,7 @@ static int cb(
 
 Return an nfqueue qhandle on success, or nil,emsg,errno on failure.
 */
-static int lnfqopen(lua_State* L)
+static int hopen(lua_State* L)
 {
     struct nfq_handle *h = nfq_open();
 
@@ -209,26 +190,7 @@ Return is qhandle on success, or nil,emsg,errno on failure.
 */
 static int setblocking(lua_State* L)
 {
-    struct nfq_handle* h = check_handle(L);
-    int set = lua_toboolean(L, 2);
-    long flags = fcntl(nfq_fd(h), F_GETFL, 0);
-    if(flags < 0) {
-        return push_error(L);
-    }
-    /* to SET blocking, we CLEAR O_NONBLOCK */
-    if(set) {
-        flags &= ~O_NONBLOCK;
-    } else {
-        flags |= O_NONBLOCK;
-
-    }
-    if(fcntl(nfq_fd(h), F_SETFL, flags) < 0) {
-        return push_error(L);
-    }
-
-    lua_settop(L, 1);
-
-    return 1;
+    return nfsetblocking(L, nfq_fd(check_handle(L)));
 }
 
 static int check_pf(lua_State* L, int narg)
@@ -516,7 +478,7 @@ static int get_payload(lua_State* L)
 static const luaL_reg nfq[] =
 {
     /* return or operate on qhandle */
-    {"open", lnfqopen},
+    {"open", hopen},
     {"close", gc},
     {"fd", fd},
     {"setblocking", setblocking},

@@ -34,41 +34,12 @@ I make full userdata out of one or both of them, thats what it has to be. Don't
 confuse them, or you will segfault!
 */
 
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-
-#include <assert.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
-#include <netinet/udp.h>
-
-#include <linux/netfilter.h>
-#include <linux/types.h>
+#include "nflua.h"
 
 #include <libnetfilter_conntrack/libnetfilter_conntrack.h>
 
-#include "nflua.h"
-
 #define NFCT_REGID "wt.nfct"
 
-
-static struct nf_conntrack* check_ct(lua_State*L)
-{
-    struct nf_conntrack* ct = lua_touserdata(L, 1);
-
-    luaL_argcheck(L, ct, 1, "conntrack not provided");
-
-    return ct;
-}
 
 static struct nfct_handle* check_cthandle(lua_State*L)
 {
@@ -77,6 +48,15 @@ static struct nfct_handle* check_cthandle(lua_State*L)
     luaL_argcheck(L, cth, 1, "conntrack handle not provided");
 
     return cth;
+}
+
+static struct nf_conntrack* check_ct(lua_State*L)
+{
+    struct nf_conntrack* ct = lua_touserdata(L, 1);
+
+    luaL_argcheck(L, ct, 1, "conntrack not provided");
+
+    return ct;
 }
 
 static const char* ctmsg_type_string(enum nf_conntrack_msg_type type)
@@ -104,7 +84,7 @@ Returns a conntrack handle on success, or nil,emsg,errno on failure.
 There is no garbage collection, nfct.fini() must be called on the handle to
 release it's resources.
 */
-static int open(lua_State *L)
+static int hopen(lua_State *L)
 {
     static const char* subsys_opts[] = {
         "track", "expect", NULL
@@ -145,7 +125,7 @@ static int open(lua_State *L)
     assert(subsys_opt == 0 || subsys_opt == 1);
 
     for(narg = 2; narg <= lua_gettop(L); narg++) {
-        int subscription_opt = luaL_checkoption(L, 1, "none", subscription_opts);
+        int subscription_opt = luaL_checkoption(L, narg, "none", subscription_opts);
         subscription_val |= subscription_vals[subsys_opt][subscription_opt];
     }
 
@@ -184,6 +164,18 @@ static int fd(lua_State* L)
     struct nfct_handle* cthandle = check_cthandle(L);
     lua_pushinteger(L, nfct_fd(cthandle));
     return 1;
+}
+
+/*-
+-- cthandle = nfct.setblocking(cthandle, [blocking])
+
+blocking is true to set blocking, and false to set non-blocking (default is false)
+
+Return is cthandle on success, or nil,emsg,errno on failure.
+*/
+static int setblocking(lua_State* L)
+{
+    return nfsetblocking(L, nfct_fd(check_cthandle(L)));
 }
 
 static int cb(
@@ -559,10 +551,20 @@ static enum nf_conntrack_attr check_attr(lua_State* L)
     return attr_val;
 }
 
+/*
+   TODO
+   get_attr_ip() -- ip in presentation format
+   get_attr_port() -- port as a number (cvt to host byte order)
+   get_attr_l3proto() -- protocol as string (or number if unrecognized)
+   get_attr_l4proto() -- "" ""
+*/
 /*-
 -- value = nfct.get_attr_u8(ct, attr)
 -- value = nfct.get_attr_u16(ct, attr)
 -- value = nfct.get_attr_u32(ct, attr)
+-- value = nfct.get_attr_n16(ct, attr)
+-- value = nfct.get_attr_n32(ct, attr)
+-- value = nfct.get_attr_port(ct, attr)
 
 No error checking is done, values of zero will be returned for
 attributes that aren't present, and undefined values will be returned
@@ -570,6 +572,11 @@ for attributes that aren't actually of the type requested. Also,
 the attribute value may be in network byte order.
 
 ct is a conntrack context (NOT a conntrack handle, do not mix the two).
+
+get_attr_n#() is like the "u" version, but it converts the number from network
+to host byte order.
+
+get_attr_port() is an alias for get_attr_n16(), since TCP and UDP ports are n16.
 
 attr is one of:
 	"orig-ipv4-src",     		-- u32 bits
@@ -634,12 +641,15 @@ attr is one of:
 
 See enum nf_conntrack_attr (the aliases are not supported)
 */
-/* TODO this could have a much better API, but I've no time for this now. */
-
+/* FIXME - I really need the aliases back in, they aren't just for backwards
+ * compatibility, they are the best names to use, usually.
+ */
 /*-
 -- ct = nfct.set_attr_u8(ct, attr, value)
 -- ct = nfct.set_attr_u16(ct, attr, value)
 -- ct = nfct.set_attr_u32(ct, attr, value)
+-- ct = nfct.set_attr_n16(ct, attr, value)
+-- ct = nfct.set_attr_n32(ct, attr, value)
 
 No error checking is done, value will be cast to the necessary type, and who
 knows what will happen for values that aren't actually of the correct type for
@@ -647,10 +657,28 @@ the attribute. The attribute value may need to be in network byte order.
 
 ct is a conntrack context (NOT a conntrack handle, do not mix the two).
 
-See nfct.get_attr_*() for the supported attr names.
+See nfct.get_attr_*() for the supported attr names and types.
 
 Returns the conntrack conntext, so calls can be chained.
 */
+
+/* Pretent nfct implements these, so I can construct setters/getters using my macro. */
+static u_int16_t nfct_get_attr_n16(struct nf_conntrack* ct, enum nf_conntrack_attr attr)
+{
+    return ntohs(nfct_get_attr_u16(ct, attr));
+}
+static u_int32_t nfct_get_attr_n32(struct nf_conntrack* ct, enum nf_conntrack_attr attr)
+{
+    return ntohl(nfct_get_attr_u32(ct, attr));
+}
+static void nfct_set_attr_n16(struct nf_conntrack* ct, enum nf_conntrack_attr attr, u_int16_t value)
+{
+    nfct_set_attr_u16(ct, attr, htons(value));
+}
+static void nfct_set_attr_n32(struct nf_conntrack* ct, enum nf_conntrack_attr attr, u_int32_t value)
+{
+    nfct_set_attr_u32(ct, attr, htonl(value));
+}
 
 /*
 static int get_attr_u8(lua_State* L)
@@ -664,11 +692,79 @@ static int get_attr_u8(lua_State* L)
 static int get_attr_##ux(lua_State* L) \
 { lua_pushinteger(L, nfct_get_attr_##ux(check_ct(L), check_attr(L))); return 1; } \
 static int set_attr_##ux(lua_State* L) \
-{ nfct_set_attr_##ux(check_ct(L), check_attr(L), luaL_checklong(L,3)); return 1; }
+{ nfct_set_attr_##ux(check_ct(L), check_attr(L), luaL_checklong(L,3)); lua_settop(L, 1); return 1; }
+
+/* should I add checks for existence of the attribute? I doubt performance is
+ * an issue, so why not return
+ * nil and emsg when attr isn't present
+ */
 
 ATTR_UX(u8)
 ATTR_UX(u16)
 ATTR_UX(u32)
+ATTR_UX(n16)
+ATTR_UX(n32)
+
+/*-
+-- value = nfct.get_attr_ipv4(ct, attr)
+-- value = nfct.get_attr_ipv6(ct, attr)
+-- ct = nfct.set_attr_ipv4(ct, attr, value)
+
+Get an attribute as a string, the internet address in presentation format.
+
+See inet_ntop(3) for more information.
+
+Return is the presentation address, or nil,emsg,errno on failure.
+*/
+static int get_attr_ipvx(lua_State* L, int af, const void* src)
+{
+    char dst[INET6_ADDRSTRLEN];
+    const char* p = inet_ntop(af, src, dst, sizeof(dst));
+    if(!p)  {
+        return push_error(L);
+    }
+    lua_pushstring(L, p);
+    return 1;
+}
+
+static int get_attr_ipv4(lua_State* L)
+{
+    return get_attr_ipvx(L,
+            AF_INET,
+            nfct_get_attr(check_ct(L), check_attr(L)));
+}
+
+static int get_attr_ipv6(lua_State* L)
+{
+    return get_attr_ipvx(L,
+            AF_INET6,
+            nfct_get_attr(check_ct(L), check_attr(L)));
+}
+
+static int set_attr_ipvx(lua_State* L, int af)
+{
+    unsigned char buf[sizeof(struct in6_addr)];
+
+    if(!inet_pton(af, luaL_checkstring(L, 3), buf)) {
+        return push_error(L);
+    }
+
+    nfct_set_attr(check_ct(L), check_attr(L), buf);
+
+    lua_settop(L, 1);
+
+    return 1;
+}
+
+static int set_attr_ipv4(lua_State* L)
+{
+    return set_attr_ipvx(L, AF_INET);
+}
+
+static int set_attr_ipv6(lua_State* L)
+{
+    return set_attr_ipvx(L, AF_INET6);
+}
 
 /*-
 -- h = nfct.ntohs(n)
@@ -692,9 +788,10 @@ static int cthtons(lua_State* L)
 static const luaL_reg nfct[] =
 {
     /* return or operate on cthandle */
-    {"open",            open},
+    {"open",            hopen},
     {"close",           gc},
     {"fd",              fd},
+    {"setblocking",     setblocking},
     {"callback_register", callback_register},
     {"catch",           catch},
     {"loop",            loop},
@@ -706,9 +803,19 @@ static const luaL_reg nfct[] =
     {"get_attr_u8",     get_attr_u8},
     {"get_attr_u16",    get_attr_u16},
     {"get_attr_u32",    get_attr_u32},
+    {"get_attr_n16",    get_attr_n16},
+    {"get_attr_n32",    get_attr_n32},
+    {"get_attr_ipv4",   get_attr_ipv4},
+    {"get_attr_ipv6",   get_attr_ipv6},
+    {"get_attr_port",   get_attr_n16},
     {"set_attr_u8",     set_attr_u8},
     {"set_attr_u16",    set_attr_u16},
     {"set_attr_u32",    set_attr_u32},
+    {"set_attr_n16",    set_attr_n16},
+    {"set_attr_n32",    set_attr_n32},
+    {"set_attr_ipv4",   set_attr_ipv4},
+    {"set_attr_ipv6",   set_attr_ipv6},
+    {"set_attr_port",   set_attr_n16},
 
     /* attr value conversion */
     {"ntohs",           ctntohs},

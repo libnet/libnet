@@ -27,6 +27,28 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 /* Code common to the lua netfilter bindings. */
 
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
+#include <assert.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <arpa/inet.h>
+
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
+
+#include <linux/netfilter.h>
+#include <linux/types.h>
+
 static const char* nfemsg(int eno)
 {
     switch(errno) {
@@ -43,4 +65,26 @@ static int push_error(lua_State* L)
     return 3;
 }
 
+static int nfsetblocking(lua_State* L, int fd)
+{
+    int set = lua_toboolean(L, 2);
+    long flags = fcntl(fd, F_GETFL, 0);
+    if(flags < 0) {
+        return push_error(L);
+    }
+    /* to SET blocking, we CLEAR O_NONBLOCK */
+    if(set) {
+        flags &= ~O_NONBLOCK;
+    } else {
+        flags |= O_NONBLOCK;
+
+    }
+    if(fcntl(fd, F_SETFL, flags) < 0) {
+        return push_error(L);
+    }
+
+    lua_settop(L, 1);
+
+    return 1;
+}
 
