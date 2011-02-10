@@ -1,8 +1,10 @@
 .PHONY: default build test
 
+-include local.mak
+
 default: build
 
-BINDING=net.so pcap.so nfq.so
+BINDING+=net.so pcap.so nfq.so
 
 UNAME=$(shell uname)
 
@@ -10,7 +12,7 @@ include $(UNAME).mak
 
 build: $(BINDING)
 
-prefix=/usr/local
+prefix=/usr
 
 SODIR = $(DESTDIR)$(prefix)/lib/lua/5.1/
 
@@ -48,10 +50,10 @@ net.so: CDEFS=$(DNETDEFS) $(LNETDEFS)
 pcap.so: pcap.c
 pcap.so: LDLIBS+=-lpcap
 
-nfq.so: nfq.c
+nfq.so: nfq.c nflua.h
 nfq.so: LDLIBS+=-lnetfilter_queue
 
-nfct.so: nfct.c
+nfct.so: nfct.c nflua.h
 nfct.so: LDLIBS+=-lnetfilter_conntrack
 
 TNET=$(wildcard test-*.lua)
