@@ -46,6 +46,7 @@ replace input rule 1:
 sudo iptables -t filter -R INPUT 1 -p udp -j QUEUE
 */
 
+#define WANT_NF_LUA_PF
 #include "nflua.h"
 
 #include <libnetfilter_queue/libnetfilter_queue.h>
@@ -193,23 +194,6 @@ static int setblocking(lua_State* L)
     return nfsetblocking(L, nfq_fd(check_handle(L)));
 }
 
-static int check_pf(lua_State* L, int narg)
-{
-    /* TODO ... other values from /usr/include/bits/socket.h */
-    static const char* pf_opts[] = {
-        "inet",
-        "inet6",
-        NULL
-    };
-    static int pf_vals[] = {
-        PF_INET,
-        PF_INET6,
-    };
-    int pf_opt = luaL_checkoption(L, narg, NULL, pf_opts);
-    int pf_val = pf_vals[pf_opt];
-
-    return pf_val;
-}
 
 /*-
 -- qhandle = nfq.unbind_pf(qhandle, family)
@@ -221,7 +205,7 @@ Return is qhandle on success and nil,emsg,errno on failure.
 static int unbind_pf(lua_State* L)
 {
     struct nfq_handle* h = check_handle(L);
-    int pf = check_pf(L, 2);
+    int pf = check_PF(L, 2);
 
     if(nfq_unbind_pf(h, pf) < 0) {
         return push_error(L);
@@ -246,7 +230,7 @@ Return is qhandle on success and nil,emsg,errno on failure.
 static int bind_pf(lua_State* L)
 {
     struct nfq_handle* h = check_handle(L);
-    int pf = check_pf(L, 2);
+    int pf = check_PF(L, 2);
 
     if(nfq_bind_pf(h, pf) < 0) {
         return push_error(L);
