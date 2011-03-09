@@ -1175,11 +1175,6 @@ static const luaL_reg nfct[] =
 
 LUALIB_API int luaopen_nfct (lua_State *L)
 {
-    /* These tables are long, and must agree in length or chaos will ensue,
-     * chaos now is better than chaos later.
-     */
-    assert(sizeof(attr_opts) == sizeof(attr_vals));
-
     luaL_register(L, "nfct", nfct);
 
     return 1;
