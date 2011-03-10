@@ -450,11 +450,11 @@ str is the IP payload, it has been stripped of link-layer headers.
 static int get_payload(lua_State* L)
 {
     struct nfq_data *nfqdata = check_qdata(L);
-    char* data = NULL;
+    unsigned char* data = NULL;
     int datasz = nfq_get_payload(nfqdata, &data);
     luaL_argcheck(L, datasz >= 0, 1, "nfqdata not available");
 
-    lua_pushlstring(L, data, datasz);
+    lua_pushlstring(L, (char*)data, datasz);
 
     return 1;
 }
