@@ -197,20 +197,20 @@ static int PF_vals[] = {
   PF_ASH,
   PF_ECONET,
   PF_ATMSVC,
-  PF_RDS,
+  21, /* PF_RDS, */
   PF_SNA,
   PF_IRDA,
   PF_PPPOX,
   PF_WANPIPE,
-  PF_LLC,
-  PF_CAN,
-  PF_TIPC,
+  26, /* PF_LLC, */
+  29, /* PF_CAN, */
+  30, /* PF_TIPC, */
   PF_BLUETOOTH,
-  PF_IUCV,
-  PF_RXRPC,
-  PF_ISDN,
-  PF_PHONET,
-  PF_IEEE802154,
+  32, /* PF_IUCV, */
+  33, /* PF_RXRPC, */
+  34, /* PF_ISDN, */
+  35, /* PF_PHONET, */
+  36, /* PF_IEEE802154, */
 };
 
 static int check_PF(lua_State* L, int argn)
@@ -314,7 +314,7 @@ static int IPPROTO_vals[] = {
   IPPROTO_UDP,
   IPPROTO_IDP,
   IPPROTO_TP,
-  IPPROTO_DCCP,
+  33, /* IPPROTO_DCCP, */
   IPPROTO_IPV6,
   IPPROTO_ROUTING,
   IPPROTO_FRAGMENT,
@@ -330,7 +330,7 @@ static int IPPROTO_vals[] = {
   IPPROTO_PIM,
   IPPROTO_COMP,
   IPPROTO_SCTP,
-  IPPROTO_UDPLITE,
+  136, /* IPPROTO_UDPLITE, */
   IPPROTO_RAW,
 };
 
