@@ -1,4 +1,10 @@
 #!/usr/bin/ruby -w
+=begin
+This approach doesn't work well when the options found can differ by platform.
+
+At least for defines, there need to be ifdef guards around them. PF_ defines, for example, vary
+across libc.
+=end
 
 pattern = ARGV.shift
 
@@ -80,7 +86,7 @@ OPTS.each do |lname, cname, doc|
   puts "  #{cname},"
 end
 puts "};"
-puts "static int " + pattern + "_vals_size = " + OPTS.size.to_s + ";"
+puts "static int " + pattern + "_vals_size = " + OPTS.size.to_s + ";" # cvt to sizeof(pattern _vals) / sizeof(pattern _vals[0])
 
 puts <<__
 static int check_#{pattern}(lua_State* L, int argn)
