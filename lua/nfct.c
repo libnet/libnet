@@ -55,7 +55,7 @@ static struct nfct_handle* check_cthandle(lua_State*L)
 
 static struct nf_conntrack* check_ct_argn(lua_State*L, int argn, const char* emsg)
 {
-    struct nf_conntrack* ct = lua_touserdata(L, 1);
+    struct nf_conntrack* ct = lua_touserdata(L, argn);
 
     luaL_argcheck(L, ct, argn, emsg);
 
@@ -616,6 +616,28 @@ static int destroy(lua_State* L)
     return 0;
 }
 
+
+/*-
+-- str = nfct.tostring(ct)
+
+Return a string representation of a conntrack.
+*/
+/* TODO support msg_type, out_type, and out_flags. */
+static int tostring(lua_State* L)
+{
+    struct nf_conntrack* ct = check_ct(L);
+    char* buf = alloca(1);
+    int bufsz = nfct_snprintf(buf, 1, ct, 0, 0, 0);
+    buf = alloca(bufsz+1);
+
+    nfct_snprintf(buf, bufsz+1, ct, 0, 0, 0);
+
+    lua_pushstring(L, buf);
+
+    return 1;
+}
+
+
 /*-
 -- ct = nfct.setobjopt(ct, option)
 
@@ -651,8 +673,7 @@ static int setobjopt(lua_State* L)
     unsigned option = vals[luaL_checkoption(L, 2, NULL, opts)];
     int ret = nfct_setobjopt(ct, option);
     if(ret < 0) {
-        push_error(L);
-        return 3;
+        return push_error(L);
     }
 
     lua_settop(L, 1);
@@ -1019,6 +1040,12 @@ static int set_attr_ipproto(lua_State* L)
     return 1;
 }
 
+/*-
+-- exp = nfct.exp_new(ctmaster, ctexpected, ctmask, timeout)
+
+master, expected, mask are all a nfct.new() ct object
+timeout is optionaal
+*/
 static int exp_new(lua_State* L)
 {
     struct nf_expect* exp = nfexp_new();
@@ -1059,6 +1086,25 @@ static int exp_destroy(lua_State* L)
     return 0;
 }
 
+/*-
+-- str = nfct.exp_tostring(exp)
+
+Return a string representation of a expectation.
+*/
+/* TODO support msg_type, out_type, and out_flags. */
+static int exp_tostring(lua_State* L)
+{
+    struct nf_expect* exp = check_exp(L, 1);
+    char* buf = alloca(1);
+    int bufsz = nfexp_snprintf(buf, 1, exp, 0, 0, 0);
+    buf = alloca(bufsz+1);
+
+    nfexp_snprintf(buf, bufsz+1, exp, 0, 0, 0);
+
+    lua_pushstring(L, buf);
+
+    return 1;
+}
 /*-
 -- cthandle = nfct.exp_query(cthandle, qtype, data)
 
@@ -1128,12 +1174,15 @@ static const luaL_reg nfct[] =
     {"fd",              fd},
     {"setblocking",     setblocking},
     {"callback_register", callback_register},
+/*  {"query",           query}, TODO  check_NFCT_Q() already exists */
+/*  {"send",            send}, TODO */
     {"catch",           catch},
     {"loop",            loop},
 
     /* return or operate on ct */
     {"new",             new},
     {"destroy",         destroy},
+    {"tostring",        tostring},
     {"setobjopt",       setobjopt},
     {"get_attr_u8",     get_attr_u8},
     {"get_attr_u16",    get_attr_u16},
@@ -1147,7 +1196,7 @@ static const luaL_reg nfct[] =
     {"set_attr_n16",    set_attr_n16},
     {"set_attr_n32",    set_attr_n32},
 
-    /* TODO should probably use service names as strings */
+    /* TODO should support service names as strings */
     {"get_attr_port",   get_attr_n16},
     {"set_attr_port",   set_attr_n16},
 
@@ -1165,6 +1214,7 @@ static const luaL_reg nfct[] =
     /* return or operate on a exp */
     {"exp_new",         exp_new},
     {"exp_destroy",     exp_destroy},
+    {"exp_tostring",    exp_tostring},
     {"exp_query",       exp_query},
 
     /* attr value conversion */
