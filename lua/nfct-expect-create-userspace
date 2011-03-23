@@ -77,13 +77,13 @@ assert(nfct.set_attr_ipproto (master, "l4proto",     "tcp"))
 assert(nfct.set_attr_port    (master, "port-src",    arg.sport))
 assert(nfct.set_attr_port    (master, "port-dst",    arg.dport))
 
-assert(nfct.setobjopt(master, "setup-reply")) -- FIXME purpose of this is?
-assert(nfct.set_attr_u8(master, "tcp-state", 3)) -- FIXME need to map enum tcp_state
-assert(nfct.set_attr_u32(master, "timeout", 200))
-
 ctprint(master, "master")
 
 --[[
+    -- only to create master connection:
+    assert(nfct.set_attr_u8(master, "tcp-state", 3)) -- 3 is from enum tcp_state
+    assert(nfct.set_attr_u32(master, "timeout", 200))
+    assert(nfct.setobjopt(master, "setup-reply"))
 
 	h = nfct_open(CONNTRACK, 0);
 	if (!h) {
@@ -131,7 +131,6 @@ assert(nfct.set_attr_ipv4    (expected, "ipv4-src",    arg.src))
 assert(nfct.set_attr_ipv4    (expected, "ipv4-dst",    arg.dst))
 
 assert(nfct.set_attr_ipproto (expected, "l4proto",     "tcp"))
-assert(nfct.set_attr_port    (expected, "port-src",    0))
 assert(nfct.set_attr_port    (expected, "port-dst",    arg.expect))
 
 ctprint(expected, "expected")
@@ -155,12 +154,13 @@ ctprint(expected, "expected")
 
 mask = assert(nfct.new())
 
+-- this mask value MUST be AF_INET or exp_query fails with ENOENT
 assert(nfct.set_attr_pf      (mask, "l3proto",     "inet"))
 assert(nfct.set_attr_u32     (mask, "ipv4-src",    0xffffffff))
 assert(nfct.set_attr_u32     (mask, "ipv4-dst",    0xffffffff))
 
+-- this mask value SHOULD be IPPROTO_TCP or ct object cannot be printed in full
 assert(nfct.set_attr_ipproto (mask, "l4proto",     "tcp"))
-assert(nfct.set_attr_port    (mask, "port-src",    0))
 assert(nfct.set_attr_port    (mask, "port-dst",    0xffff))
 
 ctprint(mask, "mask")
@@ -186,7 +186,7 @@ ctprint(mask, "mask")
 	nfct_destroy(mask);
 ]]
 
-exp = assert(nfct.exp_new(master, expected, mask, 200))
+exp = assert(nfct.exp_new(master, expected, mask, 5)) -- 5 so it goes away soon, 200 was old value
 
 expprint(exp, "expectation")
 
