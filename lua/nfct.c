@@ -799,7 +799,7 @@ See nfct.get_attr_*() for the supported attr names and types.
 Returns the conntrack conntext, so calls can be chained.
 */
 
-/* Pretent nfct implements these, so I can construct setters/getters using my macro. */
+/* Pretend nfct implements these, so I can construct setters/getters using my macro. */
 static u_int16_t nfct_get_attr_n16(struct nf_conntrack* ct, enum nf_conntrack_attr attr)
 {
     return ntohs(nfct_get_attr_u16(ct, attr));
@@ -825,16 +825,17 @@ static int get_attr_u8(lua_State* L)
 }
 */
 
+/* TODO get: should I add checks for existence of the attribute? I doubt
+ * performance is an issue, so why not return nil and emsg when attr isn't
+ * present.
+ */
+/* TODO set: can I use lua 'true' to mean full-width? Useful for masks. */
 #define ATTR_UX(ux) \
 static int get_attr_##ux(lua_State* L) \
 { lua_pushinteger(L, nfct_get_attr_##ux(check_ct(L), check_attr(L))); return 1; } \
 static int set_attr_##ux(lua_State* L) \
 { nfct_set_attr_##ux(check_ct(L), check_attr(L), luaL_checklong(L,3)); lua_settop(L, 1); return 1; }
 
-/* should I add checks for existence of the attribute? I doubt performance is
- * an issue, so why not return
- * nil and emsg when attr isn't present
- */
 
 ATTR_UX(u8)
 ATTR_UX(u16)
@@ -1174,7 +1175,7 @@ static const luaL_reg nfct[] =
     {"fd",              fd},
     {"setblocking",     setblocking},
     {"callback_register", callback_register},
-/*  {"query",           query}, TODO  check_NFCT_Q() already exists */
+/*  {"query",           query}, TODO  easy, because check_NFCT_Q() already exists */
 /*  {"send",            send}, TODO */
     {"catch",           catch},
     {"loop",            loop},
@@ -1210,6 +1211,8 @@ static const luaL_reg nfct[] =
 
     {"get_attr_pf",     get_attr_pf},
     {"set_attr_pf",     set_attr_pf},
+
+    /* TODO should support setting tcp-state with enum tcp_state */
 
     /* return or operate on a exp */
     {"exp_new",         exp_new},
