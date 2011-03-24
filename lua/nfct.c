@@ -76,7 +76,19 @@ static struct nf_expect* check_exp(lua_State* L, int argn)
     return exp;
 }
 
-static const char* ctmsg_type_string(enum nf_conntrack_msg_type type)
+static enum nf_conntrack_msg_type check_ctmsgtype(lua_State* L, int argn, const char* def)
+{
+    static const char* msgtype_opts[] = {
+        "new", "update", "destroy", "all", "error", "none", NULL
+    };
+    static enum nf_conntrack_msg_type msgtype_vals[] = {
+        NFCT_T_NEW, NFCT_T_UPDATE, NFCT_T_DESTROY, NFCT_T_ALL, NFCT_T_ERROR, 0,
+    };
+    int msgtype_opt = luaL_checkoption(L, argn, def, msgtype_opts);
+    return msgtype_vals[msgtype_opt];
+}
+
+static const char* ctmsgtype_string(enum nf_conntrack_msg_type type)
 {
     switch(type) {
         case NFCT_T_NEW: return "new";
@@ -314,7 +326,7 @@ static int check_NFCT_Q(lua_State* L, int argn)
 /*-
 -- cthandle = nfct.open(subsys, [subscription...])
 
-subsys is "track" or "expect"
+subsys is "conntrack", "expect", or "both".
 
 subscription is the groups for which notifications are requested, zero or more of
 "none", "new", "update", "destroy", or "all" (default is "none").
@@ -327,56 +339,84 @@ release it's resources.
 static int hopen(lua_State *L)
 {
     static const char* subsys_opts[] = {
-        "track", "expect", NULL
+        "both", "conntrack", "expect", NULL
     };
     static u_int8_t subsys_vals[] = {
-        NFNL_SUBSYS_CTNETLINK, NFNL_SUBSYS_CTNETLINK_EXP,
+        NFNL_SUBSYS_NONE, NFNL_SUBSYS_CTNETLINK, NFNL_SUBSYS_CTNETLINK_EXP,
     };
     int subsys_opt = luaL_checkoption(L, 1, NULL, subsys_opts);
     u_int8_t subsys_val = subsys_vals[subsys_opt];
     static const char*  subscription_opts[] = {
         "none", "new", "update", "destroy", "all", NULL
     };
-    unsigned subscription_vals[2][5] = {
-        { /* [0] == "track" */
-            0,
+#define NFCT_ALL_EXP_GROUPS \
+        (NF_NETLINK_CONNTRACK_EXP_NEW|NF_NETLINK_CONNTRACK_EXP_UPDATE|NF_NETLINK_CONNTRACK_EXP_DESTROY)
+    unsigned subscription_vals[][5] = {
+        { /* [0] == "both" */
+            0, /* none */
+            NF_NETLINK_CONNTRACK_NEW     | NF_NETLINK_CONNTRACK_EXP_NEW,
+            NF_NETLINK_CONNTRACK_UPDATE  | NF_NETLINK_CONNTRACK_EXP_UPDATE,
+            NF_NETLINK_CONNTRACK_DESTROY | NF_NETLINK_CONNTRACK_EXP_DESTROY,
+            NFCT_ALL_CT_GROUPS           | NFCT_ALL_EXP_GROUPS
+        },
+        { /* [1] == "conntrack" */
+            0, /* none */
             NF_NETLINK_CONNTRACK_NEW,
             NF_NETLINK_CONNTRACK_UPDATE,
             NF_NETLINK_CONNTRACK_DESTROY,
             NFCT_ALL_CT_GROUPS
         },
-        { /* [1] == "expect" */
-            0,
+        { /* [2] == "expect" */
+            0, /* none */
             NF_NETLINK_CONNTRACK_EXP_NEW,
             NF_NETLINK_CONNTRACK_EXP_UPDATE,
             NF_NETLINK_CONNTRACK_EXP_DESTROY,
-            NF_NETLINK_CONNTRACK_EXP_NEW
-                |NF_NETLINK_CONNTRACK_EXP_UPDATE
-                |NF_NETLINK_CONNTRACK_EXP_DESTROY
+            NFCT_ALL_EXP_GROUPS
         }
     };
     unsigned subscription_val = 0;
     int narg = 0;
-    struct nfct_handle* ct = NULL;
-
-    /* the check option should have ensured that the opt index is 0 or 1,
-     * so we can safely use it to index into the watfor vals
-     */
-    assert(subsys_opt == 0 || subsys_opt == 1);
+    struct nfct_handle* cthandle = NULL;
 
     for(narg = 2; narg <= lua_gettop(L); narg++) {
         int subscription_opt = luaL_checkoption(L, narg, NULL, subscription_opts);
         subscription_val |= subscription_vals[subsys_opt][subscription_opt];
     }
 
-    ct = nfct_open(subsys_val, subscription_val);
+    cthandle = nfct_open(subsys_val, subscription_val);
 
-    if(!ct) {
+    if(!cthandle) {
         push_error(L);
         return 3;
     }
 
-    lua_pushlightuserdata(L, ct);
+    /* Create the table to hold the callback functions, create keys for
+     * callbacks that are valid for the subsystem(s). libnfct aborts if we
+     * register callbacks for subsystems that haven't been initialized, so the
+     * presence of these keys allows us to avoid that.
+     */
+    /* _ = {} */
+    /* _.connect = true -- if subsys */
+    /* _.expect = true -- if subsys */
+    /* registery[cthandle] = _ */
+
+    lua_settop(L, 0);
+    lua_newtable(L);
+
+    if(subsys_val == 0 || subsys_val == NFNL_SUBSYS_CTNETLINK) {
+        lua_pushboolean(L, 1);
+        lua_setfield(L, -2, "conntrack");
+    }
+    if(subsys_val == 0 || subsys_val == NFNL_SUBSYS_CTNETLINK_EXP) {
+        lua_pushboolean(L, 1);
+        lua_setfield(L, -2, "expect");
+    }
+
+    lua_pushlightuserdata(L, cthandle);
+    lua_insert(L, 1);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    lua_pushlightuserdata(L, cthandle);
 
     return 1;
 }
@@ -389,7 +429,15 @@ Close the conntrack handle, freeing its resources.
 static int gc(lua_State* L)
 {
     struct nfct_handle* cthandle = check_cthandle(L);
+
+    /* Delete the table holding the callback functions. */
+    /* registery[cthandle] = nil */
+    lua_pushlightuserdata(L, cthandle);
+    lua_pushnil(L);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
     nfct_close(cthandle);
+
     return 0;
 }
 
@@ -419,8 +467,10 @@ static int setblocking(lua_State* L)
 }
 
 static int cb(
+        const char* subsys,
+        const struct nlmsghdr *nlh,
         enum nf_conntrack_msg_type type,
-        struct nf_conntrack *ct,
+        void* cbobj,
         void *data
         )
 {
@@ -436,16 +486,29 @@ static int cb(
 
     /* We expect stack to look like:
      *   [1] cthandle
-     *   [2] cbfn
+     *   [2] cbtable
+     *          .conntrack = ctcb
+     *          .expect    = expcb
      */
 
-    luaL_checktype(L, 2, LUA_TFUNCTION);
+    lua_getfield(L, 2, subsys);
+    luaL_checktype(L, 3, LUA_TFUNCTION);
+    lua_pushstring(L, ctmsgtype_string(type));
+    lua_pushlightuserdata(L, cbobj);
 
-    lua_pushvalue(L, 2); /* Push copy of fn */
-    lua_pushstring(L, ctmsg_type_string(type));
-    lua_pushlightuserdata(L, ct);
+    /* [1] cthandle */
+    /* [2] cbtable */
+    /* [3] fn */
+    /* [4] msgtype */
+    /* [5] obj */
+
+    /* TODO - we should pass the netlink header */
 
     lua_call(L, 2, 1);
+
+    /* [1] cthandle */
+    /* [2] cbtable */
+    /* [3] verdict */
 
     verdict_val = verdict_vals[
             luaL_checkoption(L, 3, "continue", verdict_opts)
@@ -457,34 +520,93 @@ static int cb(
     return verdict_val;
 }
 
+static int ctcb(
+        const struct nlmsghdr *nlh,
+        enum nf_conntrack_msg_type type,
+        struct nf_conntrack *ct,
+        void *data
+        )
+{
+    return cb("conntrack", nlh, type, ct, data);
+}
+
+static int expcb(
+        const struct nlmsghdr *nlh,
+        enum nf_conntrack_msg_type type,
+        struct nf_expect *exp,
+        void *data
+        )
+{
+    return cb("expect", nlh, type, exp, data);
+}
 
 /*-
--- cthandle = nfct.callback_register(cthandle, ctmsgtype)
+-- cthandle = nfct.ct_callback_register(cthandle, ctcb, ctmsgtype)
+-- cthandle = nfct.exp_callback_register(cthandle, expcb, ctmsgtype)
 
-ctmsgtype is one of "new", "update", "destroy", or "all" (default is "all").
+For each subsystem (conntrack and expect) only one registration can be active
+at a time, the latest call replaces any previous ones.
 
-Only one registration can be active at a time, the latest call replaces
-any previous ones.
+Callbacks can't be registered for a subsystem that wasn't opened.
+
+The callback function will be called as either
+
+  verdict = ctcb(ctmsgtype, ct)
+  verdict = expcb(ctmsgtype, exp)
+
+depending on which register is called. Since you can't know the type of the object,
+use different callback functions.
+
+ctmsgtype is one of "new", "update", "destroy", "all", or "error" (default is "all").
+
+The callback can return any of "failure", "stop", "continue", or "stolen" (the
+default is "continue"):
+
+  "failure" will stop the loop,
+  "continue" will continue with the next message, and
+  "stolen" is like continue, except the conntrack or expect object will
+    not be destroyed (the user must destroy it later with the appropriate
+    nfct.destroy() or nfct.exp_destroy or resources will be leaked)
 
 Returns cthandle on success, nil,emsg,errno on failure.
 */
-static int callback_register(lua_State* L)
+/* FIXME - the underlying IPCTNL_MSG_CT_NEW and IPCTNL_MSG_CT_DELETE are
+ * registered for (always and only), making me think that only "new" and
+ * "destroy" can actually be received in a callback.
+ * Since we choose what kind of notifications we want in nfct_open(), I'm not
+ * sure why libconntrack allows us to filter what arrives at the callback... it
+ * would make more sense if you could have multiple callbacks, but you can't.
+ */
+static int callback_register(lua_State* L, const char* subsys,
+        void (*unreg)(struct nfct_handle*),
+        int (*reg)(struct nfct_handle*, enum nf_conntrack_msg_type, int(*cbfn)(), void* data),
+        int (*cbfn)()
+        )
 {
     struct nfct_handle* cthandle = check_cthandle(L);
-    static const char* msgtype_opts[] = {
-        "new", "update", "destroy", "all", "error", NULL
-    };
-    static enum nf_conntrack_msg_type msgtype_vals[] = {
-        NFCT_T_NEW, NFCT_T_UPDATE, NFCT_T_DESTROY, NFCT_T_ALL, NFCT_T_ERROR,
-    };
-    int msgtype_opt = luaL_checkoption(L, 2, "all", msgtype_opts);
-    enum nf_conntrack_msg_type msgtype_val = msgtype_vals[msgtype_opt];
+    enum nf_conntrack_msg_type msgtype_val = check_ctmsgtype(L, 3, "all");
     int ret;
-   
-    /* Clear any current handler to avoid memory leaks. */
-    nfct_callback_unregister(cthandle);
 
-    ret = nfct_callback_register(cthandle, msgtype_val, cb, L);
+    luaL_checktype(L, 2, LUA_TFUNCTION);
+    lua_settop(L, 3);
+
+    /* Get the cbtable */
+    lua_pushvalue(L, 1);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+
+    /* Check the subsys was opened. */
+    lua_getfield(L, 4, subsys);
+    luaL_argcheck(L, !lua_isnoneornil(L, 5), 1, "register failure, handle not open for this subsystem");
+    lua_settop(L, 4);
+    
+    /* Save the cbfn */
+    lua_pushvalue(L, 2);
+    lua_setfield(L, 4, subsys);
+
+    /* Clear any current handler to avoid memory leaks. */
+    unreg(cthandle);
+
+    ret = reg(cthandle, msgtype_val, cbfn, L);
 
     if(ret < 0) {
         push_error(L);
@@ -496,83 +618,65 @@ static int callback_register(lua_State* L)
     return 1;
 }
 
+static int ct_callback_register(lua_State* L)
+{
+    return callback_register(L, "conntrack", nfct_callback_unregister2, nfct_callback_register2, ctcb);
+}
+
+static int exp_callback_register(lua_State* L)
+{
+    return callback_register(L, "expect", nfexp_callback_unregister2, nfexp_callback_register2, expcb);
+}
+
 /*-
--- cthandle = nfct.catch(cthandle, cbfn)
--- verdict = cbfn(ctmsgtype, ct)
+-- cthandle = nfct.catch(cthandle)
 
-cbfn - the callback function, and will be called as
-
-  function cbfn(ctmsgtype, ct) ...
-
-with a ctmsgtype and conntrack context (NOT a handle!) as arguments.
-
-The callback can return any of "failure", "stop", "continue", or "stolen" (the
-default is "continue"):
-
-  "failure" will stop the loop,
-  "continue" will continue with the next message, and
-  "stolen" is like continue, except the conntrack context will
-    not be destroyed (the user must destroy ct later with nfct.destroy() or
-    resources will be leaked)
-
-Note that cbfn is optional and will NOT be called unless
-nfct.register_callback() was previously called to indicate what msg types are
-of interest (in which case cbfn must be provided).
-
-Return is the callback verdict on success ("stop", "continue", or "stolen") and
-nil,emsg,errno on failure.
+Return is the cthandle on success, or nil,emsg,errno on failure.
 */
-/* TODO - will "failure" cause errno to be set? What will really happen? */
+/* FIXME return the verdict on success ("stop", "continue", or "stolen") */
 static int catch(lua_State* L)
 {
     struct nfct_handle* cthandle = check_cthandle(L);
     int ret;
 
     /* Ensure that the callbacks expectations about the stack are met. */
-    if(lua_isnoneornil(L, 2)) {
-        /* There is no cbfn, chop the stack so it contains only the handle. */
-        lua_settop(L, 1);
-    } else {
-        /* Otherwise, ensure stack contains only cthandle,cbfn */
-        luaL_checktype(L, 2, LUA_TFUNCTION);
-        lua_settop(L, 2);
-    }
+    /* Ensure stack contains only cthandle,cbtable */
+    lua_settop(L, 1);
+    lua_pushvalue(L, 1);
+    lua_gettable(L, LUA_REGISTRYINDEX);
 
     ret = nfct_catch(cthandle);
 
     if(ret < 0) {
-        /* Replace whatever is on the return stack with nil, emsg, errno. */
-        lua_settop(L, 0);
-        push_error(L);
-    } else {
-        /* Leave just the cthandle on the return stack to indicate successs */
-        lua_settop(L, 1);
+        return push_error(L);
     }
 
-    return lua_gettop(L);
+    /* Leave just the cthandle on the return stack to indicate successs */
+    lua_settop(L, 1);
+
+    return 1;
 }
 
 /*-
--- nfct.loop(cthandle, ctmsgtype, cbfn)
+-- nfct.loop(cthandle, ctmsgtype, ctcb)
 
 Equivalent to
 
-  nfct.callback_register(cthandle, ctmsgtype)
-  return nfct.catch(cthandle, cbfn)
+  nfct.ct_callback_register(cthandle, ctcb, ctmsgtype)
+  return nfct.catch(cthandle)
 
-Registering callbacks repeatedly is unnecessarily slow, so this is best used on
-blocking netlink sockets by scripts that use only the conntrack subsystem.
+Will probably be removed soon.
 */
 static int loop(lua_State* L)
 {
-    int nret = callback_register(L);
+    int nret = ct_callback_register(L);
 
     if(nret > 1) {
         return nret;
     }
 
-    /* Remove ctmsgtype so stack is (cthandle, cbfn), as expected by catch. */
-    lua_remove(L, 2);
+    /* Pop the args that catch doesn't want. */
+    lua_settop(L, 1);
 
     return catch(L);
 }
@@ -618,19 +722,21 @@ static int destroy(lua_State* L)
 
 
 /*-
--- str = nfct.tostring(ct)
+-- str = nfct.tostring(ct, ctmsgtype)
 
-Return a string representation of a conntrack.
+ctmsgtype is one of "new", "update", "destroy", or nil (meaning msg type is unknown).
+
+Returns a string representation of a conntrack.
 */
-/* TODO support msg_type, out_type, and out_flags. */
 static int tostring(lua_State* L)
 {
     struct nf_conntrack* ct = check_ct(L);
-    char* buf = alloca(1);
-    int bufsz = nfct_snprintf(buf, 1, ct, 0, 0, 0);
+    int ctmsgtype = check_ctmsgtype(L, 2, "none");
+    char* buf = alloca(1); /* nfct asserts with no buf... unlike snprintf */
+    int bufsz = nfct_snprintf(buf, 1, ct, ctmsgtype, 0, 0);
     buf = alloca(bufsz+1);
 
-    nfct_snprintf(buf, bufsz+1, ct, 0, 0, 0);
+    nfct_snprintf(buf, bufsz+1, ct, ctmsgtype, 0, 0);
 
     lua_pushstring(L, buf);
 
@@ -1088,19 +1194,21 @@ static int exp_destroy(lua_State* L)
 }
 
 /*-
--- str = nfct.exp_tostring(exp)
+-- str = nfct.exp_tostring(exp, ctmsgtype)
 
-Return a string representation of a expectation.
+ctmsgtype is one of "new", "update", "destroy", or nil (meaning msg type is unknown).
+
+Returns a string representation of a expectation.
 */
-/* TODO support msg_type, out_type, and out_flags. */
 static int exp_tostring(lua_State* L)
 {
     struct nf_expect* exp = check_exp(L, 1);
-    char* buf = alloca(1);
-    int bufsz = nfexp_snprintf(buf, 1, exp, 0, 0, 0);
+    int ctmsgtype = check_ctmsgtype(L, 2, "none");
+    char* buf = alloca(1); /* nfct asserts with no buf... unlike snprintf */
+    int bufsz = nfexp_snprintf(buf, 1, exp, ctmsgtype, 0, 0);
     buf = alloca(bufsz+1);
 
-    nfexp_snprintf(buf, bufsz+1, exp, 0, 0, 0);
+    nfexp_snprintf(buf, bufsz+1, exp, ctmsgtype, 0, 0);
 
     lua_pushstring(L, buf);
 
@@ -1174,11 +1282,13 @@ static const luaL_reg nfct[] =
     {"close",           gc},
     {"fd",              fd},
     {"setblocking",     setblocking},
-    {"callback_register", callback_register},
+    {"catch",           catch},
 /*  {"query",           query}, TODO  easy, because check_NFCT_Q() already exists */
 /*  {"send",            send}, TODO */
-    {"catch",           catch},
-    {"loop",            loop},
+    {"loop",            loop}, /* TODO rename to ct_loop() */
+    {"ct_callback_register", ct_callback_register},
+    {"exp_callback_register", exp_callback_register},
+
 
     /* return or operate on ct */
     {"new",             new},
