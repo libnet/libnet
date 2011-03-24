@@ -1,6 +1,14 @@
 #!/usr/bin/env lua5.1
+--[[
+Print events from netfilter's conntrack subsystem.
+
+Unlike the conntrack utility's -E mode, it can print events from conntrack and
+expect at the same time.
+]]
 
 require"nfct"
+
+io.stdout:setvbuf"line"
 
 arg[1] = arg[1] or "both"
 arg[2] = arg[2] or "all"
@@ -8,11 +16,11 @@ arg[2] = arg[2] or "all"
 cthandle = assert(nfct.open(unpack(arg)))
 
 function cbct(cttype, ct)
-    print(nfct.tostring(ct, cttype))
+    print("ct", nfct.tostring(ct, cttype))
 end
 
 function cbexp(cttype, exp)
-    print(nfct.exp_tostring(exp, cttype))
+    print("exp", nfct.exp_tostring(exp, cttype))
 end
 
 register = {
