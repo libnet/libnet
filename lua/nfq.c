@@ -247,8 +247,8 @@ static int bind_pf(lua_State* L)
 
 cbfn - a function called for every queued packet with one argument, qdata. It
 returns "accept" or "drop" meaning to do that to the packet. For no return
-value, the default is "accept".  If it returns a second argument, it must be a
-string, and replaces the current packet.
+value, the default is "accept".  If the packet is accepted, the cbfn can
+optionally return a second argument, a string that replaces the current packet.
 
 Return qhandle on success and nil,emsg,errno on failure.
 */
