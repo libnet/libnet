@@ -32,6 +32,10 @@ NOTE I know its confusing that the nfct module has functions that should be
 called on different kinds of objects mixed together, but unless I make full
 userdata out of one or both of them, thats what it has to be. Don't confuse
 them, or you will segfault!
+
+Also, the netfilter libraries use assert() to check for invalid argument
+checking, and non-type-safe APIs. The end result is you can absolutely
+segfault or abort if you misuse this module.
 */
 
 #define WANT_NF_LUA_PF
@@ -317,7 +321,7 @@ static int NFCT_Q_vals[] = {
 /*static int NFCT_Q_vals_size = 8;*/
 static int check_NFCT_Q(lua_State* L, int argn)
 {
-  int opt = luaL_checkoption(L, argn, NULL /* default? */, NFCT_Q_opts);
+  int opt = luaL_checkoption(L, argn, NULL, NFCT_Q_opts);
   int val = NFCT_Q_vals[opt];
   return val;
 }
@@ -375,11 +379,11 @@ static int hopen(lua_State *L)
         }
     };
     unsigned subscription_val = 0;
-    int narg = 0;
+    int argn = 0;
     struct nfct_handle* cthandle = NULL;
 
-    for(narg = 2; narg <= lua_gettop(L); narg++) {
-        int subscription_opt = luaL_checkoption(L, narg, NULL, subscription_opts);
+    for(argn = 2; argn <= lua_gettop(L); argn++) {
+        int subscription_opt = luaL_checkoption(L, argn, NULL, subscription_opts);
         subscription_val |= subscription_vals[subsys_opt][subscription_opt];
     }
 
@@ -1147,39 +1151,79 @@ static int set_attr_ipproto(lua_State* L)
     return 1;
 }
 
-/*-
--- exp = nfct.exp_new(ctmaster, ctexpected, ctmask, timeout)
+static const char* EXP_FLAG_opts[] = {
+    "permanent",
+    "inactive",
+    "userspace",
+    NULL
+};
 
-master, expected, mask are all a nfct.new() ct object
-timeout is optionaal
+static int EXP_FLAG_vals[] = {
+    NF_CT_EXPECT_PERMANENT,
+    NF_CT_EXPECT_INACTIVE,
+    NF_CT_EXPECT_USERSPACE,
+};
+
+static int check_EXP_FLAG(lua_State* L, int argn)
+{
+  int opt = luaL_checkoption(L, argn, NULL, EXP_FLAG_opts);
+  int val = EXP_FLAG_vals[opt];
+  return val;
+}
+
+static uint32_t check_EXP_FLAGS(lua_State* L, int argn, int arglen)
+{
+    /* Multiple flags can be specified, starting at argn, and going for arglen */
+    uint32_t flags = 0;
+    
+    if(arglen < 1) {
+        /* consume the stack */
+        arglen = lua_gettop(L) + 1 - argn;
+    }
+
+    for(; arglen > 0; argn++, arglen--) {
+        if(!lua_isnoneornil(L, argn)) {
+            flags |= check_EXP_FLAG(L, argn);
+        }
+    }
+    return flags;
+}
+
+/*-
+-- exp = nfct.exp_new(ctmaster, ctexpected, ctmask, timeout, flags...)
+
+master, expected, mask are all ct objects, see nfct.new().
+
+timeout is in seconds the expectation will wait for a connection
+
+flags is one or more of "permanent", "inactive", or "userspace", and is optional (default is no flags).
+
+permanent means the expectation remains in place until timeout, even if when connections match (the default
+is to clear the connection after an expectaion matches).
+
+userspace appears to be true for all expectations created using this API, I
+don't know why its there, and I've no idea what inactive means.
+
 */
 static int exp_new(lua_State* L)
 {
+    struct nf_conntrack* master = check_ct_argn(L, 1, "master");
+    struct nf_conntrack* expected = check_ct_argn(L, 2, "expected");
+    struct nf_conntrack* mask = check_ct_argn(L, 3, "mask");
+    uint32_t timeout = luaL_checklong(L, 4);
+    uint32_t flags = check_EXP_FLAGS(L, 5, 0);
     struct nf_expect* exp = nfexp_new();
 
-    if(!exp) {
+    if(!exp)
         return push_error(L);
-    }
+
+    nfexp_set_attr(exp, ATTR_EXP_MASTER,   master);
+    nfexp_set_attr(exp, ATTR_EXP_EXPECTED, expected);
+    nfexp_set_attr(exp, ATTR_EXP_MASK,     mask);
+    nfexp_set_attr_u32(exp, ATTR_EXP_TIMEOUT, timeout);
+    nfexp_set_attr_u32(exp, ATTR_EXP_FLAGS,   flags);
 
     lua_pushlightuserdata(L, exp);
-
-    lua_insert(L, 1);
-
-    /*
-     * [1] exp
-     * [2] master
-     * [3] expected
-     * [4] mask
-     * [5] timeout
-     */
-    switch(lua_gettop(L)) {
-        case 5: nfexp_set_attr_u32(exp, ATTR_EXP_TIMEOUT, luaL_checklong(L, 5));
-        case 4: nfexp_set_attr(exp, ATTR_EXP_MASK,     check_ct_argn(L, 4, "mask"));
-        case 3: nfexp_set_attr(exp, ATTR_EXP_EXPECTED, check_ct_argn(L, 3, "expected"));
-        case 2: nfexp_set_attr(exp, ATTR_EXP_MASTER,   check_ct_argn(L, 2, "master"));
-    }
-
-    lua_settop(L, 1);
 
     return 1;
 }
@@ -1198,7 +1242,7 @@ static int exp_destroy(lua_State* L)
 
 ctmsgtype is one of "new", "update", "destroy", or nil (meaning msg type is unknown).
 
-Returns a string representation of a expectation.
+Returns a string representation of an expectation.
 */
 static int exp_tostring(lua_State* L)
 {
