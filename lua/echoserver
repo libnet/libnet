@@ -1,0 +1,118 @@
+#!/usr/bin/env lua5.1
+
+require"socket"
+
+--[[
+FIXME
+
+control sockets are never closed, they leak
+
+echo listen sockets are never close, they listen forever
+
+]]
+
+local TIMEOUT = 0.1
+
+local ctrl_port = arg[1]
+
+if not ctrl_port then
+    print("Usage: " .. arg[0] .. " control_listen_port")
+    os.exit(0)
+end
+
+local ctrl_listen_sock = assert(socket.bind("*", ctrl_port))
+ctrl_listen_sock:settimeout(TIMEOUT)
+print("Waiting for connection...")
+
+local mon_socks = {ctrl_listen_sock} -- all socks, starting with just server ctrl sock
+local echo_listen_socks = {} -- echo listen socks
+local echo_data_socks = {} -- echo data socks
+local ctrl_data_socks = {} -- client ctrl socks
+
+local function remove(t, item)
+    for i, v in pairs(t) do
+        if v == item then
+            table.remove(t, i)
+        end
+    end
+end
+
+local function generate_echo_listen_socks(client_ctrl)
+    while true do
+        local part, msg = client_ctrl:receive()
+        -- read data and if any obtained, create socket, send port number
+        if part then
+            local echo_sock = assert(socket.bind("*", 0))
+            assert(echo_sock:settimeout(TIMEOUT))
+            table.insert(mon_socks, echo_sock)
+            table.insert(echo_listen_socks, echo_sock)
+            local ip, port = echo_sock:getsockname()
+            print("Sending port " .. port)
+            assert(client_ctrl:send(port.."\n"))
+        elseif msg == "closed" then
+            -- client closed control connection
+            print("Removing closed control data socket")
+            remove(ctrl_data_socks, client_ctrl)
+            remove(mon_socks, client_ctrl)
+            return
+        else
+            -- client doesn't need any more echo ports
+            return
+        end
+    end
+end
+
+while true do
+    print("Waiting for activity on " .. #mon_socks .. " sockets")
+    local readsocks = socket.select(mon_socks)
+    for _, sock in ipairs(readsocks) do
+        -- control listen sock
+        if sock == ctrl_listen_sock then
+            print("Handling control listen sock activity")
+            local client_ctrl = ctrl_listen_sock:accept()
+            table.insert(mon_socks, client_ctrl)
+            table.insert(ctrl_data_socks, client_ctrl)
+            client_ctrl:settimeout(TIMEOUT)
+            print("Control connection obtained from: ")
+            print(client_ctrl:getpeername())
+            generate_echo_listen_socks(client_ctrl)
+        else
+            -- control data socks
+            for _, cc_sock in ipairs(ctrl_data_socks) do
+                if sock == cc_sock then
+                    print("Handling control data sock activity")
+                    generate_echo_listen_socks(cc_sock)
+                end
+            end
+            -- echo listen socks
+            for _, esock in ipairs(echo_listen_socks) do
+                if sock == esock then
+                    print("Handling echo listen sock activity")
+                    local client = sock:accept()
+                    client:settimeout(TIMEOUT)
+                    table.insert(mon_socks, client)
+                    table.insert(echo_data_socks, client)
+                    print("Echo connection obtained from: ")
+                    print(client:getpeername())
+                end
+            end
+            -- echo data socks
+            for i, csock in ipairs(echo_data_socks) do
+                if sock == csock then
+                    print("Handling client sock activity")
+                    local part, err = sock:receive()
+                    if part then
+                        print("Echo: " .. part)
+                        sock:send(part.."\n")
+                    elseif err == "closed" then
+                        print("Removing closed echo data socket")
+                        table.remove(echo_data_socks, i)
+                        remove(mon_socks, sock)
+                    else
+                        print("Echo data error: "..err)
+                    end
+                end
+            end
+        end
+    end
+end
