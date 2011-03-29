@@ -939,7 +939,8 @@ static int get_attr_u8(lua_State* L)
  * performance is an issue, so why not return nil and emsg when attr isn't
  * present.
  */
-/* TODO set: can I use lua 'true' to mean full-width? Useful for masks. */
+/* TODO set: can I use true to mean full-width? Useful for masks. */
+/* TODO set: can I use nil to mean nfct_attr_unset()? */
 #define ATTR_UX(ux) \
 static int get_attr_##ux(lua_State* L) \
 { lua_pushinteger(L, nfct_get_attr_##ux(check_ct(L), check_attr(L))); return 1; } \
