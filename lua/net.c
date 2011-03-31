@@ -32,7 +32,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <time.h>
 
-#include <dnet.h>
+#include <dumbnet.h>
 #include "libnet_decode.h"
 #include <libnet.h>
 
@@ -1182,6 +1182,8 @@ void dump(lua_State* L) {
   lua_pop(L, 1);
 }
 #endif
+
+/* TODO net.ntop() take either a number (a host u32 inet addr), or a string of bytes, and convert to presentation */
 
 /*-
 - network = net.pton(presentation)
