@@ -428,6 +428,14 @@ static int lnet_write(lua_State *L)
     return 1;
 }
 
+/*-
+- size = net:write_link(link_pdu)
+
+Writes link_pdu raw at the link layer, you are responsible for forming
+the link-layer header.
+
+Returns the size written on success.
+*/
 static int lnet_write_link (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
@@ -436,6 +444,7 @@ static int lnet_write_link (lua_State *L)
     uint32_t payloadsz = (uint32_t) payloadsz_;
     const uint8_t* payload = (const uint8_t*) payload_;
     int size = libnet_write_link(ud, payload, payloadsz);
+    check_error(L, ud, size);
     lua_pushinteger(L, size);
     return 1;
 }
