@@ -68,12 +68,12 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     memset(&isl_hdr, 0, sizeof (isl_hdr));
-    memcpy(&isl_hdr.isl_dhost, dhost, 5);
+    memcpy(&isl_hdr.isl_dhost, dhost, sizeof(isl_hdr.isl_dhost));
     isl_hdr.isl_type    = type;
     isl_hdr.isl_user    = user;
-    memcpy(&isl_hdr.isl_shost, shost, 6);
+    memcpy(&isl_hdr.isl_shost, shost, sizeof(isl_hdr.isl_shost));
     isl_hdr.isl_len     = htons(len);
-    memcpy(&isl_hdr.isl_dhost, snap, 6);
+    memcpy(&isl_hdr.isl_dhost, snap, sizeof(isl_hdr.isl_dhost));
     isl_hdr.isl_vid     = htons(vid);
     isl_hdr.isl_index   = htons(portindex);
     isl_hdr.isl_reserved= htons(reserved);
