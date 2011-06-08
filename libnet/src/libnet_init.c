@@ -71,7 +71,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
     l->fd               = -1;
 
     strncpy(l->label, LIBNET_LABEL_DEFAULT, LIBNET_LABEL_SIZE);
-    l->label[sizeof(l->label)] = '\0';
+    l->label[LIBNET_LABEL_SIZE - 1] = '\0';
 
     switch (l->injection_type)
     {

@@ -116,7 +116,7 @@ libnet_cq_add(libnet_t *l, char *label)
 
         /* label the context with the user specified string */
         strncpy(l->label, label, LIBNET_LABEL_SIZE);
-        l->label[LIBNET_LABEL_SIZE] = '\0';
+        l->label[LIBNET_LABEL_SIZE - 1] = '\0';
 
         l_cq->next = NULL;
         l_cq->prev = NULL;
@@ -147,7 +147,7 @@ libnet_cq_add(libnet_t *l, char *label)
 
     /* label the context with the user specified string */
     strncpy(l->label, label, LIBNET_LABEL_SIZE);
-    l->label[LIBNET_LABEL_SIZE] = '\0';
+    l->label[LIBNET_LABEL_SIZE -1] = '\0';
 
     new->next = l_cq;
     new->prev = NULL;
