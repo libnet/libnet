@@ -176,8 +176,6 @@ libnet_cq_remove(libnet_t *l)
 
     if (l == NULL)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't remove empty libnet context\n", __func__);
         return(NULL);
     }
 
