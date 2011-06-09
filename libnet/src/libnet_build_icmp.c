@@ -400,7 +400,7 @@ libnet_ptag_t
 libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
 uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_icmpv6_hdr icmp_hdr;
 
@@ -410,7 +410,6 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_ICMPV6_UNREACH_H + payload_s;        /* size of memory block */
-    h = LIBNET_ICMPV6_UNREACH_H + payload_s + l->total_size;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -431,7 +430,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     LIBNET_BUILD_ICMP_ERR_FINISH(LIBNET_ICMPV6_UNREACH_H);
 
-    return (ptag ? ptag : libnet_pblock_update(l, p, h,
+    return (ptag ? ptag : libnet_pblock_update(l, p, 0,
             LIBNET_PBLOCK_ICMPV6_UNREACH_H));
 bad:
     libnet_pblock_delete(l, p);
