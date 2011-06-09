@@ -159,7 +159,7 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
             break;
     }
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&cdp_value_hdr, LIBNET_CDP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&cdp_value_hdr, LIBNET_CDP_VALUE_H);
     if (n == -1)
     {
         return (-1);
