@@ -410,6 +410,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_ICMPV6_UNREACH_H + payload_s;        /* size of memory block */
+    h = LIBNET_ICMPV6_UNREACH_H + payload_s + l->total_size;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create

@@ -336,6 +336,7 @@ struct libnet_cdp_hdr
 /*
  *  Used as an overlay for type/len/values
  */
+#define LIBNET_CDP_VALUE_H  0x04 /*< CDP value header base: 4 bytes */
 struct libnet_cdp_value_hdr
 {
     uint16_t cdp_type;
