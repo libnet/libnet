@@ -83,8 +83,7 @@ libnet_t *l, libnet_ptag_t ptag)
 
     if (chaddr)
     { 
-        memcpy(dhcp_hdr.dhcp_chaddr, chaddr, sizeof (dhcp_hdr.dhcp_chaddr));
-        dhcp_hdr.dhcp_chaddr[sizeof(dhcp_hdr.dhcp_chaddr) - 1] = 0;
+        strncpy((char *)dhcp_hdr.dhcp_chaddr, (const char *)chaddr, sizeof (dhcp_hdr.dhcp_chaddr) - 1);
     }
     else
     {
@@ -93,8 +92,7 @@ libnet_t *l, libnet_ptag_t ptag)
  
     if (sname)
     { 
-        memcpy(dhcp_hdr.dhcp_sname, sname, sizeof (dhcp_hdr.dhcp_sname));
-        dhcp_hdr.dhcp_sname[sizeof(dhcp_hdr.dhcp_sname) - 1] = 0;
+        strncpy((const char *)dhcp_hdr.dhcp_sname, (char *)sname, sizeof (dhcp_hdr.dhcp_sname) - 1);
     }
     else
     {
@@ -103,8 +101,7 @@ libnet_t *l, libnet_ptag_t ptag)
 
     if (file)
     {
-        memcpy(dhcp_hdr.dhcp_file, file, sizeof (dhcp_hdr.dhcp_file));
-        dhcp_hdr.dhcp_file[sizeof(dhcp_hdr.dhcp_file) - 1] = 0;
+        strncpy(dhcp_hdr.dhcp_file, file, sizeof (dhcp_hdr.dhcp_file) - 1);
     }
     else
     {
