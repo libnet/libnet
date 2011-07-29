@@ -57,7 +57,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, LIBNET_HSRP_H, LIBNET_PBLOCK_HSRP_H);
+    p = libnet_pblock_probe(l, ptag, LIBNET_HSRP_H + payload_s, LIBNET_PBLOCK_HSRP_H);
     if (p == NULL)
     {
         return (-1);
