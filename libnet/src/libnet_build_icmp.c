@@ -313,7 +313,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     /* size of memory block */
-    n = LIBNET_ICMPV4_TIMXCEED_H;
+    n = LIBNET_ICMPV4_TIMXCEED_H + payload_s;
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
@@ -362,7 +362,7 @@ libnet_ptag_t ptag)
         return (-1);
     } 
 
-    n = LIBNET_ICMPV4_REDIRECT_H;               /* size of memory block */
+    n = LIBNET_ICMPV4_REDIRECT_H + payload_s;               /* size of memory block */
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
