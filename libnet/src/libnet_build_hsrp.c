@@ -1,8 +1,9 @@
 /*
- *  libnet
- *  libnet_build_hsrp.c - HSRP packet assembler
+ *  $Id: libnet_build_dhcp.c,v 1.10 2004/03/01 20:26:12 mike Exp $
  *
- *  Copyright (c) 2004 David Barroso Berrueta <tomac@wasahero.org>
+ *  libnet
+ *  libnet_build_dhcp.c - DHCP/BOOTP packet assembler
+ *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
  *  All rights reserved.
  *
@@ -39,43 +40,76 @@
 #endif
 
 libnet_ptag_t
-libnet_build_hsrp(uint8_t version, uint8_t opcode, uint8_t state, 
-uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group,
-uint8_t reserved, uint8_t authdata[HSRP_AUTHDATA_LENGTH], uint32_t virtual_ip,
-const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen, 
+uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t *payload, uint32_t payload_s,
+libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n;
-    libnet_pblock_t *p;
-    struct libnet_hsrp_hdr hsrp_hdr;
+    uint32_t n, h;
+    libnet_pblock_t *p; 
+    struct libnet_dhcpv4_hdr dhcp_hdr;
 
     if (l == NULL)
     { 
         return (-1);
     } 
 
+    n = LIBNET_DHCPV4_H + payload_s;
+    h = 0;          /* no checksum */
+ 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, LIBNET_HSRP_H + payload_s, LIBNET_PBLOCK_HSRP_H);
+    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_DHCPV4_H);
     if (p == NULL)
     {
         return (-1);
     }
 
-    memset(&hsrp_hdr, 0, sizeof(hsrp_hdr));
-    hsrp_hdr.version = version;
-    hsrp_hdr.opcode = opcode;
-    hsrp_hdr.state = state;
-    hsrp_hdr.hello_time = hello_time;
-    hsrp_hdr.hold_time = hold_time;
-    hsrp_hdr.priority = priority;
-    hsrp_hdr.group = group;
-    hsrp_hdr.reserved = reserved;
-    memcpy(hsrp_hdr.authdata, authdata, HSRP_AUTHDATA_LENGTH*sizeof(uint8_t));
-    hsrp_hdr.virtual_ip = virtual_ip;
+    memset(&dhcp_hdr, 0, sizeof(dhcp_hdr));
+    dhcp_hdr.dhcp_opcode    = opcode;
+    dhcp_hdr.dhcp_htype     = htype;
+    dhcp_hdr.dhcp_hlen      = hlen;
+    dhcp_hdr.dhcp_hopcount  = hopcount;
+    dhcp_hdr.dhcp_xid       = htonl(xid);
+    dhcp_hdr.dhcp_secs      = htons(secs);
+    dhcp_hdr.dhcp_flags     = htons(flags);
+    dhcp_hdr.dhcp_cip       = htonl(cip);
+    dhcp_hdr.dhcp_yip       = htonl(yip);
+    dhcp_hdr.dhcp_sip       = htonl(sip);
+    dhcp_hdr.dhcp_gip       = htonl(gip);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&hsrp_hdr, LIBNET_HSRP_H);
+    if (chaddr)
+    { 
+        strncpy((char *)dhcp_hdr.dhcp_chaddr, (const char *)chaddr, sizeof (dhcp_hdr.dhcp_chaddr) - 2);
+    }
+    else
+    {
+        memset(dhcp_hdr.dhcp_chaddr, 0, sizeof (dhcp_hdr.dhcp_chaddr));
+    }
+ 
+    if (sname)
+    { 
+        strncpy((const char *)dhcp_hdr.dhcp_sname, (char *)sname, sizeof (dhcp_hdr.dhcp_sname) - 2);
+    }
+    else
+    {
+        memset(dhcp_hdr.dhcp_sname, 0, sizeof (dhcp_hdr.dhcp_sname));
+    }
+
+    if (file)
+    {
+        strncpy(dhcp_hdr.dhcp_file, file, sizeof (dhcp_hdr.dhcp_file) - 1);
+    }
+    else
+    {
+        memset(dhcp_hdr.dhcp_file, 0, sizeof(dhcp_hdr.dhcp_file));
+    }
+    dhcp_hdr.dhcp_magic = htonl(DHCP_MAGIC);    /* should this be tunable? */
+
+    n = libnet_pblock_append(l, p, (uint8_t *)&dhcp_hdr, LIBNET_DHCPV4_H);
     if (n == -1)
     {
         goto bad;
@@ -83,8 +117,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     if (payload_s && !payload)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
+         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "%s(): payload inconsistency\n", __func__);
         goto bad;
     }
  
@@ -97,9 +131,23 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         }
     }
  
-    return (ptag ? ptag : libnet_pblock_update(l, p, 0, LIBNET_PBLOCK_HSRP_H));
+    return (ptag ? ptag : libnet_pblock_update(l, p, h, 
+            LIBNET_PBLOCK_DHCPV4_H));
 bad:
     libnet_pblock_delete(l, p);
     return (-1);
 }
+
+libnet_ptag_t
+libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
+uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
+uint32_t cip, uint32_t yip, uint32_t sip, uint32_t gip, const uint8_t *chaddr,
+uint8_t *sname, const uint8_t *file, const uint8_t *payload, uint32_t payload_s,
+libnet_t *l, libnet_ptag_t ptag)
+{
+    return (libnet_build_dhcpv4(opcode, htype, hlen, hopcount, xid, secs,
+        flags, cip, yip, sip, gip, chaddr, sname, file, payload, payload_s, 
+        l, ptag));
+}
+
 /* EOF */
