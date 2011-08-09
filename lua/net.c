@@ -558,6 +558,31 @@ static int lnet_data (lua_State *L)
 }
 
 /*-
+-- ptag = net:igmp{type=NUM, code=NUM, ip=IP, payload=STR, ptag=int}
+
+Build IGMP packet inside net context.
+
+ptag is optional, defaults to creating a new protocol block
+*/
+static int lnet_igmp (lua_State *L)
+{
+    libnet_t* ud = checkudata(L);
+    int type = v_arg_integer(L, 2, "type");
+    int code = v_arg_integer(L, 2, "code");
+    const char* ip = v_arg_string(L, 2, "ip");
+    uint32_t ip_n = check_ip_pton(L, ip, "ip");
+    uint32_t payloadsz = 0;
+    const uint8_t* payload = checkpayload(L, 2, &payloadsz);
+    int cksum = 0;
+    int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_IGMP_H);
+
+    ptag = libnet_build_igmp(type, code, cksum, ip_n, payload, payloadsz, ud, ptag);
+    check_error(L, ud, ptag);
+    lua_pushinteger(L, ptag);
+    return 1;
+}
+
+/*-
 -- ptag = net:udp{src=NUM, dst=NUM, len=NUM, payload=STR, ptag=int}
 
 Build UDP packet inside net context.
@@ -1364,6 +1389,7 @@ static const luaL_reg net_methods[] =
   {"fd", lnet_getfd},
   {"device", lnet_getdevice},
   {"data", lnet_data},
+  {"igmp", lnet_igmp},
   {"udp", lnet_udp},
   {"get_udp", lnet_get_udp},
   {"tcp", lnet_tcp},
