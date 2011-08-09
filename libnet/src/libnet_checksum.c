@@ -179,7 +179,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
  *
  * iphdr is the pointer to it's encapsulating IP header
  * protocol describes the type of "q", expressed as an IPPROTO_ value
- * len is the h_len from "q"
+ * h_len is the h_len from "q"
  */
 int
 libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
