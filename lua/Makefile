@@ -22,7 +22,6 @@ install: $(BINDING)
 	../libnet/install-sh -t $(SODIR) $(BINDING)
 
 CWARNS = -Wall \
-  -pedantic \
   -Wcast-align \
   -Wnested-externs \
   -Wpointer-arith \
