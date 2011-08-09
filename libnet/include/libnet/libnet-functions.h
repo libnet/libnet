@@ -2256,8 +2256,7 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag);
  * Function copies protocol block data over.
  */
 int
-libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const uint8_t *buf,
-uint32_t len);
+libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t len);
 
 /*
  * [Internal] 
