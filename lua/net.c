@@ -32,7 +32,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <time.h>
 
-#include <dumbnet.h>
+#include <dnet.h>
 #include "libnet_decode.h"
 #include <libnet.h>
 
