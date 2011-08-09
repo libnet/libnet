@@ -364,9 +364,9 @@ struct libnet_dhcpv4_hdr
     uint32_t dhcp_yip;        /* your IP */
     uint32_t dhcp_sip;        /* server's IP */
     uint32_t dhcp_gip;        /* gateway IP */
-    uint8_t dhcp_chaddr[16]; /* client hardware address */
-    uint8_t dhcp_sname[64];  /* server host name */
-    uint8_t dhcp_file[128];  /* boot file name */
+    uint8_t dhcp_chaddr[16]; /* client hardware address, len is dhcp_hlen */
+    char dhcp_sname[64];     /* server host name, null terminated string */
+    char dhcp_file[128];     /* boot file name, null terminated string */
     uint32_t dhcp_magic;      /* BOOTP magic header */
 #define DHCP_MAGIC                  0x63825363
 #define LIBNET_BOOTP_MIN_LEN        0x12c
