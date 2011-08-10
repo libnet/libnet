@@ -799,7 +799,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param type packet type
  * @param code packet code (should be 0)
  * @param sum checksum (0 for libnet to autofill)
- * @param ip IPv4 address
+ * @param ip IPv4 address (in standard/network byte order)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
