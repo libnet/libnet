@@ -84,7 +84,7 @@ if test -n "${with_link_layer}"; then
         none) AC_LIBOBJ([libnet_link_none]) ;;
         *) AC_MSG_ERROR([Invalid link type "${with_link_layer}"]) ;;
     esac
-    AC_MSG_RESULT(forced link layer to ${with_link_layer})
+    AC_MSG_RESULT(user selected link layer ${with_link_layer})
 elif test "${cross_compiling}" != "yes" -a -r /dev/bpf0 ; then
     AC_LIBOBJ([libnet_link_bpf])
     AC_MSG_RESULT(found link layer bpf)
