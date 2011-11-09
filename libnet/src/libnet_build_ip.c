@@ -749,10 +749,66 @@ libnet_ptag_t
 libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
             libnet_t *l, libnet_ptag_t ptag)
 {
+    int libnet_in6_addr_cmp(struct libnet_in6_addr addr1, struct libnet_in6_addr addr2) {
+        /* Returns != 0 if addresses are equal, 0 otherwise. */
+        uint32_t *p1 = (uint32_t*)&addr1.__u6_addr, *p2 = (uint32_t*)&addr2.__u6_addr;
+        return ((p1[0] == p2[0]) && (p1[1] == p2[1]) && (p1[2] == p2[2]) &&
+                (p1[3] == p2[3]));
+    }
 
-    /* NYI */
-     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-             "%s(): not yet implemented\n", __func__);
+    uint32_t n;
+    libnet_pblock_t *p;
+    struct libnet_ipv6_hdr ip_hdr;
+    struct libnet_in6_addr src;
+
+    if (l == NULL)
+    {
+        return (-1);
+    }
+
+    n = LIBNET_IPV6_H;                      /* size of memory block */
+    /*
+     *  Find the existing protocol block if a ptag is specified, or create
+     *  a new one.
+     */
+    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_H);
+    if (p == NULL)
+    {   
+        return (-1);
+    }  
+
+    src = libnet_get_ipaddr6(l);
+    if (libnet_in6_addr_cmp(src, in6addr_error))
+    {
+        /* err msg set in libnet_get_ipaddr6() */ 
+        return (-1);
+    }
+
+    memset(&ip_hdr, 0, sizeof(ip_hdr));
+    ip_hdr.ip_flags[0] = 0x06 << 4; /* ip version */
+    ip_hdr.ip_flags[1] = 0;
+    ip_hdr.ip_flags[2] = 0;
+    ip_hdr.ip_flags[3] = 0;
+    ip_hdr.ip_len      = htons(len);
+    ip_hdr.ip_nh       = nh;
+    ip_hdr.ip_hl       = 64;
+    ip_hdr.ip_src      = src;
+    ip_hdr.ip_dst      = dst;
+     
+    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV6_H);
+    if (n == -1)
+    {
+        goto bad;
+    }
+
+    /* no checksum for IPv6 */
+    ptag = ptag ? ptag : libnet_pblock_update(l, p, LIBNET_IPV6_H,
+            LIBNET_PBLOCK_IPV6_H);
+
+    return ptag;
+
+bad:
+    libnet_pblock_delete(l, p);
     return (-1);
 }
 

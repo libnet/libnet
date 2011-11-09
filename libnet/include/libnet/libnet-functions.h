@@ -1036,7 +1036,14 @@ libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * This function is not yet implement and is a NOOP.
+ * Autobuilds a version 6 RFC 2460 Internet Protocol (IP) header. The function
+ * is useful to build an IP header quickly when you do not need a granular
+ * level of control. The function takes the same len, nh, and dst arguments
+ * as libnet_build_ipv4(). The function does not accept a ptag argument, but it
+ * does return a ptag. In other words, you can use it to build a new IP header
+ * but not to modify an existing one.
+ * This function requires libnet_get_ipaddr6(), which is not yet implemented
+ * for Win32 platforms.
  * @param len length
  * @param nh next header
  * @param dst destination IPv6 address
