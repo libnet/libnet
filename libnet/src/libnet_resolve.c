@@ -294,6 +294,53 @@ libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name)
     }
 }
 
+#if !defined(__WIN32__)
+
+#include <ifaddrs.h>
+
+struct libnet_in6_addr
+libnet_get_ipaddr6(libnet_t *l)
+{
+    struct ifaddrs *ifaddr, *p;
+    struct libnet_in6_addr addr;
+
+    if (l == NULL)
+    {
+        return (in6addr_error);
+    }
+
+    if (getifaddrs(&ifaddr) != 0)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): getifaddrs(): %s\n", __func__, strerror(errno));
+        return (in6addr_error);
+    }
+
+    if (l->device == NULL)
+    {
+        if (libnet_select_device(l) == -1)
+        {
+            /* error msg set in libnet_select_device() */
+            return (in6addr_error);
+        }
+    }
+
+    for (p = ifaddr; p != NULL; p = p->ifa_next)
+    {
+        if ((strcmp(p->ifa_name, l->device) == 0) && (p->ifa_addr != NULL) &&
+                (p->ifa_addr->sa_family == AF_INET6))
+        {
+            memcpy(&addr.__u6_addr,
+                    ((struct sockaddr_in6*)p->ifa_addr)->sin6_addr.s6_addr, 16);
+            freeifaddrs(ifaddr);
+            return (addr);
+        }
+    }
+
+    freeifaddrs(ifaddr);
+    return (in6addr_error);
+}
+#else
 struct libnet_in6_addr
 libnet_get_ipaddr6(libnet_t *l)
 {
@@ -301,6 +348,7 @@ libnet_get_ipaddr6(libnet_t *l)
            "%s(): not yet Implemented\n", __func__);
     return (in6addr_error);
 }
+#endif /* WIN32 */
 
 #if !defined(__WIN32__)
 uint32_t

@@ -1869,7 +1869,11 @@ uint32_t
 libnet_get_ipaddr4(libnet_t *l);
 
 /**
- * This function is not yet implemented under IPv6.
+ * Returns the IPv6 address for the device libnet was initialized with. If
+ * libnet was initialized without a device (in raw socket mode) the function
+ * will attempt to find one. If the function fails and returns in6addr_error, a
+ * call to libnet_geterrror() will tell you why.
+ * This function is not yet implemented for Win32 platforms.
  * @param l pointer to a libnet context
  * @return well, nothing yet
  */
