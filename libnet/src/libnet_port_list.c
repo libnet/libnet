@@ -127,7 +127,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
         if (i)
         {
             tmp->next = malloc(sizeof (libnet_plist_t));
-            if (!tmp)
+            if (!tmp->next)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                     "libnet_build_plist_chain: malloc %s\n", strerror(errno));
@@ -194,11 +194,11 @@ libnet_plist_chain_next_pair(libnet_plist_t *plist, uint16_t *bport,
     uint16_t *node_cnt;
     uint16_t tmp_cnt;
 
-    node_cnt = &(all_lists[plist->id]);
     if (plist == NULL)
     {
         return (-1);
     }
+    node_cnt = &(all_lists[plist->id]);
 
     /*
      *  We are at the end of the list.

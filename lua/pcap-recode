@@ -1,6 +1,0 @@
-#!/usr/bin/env lua
-
-require"netutil"
-
-pcaprecode(arg[1], arg[2])
-

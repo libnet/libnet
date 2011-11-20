@@ -261,7 +261,8 @@ libnet_get_hwaddr(libnet_t *l)
     int8_t *buf, *next, *end;
     struct if_msghdr *ifm;
     struct sockaddr_dl *sdl;
-    struct libnet_ether_addr *ea = NULL;
+    /* This implementation is not-reentrant. */
+    static struct libnet_ether_addr ea;
 
     mib[0] = CTL_NET;
     mib[1] = AF_ROUTE;
@@ -319,20 +320,13 @@ libnet_get_hwaddr(libnet_t *l)
                 continue;
             if (strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
             {
-                if (!(ea = malloc(sizeof(struct libnet_ether_addr))))
-                {
-                    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                            "%s(): malloc(): %s", __func__, strerror(errno));
-                    free(buf);
-                    return (NULL);
-                }
-                memcpy(ea->ether_addr_octet, LLADDR(sdl), ETHER_ADDR_LEN);
+                memcpy(ea.ether_addr_octet, LLADDR(sdl), ETHER_ADDR_LEN);
                 break;
             }
         }
     }
     free(buf);
-    return (ea);
+    return (&ea);
 }
 
 

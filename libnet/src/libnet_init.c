@@ -44,14 +44,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
 {
     libnet_t *l = NULL;
 
-#if !defined(__WIN32__)
-    if ((injection_type != LIBNET_NONE) && getuid() && geteuid())
-    {
-        snprintf(err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): UID or EUID of 0 required\n", __func__);
-        goto bad;
-    }
-#else
+#if defined(__WIN32__)
     WSADATA wsaData;
 
     if ((WSAStartup(0x0202, &wsaData)) != 0)
@@ -78,7 +71,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
     l->fd               = -1;
 
     strncpy(l->label, LIBNET_LABEL_DEFAULT, LIBNET_LABEL_SIZE);
-    l->label[sizeof(l->label)] = '\0';
+    l->label[LIBNET_LABEL_SIZE - 1] = '\0';
 
     switch (l->injection_type)
     {

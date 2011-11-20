@@ -448,7 +448,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }  
     
     memset(&ip_hdr, 0, sizeof(ip_hdr));
-    ip_hdr.ip_flags[0] = 0x06 << 4;
+    ip_hdr.ip_flags[0] = (0x06 << 4) | ((tc & 0xF0) >> 4);
     ip_hdr.ip_flags[1] = ((tc & 0x0F) << 4) | ((fl & 0xF0000) >> 16);
     ip_hdr.ip_flags[2] = fl & 0x0FF00 >> 8;
     ip_hdr.ip_flags[3] = fl & 0x000FF;

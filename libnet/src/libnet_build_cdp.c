@@ -53,8 +53,8 @@ libnet_t *l, libnet_ptag_t ptag)
         return (-1); 
     }
 
-    n = LIBNET_CDP_H + len + payload_s;
-    h = LIBNET_CDP_H + len + payload_s;
+    n = LIBNET_CDP_H + LIBNET_CDP_H + len + payload_s;
+    h = LIBNET_CDP_H + LIBNET_CDP_H + len + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -135,9 +135,9 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
         return (-1);
     }
 
-	memset(&cdp_value_hdr, 0, sizeof(cdp_value_hdr));
-	cdp_value_hdr.cdp_type  = htons(type);
-    cdp_value_hdr.cdp_len   = htons(len + 4);   /* 4 bytes for len and type */
+    memset(&cdp_value_hdr, 0, sizeof(cdp_value_hdr));
+    cdp_value_hdr.cdp_type  = htons(type);
+    cdp_value_hdr.cdp_len   = htons(len + LIBNET_CDP_VALUE_H);   /* 4 bytes for len and type */
 
     switch (type)
     {
@@ -159,7 +159,7 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
             break;
     }
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&cdp_value_hdr, LIBNET_CDP_H);
+    n = libnet_pblock_append(l, p, (uint8_t *)&cdp_value_hdr, LIBNET_CDP_VALUE_H);
     if (n == -1)
     {
         return (-1);

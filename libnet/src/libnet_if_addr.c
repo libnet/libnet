@@ -154,6 +154,9 @@ register char *errbuf)
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): ioctl(SIOCGIFCONF) error: %s\n", 
                 __func__, strerror(errno));
+#ifdef HAVE_LINUX_PROCFS
+	fclose(fp);
+#endif
 	return(-1);
     }
 
@@ -224,6 +227,9 @@ register char *errbuf)
                         "%s(): SIOCGIFADDR: dev=%s: %s\n", __func__, device,
                         strerror(errno));
                 close(fd);
+#ifdef HAVE_LINUX_PROCFS
+                fclose(fp);
+#endif
                 return (-1);
 	    }
             else /* device has no IP address => set to 0 */
@@ -243,6 +249,9 @@ register char *errbuf)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
                     "%s(): strdup not enough memory\n", __func__);
+#ifdef HAVE_LINUX_PROCFS
+            fclose(fp);
+#endif
             return(-1);
         }
 
@@ -260,6 +269,7 @@ register char *errbuf)
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): ferror: %s\n", __func__, strerror(errno));
+	fclose(fp);
 	return (-1);
     }
     fclose(fp);

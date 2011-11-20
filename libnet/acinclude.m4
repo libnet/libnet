@@ -39,17 +39,10 @@ dnl
 
 AC_DEFUN([AC_LIBNET_CHECK_PF_PACKET],
 [
-    AC_MSG_CHECKING(for packet socket (PF_SOCKET))
+    AC_MSG_CHECKING(for packet socket (PF_PACKET))
     AC_CACHE_VAL(libnet_cv_have_packet_socket,
 
-        [case "$target_os" in
-
-        linux*)
-                libnet_cv_have_packet_socket=no
-		AC_MSG_RESULT(no)
-                ;;
-        *)
-
+        [
     cat > pf_packet-test.c << EOF
 #include <stdio.h>
 #include <errno.h>
@@ -110,8 +103,8 @@ EOF
     fi
 
     rm -f pf_packet-test* core core.pf_packet-test
-    ;;
-    esac])
+
+    ])
 
     if test $libnet_cv_have_packet_socket = yes -o $libnet_cv_have_packet_socket = probably; then
         AC_DEFINE(HAVE_PACKET_SOCKET, 1,

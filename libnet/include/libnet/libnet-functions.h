@@ -791,15 +791,15 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_icmpv6_unreach(u_int8_t type, u_int8_t code, u_int16_t sum,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.
  * @param type packet type
  * @param code packet code (should be 0)
  * @param sum checksum (0 for libnet to autofill)
- * @param ip IPv4 address
+ * @param ip IPv4 address (in standard/network byte order)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1476,9 +1476,9 @@ libnet_ptag_t ptag);
  * @param yip
  * @param sip
  * @param gip
- * @param chaddr
- * @param sname
- * @param file
+ * @param chaddr, client hardware address, length is hlen
+ * @param sname, server host name, a null terminated string
+ * @param file, boot file name, a null terminated string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1489,7 +1489,7 @@ libnet_ptag_t
 libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
 uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, const uint8_t *chaddr,
-uint8_t *sname, const uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
+const char *sname, const char *file, const uint8_t* payload, uint32_t payload_s, 
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1504,9 +1504,9 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param yip
  * @param sip
  * @param gip
- * @param chaddr
- * @param sname
- * @param file
+ * @param chaddr, client hardware address, length is hlen
+ * @param sname, server host name, a null terminated string
+ * @param file, boot file name, a null terminated string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1517,7 +1517,7 @@ libnet_ptag_t
 libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
 uint32_t cip, uint32_t yip,  uint32_t sip, uint32_t gip, const uint8_t *chaddr,
-uint8_t *sname, const uint8_t *file, const uint8_t* payload, uint32_t payload_s, 
+const char *sname, const char *file, const uint8_t* payload, uint32_t payload_s, 
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -2256,8 +2256,7 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag);
  * Function copies protocol block data over.
  */
 int
-libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const uint8_t *buf,
-uint32_t len);
+libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t len);
 
 /*
  * [Internal] 
