@@ -735,7 +735,8 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    int8_t buf[2048];
+    /* This implementation is not-reentrant. */
+    static int8_t buf[2048];
     union DL_primitives *dlp;
     struct libnet_ether_addr *eap;
 

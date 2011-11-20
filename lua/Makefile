@@ -1,8 +1,10 @@
 .PHONY: default build test
 
+-include local.mak
+
 default: build
 
-BINDING=net.so pcap.so
+BINDING+=net.so
 
 UNAME=$(shell uname)
 
@@ -10,7 +12,7 @@ include $(UNAME).mak
 
 build: $(BINDING)
 
-prefix=/usr/local
+prefix=/usr
 
 SODIR = $(DESTDIR)$(prefix)/lib/lua/5.1/
 
@@ -20,14 +22,14 @@ install: $(BINDING)
 	../libnet/install-sh -t $(SODIR) $(BINDING)
 
 CWARNS = -Wall \
-  -pedantic \
   -Wcast-align \
   -Wnested-externs \
   -Wpointer-arith \
   -Wshadow \
   -Wwrite-strings
 
-CDEFS=$(shell sh ../libnet/libnet-config --cflags --defines) $(shell dnet-config --cflags)
+DNETDEFS=$(shell dnet-config --cflags)
+LNETDEFS=$(shell sh ../libnet/libnet-config --cflags --defines) 
 COPT=-O2 -DNDEBUG -g
 CFLAGS=$(CWARNS) $(CDEFS) $(CLUA) $(LDFLAGS) -I../libnet/include -L../libnet/src/.libs/
 LDLIBS=$(LLUA)
@@ -42,12 +44,7 @@ CC.SO := $(CC) $(COPT) $(CFLAGS)
 
 net.so: net.c libnet_decode.c
 net.so: LDLIBS+=$(LDDNET) $(LDLNET)
-
-pcap.so: pcap.c
-pcap.so: LDLIBS+=-lpcap
-
-nfq.so: nfq.c
-nfq.so: LDLIBS+=-lnetfilter_queue
+net.so: CDEFS=$(DNETDEFS) $(LNETDEFS)
 
 TNET=$(wildcard test-*.lua)
 TOUT=$(TNET:.lua=.test)

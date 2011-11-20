@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-set -x
-
-~/bin/T . ../libnet/include ../libnet/src
-

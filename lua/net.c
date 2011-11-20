@@ -313,7 +313,7 @@ static const char* type_string(u_int8_t type)
 }
 
 /*-
-- net:destroy()
+-- net:destroy()
 
 Manually destroy a net object, freeing it's resources (this will happen
 on garbage collection if not done explicitly).
@@ -331,7 +331,7 @@ static int lnet_destroy (lua_State *L)
 }
 
 /*-
-- net = net:clear()
+-- net = net:clear()
 
 Clear the current packet and all it's protocol blocks.
 
@@ -348,14 +348,15 @@ static int lnet_clear(lua_State* L)
 }
 
 /*-
-- str = net:block([ptag])
+-- str = net:block([ptag])
 
 Coalesce the protocol blocks into a single chunk, and return.
 
 If a ptag is provided, just return data of that pblock (no checksums
 will be calculated).
-
-FIXME - we should just have a packet function, this fails on single blocks,
+*/
+/*
+FIXME - we should just have a packet function, this fails on single blocks/ptags,
 and the :pblock() method is better, anyway.
 */
 static int lnet_block(lua_State* L)
@@ -392,7 +393,7 @@ static int lnet_block(lua_State* L)
 }
 
 /*-
-- net:pbuf(ptag)
+-- net:pbuf(ptag)
 */
 static int lnet_pbuf(lua_State* L)
 {
@@ -410,7 +411,7 @@ static int lnet_pbuf(lua_State* L)
 }
 
 /*-
-- net:write()
+-- net:write()
 
 Write the packet (which must previously have been built up inside the context).
 */
@@ -428,6 +429,14 @@ static int lnet_write(lua_State *L)
     return 1;
 }
 
+/*-
+-- size = net:write_link(link_pdu)
+
+Writes link_pdu raw at the link layer, you are responsible for forming
+the link-layer header.
+
+Returns the size written on success.
+*/
 static int lnet_write_link (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
@@ -436,12 +445,13 @@ static int lnet_write_link (lua_State *L)
     uint32_t payloadsz = (uint32_t) payloadsz_;
     const uint8_t* payload = (const uint8_t*) payload_;
     int size = libnet_write_link(ud, payload, payloadsz);
+    check_error(L, ud, size);
     lua_pushinteger(L, size);
     return 1;
 }
 
 /*-
-- net:tag_below(ptag)
+-- net:tag_below(ptag)
 
 tag below ptag, or bottom tag if ptag is nil
 */
@@ -460,7 +470,7 @@ static int lnet_tag_below(lua_State* L)
 }
 
 /*-
-- net:tag_above(ptag)
+-- net:tag_above(ptag)
 
 tag above ptag, or top tag if ptag is nil
 */
@@ -493,7 +503,7 @@ static int lnet_tag_type(lua_State* L)
 }
 
 /*-
-- net:fd()
+-- net:fd()
 
 Get the fileno of the underlying file descriptor.
 */
@@ -505,7 +515,7 @@ static int lnet_getfd(lua_State* L)
 }
 
 /*-
-- net:device()
+-- net:device()
 
 Get the device name, maybe be nil.
 */
@@ -528,7 +538,7 @@ static int lnet_getdevice(lua_State* L)
  */
 
 /*-
-- ptag = net:data{payload=STR, ptag=int}
+-- ptag = net:data{payload=STR, ptag=int}
 
 Build generic data packet inside net context.
 
@@ -548,7 +558,32 @@ static int lnet_data (lua_State *L)
 }
 
 /*-
-- ptag = net:udp{src=NUM, dst=NUM, len=NUM, payload=STR, ptag=int}
+-- ptag = net:igmp{type=NUM, code=NUM, ip=IP, payload=STR, ptag=int}
+
+Build IGMP packet inside net context.
+
+ptag is optional, defaults to creating a new protocol block
+*/
+static int lnet_igmp (lua_State *L)
+{
+    libnet_t* ud = checkudata(L);
+    int type = v_arg_integer(L, 2, "type");
+    int code = v_arg_integer(L, 2, "code");
+    const char* ip = v_arg_string(L, 2, "ip");
+    uint32_t ip_n = check_ip_pton(L, ip, "ip");
+    uint32_t payloadsz = 0;
+    const uint8_t* payload = checkpayload(L, 2, &payloadsz);
+    int cksum = 0;
+    int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_IGMP_H);
+
+    ptag = libnet_build_igmp(type, code, cksum, ip_n, payload, payloadsz, ud, ptag);
+    check_error(L, ud, ptag);
+    lua_pushinteger(L, ptag);
+    return 1;
+}
+
+/*-
+-- ptag = net:udp{src=NUM, dst=NUM, len=NUM, payload=STR, ptag=int}
 
 Build UDP packet inside net context.
 
@@ -604,12 +639,12 @@ checkptype(lua_State* L, libnet_t* l, uint8_t type)
 }
 
 /*-
-- argt = net:get_udp()
+-- argt = net:get_udp()
 
 Get udp pblock argument table.
 
-TODO - optional ptag argument?
 */
+/* TODO - optional ptag argument? */
 static int lnet_get_udp(lua_State *L)
 {
     libnet_t* ud = checkudata(L);
@@ -635,7 +670,7 @@ static int lnet_get_udp(lua_State *L)
 }
 
 /*-
-- ptag = n:tcp{
+-- ptag = n:tcp{
     -- required arguments
       src=port,
       dst=port,
@@ -730,12 +765,12 @@ static int lnet_tcp (lua_State *L)
 }
 
 /*-
-- argt = net:get_tcp()
+-- argt = net:get_tcp()
 
 Get tcp pblock argument table.
-
-TODO - optional ptag argument?
 */
+
+/* TODO - optional ptag argument? */
 static int lnet_get_tcp (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
@@ -783,7 +818,7 @@ static int lnet_get_tcp (lua_State *L)
 
 
 /*-
-- ptag = n:ipv4{
+-- ptag = n:ipv4{
     -- required arguments
       src=ipaddr,
       dst=ipaddr,
@@ -863,6 +898,58 @@ static int lnet_ipv4 (lua_State *L)
     }
 
     /* If len unspecified, rewrite it to be len of ipv4 pblock + previous blocks. */
+    /* FIXME I don't think defaulting to end is correct
+
+-- libnet doesn't have a generic icmp construction api, see bug#1373
+local function build_icmp(n, icmp)
+    local typecode = string.char(assert(icmp.type), assert(icmp.code))
+    local data = icmp.data or ""
+    local checksum = net.checksum(typecode, "\0\0", data)
+    local packet = typecode..checksum..data
+
+    return n:ipv4{
+        src      = arg.localip,
+        dst      = arg.dutip,
+        protocol = 1, -- ICMP is protocol 1 FIXME get from iana.ip.types.icmp
+        payload  = packet,
+        len      = 20 + #packet,
+        ptag     = icmp.ptag
+    }
+end
+
+getmetatable(n).icmp = build_icmp
+
+-- set up the pblock stack, top to bottom
+local ptag = n:icmp{type=0, code=0}
+n:eth{src=arg.localmac, dst=arg.dutmac}
+
+   n:icmp{ptag=ptag, type=type, code=code, payload=data}
+
+print(n:dump())
+print(n:get_ipv4())
+
+
+~/w/wt/achilles-engine/data/Plugins/Grammar % sudo ./icmp-data-grammar-l2 dutip=1.1.1.1 localdev=lo localip=2.2.2.2 dutmac=11:11:11:11:11:11 localmac=22:22:22:22:22:22 pcap=pc.pcap
+tag 2 flags 0 type ipdata/0xf buf 0x6541e0 b_len  4 h_len  4 copied 4 prev -1 next 1
+tag 1 flags 1 type ipv4/0xd buf 0x6582f0 b_len 20 h_len 20 copied 20 prev 2 next 3
+tag 3 flags 0 type eth/0x4 buf 0x647580 b_len 14 h_len  0 copied 14 prev 1 next -1
+link_offset 14 aligner 0 total_size 38 nblocks 3
+
+Total:1
+Subtest 1: ICMP type 0 code 1 with payload size 1
+tag 2 flags 0 type ipdata/0xf buf 0x6541e0 b_len  4 h_len  4 copied 4 prev -1 next 1
+tag 1 flags 1 type ipv4/0xd buf 0x6582f0 b_len 20 h_len 20 copied 20 prev 2 next 3
+tag 3 flags 0 type eth/0x4 buf 0x647580 b_len 14 h_len  0 copied 14 prev 1 next -1
+link_offset 14 aligner 0 total_size 38 nblocks 3
+
+{
+ptag = 1, protocol = 1, _iphl = 5, id = 0, options = "", dst = "1.1.1.1", src = "2.2.2.2", _sum = 0, _ipv = 4, tos = 0, _len = 28, ttl = 64, frag = 0
+}
+
+
+============>> note that _len is 28, it should be 24
+    
+    */
     if(len < 0) {
         libnet_pblock_t* p = ptag ? libnet_pblock_find(ud, ptag)->prev : ud->pblock_end;
 
@@ -888,12 +975,11 @@ static int lnet_ipv4 (lua_State *L)
 }
 
 /*-
-- argt = net:get_ipv4()
+-- argt = net:get_ipv4()
 
 Get ipv4 pblock argument table.
-
-TODO - optional ptag argument?
 */
+/* TODO - optional ptag argument? */
 static int lnet_get_ipv4 (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
@@ -913,6 +999,15 @@ static int lnet_get_ipv4 (lua_State *L)
     setintfield(L, 2, "_len", ntohs(ip->ip_len));
     setintfield(L, 2, "id", ntohs(ip->ip_id));
     setintfield(L, 2, "frag", ntohs(ip->ip_off));
+    /* FIXME
+    Only if non-zero, or flags are set:
+    setintfield(L, 2, "_fragoffset", ntohs(ip->ip_off) & 0xd0);
+    Only if non-zero:
+    setintfield(L, 2, "_fragflags",  ntohs(ip->ip_off) & 0x1f);
+                 , 2, "_fragmore",                           ;
+                 , 2, "_fragdont",                           ;
+                 , 2, "_fragrsv",                           ;
+    */
     setintfield(L, 2, "ttl", ip->ip_ttl);
     setintfield(L, 2, "protocol", ip->ip_p);
     setintfield(L, 2, "_sum", ntohs(ip->ip_sum));
@@ -944,7 +1039,7 @@ static int lnet_get_ipv4 (lua_State *L)
 
 
 /*-
-- ptag = n:eth{src=ethmac, dst=ethmac, type=int, payload=str, ptag=int}
+-- ptag = n:eth{src=ethmac, dst=ethmac, type=int, payload=str, ptag=int}
 
 type is optional, defaults to IP
 ptag is optional, defaults to creating a new protocol block
@@ -975,7 +1070,7 @@ static int lnet_eth (lua_State *L)
 
 
 /*-
-- argt = net:get_eth()
+-- argt = net:get_eth()
 
 Get eth pblock argument table.
 */
@@ -1068,7 +1163,7 @@ static void pushpblock(lua_State* L, libnet_pblock_t* pblock)
 }
 
 /*-
-- net:pblock(lua_State* L, int ptag)
+-- net:pblock(lua_State* L, int ptag)
 
 Get a table with all the pblock info in it.
 */
@@ -1081,7 +1176,7 @@ static int lnet_pblock(lua_State* L)
 }
 
 /*-
-- net:dump()
+-- net:dump()
 
 Write summary of protocol blocks to stdout.
 */
@@ -1122,8 +1217,10 @@ void dump(lua_State* L) {
 }
 #endif
 
+/* TODO net.ntop() take either a number (a host u32 inet addr), or a string of bytes, and convert to presentation */
+
 /*-
-- network = net.pton(presentation)
+-- network = net.pton(presentation)
 
 presentation is something like "df:33:44:12:45:54", or "1.2.3.4", or a host name
 
@@ -1149,7 +1246,7 @@ static int lnet_pton(lua_State *L)
 }
 
 /*-
-- n = net.htons(h)
+-- n = net.htons(h)
 
 Return a network byte order encoding of number, h.
 */
@@ -1169,7 +1266,7 @@ static int lnet_htons(lua_State *L)
 }
 
 /*-
-- sum = net.checksum(string, ...)
+-- sum = net.checksum(string, ...)
 
 Checksum the series of strings passed in.
 */
@@ -1188,14 +1285,15 @@ static int lnet_chksum(lua_State *L)
 
     chks = LIBNET_CKSUM_CARRY(interm);
 
-    lua_pushlstring(L, (char *)&chks, 2);
+    lua_pushlstring(L, (char *)&chks, 2); /* FIXME intel specific? */
+
     return 1;
 }
 
 /*-
-- remaining = net.nanosleep(seconds)
+-- remaining = net.nanosleep(seconds)
 
-Seconds can be decimal (resolution is nanoseconds, theoretically).
+Seconds can be smaller than 1 (resolution is nanoseconds, theoretically).
 Return is number of seconds not slept, or nil and an error message on failure.
 
 remaining = assert(net.nanosleep(seconds))
@@ -1242,7 +1340,7 @@ static int lnet_gettimeofday(lua_State *L)
 }
 
 /*-
-- net.init(injection, device)
+-- net.init(injection, device)
 
 injection is one of "link", "raw", ...
 device is "eth0", ...
@@ -1291,6 +1389,7 @@ static const luaL_reg net_methods[] =
   {"fd", lnet_getfd},
   {"device", lnet_getdevice},
   {"data", lnet_data},
+  {"igmp", lnet_igmp},
   {"udp", lnet_udp},
   {"get_udp", lnet_get_udp},
   {"tcp", lnet_tcp},

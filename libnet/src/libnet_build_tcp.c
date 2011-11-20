@@ -143,7 +143,8 @@ libnet_build_tcp(
             goto bad;
         }
 
-        if (libnet_pblock_append(l, p_data, payload, payload_s) == -1)
+        n = libnet_pblock_append(l, p_data, payload, payload_s);
+        if (n == -1)
         {
             goto bad;
         }
@@ -188,7 +189,7 @@ libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l
 libnet_ptag_t ptag)
 {
     static const uint8_t padding[] = { 0 };
-    int offset, underflow;
+    int n, offset, underflow;
     uint32_t i, j, adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
@@ -244,10 +245,19 @@ libnet_ptag_t ptag)
     {
         return (-1);
     }
-	
-    libnet_pblock_append(l, p, options, options_s);
-    libnet_pblock_append(l, p, padding, adj_size - options_s);
-	
+
+    n = libnet_pblock_append(l, p, options, options_s);
+    if (n == -1)
+    {
+        goto bad;
+    }
+
+    n = libnet_pblock_append(l, p, padding, adj_size - options_s);
+    if (n == -1)
+    {
+        goto bad;
+    }
+
     if (ptag && p->next)
     {
         p_temp = p->next;
@@ -296,6 +306,9 @@ libnet_ptag_t ptag)
 
     return (ptag ? ptag : libnet_pblock_update(l, p, adj_size,
             LIBNET_PBLOCK_TCPO_H));
+bad:
+    libnet_pblock_delete(l, p);
+    return (-1);
 }
 
 /* EOF */

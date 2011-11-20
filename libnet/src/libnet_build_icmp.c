@@ -313,7 +313,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     /* size of memory block */
-    n = LIBNET_ICMPV4_TIMXCEED_H;
+    n = LIBNET_ICMPV4_TIMXCEED_H + payload_s;
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
@@ -362,7 +362,7 @@ libnet_ptag_t ptag)
         return (-1);
     } 
 
-    n = LIBNET_ICMPV4_REDIRECT_H;               /* size of memory block */
+    n = LIBNET_ICMPV4_REDIRECT_H + payload_s;               /* size of memory block */
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
@@ -397,10 +397,10 @@ bad:
 
 
 libnet_ptag_t
-libnet_build_icmpv6_unreach(u_int8_t type, u_int8_t code, u_int16_t sum,
-u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
+uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    u_int32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_icmpv6_hdr icmp_hdr;
 
@@ -430,7 +430,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     LIBNET_BUILD_ICMP_ERR_FINISH(LIBNET_ICMPV6_UNREACH_H);
 
-    return (ptag ? ptag : libnet_pblock_update(l, p, h,
+    return (ptag ? ptag : libnet_pblock_update(l, p, 0,
             LIBNET_PBLOCK_ICMPV6_UNREACH_H));
 bad:
     libnet_pblock_delete(l, p);

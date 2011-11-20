@@ -69,7 +69,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     igmp_hdr.igmp_type         = type;    /* packet type */
     igmp_hdr.igmp_code         = code;    /* packet code */
     igmp_hdr.igmp_sum          = (sum ? htons(sum) : 0);  /* packet checksum */
-    igmp_hdr.igmp_group.s_addr = htonl(ip);
+    igmp_hdr.igmp_group.s_addr = ip;
 
     n = libnet_pblock_append(l, p, (uint8_t *)&igmp_hdr, LIBNET_IGMP_H);
     if (n == -1)

@@ -8,5 +8,7 @@
 set -x
 set -e
 
-autoreconf -ivf -I . -I /sw/share/aclocal
+autoreconf -ivf -I . -I /sw/share/aclocal \
+    || autoreconf -ivf -I .
+
 

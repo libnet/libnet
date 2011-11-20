@@ -179,7 +179,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
  *
  * iphdr is the pointer to it's encapsulating IP header
  * protocol describes the type of "q", expressed as an IPPROTO_ value
- * len is the h_len from "q"
+ * h_len is the h_len from "q"
  */
 int
 libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end)
@@ -189,7 +189,6 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
     struct libnet_ipv6_hdr *ip6h_p = NULL; /* default to not using IPv6 */
     int ip_hl   = 0;
     int sum     = 0;
-    int is_ipv6 = 0; /* TODO - remove this, it is redundant with ip6h_p */
 
     /* Check for memory under/over reads/writes. */
     if(iphdr < beg || (iphdr+sizeof(*iph_p)) > end)
@@ -267,7 +266,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
              * + the TCP header (with checksum set to zero) and data
              */
             tcph_p->th_sum = 0;
-            if (is_ipv6)
+            if (ip6h_p)
             {
                 sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
             }
@@ -298,7 +297,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             CHECK_IP_PAYLOAD_SIZE();
 
             udph_p->uh_sum = 0;
-            if (is_ipv6)
+            if (ip6h_p)
             {
                 sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
             }
@@ -324,7 +323,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             /* Hm, is this valid? Is the checksum algorithm for ICMPv6 encapsulated in IPv4
              * actually defined?
              */
-            if (is_ipv6)
+            if (ip6h_p)
             {
                 sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
                 sum += ntohs(IPPROTO_ICMP6 + h_len);
@@ -343,12 +342,12 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             CHECK_IP_PAYLOAD_SIZE();
 
             icmph_p->icmp_sum = 0;
-            if (is_ipv6)
+            if (ip6h_p)
             {
-                sum = libnet_in_cksum((u_int16_t *)&ip6h_p->ip_src, 32);
+                sum = libnet_in_cksum((uint16_t *)&ip6h_p->ip_src, 32);
                 sum += ntohs(IPPROTO_ICMP6 + h_len);
             }
-            sum += libnet_in_cksum((u_int16_t *)icmph_p, h_len);
+            sum += libnet_in_cksum((uint16_t *)icmph_p, h_len);
             icmph_p->icmp_sum = LIBNET_CKSUM_CARRY(sum);
             break;
         }

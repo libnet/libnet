@@ -73,9 +73,9 @@ libnet_ptag_t ptag)
     rip_hdr.rip_rd       = htons(rd);
     rip_hdr.rip_af       = htons(af);
     rip_hdr.rip_rt       = htons(rt);
-    rip_hdr.rip_addr     = htonl(addr);
-    rip_hdr.rip_mask     = htonl(mask);
-    rip_hdr.rip_next_hop = htonl(next_hop);
+    rip_hdr.rip_addr     = addr;
+    rip_hdr.rip_mask     = mask;
+    rip_hdr.rip_next_hop = next_hop;
     rip_hdr.rip_metric   = htonl(metric);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&rip_hdr, LIBNET_RIP_H);

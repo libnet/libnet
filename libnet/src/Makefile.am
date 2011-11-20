@@ -62,14 +62,24 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_write.c
 
 libnet_la_LIBADD = @LTLIBOBJS@
-libnet_la_LDFLAGS = -version-info 6:0:5 -Wl
 
 # Note: this version-info should NOT simply be the version of the libnet
 # package. See:
 #   http://www.sourceware.org/autobook/autobook/autobook_91.html
 # for the rules.
 #
+# Summary:
+#
+# Form is current:revision:age.
+#
+# New APIs, backwards compatible, increment current and age.
+# Bug fix, no new APIs, increment revision.
+#
 # Note:
 # 1.1.2.1-fork is 5:0:4
 # 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
+# 1.1.4 was 6:0:5 -> probably an error on my part
+# 1.1.5 is 7:0:6 -> new APIs, backwards compat
+
+libnet_la_LDFLAGS = -version-info 7:0:6 -Wl
 
