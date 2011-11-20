@@ -519,7 +519,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         default:
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): unsuported protocol %d\n", __func__, protocol);
+                "%s(): unsupported protocol %d\n", __func__, protocol);
             return (-1);
         }
     }
