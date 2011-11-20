@@ -63,11 +63,9 @@
 #define LIBNET_ICMPV4_TIMXCEED_H 0x08   /**< ICMP_TIMXCEED header: 8 bytes */
 #define LIBNET_ICMPV4_REDIRECT_H 0x08   /**< ICMP_REDIRECT header: 8 bytes */
 #define LIBNET_ICMPV4_TS_H      0x14    /**< ICMP_TIMESTAMP headr:20 bytes */
-#define LIBNET_ICMPV6_H         0x04    /**< ICMP6 header base:    4 bytes */
+#define LIBNET_ICMPV6_COMMON_H  0x04    /**< ICMP6 header base:    4 bytes */
+#define LIBNET_ICMPV6_H         0x08    /**< ICMP6 header base:    8 bytes (unused, for backwards compatibility) */
 #define LIBNET_ICMPV6_UNREACH_H 0x08    /**< ICMP6 unreach base:   8 bytes */
-#define LIBNET_ICMPV6_ECHO_H    0x04    /**< ICMP6 echo header:    4 bytes */
-#define LIBNET_ICMPV6_NDP_NSA_H 0x14    /**< ICMP6 NDP header:    20 bytes */
-#define LIBNET_ICMPV6_NDP_OPT_H 0x02    /**< ICMP6 ndp options:    2 bytes */
 #define LIBNET_IGMP_H           0x08    /**< IGMP header:          8 bytes */
 #define LIBNET_IPV4_H           0x14    /**< IPv4 header:         20 bytes */
 #define LIBNET_IPV6_H           0x28    /**< IPv6 header:         40 bytes */
@@ -822,52 +820,139 @@ struct libnet_ipv6_hbhopts_hdr
  *  Internet Control Message Protocol v6
  *  Base header size: 4 bytes
  */
-#define IPPROTO_ICMP6   0x3a
+#ifndef IPPROTO_ICMPV6
+#define IPPROTO_ICMPV6  58
+#endif
 struct libnet_icmpv6_hdr
 {
     uint8_t icmp_type;       /* ICMP type */
+/* Don't define if <netinet/icmp6.h> has defined them. */
+#ifndef ICMP6_ECHO_REQUEST
+#define ICMP6_ECHO_REQUEST           128
+#endif
+#ifndef ICMP6_ECHO_REPLY
+#define ICMP6_ECHO_REPLY             129
+#endif
+#ifndef ICMP6_DST_UNREACH
+#define ICMP6_DST_UNREACH            1
+#endif
+#ifndef ICMP6_PACKET_TOO_BIG
+#define ICMP6_PACKET_TOO_BIG         2
+#endif
+#ifndef ICMP6_TIME_EXCEEDED
+#define ICMP6_TIME_EXCEEDED          3
+#endif
+#ifndef ICMP6_PARAM_PROB
+#define ICMP6_PARAM_PROB             4
+#endif
+
+#ifndef ND_ROUTER_SOLICIT
+#define ND_ROUTER_SOLICIT           133
+#endif
+#ifndef ND_ROUTER_ADVERT
+#define ND_ROUTER_ADVERT            134
+#endif
+#ifndef ND_NEIGHBOR_SOLICIT
+#define ND_NEIGHBOR_SOLICIT         135
+#endif
+#ifndef ND_NEIGHBOR_ADVERT
+#define ND_NEIGHBOR_ADVERT          136
+#endif
+
+    uint8_t icmp_code;       /* ICMP code */
+#ifndef ICMP6_DST_UNREACH_NOROUTE
+#define ICMP6_DST_UNREACH_NOROUTE     0
+#endif
+#ifndef ICMP6_DST_UNREACH_ADMIN
+#define ICMP6_DST_UNREACH_ADMIN       1
+#endif
+#ifndef ICMP6_DST_UNREACH_BEYONDSCOPE
+#define ICMP6_DST_UNREACH_BEYONDSCOPE 2
+#endif
+#ifndef ICMP6_DST_UNREACH_ADDR
+#define ICMP6_DST_UNREACH_ADDR        3
+#endif
+#ifndef ICMP6_DST_UNREACH_NOPORT
+#define ICMP6_DST_UNREACH_NOPORT      4
+#endif
+    uint16_t icmp_sum;       /* ICMP Checksum */
+
+    /* This is confusing: id/seq are used only for echo req/reply, but must
+     * exist in struct for backwards compatibility. */
+    uint16_t id;             /* ICMP id (unused, for backwards compatibility) */
+    uint16_t seq;            /* ICMP sequence number (unused, for backwards compatibility) */
+
+    /* Non-standard names, for libnet backwards compatibility, don't use. */
+    /* ipproto: */
+#define IPPROTO_ICMP6    58
+    /* types: */
 #define ICMP6_ECHO          128
 #define ICMP6_ECHOREPLY     129
-#define ICMP6_ROUTERSOL     133
-#define ICMP6_ROUTERADV     134
-#define ICMP6_NEIGHSOL      135
-#define ICMP6_NEIGHADV      136
-
 #define ICMP6_UNREACH       1
 #define ICMP6_PKTTOOBIG     2
 #define ICMP6_TIMXCEED      3
 #define ICMP6_PARAMPROB     4
-    uint8_t icmp_code;       /* ICMP code */
+    /* codes: */
 #define ICMP6_NOROUTE                  0
 #define ICMP6_ADM_PROHIBITED           1
 #define ICMP6_NOT_NEIGHBOUR            2
 #define ICMP6_ADDR_UNREACH             3
 #define ICMP6_PORT_UNREACH             4
-    uint16_t icmp_sum;       /* ICMP Checksum */
 };
 
 /* All of this stuff follows base ICMPv6 header */
+
+struct libnet_icmpv6_unreach {
+    uint32_t unused;
+};
 
 struct libnet_icmpv6_echo {
     uint16_t id;
     uint16_t seq;
 };
 
-struct libnet_icmpv6_ndp_nsa {
+struct libnet_icmpv6_ndp_nsol {
+    uint32_t reserved;
+    struct libnet_in6_addr target_addr;
+};
+
+struct libnet_icmpv6_ndp_nadv {
     uint32_t flags;
-#define NDP_FL_ROUTER       (1 << 31)
-#define NDP_FL_SOLICITED    (1 << 30)
-#define NDP_FL_OVERRIDE     (1 << 29)
-    struct libnet_in6_addr tgt_addr;
+#ifndef ND_NA_FLAG_ROUTER
+#define ND_NA_FLAG_ROUTER        0x80000000
+#endif
+#ifndef ND_NA_FLAG_SOLICITED
+#define ND_NA_FLAG_SOLICITED     0x40000000
+#endif
+#ifndef ND_NA_FLAG_OVERRIDE
+#define ND_NA_FLAG_OVERRIDE      0x20000000
+#endif
+    struct libnet_in6_addr target_addr;
 };
 
 struct libnet_icmpv6_ndp_opt {
     uint8_t type;
-#define ICMPV6_NDPOPT_SLLA      1
-#define ICMPV6_NDPOPT_TLLA      2
-#define ICMPV6_NDPOPT_PREFIX    3
-#define ICMPV6_NDPOPT_REDHDR    4
-#define ICMPV6_NDPOPT_MTU       5
+#ifndef ND_OPT_SOURCE_LINKADDR
+#define ND_OPT_SOURCE_LINKADDR		1
+#endif
+#ifndef ND_OPT_TARGET_LINKADDR
+#define ND_OPT_TARGET_LINKADDR		2
+#endif
+#ifndef ND_OPT_PREFIX_INFORMATION
+#define ND_OPT_PREFIX_INFORMATION	3
+#endif
+#ifndef ND_OPT_REDIRECTED_HEADER
+#define ND_OPT_REDIRECTED_HEADER	4
+#endif
+#ifndef ND_OPT_MTU
+#define ND_OPT_MTU			5
+#endif
+#ifndef ND_OPT_RTR_ADV_INTERVAL
+#define ND_OPT_RTR_ADV_INTERVAL		7
+#endif
+#ifndef ND_OPT_HOME_AGENT_INFO
+#define ND_OPT_HOME_AGENT_INFO		8
+#endif
     uint8_t len;
 };
 

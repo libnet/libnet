@@ -39,6 +39,8 @@
 #include "../include/win32/libnet.h"
 #endif
 
+#include <assert.h>
+
 /* some common cruft for completing ICMP error packets */
 #define LIBNET_BUILD_ICMP_ERR_FINISH(len)                                    \
 do                                                                           \
@@ -397,208 +399,210 @@ bad:
 
 
 libnet_ptag_t
-libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
-uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+libnet_build_icmpv6_common(
+        uint8_t type, uint8_t code, uint16_t sum,
+        const void* specific, uint32_t specific_s, uint8_t pblock_type,
+        uint8_t *payload, uint32_t payload_s,
+        libnet_t *l, libnet_ptag_t ptag
+        )
 {
     uint32_t n;
     libnet_pblock_t *p;
     struct libnet_icmpv6_hdr icmp_hdr;
-
-#if 0
 
     if (l == NULL)
     { 
         return (-1);
     } 
 
-    n = LIBNET_ICMPV6_UNREACH_H + payload_s;        /* size of memory block */
+    n = sizeof(icmp_hdr) + specific_s + payload_s;
 
-    /*
-     *  Find the existing protocol block if a ptag is specified, or create
-     *  a new one.
-     */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_UNREACH_H);
+    p = libnet_pblock_probe(l, ptag, n, pblock_type);
+
     if (p == NULL)
     {
         return (-1);
     }
 
     memset(&icmp_hdr, 0, sizeof(icmp_hdr));
-    icmp_hdr.icmp_type = type;          /* packet type */
-    icmp_hdr.icmp_code = code;          /* packet code */
-    icmp_hdr.icmp_sum  = (sum ? htons(sum) : 0);  /* checksum */
-    icmp_hdr.id   = 0;             /* must be 0 */
-    icmp_hdr.seq  = 0;             /* must be 0 */
+    icmp_hdr.icmp_type = type;
+    icmp_hdr.icmp_code = code;
+    icmp_hdr.icmp_sum  = htons(sum);
 
-    LIBNET_BUILD_ICMP_ERR_FINISH(LIBNET_ICMPV6_UNREACH_H);
+    if (libnet_pblock_append(l, p, (uint8_t *)&icmp_hdr, LIBNET_ICMPV6_COMMON_H) < 0)
+    {
+        goto bad;
+    }
 
-    return (ptag ? ptag : libnet_pblock_update(l, p, 0,
-            LIBNET_PBLOCK_ICMPV6_UNREACH_H));
+    if (libnet_pblock_append(l, p, specific, specific_s) < 0)
+    {
+        goto bad;
+    }
+
+    if (libnet_pblock_append(l, p, payload, payload_s) < 0)
+    {
+        goto bad;
+    }
+
+    if (sum == 0)
+    {
+        libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
+    }
+
+    return ptag ? ptag : libnet_pblock_update(l, p, 0, pblock_type);
+
 bad:
     libnet_pblock_delete(l, p);
-#endif
-    return (-1);
+
+    return -1;
 }
 
 libnet_ptag_t libnet_build_icmpv6(uint8_t type, uint8_t code, uint16_t sum,
                                   uint8_t* payload, uint32_t payload_s,
                                   libnet_t* l, libnet_ptag_t ptag)
 {
-    struct libnet_icmpv6_hdr icmp_hdr;
-    libnet_pblock_t* p;
-    uint32_t n;
-
-    if(l == NULL)
-        return -1;
-
-    n = payload_s + LIBNET_ICMPV6_H;
-
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_H);
-    if(p == NULL)
-        return -1;
-
-    memset(&icmp_hdr, 0, sizeof(icmp_hdr));
-    icmp_hdr.icmp_type = type;
-    icmp_hdr.icmp_code = code;
-    icmp_hdr.icmp_sum = (sum ? htons(sum) : 0);
-
-    LIBNET_BUILD_ICMP_ERR_FINISH(LIBNET_ICMPV6_H);
-
-    return (ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_H));
-
-bad:
-    libnet_pblock_delete(l, p);
-    return -1;
+    return libnet_build_icmpv6_common(
+            type, code, sum,
+            NULL, 0, LIBNET_PBLOCK_ICMPV6_UNREACH_H,
+            payload, payload_s,
+            l, ptag);
 }
 
-libnet_ptag_t libnet_build_icmpv6_echo(uint16_t id, uint16_t seq,
-                                       uint8_t *data, uint32_t datalen,
-                                       libnet_t *l, libnet_ptag_t ptag)
+libnet_ptag_t
+libnet_build_icmpv6_unreach(
+        uint8_t type, uint8_t code, uint16_t sum,
+        uint8_t *payload, uint32_t payload_s,
+        libnet_t *l, libnet_ptag_t ptag
+        )
 {
-    struct libnet_icmpv6_echo echo;
-    libnet_pblock_t *p;
-    uint32_t n;
+    struct libnet_icmpv6_unreach specific;
 
-    if(l == NULL)
-        return -1;
+    memset(&specific, 0, sizeof(specific));
 
-    n = LIBNET_ICMPV6_ECHO_H;
+    return libnet_build_icmpv6_common(
+            type, code, sum,
+            &specific, sizeof(specific), LIBNET_PBLOCK_ICMPV6_UNREACH_H,
+            payload, payload_s,
+            l, ptag);
+}
 
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_ECHO_H);
-    if(p == NULL)
-        return -1;
+libnet_ptag_t
+libnet_build_icmpv6_echo(
+        uint8_t type, uint8_t code, uint16_t sum,
+        uint16_t id, uint16_t seq,
+        uint8_t *payload, uint32_t payload_s,
+        libnet_t *l, libnet_ptag_t ptag
+        )
+{
+    struct libnet_icmpv6_echo specific;
 
-    memset(&echo, 0, sizeof(echo));
-    echo.id = id;
-    echo.seq = seq;
-    if(libnet_pblock_append(l, p, &echo, n) == -1)
-        goto bad;
+    memset(&specific, 0, sizeof(specific));
+    specific.id = htons(id);
+    specific.seq = htons(seq);
 
-    return ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_ECHO_H);
-
-bad:
-    libnet_pblock_delete(l, p);
-    return -1;
+    return libnet_build_icmpv6_common(
+            type, code, sum,
+            &specific, sizeof(specific), LIBNET_PBLOCK_ICMPV6_ECHO_H,
+            payload, payload_s,
+            l, ptag);
 }
 
 
-libnet_ptag_t libnet_build_icmpv6_nsol(struct libnet_in6_addr tgt,
-                                       libnet_t* l, libnet_ptag_t ptag)
+libnet_ptag_t libnet_build_icmpv6_ndp_nsol(
+        uint8_t type, uint8_t code, uint16_t sum,
+        struct libnet_in6_addr target,
+        uint8_t *payload, uint32_t payload_s,
+        libnet_t* l, libnet_ptag_t ptag)
 {
-    struct libnet_icmpv6_ndp_nsa na;
-    uint32_t n;
-    libnet_pblock_t* p;
+    struct libnet_icmpv6_ndp_nsol specific;
 
-    if(l == NULL)
-        return -1;
+    memset(&specific, 0, sizeof(specific));
+    specific.reserved = 0;
+    specific.target_addr = target;
 
-    n = LIBNET_ICMPV6_NDP_NSA_H;
-
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDNSOL_H);
-    if(p == NULL)
-        return -1;
-
-    memset(&na, 0, sizeof(na));
-    na.tgt_addr = tgt;
-    if(libnet_pblock_append(l, p, &na, n) == -1)
-        goto bad;
-
-    return ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_NDNSOL_H);
-
-bad:
-    libnet_pblock_delete(l, p);
-    return -1;
+    return libnet_build_icmpv6_common(
+            type, code, sum,
+            &specific, sizeof(specific), LIBNET_PBLOCK_ICMPV6_NDP_NSOL_H,
+            payload, payload_s,
+            l, ptag);
 }
 
 
-libnet_ptag_t libnet_build_icmpv6_nadv(uint32_t flags,
-                                       struct libnet_in6_addr tgt,
-                                       libnet_t* l, libnet_ptag_t ptag)
+libnet_ptag_t libnet_build_icmpv6_ndp_nadv(
+        uint8_t type, uint8_t code, uint16_t sum,
+        uint32_t flags, struct libnet_in6_addr target,
+        uint8_t *payload, uint32_t payload_s,
+        libnet_t* l, libnet_ptag_t ptag)
 {
-    struct libnet_icmpv6_ndp_nsa na;
-    uint32_t n;
-    libnet_pblock_t* p;
 
-    if(l == NULL)
-        return -1;
+    struct libnet_icmpv6_ndp_nadv specific;
 
-    n = LIBNET_ICMPV6_NDP_NSA_H;
+    memset(&specific, 0, sizeof(specific));
+    specific.flags = htonl(flags);
+    specific.target_addr = target;
 
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDNADV_H);
-    if(p == NULL)
-        return -1;
-
-    memset(&na, 0, sizeof(na));
-    na.flags = htonl(flags);
-    na.tgt_addr = tgt;
-    if(libnet_pblock_append(l, p, &na, n) == -1)
-        goto bad;
-
-    return ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_NDNADV_H);
-
-bad:
-    libnet_pblock_delete(l, p);
-    return -1;
+    return libnet_build_icmpv6_common(
+            type, code, sum,
+            &specific, sizeof(specific), LIBNET_PBLOCK_ICMPV6_NDP_NADV_H,
+            payload, payload_s,
+            l, ptag);
 }
 
-libnet_ptag_t libnet_build_icmpv6_ndp_lla(uint8_t type, uint8_t len,
-                                          uint8_t* mac, uint32_t maclen,
-                                          libnet_t* l, libnet_ptag_t ptag)
+libnet_ptag_t libnet_build_icmpv6_ndp_opt(
+        uint8_t type, uint8_t* option, uint32_t option_s,
+        libnet_t* l, libnet_ptag_t ptag)
 {
-    struct libnet_icmpv6_ndp_opt no;
+    struct libnet_icmpv6_ndp_opt opt;
     uint32_t n;
+    static uint8_t pad[8] = { 0 };
+    uint32_t pad_s = 0;
     libnet_pblock_t* p;
 
     if(l == NULL)
         return -1;
 
-    if(!mac)
-        maclen = 0;
+    if(!option)
+        option_s = 0;
 
-    if(len == 0)
-        len = (LIBNET_PBLOCK_ICMPV6_NDPOPT_H + maclen);
+    /* options need to be padded to a multiple of 8-bytes, and opts.len is in units of 8-bytes */
+    n = sizeof(opt) + option_s;
 
-    n = LIBNET_ICMPV6_NDP_OPT_H + maclen;
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDPOPT_H);
-    if(p == NULL)
-        return -1;
-    memset(&no, 0, sizeof(no));
-    no.type = type;
-    no.len = len;
-
-    if(libnet_pblock_append(l, p, &no, LIBNET_ICMPV6_NDP_OPT_H) == -1)
-        goto bad;
-
-    if(mac != NULL) {
-        if(libnet_pblock_append(l, p, mac, maclen) == -1)
-            goto bad;
+    if(n % 8)
+    {
+        n += 8 - (n % 8);
     }
 
-    return ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_NDPOPT_H);
+    if(n > (0xff * 8))
+    {
+        return -1;
+    }
+
+    pad_s = n - option_s - sizeof(opt);
+
+    assert((n % 8) == 0);
+    assert(pad_s < sizeof(pad));
+
+    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDP_OPT_H);
+    if(p == NULL)
+        return -1;
+
+    memset(&opt, 0, sizeof(opt));
+    opt.type = type;
+    opt.len  = n / 8;
+
+    if(libnet_pblock_append(l, p, &opt, sizeof(opt)) == -1)
+        goto bad;
+
+    if(libnet_pblock_append(l, p, option, option_s) == -1)
+        goto bad;
+
+    if(libnet_pblock_append(l, p, pad, pad_s) == -1)
+        goto bad;
+
+    return ptag ? ptag : libnet_pblock_update(l, p, n, LIBNET_PBLOCK_ICMPV6_NDP_OPT_H);
 
 bad:
     libnet_pblock_delete(l, p);
     return -1;
 }
 
-/* EOF */

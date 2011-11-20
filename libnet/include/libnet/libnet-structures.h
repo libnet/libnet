@@ -158,12 +158,12 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_IPV6_HBHOPTS_H    0x3e    /* IPv6 hop/hop opts header */
 #define LIBNET_PBLOCK_SEBEK_H           0x3f    /* Sebek header */
 #define LIBNET_PBLOCK_HSRP_H            0x40    /* HSRP header */
-#define LIBNET_PBLOCK_ICMPV6_H          0x41    /* ICMPv6 header */
-#define LIBNET_PBLOCK_ICMPV6_UNREACH_H  0x42    /* ICMPv6 unreach header */
-#define LIBNET_PBLOCK_ICMPV6_NDNSOL_H   0x43    /* ICMPv6 neighbor solicitation header */
-#define LIBNET_PBLOCK_ICMPV6_NDNADV_H   0x44    /* ICMPv6 neighbor adv header */
-#define LIBNET_PBLOCK_ICMPV6_NDPOPT_H   0x45    /* ICMPv6 NDP option */
+#define LIBNET_PBLOCK_ICMPV6_H          0x41    /* ICMPv6 header (unused) */
 #define LIBNET_PBLOCK_ICMPV6_ECHO_H     0x46    /* ICMPv6 echo header */
+#define LIBNET_PBLOCK_ICMPV6_UNREACH_H  0x42    /* ICMPv6 unreach header */
+#define LIBNET_PBLOCK_ICMPV6_NDP_NSOL_H 0x43    /* ICMPv6 NDP neighbor solicitation header */
+#define LIBNET_PBLOCK_ICMPV6_NDP_NADV_H 0x44    /* ICMPv6 NDP neighbor advertisement header */
+#define LIBNET_PBLOCK_ICMPV6_NDP_OPT_H  0x45    /* ICMPv6 NDP option */
 
     uint8_t flags;                             /* control flags */
 #define LIBNET_PBLOCK_DO_CHECKSUM       0x01    /* needs a checksum */

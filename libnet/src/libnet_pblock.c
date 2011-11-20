@@ -268,6 +268,13 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag)
 int
 libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t len)
 {
+    if (len && !buf)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+			    "%s(): payload inconsistency\n", __func__);
+        return -1;
+    }
+
     if (p->copied + len > p->b_len)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -575,7 +582,10 @@ libnet_pblock_p2p(uint8_t type)
         case LIBNET_PBLOCK_ICMPV4_TS_H:
             return (IPPROTO_ICMP);
         case LIBNET_PBLOCK_ICMPV6_H:
+        case LIBNET_PBLOCK_ICMPV6_ECHO_H:
         case LIBNET_PBLOCK_ICMPV6_UNREACH_H:
+        case LIBNET_PBLOCK_ICMPV6_NDP_NSOL_H:
+        case LIBNET_PBLOCK_ICMPV6_NDP_NADV_H:
             return (IPPROTO_ICMPV6);
         case LIBNET_PBLOCK_IGMP_H:
             return (IPPROTO_IGMP);
