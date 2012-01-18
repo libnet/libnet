@@ -33,6 +33,7 @@
  */
 
 #include <netinet/in.h>
+#include <sys/types.h>
 #include <netinet/udp.h>
 
 #if (HAVE_CONFIG_H)
