@@ -251,6 +251,10 @@ dnl
         AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
             [Define if our version of Solaris supports IPv6.])
         ;;
+    5.10|5.11|5.12)
+        AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
+            [Define if our version of Solaris supports IPv6.])
+        ;;
 
     esac
 
