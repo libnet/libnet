@@ -45,6 +45,11 @@ CC.SO := $(CC) $(COPT) $(CFLAGS)
 net.so: net.c libnet_decode.c
 net.so: LDLIBS+=$(LDDNET) $(LDLNET)
 net.so: CDEFS=$(DNETDEFS) $(LNETDEFS)
+net.so: dnet.h
+
+dnet.h:
+	if test -e /usr/include/dumbnet.h; then echo '#include<dumbnet.h>' > dnet.h; \
+	else echo '#include<dnet.h>' > dnet.h; fi
 
 TNET=$(wildcard test-*.lua)
 TOUT=$(TNET:.lua=.test)
