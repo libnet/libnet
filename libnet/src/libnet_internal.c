@@ -307,6 +307,8 @@ libnet_diag_dump_pblock_type(uint8_t type)
             return ("icmpv6");
         case LIBNET_PBLOCK_ICMPV6_UNREACH_H:
             return ("icmpv6_unreach");
+        case LIBNET_PBLOCK_ICMPV6_NDSOL_H:
+            return ("icmpv6_ndsol");
     }
     return ("unrecognized pblock");
 }

@@ -65,6 +65,7 @@
 #define LIBNET_ICMPV4_TS_H      0x14    /**< ICMP_TIMESTAMP headr:20 bytes */
 #define LIBNET_ICMPV6_H         0x08    /**< ICMP6 header base:    8 bytes */
 #define LIBNET_ICMPV6_UNREACH_H 0x08    /**< ICMP6 unreach base:   8 bytes */
+#define LIBNET_ICMPV6_NDSOL_H   0x18    /**< ICMP6 nd sol base:   24 bytes */
 #define LIBNET_IGMP_H           0x08    /**< IGMP header:          8 bytes */
 #define LIBNET_IPV4_H           0x14    /**< IPv4 header:         20 bytes */
 #define LIBNET_IPV6_H           0x28    /**< IPv6 header:         40 bytes */
@@ -841,6 +842,9 @@ struct libnet_icmpv6_hdr
 #endif
 #ifndef ICMP6_PARAMPROB
 #define ICMP6_PARAMPROB     4
+#endif
+#ifndef ICMP6_ND_SOL
+#define ICMP6_ND_SOL      135
 #endif
     uint8_t icmp_code;       /* ICMP code */
 #ifndef ICMP6_NOROUTE

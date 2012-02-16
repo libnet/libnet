@@ -297,6 +297,9 @@ dnl
      LIBS="$LIBS -lws2_32"
      ;;
 
+*irix*)
+    AC_DEFINE(HAVE_IRIX, 1, [Define if we're building on IRIX.])
+    ;;
 *)
     AC_MSG_WARN(apparently your OS is not officially supported yet)
     AC_MSG_WARN(this may not work)

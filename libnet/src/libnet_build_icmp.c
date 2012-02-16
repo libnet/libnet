@@ -300,6 +300,73 @@ bad:
 }
 
 libnet_ptag_t
+libnet_build_icmpv6_ndsol(uint16_t sum,
+                          struct libnet_in6_addr target,
+                          uint8_t *payload, uint32_t payload_s,
+                          libnet_t *l, libnet_ptag_t ptag)
+{
+        uint32_t n;
+        libnet_pblock_t *p;
+        struct libnet_icmpv6_hdr icmp_hdr;
+
+        if (l == NULL)
+        {
+                return (-1);
+        }
+
+        /* size of memory block */
+        n = LIBNET_ICMPV6_NDSOL_H + payload_s;
+
+        /*
+         *  Find the existing protocol block if a ptag is specified, or create
+         *  a new one.
+         */
+        p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDSOL_H);
+        if (p == NULL)
+        {
+                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                         "%s(): unknown ptag %d",
+                         __func__, ptag);
+                goto bad_no_delete;
+        }
+
+        memset(&icmp_hdr, 0, sizeof(struct libnet_icmpv6_hdr));
+        icmp_hdr.icmp_type = ICMP6_ND_SOL;
+        icmp_hdr.icmp_code = 0;
+        icmp_hdr.icmp_sum  = (sum ? htons(sum) : 0);
+        icmp_hdr.id   = 0;             /* must be 0 */
+        icmp_hdr.seq  = 0;             /* must be 0 */
+
+        n = libnet_pblock_append(l, p, (u_int8_t*)&icmp_hdr,
+                                 sizeof(struct libnet_icmpv6_hdr));
+        if (-1 == n)
+        {
+                goto bad;
+        }
+
+        n = libnet_pblock_append(l, p, (u_int8_t*)&target,
+                                 sizeof(struct libnet_in6_addr));
+        if (-1 == n)
+        {
+                goto bad;
+        }
+
+        LIBNET_DO_PAYLOAD(l, p);
+        if (sum == 0)
+        {
+                libnet_pblock_setflags(p, LIBNET_PBLOCK_DO_CHECKSUM);
+        }
+
+        return (ptag ? ptag
+                : libnet_pblock_update(l, p, 0,
+                                       LIBNET_PBLOCK_ICMPV6_NDSOL_H));
+ bad:
+        libnet_pblock_delete(l, p);
+ bad_no_delete:
+        return -1;
+}
+
+libnet_ptag_t
 libnet_build_icmpv4_timeexceed(uint8_t type, uint8_t code, uint16_t sum,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {

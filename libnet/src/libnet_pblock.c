@@ -576,6 +576,7 @@ libnet_pblock_p2p(uint8_t type)
             return (IPPROTO_ICMP);
         case LIBNET_PBLOCK_ICMPV6_H:
         case LIBNET_PBLOCK_ICMPV6_UNREACH_H:
+        case LIBNET_PBLOCK_ICMPV6_NDSOL_H:
             return (IPPROTO_ICMPV6);
         case LIBNET_PBLOCK_IGMP_H:
             return (IPPROTO_IGMP);
