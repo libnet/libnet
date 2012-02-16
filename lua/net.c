@@ -558,17 +558,20 @@ static int lnet_data (lua_State *L)
 }
 
 /*-
--- ptag = net:igmp{type=NUM, code=NUM, ip=IP, payload=STR, ptag=int}
+-- ptag = net:igmp{type=NUM, [reserved=NUM,] ip=IP, payload=STR, ptag=int}
 
-Build IGMP packet inside net context.
+Build IGMPv1 packet inside net context.
+
+Reserved is optional, and should always be 0.
 
 ptag is optional, defaults to creating a new protocol block
 */
+/* TODO type should allow strings: query, report */
 static int lnet_igmp (lua_State *L)
 {
     libnet_t* ud = checkudata(L);
     int type = v_arg_integer(L, 2, "type");
-    int code = v_arg_integer(L, 2, "code");
+    int rsv = v_arg_integer_opt(L, 2, "reserved", 0);
     const char* ip = v_arg_string(L, 2, "ip");
     uint32_t ip_n = check_ip_pton(L, ip, "ip");
     uint32_t payloadsz = 0;
@@ -576,7 +579,7 @@ static int lnet_igmp (lua_State *L)
     int cksum = 0;
     int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_IGMP_H);
 
-    ptag = libnet_build_igmp(type, code, cksum, ip_n, payload, payloadsz, ud, ptag);
+    ptag = libnet_build_igmp(type, rsv, cksum, ip_n, payload, payloadsz, ud, ptag);
     check_error(L, ud, ptag);
     lua_pushinteger(L, ptag);
     return 1;
@@ -1268,7 +1271,8 @@ static int lnet_htons(lua_State *L)
 /*-
 -- sum = net.checksum(string, ...)
 
-Checksum the series of strings passed in.
+Checksum the series of strings passed in. sum is a string, the 16-bit checksum
+encoded in network byte order.
 */
 static int lnet_chksum(lua_State *L)
 {
@@ -1285,7 +1289,7 @@ static int lnet_chksum(lua_State *L)
 
     chks = LIBNET_CKSUM_CARRY(interm);
 
-    lua_pushlstring(L, (char *)&chks, 2); /* FIXME intel specific? */
+    lua_pushlstring(L, (char *)&chks, 2); /* FIXME intel specific? should be using htons() */
 
     return 1;
 }
