@@ -797,7 +797,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.
  * @param type packet type
- * @param code packet code (should be 0)
+ * @param reserved (should be 0 for IGMPv1)
  * @param sum checksum (0 for libnet to autofill)
  * @param ip IPv4 address (in standard/network byte order)
  * @param payload optional payload or NULL
@@ -805,9 +805,11 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
+ * 
+ * @note 'reserved' was previously called 'code', which it is not, in any IGMP version.
  */
 libnet_ptag_t
-libnet_build_igmp(uint8_t type, uint8_t code, uint16_t sum, uint32_t ip,
+libnet_build_igmp(uint8_t type, uint8_t reserved, uint16_t sum, uint32_t ip,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**

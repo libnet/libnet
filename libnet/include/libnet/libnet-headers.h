@@ -1062,7 +1062,7 @@ struct libnet_igmp_hdr
 #ifndef IGMP_LEAVE_GROUP
 #define IGMP_LEAVE_GROUP                0x17    /* Leave-group message */
 #endif
-    uint8_t igmp_code;       /* IGMP code */
+    uint8_t igmp_code;       /* IGMP reserved field (0), mistakenly called 'code' in early libnet versions */
     uint16_t igmp_sum;       /* IGMP checksum */
     struct in_addr igmp_group;/* IGMP host IP */
 };
