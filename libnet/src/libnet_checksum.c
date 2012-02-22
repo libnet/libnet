@@ -275,7 +275,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
                 /* 8 = src and dst */
                 sum = libnet_in_cksum((uint16_t *)&iph_p->ip_src, 8);
             }
-            sum += ntohs(iph_p->ip_p + h_len);
+            sum += ntohs(IPPROTO_TCP + h_len);
             sum += libnet_in_cksum((uint16_t *)tcph_p, h_len);
             tcph_p->th_sum = LIBNET_CKSUM_CARRY(sum);
 #if 0
