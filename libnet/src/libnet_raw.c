@@ -218,7 +218,7 @@ libnet_open_raw6(libnet_t *l)
         return (-1);
     } 
 
-    l->fd = socket(PF_INET6, SOCK_RAW, IPPROTO_RAW);
+    l->fd = socket(AF_INET6, SOCK_RAW, IPPROTO_RAW);
     if (l->fd == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
@@ -235,6 +235,13 @@ libnet_open_raw6(libnet_t *l)
                 strerror(errno));
         goto bad;
     }
+    if(l->device != NULL)
+        if(setsockopt(l->fd, SOL_SOCKET, SO_BINDTODEVICE, l->device, strlen(l->device)) == -1) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): set SO_BINDTODEVICE failed: %s\n", __func__, strerror(errno));
+            goto bad;
+        }
+
 #endif  /* __linux__ */
     return (l->fd);
 
