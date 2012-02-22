@@ -777,6 +777,22 @@ libnet_build_icmpv4_timestamp(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, uint32_t otime, uint32_t rtime, uint32_t ttime,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
+/*
+ * Builds an ICMPv6 header
+ * @param type type of ICMPv6 packet
+ * @param code code of ICMP packet
+ * @param sum checksum (0 for libnet to autofill)
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * See definitions of types and codes (ICMP6_*) in struct libnet_icmpv6_hdr.
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t libnet_build_icmpv6(uint8_t type, uint8_t code, uint16_t sum,
+                                  uint8_t* payload, uint32_t payload_s,
+                                  libnet_t* l, libnet_ptag_t ptag);
+
 /**
  * Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP)
  * unreachable header. The IP header that caused the error message should be 
@@ -793,6 +809,59 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
 uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds ICMPv6 echo header
+ * @param id echo id number
+ * @param seq echo sequence number
+ * @param data optional payload or NULL
+ * @param datalen payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t libnet_build_icmpv6_echo(uint16_t id, uint16_t seq,
+                                       uint8_t *data, uint32_t datalen,
+                                       libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds ICMPv6 Neighbor Solicitation header
+ * @param tgt target ipv6 address
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+
+
+libnet_ptag_t libnet_build_icmpv6_nsol(struct libnet_in6_addr tgt,
+                                       libnet_t* l, libnet_ptag_t ptag);
+
+/**
+ * Builds ICMPv6 Neighbor Advertisement header
+ * @param flags neighbor advertisement flags
+ * @param tgt target ipv6 address
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t libnet_build_icmpv6_nadv(uint32_t flags,
+                                       struct libnet_in6_addr tgt,
+                                       libnet_t* l, libnet_ptag_t ptag);
+
+/**
+ * Builds ICMPv6 NDP link-layer address option
+ * @param type address type (ICMPV6_NDPOPT_SLLA for source, ICMPV6_NDPOPT_TLLA for target)
+ * @param len addess length in 8-byte chunks FIXME builder should calculate len if it is zero
+ * @param mac hardware address
+ * @param maclen hardware address length FIXME builder doesn't pad to 8-byte boundaries, if caller doesn't, option is invalid
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+
+ */
+libnet_ptag_t libnet_build_icmpv6_ndp_lla(uint8_t type, uint8_t len,
+                                          uint8_t* mac, uint32_t maclen,
+                                          libnet_t* l, libnet_ptag_t ptag);
 
 /**
  * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.

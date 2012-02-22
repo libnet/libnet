@@ -166,7 +166,7 @@ if (payload_s)                                                               \
 #ifdef IFF_LOOPBACK
 #define LIBNET_ISLOOPBACK(p) ((p)->ifr_flags & IFF_LOOPBACK)
 #else
-#define LIBNET_ISLOOPBACK(p) (strcmp((p)->ifr_name, "lo0") == 0)
+#define LIBNET_ISLOOPBACK(p) (strcmp((p)->ifr_name, "lo") == 0)
 #endif
 
 /* advanced mode check */

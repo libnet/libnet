@@ -63,8 +63,11 @@
 #define LIBNET_ICMPV4_TIMXCEED_H 0x08   /**< ICMP_TIMXCEED header: 8 bytes */
 #define LIBNET_ICMPV4_REDIRECT_H 0x08   /**< ICMP_REDIRECT header: 8 bytes */
 #define LIBNET_ICMPV4_TS_H      0x14    /**< ICMP_TIMESTAMP headr:20 bytes */
-#define LIBNET_ICMPV6_H         0x08    /**< ICMP6 header base:    8 bytes */
+#define LIBNET_ICMPV6_H         0x04    /**< ICMP6 header base:    4 bytes */
 #define LIBNET_ICMPV6_UNREACH_H 0x08    /**< ICMP6 unreach base:   8 bytes */
+#define LIBNET_ICMPV6_ECHO_H    0x04    /**< ICMP6 echo header:    4 bytes */
+#define LIBNET_ICMPV6_NDP_NSA_H 0x14    /**< ICMP6 NDP header:    20 bytes */
+#define LIBNET_ICMPV6_NDP_OPT_H 0x02    /**< ICMP6 ndp options:    2 bytes */
 #define LIBNET_IGMP_H           0x08    /**< IGMP header:          8 bytes */
 #define LIBNET_IPV4_H           0x14    /**< IPv4 header:         20 bytes */
 #define LIBNET_IPV6_H           0x28    /**< IPv6 header:         40 bytes */
@@ -502,6 +505,7 @@ struct libnet_ethernet_hdr
 #ifndef ETHERTYPE_IP
 #define ETHERTYPE_IP            0x0800  /* IP protocol */
 #endif
+#define ETHERTYPE_IPV6          0x86dd  /* IPv6 protocol */
 #ifndef ETHERTYPE_ARP
 #define ETHERTYPE_ARP           0x0806  /* addr. resolution protocol */
 #endif
@@ -816,53 +820,56 @@ struct libnet_ipv6_hbhopts_hdr
 /*
  *  ICMP6 header
  *  Internet Control Message Protocol v6
- *  Base header size: 8 bytes
+ *  Base header size: 4 bytes
  */
-#ifndef IPPROTO_ICMP6
 #define IPPROTO_ICMP6   0x3a
-#endif
 struct libnet_icmpv6_hdr
 {
     uint8_t icmp_type;       /* ICMP type */
-#ifndef ICMP6_ECHO
 #define ICMP6_ECHO          128
-#endif
-#ifndef ICMP6_ECHOREPLY
 #define ICMP6_ECHOREPLY     129
-#endif
-#ifndef ICMP6_UNREACH
+#define ICMP6_ROUTERSOL     133
+#define ICMP6_ROUTERADV     134
+#define ICMP6_NEIGHSOL      135
+#define ICMP6_NEIGHADV      136
+
 #define ICMP6_UNREACH       1
-#endif
-#ifndef ICMP6_PKTTOOBIG
 #define ICMP6_PKTTOOBIG     2
-#endif
-#ifndef ICMP6_TIMXCEED
 #define ICMP6_TIMXCEED      3
-#endif
-#ifndef ICMP6_PARAMPROB
 #define ICMP6_PARAMPROB     4
-#endif
     uint8_t icmp_code;       /* ICMP code */
-#ifndef ICMP6_NOROUTE
 #define ICMP6_NOROUTE                  0
-#endif
-#ifndef ICMP6_ADM_PROHIBITED
 #define ICMP6_ADM_PROHIBITED           1
-#endif
-#ifndef ICMP6_NOT_NEIGHBOUR
 #define ICMP6_NOT_NEIGHBOUR            2
-#endif
-#ifndef ICMP6_ADDR_UNREACH
 #define ICMP6_ADDR_UNREACH             3
-#endif
-#ifndef ICMP6_PORT_UNREACH
 #define ICMP6_PORT_UNREACH             4
-#endif
     uint16_t icmp_sum;       /* ICMP Checksum */
-    uint16_t id;             /* ICMP id */
-    uint16_t seq;            /* ICMP sequence number */
 };
 
+/* All of this stuff follows base ICMPv6 header */
+
+struct libnet_icmpv6_echo {
+    uint16_t id;
+    uint16_t seq;
+};
+
+struct libnet_icmpv6_ndp_nsa {
+    uint32_t flags;
+#define NDP_FL_ROUTER       (1 << 31)
+#define NDP_FL_SOLICITED    (1 << 30)
+#define NDP_FL_OVERRIDE     (1 << 29)
+    struct libnet_in6_addr tgt_addr;
+};
+
+struct libnet_icmpv6_ndp_opt {
+    uint8_t type;
+#define ICMPV6_NDPOPT_SLLA      1
+#define ICMPV6_NDPOPT_TLLA      2
+#define ICMPV6_NDPOPT_PREFIX    3
+#define ICMPV6_NDPOPT_REDHDR    4
+#define ICMPV6_NDPOPT_MTU       5
+    uint8_t len;
+};
 
 
 /*
