@@ -782,6 +782,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * echo or echo reply header.
  * @param type type of ICMP packet (should be ICMP6_ECHO_REQUEST or ICMP6_ECHO_REPLY)
  * @param code code of ICMP packet (should be zero)
+ * @param sum checksum (0 for libnet to autofill)
  * @param id echo id number
  * @param seq echo sequence number
  * @param payload optional payload or NULL
@@ -1544,9 +1545,9 @@ libnet_ptag_t ptag);
  * @param yip
  * @param sip
  * @param gip
- * @param chaddr, client hardware address, length is hlen
- * @param sname, server host name, a null terminated string
- * @param file, boot file name, a null terminated string
+ * @param chaddr client hardware address, length is hlen
+ * @param sname server host name, a null terminated string
+ * @param file boot file name, a null terminated string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1572,9 +1573,9 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param yip
  * @param sip
  * @param gip
- * @param chaddr, client hardware address, length is hlen
- * @param sname, server host name, a null terminated string
- * @param file, boot file name, a null terminated string
+ * @param chaddr client hardware address, length is hlen
+ * @param sname server host name, a null terminated string
+ * @param file boot file name, a null terminated string
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
