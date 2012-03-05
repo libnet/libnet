@@ -19,28 +19,12 @@ Releases are at:
 
 In progress:
 
-- add me and up-to-date links to copyright and docs
-- add contributors to docs
-- make list of people who want to know about releases, or make a mailing list
-- update auttools to:
-> http://ftp.gnu.org/gnu/autoconf/autoconf-2.63.tar.gz
-> http://ftp.gnu.org/gnu/automake/automake-1.10.tar.gz
-> http://ftp.gnu.org/gnu/libtool/libtool-2.2.6a.tar.gz
->
-> You may have to install m4 too:
-> http://ftp.gnu.org/gnu/m4/m4-1.4.12.tar.gz
-  so newer configure script goes with the release, after which
-  mkinstalldirs can maybe be deleted.
-- rerelease
-
-- lua bindings, to libnet, libpcap, and libnfq: these will allow construction,
-  capture, modification, injection and reinjection of packets (as well as unit
-  testing libnet)
-
+- make a mailing list
+- make libnet-1.1.6 release candidate
+- make libnet-1.1.6 release
 
 Incomplete:
 
-- redo error handling in net binding
 - icmpv6 patches: cksum is wrong
 - cksum bug? generally, I don't trust the checksums are correct
 - unit test framework
