@@ -4,6 +4,48 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+- 1.1.6
+
+    - Remove BUGS, it referred to non-existent code. (Sam Roberts)
+    - Reworked icmpv6 patch to parallel the form of icmpv4 support. (Sam Roberts)
+    - Don't depend on netinet/ip.h. (Sam Roberts)
+    - Remove unused variable. (Sam Roberts)
+    - Support building ICMPv6 packets. (someone)
+    - Fixed typo in error message. (Thomas Habets)
+    - Use SO_BINDTODEVICE to force packets out opened device. (someone)
+    - Always use an IPPROTO of TCP when calculating TCP checksums. (Sam Roberts)
+    - Use correct addr type for addrlen calculation. (someone)
+    - libnet_build_igmp reserved field was mistakenly called 'code' (Sam Roberts)
+    - Documentation doesn't include any gif files. (Sam Roberts)
+    - Enable IPV6 support on Solaris 11. (Rich Burridge)
+    - Trying to fix write errors (Víctor Martínez)
+    - Presence of linux's PF_PACKET sockets is now detected. The acinclude.m4 merged in from packetfactory's 1.1.3-rc branch mysteriously assumed that that there was no PF_PACKET if the target OS was linux, which is the opposite of what we want. (Sam Roberts)
+    - Fix libnet_build_igmp() to not reverse the order of the ip address. libnet APIs that take IP addresses as a uint32_t expect them to already be in network byte order. (Sam Roberts)
+    - pblock_append deals with raw memory and structs, so declare it correctly (Sam Roberts)
+    - Clarified types and sizes of DHCP/BOOTP chaddr, sname, and file. chaddr is a hardware address, with size specified seperately, whereas sname and file are null terminated strings. (Sam Roberts)
+    - Explicitly ignore return value of write (some systems now warn about this). (Sam Roberts)
+    - Synchronize comment about h_len with parameter name in function. (Sam Roberts)
+    - Fixes a buffer overflow issue when copying chaddr, file, and sname fields to the DHCP header. (allfro)
+    - Fixes improper calculation of header size when libnet_pblock_probe is called. payload_s must be added to the header length in order to accommodate for the existence of a non-NULL payload. Otherwise the user is prompted with a 'memcpy would cause overflow' error and the program exits. (allfro)
+    - Fixes incorrect memory block size set in the timeexceed and redirect builders. The n variable does not add the size of the payload (payload_s) for proper allocation of the buffer when payload is not NULL and payload_s is greater than 0. This results in a memcpy buffer overflow error when libnet_pblock_append is called exiting the program. (allfro)
+    - Fixes a bug that incorrectly converts the addr, mask, and next_hop fields to network byte order. Users will usually call libnet_name2addr4 to fill these fields and this function already provides a network byte-ordered value. (allfro)
+    - snap parameter was getting copied into the dhost field. (Sam Roberts)
+    - h_len is no longer used, so pass zero. Coverity noticed that stack garbage was being passed instead of a valid value, its just that the value isn't used, and incluing l->total_size is wrong when the pblock is being updated (though it will work on pblock creation). (Sam Roberts)
+    - Length n should include the value_hdr. (Sam Roberts)
+    - Coverity: UNINIT (Jiri Popelka)
+    - Coverity: REVERSE_INULL (Jiri Popelka)
+    - Coverity: RESOURCE_LEAK (Jiri Popelka)
+    - Coverity: OVERRUN_STATIC (Jiri Popelka)
+    - Coverity: OVERRUN_STATIC (Jiri Popelka)
+    - Coverity: OVERRUN_STATIC (Jiri Popelka)
+    - Coverity: FORWARD_NULL (Jiri Popelka)
+    - Coverity: FORWARD_NULL (Jiri Popelka)
+    - Coverity: CHECKED_RETURN (Jiri Popelka)
+    - mkinstalldirs is replaced by autogen.sh. Maybe it shouldn't be checked in? (Sam Roberts)
+    - autogen retries if /sw/... doesn't exist (Sam Roberts)
+    - build_ipv6: set higher traffic class bits (Ulrich Weber)
+    - Fix missing uint instead of u_int (Dagobert Michelsen)
+
 - 1.1.5
 
     - IRIX: Get MAC address from ioctl(), not by spawning shell. (Thomas Habets)
