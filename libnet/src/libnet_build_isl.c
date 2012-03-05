@@ -45,7 +45,7 @@ uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
 uint16_t portindex, uint16_t reserved, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_isl_hdr isl_hdr;
 
@@ -55,7 +55,6 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_ISL_H + payload_s;           /* size of memory block */
-    h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
