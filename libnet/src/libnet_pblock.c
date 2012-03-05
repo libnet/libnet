@@ -612,3 +612,14 @@ libnet_pblock_p2p(uint8_t type)
     }
 }
 
+void
+libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
+{
+    (void) l;
+    (void) p;
+    /* For backwards compatibility, libnet_pblock_t no longer includes
+       an ip_offset, so calling this is unnecessary.
+       */
+}
+
+
