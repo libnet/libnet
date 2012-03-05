@@ -4,8 +4,8 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+NOTE - Since 1.1.3 this file is no longer maintained, see CHANGELOG.
 
-    1.1.x CONTRIBUTERS
     Barbato, Luca
         . faster C checksum routine
     Beverly, Scott          <scottbeverly@xengin.com>
