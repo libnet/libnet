@@ -229,6 +229,14 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name);
 extern const struct libnet_in6_addr in6addr_error;
 
 /**
+ * Check a libnet_in6_addr structure for identity with in6addr_error.
+ * @param addr address to check
+ * @return 1 if addr is in6addr_error, 0 if it is not
+ */
+int
+libnet_in6_is_error(struct libnet_in6_addr addr);
+
+/**
  * Takes a dotted decimal string or a canonical DNS name and returns a 
  * network byte ordered IPv6 address. This may incur a DNS lookup if mode is
  * set to LIBNET_RESOLVE and host_name refers to a canonical DNS name. If mode
@@ -242,7 +250,7 @@ extern const struct libnet_in6_addr in6addr_error;
  * @return network byte ordered IPv6 address structure 
  */
 struct libnet_in6_addr
-libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name);
+libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name);
 
 /**
  * Should document this baby right here.

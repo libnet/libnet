@@ -230,8 +230,14 @@ libnet_addr2name6_r(struct libnet_in6_addr addr, uint8_t use_name,
 
 const struct libnet_in6_addr in6addr_error = IN6ADDR_ERROR_INIT;
 
+int
+libnet_in6_is_error(struct libnet_in6_addr addr)
+{
+    return 0 == memcmp(&addr, &in6addr_error, sizeof(addr));
+}
+
 struct libnet_in6_addr
-libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name)
+libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
 {
 #if !defined (__WIN32__)
     struct libnet_in6_addr addr;
@@ -272,14 +278,14 @@ libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name)
     }
     else
     {
-		#if defined(__WIN32__) /* Silence Win32 warning */
-		if (l)
+#if defined(__WIN32__) /* Silence Win32 warning */
+        if (l)
         {        
                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): can't resolve IPv6 addresses.\n", __func__);
         }
         return (in6addr_error);
-        #else
+#else
         if(!inet_pton(AF_INET6, host_name, &addr))
         {
             if (l)
@@ -290,7 +296,7 @@ libnet_name2addr6(libnet_t *l, char *host_name, uint8_t use_name)
             return (in6addr_error);
         }
         return (addr);
-        #endif
+#endif
     }
 }
 
