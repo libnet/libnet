@@ -6,6 +6,16 @@
 
 - 1.1.6
 
+    - Rework libnet_autobuild_ipv6() to eliminate code duplication. (Sam Roberts)
+    - Implemented libnet_autobuild_ipv6() (repolho)
+    - Implemented unix version of libnet_get_ipaddr6() (repolho)
+    - Reintroduce libnet_pblock_record_ip_offset() which is empty. (Sam Roberts)
+    - Make clear that all contributions are under libnet copyright. (Sam Roberts)
+    - Fix doc comment format errors reported by doxygen. (Sam Roberts)
+    - Update for doxygen 1.7.4. (Sam Roberts)
+    - Note that PORTED is no longer maintained. (Sam Roberts)
+    - Note that CONTRIB is no longer maintained. (Sam Roberts)
+    - Prep for upcoming 1.1.6 release. (Sam Roberts)
     - Remove BUGS, it referred to non-existent code. (Sam Roberts)
     - Reworked icmpv6 patch to parallel the form of icmpv4 support. (Sam Roberts)
     - Don't depend on netinet/ip.h. (Sam Roberts)

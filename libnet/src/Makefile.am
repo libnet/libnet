@@ -80,6 +80,7 @@ libnet_la_LIBADD = @LTLIBOBJS@
 # 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
 # 1.1.4 was 6:0:5 -> probably an error on my part
 # 1.1.5 is 7:0:6 -> new APIs, backwards compat
+# 1.1.6 is 8:0:7 -> new APIs, backwards compat
 
-libnet_la_LDFLAGS = -version-info 7:0:6 -Wl
+libnet_la_LDFLAGS = -version-info 8:0:7 -Wl
 

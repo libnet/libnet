@@ -7,21 +7,20 @@ Pre-release:
 
 Use ../ChangeLog to update changelog.
 
-
 - configure.in
 
 Update version.
-
 
 - src/Makefile.am
 
 Update LDFLAGS' version-info.
 
-
-- tag it
+- tag it, with -rc#
 
 > git tag -fa libnet-x.y.z -m libnet-x.y.z
 > git push --tags
+
+- Announce release-candidate on libnet-dev-announce
 
 Post-release:
 
@@ -37,7 +36,5 @@ Go to:
 
     https://sourceforge.net/projects/libnet-dev/files_beta/
 
-
 - Announce release on libnet-dev-announce
-
 
