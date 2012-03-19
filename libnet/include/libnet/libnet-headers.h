@@ -66,6 +66,10 @@
 #define LIBNET_ICMPV6_COMMON_H  0x04    /**< ICMP6 header base:    4 bytes */
 #define LIBNET_ICMPV6_H         0x08    /**< ICMP6 header base:    8 bytes (unused, for backwards compatibility) */
 #define LIBNET_ICMPV6_UNREACH_H 0x08    /**< ICMP6 unreach base:   8 bytes */
+#define LIBNET_ICMPV6_ECHO_H    0x08    /**< ICMP6 echo:           8 bytes */
+#define LIBNET_ICMPV6_NDP_NSOL_H  24    /**< ICMP6 NDP NSOL:      24 bytes */
+#define LIBNET_ICMPV6_NDP_NADV_H  24    /**< ICMP6 NDP NADV:      24 bytes */
+#define LIBNET_ICMPV6_NDP_OPT_H 0x02    /**< ICMP6 NDP OPT base:   2 bytes */
 #define LIBNET_IGMP_H           0x08    /**< IGMP header:          8 bytes */
 #define LIBNET_IPV4_H           0x14    /**< IPv4 header:         20 bytes */
 #define LIBNET_IPV6_H           0x28    /**< IPv6 header:         40 bytes */
