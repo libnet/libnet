@@ -415,7 +415,7 @@ libnet_build_icmpv6_common(
         return (-1);
     } 
 
-    n = sizeof(icmp_hdr) + specific_s + payload_s;
+    n = LIBNET_ICMPV6_COMMON_H + specific_s + payload_s;
 
     p = libnet_pblock_probe(l, ptag, n, pblock_type);
 
