@@ -281,7 +281,7 @@ dnl
     ;;
 
 *hpux11*)
-    AC_DEFINE(HAVE_HPUX11, 1, [Define if we're building on HP/UX.])
+    AC_DEFINE(HAVE_HPUX11, 1, [Define if we are building on HP/UX.])
     AC_CHECK_HEADERS(sys/dlpi_ext.h)
     ;;
 
