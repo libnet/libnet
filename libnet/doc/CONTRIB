@@ -9,6 +9,8 @@ People who have volunteed to check libnet release candidates:
 - Thomas Habets <thomas@habets.se>: Irix, snoop, dlpi
 - Emilio A. Escobar <eescobar@gmail.com>: Ubuntu, *BSD, Solaris
 - Rich Burridge <rich.burridge@oracle.com>: Solaris
+- Dirk Meyer <dinoex@FreeBSD.org>: FreeBSD
+- Dagobert Michelsen <dam@opencsw.org>: Solaris
 
 Since 1.1.3 the list below is no longer maintained, see CHANGELOG.
 
