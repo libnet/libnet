@@ -6,6 +6,13 @@
 
 - 1.1.6
 
+    - Only use getifaddrs() if it exists. (reported by Dagobert Michelsen) (Sam Roberts)
+    - Clean up use of single and bracket quotes. (Sam Roberts)
+    - FreeBSD and Solaris volunteers to contibute. (Sam Roberts)
+    - ICMPv6 struct is too long, so use length macro (sickmind@lavabit.com) (Sam Roberts)
+    - ICMPv6 pblock sizes are needed to calculate IPv6's ip_len (reported by sickmind@lavabit.com) (Sam Roberts)
+    - Prep for 1.1.6 release, such as bumping version (Sam Roberts)
+    - Add people who have volunteered to check release candidates. (Sam Roberts)
     - Rework libnet_autobuild_ipv6() to eliminate code duplication. (Sam Roberts)
     - Implemented libnet_autobuild_ipv6() (repolho)
     - Implemented unix version of libnet_get_ipaddr6() (repolho)
