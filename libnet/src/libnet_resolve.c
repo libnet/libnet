@@ -300,7 +300,7 @@ libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
     }
 }
 
-#if !defined(__WIN32__)
+#ifdef HAVE_GETIFADDRS
 
 #include <ifaddrs.h>
 
