@@ -6,6 +6,8 @@
 
 - 1.1.6
 
+    - Note about why including libnet.h breaks dnet.h/dumbnet.h (Sam Roberts)
+    - Prepare for 1.1.6-rc3. (Sam Roberts)
     - Only use getifaddrs() if it exists. (reported by Dagobert Michelsen) (Sam Roberts)
     - Clean up use of single and bracket quotes. (Sam Roberts)
     - FreeBSD and Solaris volunteers to contibute. (Sam Roberts)

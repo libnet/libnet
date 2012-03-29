@@ -20,21 +20,12 @@ Update LDFLAGS' version-info.
 > git tag -a libnet-x.y.z -m libnet-x.y.z
 > git push --tags
 
+- Build it, ../Build
+
+- Push it, ../Push
+
 - Announce release-candidate on libnet-dev-announce
 
-Post-release:
-
-- Post tarball to source forge.
-
-Go to:
-
-    http://sourceforge.net/projects/libnet-dev/
-
-Login as ras_u_ras_t
-
-Go to:
-
-    https://sourceforge.net/projects/libnet-dev/files/
 
 - Announce release on libnet-dev-announce
 

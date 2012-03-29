@@ -1,12 +1,10 @@
-dnl $Id: configure.in,v 1.10 2004/11/09 07:02:52 mike Exp $
-dnl
 dnl Libnet autoconfiguration information file
 dnl Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
 dnl All rights reserved.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libnet, 1.1.6-rc3)
+AC_INIT(libnet, 1.1.6)
 AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
