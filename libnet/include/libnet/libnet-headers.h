@@ -1095,6 +1095,11 @@ struct libnet_icmpv4_hdr
             uint16_t seq;/* ICMP sequence number */
         } echo;
 
+        /* TODO this hack conflicts with the system headers, which is why we
+         * undef what they do, and it also damages dnet/dumbnet's headers if
+         * they are included after ours. Fixing will break API, though, so
+         * we leave it for now.
+         */
 #undef icmp_id
 #undef icmp_seq
 #define icmp_id     hun.echo.id
