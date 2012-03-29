@@ -9,6 +9,7 @@ for _,v in ipairs(arg) do
 end
 
 require"net"
+require"pcap"
 
 DEV="en0"
 
@@ -44,15 +45,37 @@ function dump(n, size)
   --print("q=[["..q(b).."]]")
   print("h=[["..h(b).."]]")
 
+  if _dumper then
+      assert(_dumper:dump(b))
+      assert(_dumper:flush())
+  end
+
   if size then
     assert(#b == size, "block's size is not expected, "..size)
   end
 end
 
+function pcap_dumper(fname)
+    local cap = assert(pcap.open_dead(pcap.DLT.EN10MB))
+    local dmp = assert(cap:dump_open(fname))
+    assert(dmp:flush())
+    cap:close()
+    return dmp
+end
+
 function test(n, f)
+    local strip = {
+        ["+"]="-";
+        [" "]="-";
+        ["/"]="-";
+        [","]="";
+    }
+    local pcap_name = "out"..string.gsub(n, ".", strip)..".pcap"
+    _dumper = pcap_dumper(pcap_name)
+
     print""
     print""
-    print("=test: "..n)
+    print("=test: "..n.." ("..pcap_name..")")
 
     if not keepgoing then
         f()
@@ -65,6 +88,7 @@ function test(n, f)
             print("+pass: "..n)
         end
     end
+    _dumper = _dumper:close()
 end
 
 function hex_dump(s)
