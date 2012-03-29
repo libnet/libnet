@@ -57,7 +57,7 @@ TOUT=$(TNET:.lua=.test)
 echo:
 	echo $(TOUT)
 
-test: net.test pcap.test recoding.test $(TOUT)
+test: net.test $(TOUT)
 
 %.test: %.lua net.so
 	lua $<
