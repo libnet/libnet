@@ -1,7 +1,7 @@
 
 set -x
 
-V=$(git describe | sed -es/libnet-//)
+V=$(git describe --tags| sed -es/libnet-//)
 D=$(date --rfc-822)
 
 rm -rf debian

@@ -17,7 +17,7 @@ Update LDFLAGS' version-info.
 
 - tag it, with -rc#
 
-> git tag -fa libnet-x.y.z -m libnet-x.y.z
+> git tag -a libnet-x.y.z -m libnet-x.y.z
 > git push --tags
 
 - Announce release-candidate on libnet-dev-announce
@@ -34,7 +34,7 @@ Login as ras_u_ras_t
 
 Go to:
 
-    https://sourceforge.net/projects/libnet-dev/files_beta/
+    https://sourceforge.net/projects/libnet-dev/files/
 
 - Announce release on libnet-dev-announce
 
