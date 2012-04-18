@@ -39,6 +39,8 @@
 #include "../include/win32/libnet.h"
 #endif
 
+#include <netinet/in.h>
+
 /* FIXME - unit test these - 0 is debian's version, else is -RC1's */
 /* Note about aliasing warning:
  *
