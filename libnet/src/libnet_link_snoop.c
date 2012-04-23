@@ -33,7 +33,7 @@
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
 
-#if (HAVE_CONFIG_H)
+#include "common.h"
 #include "../include/config.h"
 #endif
 #include "../include/libnet.h"

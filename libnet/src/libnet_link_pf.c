@@ -30,10 +30,7 @@
  *	Extraction/creation by Jeffrey Mogul, DECWRL
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#include "../include/low_libnet.h"
+#include "common.h"
 
 #include "../include/gnuc.h"
 #ifdef HAVE_OS_PROTO_H

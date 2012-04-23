@@ -1,8 +1,5 @@
 /*
- *  $Id: libnet_build_data.c,v 1.7 2004/04/13 17:32:28 mike Exp $
- *
- *  libnet
- *  libnet_build_data.c - generic data block builder
+ *  common.h - common headers
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
  *  All rights reserved.
@@ -30,41 +27,30 @@
  *
  */
 
-#include "common.h"
+#include "../include/config.h"
 
-/* FIXME this won't work with TCP or IPv4 data, which is probably a bug */
-libnet_ptag_t
-libnet_build_data(const uint8_t *payload, uint32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag)
-{
-    uint32_t n, h;
-    libnet_pblock_t *p;
+#if (_WIN32) || (__CYGWIN__)
 
-    if (l == NULL)
-    { 
-        return (-1);
-    } 
+#include "../include/win32/libnet.h"
+#include "../include/win32/config.h"
 
-    n = payload_s;
-    h = 0;          /* no checksum on generic block */
+#else
 
-    /*
-     *  Find the existing protocol block if a ptag is specified, or create
-     *  a new one.
-     */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_DATA_H);
-    if (p == NULL)
-    {
-        return (-1);
-    }
+#include "../include/libnet.h"
 
-    /* boilerplate payload sanity check / append macro */
-    LIBNET_DO_PAYLOAD(l, p);
+#include <assert.h>
 
-    return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_DATA_H));
-bad:
-    libnet_pblock_delete(l, p);
-    return (-1);
-}
+#include <sys/types.h>
 
-/* EOF */
+/* IPPROTO_ and sockaddr_ definitions are here. They are often
+ * implicitly pulled in, but some systems need them explicitly
+ * included.
+ */
+#include <netinet/in.h>
+
+/* TODO - should ../include/gnuc.h be included here? */
+
+/* TODO - HAVE_OS_PROTO_H is never defined, but used in some files, delete it */
+
+#endif
+

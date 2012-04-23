@@ -27,6 +27,8 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+#include "common.h"
+
 #include <sys/param.h>  /* optionally get BSD define */
 #include <sys/timeb.h>
 #include <sys/file.h>
@@ -36,10 +38,6 @@
 #include <sys/time.h>
 #include <net/bpf.h>
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif 
-#include "../include/libnet.h"
 #include <sys/sysctl.h>
 #include <net/route.h>
 #include <net/if_dl.h>

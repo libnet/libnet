@@ -30,14 +30,8 @@
  *
  */
  
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#endif
+#include "common.h"
+
 int
 libnet_seed_prand(libnet_t *l)
 {

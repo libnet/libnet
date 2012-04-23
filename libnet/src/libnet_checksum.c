@@ -30,16 +30,7 @@
  *
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#endif
-
-#include <netinet/in.h>
+#include "common.h"
 
 /* FIXME - unit test these - 0 is debian's version, else is -RC1's */
 /* Note about aliasing warning:

@@ -24,9 +24,9 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
+#include "common.h"
+
+
 #include <sys/time.h>
 
 #include <net/if.h>

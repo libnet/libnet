@@ -32,12 +32,10 @@
  *
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
+#include "common.h"
+
 #include <winsock2.h>
 #include <iphlpapi.h> /* From the Microsoft Platform SDK */
-#include "../include/win32/libnet.h"
 #include <assert.h>
 #include <Packet32.h>
 #include <Ntddndis.h>

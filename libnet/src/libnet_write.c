@@ -32,18 +32,9 @@
  *
  */
 
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <netinet/udp.h>
+#include "common.h"
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#include "../include/win32/config.h"
+#if (_WIN32) || (__CYGWIN__)
 #include "packet32.h"
 #include "Ntddndis.h"
 #endif

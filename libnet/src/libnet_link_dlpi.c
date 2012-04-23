@@ -31,9 +31,8 @@
  */
 
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
+#include "common.h"
+
 #include <sys/types.h>
 #include <sys/time.h>
 #ifdef HAVE_SYS_BUFMOD_H

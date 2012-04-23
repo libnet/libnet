@@ -30,16 +30,7 @@
  *
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#endif
-
-#include <netinet/in.h>
+#include "common.h"
 
 /* TODO this doesn't make any sense, the code in the #else branch is littered
    with conditionals on __WIN32__ that are never reachable, what happened?

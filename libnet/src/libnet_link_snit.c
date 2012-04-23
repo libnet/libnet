@@ -31,19 +31,12 @@
  * This module now handles the STREAMS based NIT.
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#endif
+#include "common.h"
+
 #include "../include/gnuc.h"
 #ifdef HAVE_OS_PROTO_H
 #include "../include/os-proto.h"
 #endif
-
 
 struct libnet_link_int *
 libnet_open_link_interface(int8_t *device, int8_t *ebuf)
