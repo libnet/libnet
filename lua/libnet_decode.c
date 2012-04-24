@@ -137,6 +137,11 @@ int libnet_decode_ipv4(const uint8_t* pkt, size_t pkt_s, libnet_t *l)
 
     /* pcaps often contain trailing garbage after the IP packet, drop that, but not the ip hdr
      * no matter how damaged the ip_len field is */
+    /* TODO this means its not possible to reencode pcaps... the padding that comes
+       off the wire for eth frames shorter than 60 bytes gets lost. However, the next-hdr
+       only knows its length because of what tcp tells it... maybe ipv4 should push pblock
+       with any trailing garbage, afterwards? But that might cause lengths to be reevaluated
+       unless there was a specific pblock type for ethernet-padding. */
     if(pkt_s > ntohs(ip_hdr->ip_len))
         pkt_s = ntohs(ip_hdr->ip_len);
 
