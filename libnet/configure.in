@@ -199,6 +199,8 @@ case "$target_os" in
 *darwin*)
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
+
+    AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, [Define if libnet should byteswap data.])
     LIBNET_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN"
 
 dnl
