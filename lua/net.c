@@ -678,11 +678,11 @@ static int lnet_get_udp(lua_State *L)
       src=port,
       dst=port,
       seq=int,
-      ack=int,
       flags=int,
       win=int,
-      urg=int,
     -- optional arguments
+      ack=int,
+      urg=int,
       ptag=int,
       payload=str,
       options=tcp_options,
@@ -697,10 +697,10 @@ static int lnet_tcp (lua_State *L)
     int src = v_arg_integer(L, 2, "src");
     int dst = v_arg_integer(L, 2, "dst");
     int seq = v_arg_integer(L, 2, "seq");
-    int ack = v_arg_integer(L, 2, "ack");
+    int ack = v_arg_integer_opt(L, 2, "ack", 0);
     int flags = v_arg_integer(L, 2, "flags");
     int win = v_arg_integer(L, 2, "win");
-    int urg = v_arg_integer(L, 2, "urg");
+    int urg = v_arg_integer_opt(L, 2, "urg", 0);
     int ptag = lnet_arg_ptag(L, ud, 2, LIBNET_PBLOCK_TCP_H);
     uint32_t payloadsz = 0;
     const uint8_t* payload = checkpayload(L, 2, &payloadsz);
