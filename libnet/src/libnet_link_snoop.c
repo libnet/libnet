@@ -44,7 +44,6 @@
 #include <netinet/ip_var.h>
 #include <netinet/if_ether.h>
 #include <netinet/udp_var.h>
-#include <netinet/tcpip.h>
 
 #include "../include/gnuc.h"
 #include "../include/bpf.h"

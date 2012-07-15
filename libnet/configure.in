@@ -282,6 +282,10 @@ dnl
      LIBS="$LIBS -lws2_32"
      ;;
 
+*irix*)
+    CFLAGS="$CFLAGS -DINET6=1"
+    ;;
+
 *)
     AC_MSG_WARN(apparently your OS is not officially supported yet)
     AC_MSG_WARN(this may not work)
