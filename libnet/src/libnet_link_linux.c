@@ -237,8 +237,17 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     sa.sa_data[sizeof (sa.sa_data) - 1] = 0;
 #endif
 
-    c = sendto(l->fd, packet, size, 0,
-            (struct sockaddr *)&sa, sizeof (sa));
+    /* FIXME horrid hack, intel nics crash if size is less than 17, so pad to 17 bytes */
+    if(size >= 17) {
+        c = sendto(l->fd, packet, size, 0,
+                (struct sockaddr *)&sa, sizeof (sa));
+    } else {
+        uint8_t padded[17] = { 0 };
+        memcpy(padded, packet, size);
+        c = sendto(l->fd, padded, sizeof(padded), 0,
+                (struct sockaddr *)&sa, sizeof (sa));
+    }
+
     if (c != size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
