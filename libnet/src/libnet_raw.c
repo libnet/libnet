@@ -39,6 +39,11 @@
 #include "../include/win32/libnet.h"
 #endif
 
+#include <netinet/in.h>
+
+/* TODO this doesn't make any sense, the code in the #else branch is littered
+   with conditionals on __WIN32__ that are never reachable, what happened?
+   */
 #if defined (__WIN32__)
 int
 libnet_open_raw4(libnet_t *l)

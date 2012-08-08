@@ -38,7 +38,9 @@
 #else
 #include "../include/win32/libnet.h"
 #endif
+
 #include <assert.h>
+#include <netinet/in.h>
 
 libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t type)

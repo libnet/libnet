@@ -41,6 +41,9 @@
 #ifdef HAVE_SYS_SOCKIO_H
 #include <sys/sockio.h>
 #endif
+
+#include <netinet/in.h>
+
 #include "../include/ifaddrlist.h"
 
 #define MAX_IPADDR 512
