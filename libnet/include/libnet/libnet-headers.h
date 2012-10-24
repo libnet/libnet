@@ -1374,7 +1374,7 @@ struct libnet_auth_hdr
     uint16_t ospf_auth_null; /* NULL */
     uint8_t ospf_auth_keyid; /* authentication key ID */
     uint8_t ospf_auth_len;   /* auth data length */
-    uint ospf_auth_seq;    /* cryptographic sequence number */
+    uint32_t ospf_auth_seq;    /* cryptographic sequence number */
 };
 
 
@@ -1389,7 +1389,7 @@ struct libnet_ospf_hello_hdr
     uint16_t hello_intrvl;       /* num of seconds between routers last packet */
     uint8_t hello_opts;          /* Options for HELLO packets (look above) */
     uint8_t hello_rtr_pri;       /* router's priority (if 0, can't be backup) */
-    uint hello_dead_intvl;     /* # of secs a router is silent till deemed down */
+    uint32_t hello_dead_intvl;     /* # of secs a router is silent till deemed down */
     struct in_addr hello_des_rtr;   /* Designated router on the network */
     struct in_addr hello_bkup_rtr;  /* Backup router */
     struct in_addr hello_nbr;       /* neighbor router, memcpy more as needed */
@@ -1407,7 +1407,7 @@ struct libnet_dbd_hdr
 #define LIBNET_DBD_IBI      0x01    /* init */
 #define LIBNET_DBD_MBIT     0x02    /* more DBD packets are to come */
 #define LIBNET_DBD_MSBIT    0x04    /* If 1, sender is the master in the exchange */
-    uint  dbd_seq;         /* DBD sequence number */
+    uint32_t  dbd_seq;         /* DBD sequence number */
 };
 
 
@@ -1426,8 +1426,8 @@ struct libnet_dbd_hdr
  */
 struct libnet_lsr_hdr
 {
-    uint lsr_type;             /* type of LS being requested */
-    uint lsr_lsid;             /* link state ID */
+    uint32_t lsr_type;             /* type of LS being requested */
+    uint32_t lsr_lsid;             /* link state ID */
     struct in_addr lsr_adrtr;   /* advertising router (memcpy more as needed) */
 };
 
@@ -1437,7 +1437,7 @@ struct libnet_lsr_hdr
  */
 struct libnet_lsu_hdr
 {
-    uint lsu_num;              /* number of LSAs that will be broadcasted */
+    uint32_t lsu_num;              /* number of LSAs that will be broadcasted */
 };
 
 
@@ -1449,9 +1449,9 @@ struct libnet_lsa_hdr
     uint16_t lsa_age;        /* time in seconds since the LSA was originated */
     uint8_t lsa_opts;        /* look above for OPTS_* */
     uint8_t lsa_type;        /* look below for LS_TYPE_* */
-    uint lsa_id;           /* link State ID */
+    uint32_t lsa_id;           /* link State ID */
     struct in_addr lsa_adv; /* router ID of Advertising router */
-    uint lsa_seq;          /* LSA sequence number to detect old/bad ones */
+    uint32_t lsa_seq;          /* LSA sequence number to detect old/bad ones */
     uint16_t lsa_sum;      /* "Fletcher Checksum" of all fields minus age */
     uint16_t lsa_len;        /* length in bytes including the 20 byte header */
 };
@@ -1470,11 +1470,11 @@ struct libnet_rtr_lsa_hdr
 #define LIBNET_RTR_FLAGS_E  0x0200  /* E bit */
 #define LIBNET_RTR_FLAGS_B  0x0400  /* B bit */
     uint16_t rtr_num;        /* number of links within that packet */
-    uint rtr_link_id;      /* describes link_data (look below) */
+    uint32_t rtr_link_id;      /* describes link_data (look below) */
 #define LIBNET_LINK_ID_NBR_ID   1   /* Neighbors router ID, also can be 4 */
 #define LIBNET_LINK_ID_IP_DES   2   /* IP address of designated router */
 #define LIBNET_LINK_ID_SUB      3   /* IP subnet number */
-    uint rtr_link_data;    /* Depending on link_id, info is here */
+    uint32_t rtr_link_data;    /* Depending on link_id, info is here */
     uint8_t rtr_type;        /* Description of router link */
 #define LIBNET_RTR_TYPE_PTP     1   /* Point-To-Point */
 #define LIBNET_RTR_TYPE_TRANS   2   /* Connection to a "transit network" */
@@ -1491,7 +1491,7 @@ struct libnet_rtr_lsa_hdr
 struct libnet_net_lsa_hdr
 {
     struct in_addr net_nmask;   /* Netmask for that network */
-    uint  net_rtr_id;          /* ID of router attached to that network */
+    uint32_t  net_rtr_id;          /* ID of router attached to that network */
 };
  
  
@@ -1501,8 +1501,8 @@ struct libnet_net_lsa_hdr
 struct libnet_sum_lsa_hdr
 {
     struct in_addr sum_nmask;   /* Netmask of destination IP address */
-    uint  sum_metric;          /* Same as in rtr_lsa (&0xfff to use last 24bit */
-    uint  sum_tos_metric;      /* first 8bits are TOS, 24bits are TOS Metric */
+    uint32_t  sum_metric;          /* Same as in rtr_lsa (&0xfff to use last 24bit */
+    uint32_t  sum_tos_metric;      /* first 8bits are TOS, 24bits are TOS Metric */
 };
  
  
@@ -1513,10 +1513,10 @@ struct libnet_sum_lsa_hdr
 struct libnet_as_lsa_hdr
 {
     struct in_addr as_nmask;    /* Netmask for advertised destination */
-    uint  as_metric;           /* May have to set E bit in first 8bits */
+    uint32_t  as_metric;           /* May have to set E bit in first 8bits */
 #define LIBNET_AS_E_BIT_ON 0x80000000  /* as_metric */
     struct in_addr as_fwd_addr; /* Forwarding address */
-    uint  as_rte_tag;          /* External route tag */
+    uint32_t  as_rte_tag;          /* External route tag */
 };
 
 

@@ -1406,7 +1406,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_ospfv2_hello(uint32_t netmask, uint16_t interval, uint8_t opts,
-uint8_t priority, uint dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
+uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1422,7 +1422,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_ospfv2_dbd(uint16_t dgram_len, uint8_t opts, uint8_t type,
-uint seqnum, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
+uint32_t seqnum, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
  
 /**
@@ -1436,7 +1436,7 @@ libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsr(uint type, uint lsid, uint32_t advrtr,
+libnet_build_ospfv2_lsr(uint32_t type, uint32_t lsid, uint32_t advrtr,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1448,7 +1448,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsu(uint num, const uint8_t* payload, uint32_t payload_s,
+libnet_build_ospfv2_lsu(uint32_t num, const uint8_t* payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1468,7 +1468,7 @@ libnet_t *l, libnet_ptag_t ptag);
  */
 libnet_ptag_t
 libnet_build_ospfv2_lsa(uint16_t age, uint8_t opts, uint8_t type,
-uint lsid, uint32_t advrtr, uint seqnum, uint16_t sum, uint16_t len,
+uint32_t lsid, uint32_t advrtr, uint32_t seqnum, uint16_t sum, uint16_t len,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1486,8 +1486,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsa_rtr(uint16_t flags, uint16_t num, uint id,
-uint data, uint8_t type, uint8_t tos, uint16_t metric, const uint8_t* payload,
+libnet_build_ospfv2_lsa_rtr(uint16_t flags, uint16_t num, uint32_t id,
+uint32_t data, uint8_t type, uint8_t tos, uint16_t metric, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1500,7 +1500,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsa_net(uint32_t nmask, uint rtrid, const uint8_t* payload,
+libnet_build_ospfv2_lsa_net(uint32_t nmask, uint32_t rtrid, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1514,7 +1514,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsa_sum(uint32_t nmask, uint metric, uint tos,
+libnet_build_ospfv2_lsa_sum(uint32_t nmask, uint32_t metric, uint32_t tos,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
@@ -1529,8 +1529,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_ospfv2_lsa_as(uint32_t nmask, uint metric, uint32_t fwdaddr,
-uint tag, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
+libnet_build_ospfv2_lsa_as(uint32_t nmask, uint32_t metric, uint32_t fwdaddr,
+uint32_t tag, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
