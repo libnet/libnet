@@ -121,7 +121,7 @@ done:
 #if defined (__WIN32__)
 libnet_ptag_t
 libnet_win32_build_fake_ethernet(uint8_t *dst, uint8_t *src, uint16_t type,
-uint8_t *payload, uint32_t payload_s, uint8_t *packet, libnet_t *l,
+const uint8_t *payload, uint32_t payload_s, uint8_t *packet, libnet_t *l,
 libnet_ptag_t ptag)
 {
     struct libnet_ethernet_hdr eth_hdr;
@@ -150,7 +150,7 @@ libnet_ptag_t ptag)
 
 libnet_ptag_t
 libnet_win32_build_fake_token(uint8_t *dst, uint8_t *src, uint16_t type,
-uint8_t *payload, uint32_t payload_s, uint8_t *packet, libnet_t *l,
+const uint8_t *payload, uint32_t payload_s, uint8_t *packet, libnet_t *l,
 libnet_ptag_t ptag)
 {
     struct libnet_token_ring_hdr token_ring_hdr;
@@ -209,9 +209,11 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
                 "%s(): failed to allocate packet\n", __func__);
         return (-1);
     }
-	
+    /* FIXME all the return paths below, except the last, leak 'packet' */
+
     /* we have to do the IP checksum  */
-    if (libnet_do_checksum(l, payload, IPPROTO_IP, LIBNET_IPV4_H) == -1)
+    /* FIXME MSVC warning is correct, checksum modifies its input. Fix is to build checksum inside the allocated 'packet' */
+    if (libnet_inet_checksum(l, payload, IPPROTO_IP, LIBNET_IPV4_H, payload, payload+payload_s) == -1)
     {
         /* error msg set in libnet_do_checksum */
         return (-1);

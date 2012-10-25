@@ -117,7 +117,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
     struct in_addr addr;
     struct hostent *host_ent; 
     uint32_t m;
-    uint val;
+    uint32_t val;
     int i;
 
     if (use_name == LIBNET_RESOLVE)
@@ -127,7 +127,14 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
             if (!(host_ent = gethostbyname(host_name)))
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): %s\n", __func__, hstrerror(h_errno));
+                        "%s(): %s\n", __func__, 
+#if (_WIN32)
+                            "gethostbyname failure"
+#else
+                            /* FIXME doesn't exist on windows, needs WSAGetLastError()/FormatMessage */
+                            hstrerror(h_errno)
+#endif
+						);
                 /* XXX - this is actually 255.255.255.255 */
                 return (-1);
             }

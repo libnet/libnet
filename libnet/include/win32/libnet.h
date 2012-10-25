@@ -58,11 +58,13 @@ extern "C" {
 /* Some UNIX to Win32 conversions */
 #define STDOUT_FILENO stdout
 #define snprintf _snprintf 
+#define strdup _strdup
 #define write _write
 #define open _open
 #define random rand
 #define close closesocket
 #define __func__ __FUNCTION__
+#define _CRT_SECURE_NO_WARNINGS
 
 /* __FUNCTION__ available in VC ++ 7.0 (.NET) and greater */
 #if _MSC_VER < 1300
@@ -90,6 +92,15 @@ extern "C" {
 #include <ctype.h>
 #include <errno.h>
 #include <stdarg.h>
+
+#include "stdint.h"
+
+typedef uint32_t uint; /* FIXME all uses of uint need to be fixed, it not portable */
+
+/* Libnet's unnamespaced ICMP6_ macros stomp on the enumerated versions of
+   these names in the MS headers, so pre-include this header. */
+#include <iphlpapi.h> /* From the Microsoft Platform SDK */
+
 #include "../libnet/libnet-macros.h"
 #include "../libnet/libnet-headers.h"
 #include "../libnet/libnet-structures.h"
