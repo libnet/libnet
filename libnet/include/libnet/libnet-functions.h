@@ -2254,7 +2254,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len);
  *
  * Finding that protocol requires that the IP header be well-formed... so this
  * won't work well for invalid packets. But then, what is the valid checksum
- * for a valid packet, anyhow?
+ * for a invalid packet, anyhow?
  *
  * This doesn't work well for non-inet checksums, sorry, that's an original design
  * flaw. pblock_t needs a pointer in it, to a packet assembly function that can be
