@@ -25,7 +25,21 @@ Platform SDK : http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 
 4. To properly setup the winpcap/libpcap dependencies.
    
-   Visual Studio .NET Instructions.
+-  Visual Studio 2010 Instructions.
+
+   Select libnet project
+   	Right-click, and select Properties
+	Under Configuration Properties, select VC++ Directories
+
+	Select Include files.
+		Add the following path
+			<path>wpdpack\Include
+	Select Library paths.
+		Add the following path
+			<path>wpdpack\Lib
+
+-  Visual Studio .NET Instructions.
+
    Select Tools/Options
       Under the options dialog, select Projects and then VC++ Directories
       Select Include files.
@@ -35,10 +49,14 @@ Platform SDK : http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
       Add the following path
       <path>wpdpack\Lib
 
-   Visual C++ 6.0 Instructions
+-  Visual C++ 6.0 Instructions
+
    You will need to also install the Microsoft Platform SDK in order to have iphlpapi.h
+
    The platform SDK is available here: http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
-   NOTE: The include order is important, or you will get redefinition errors. Put the platform sdk's directory first.
+
+   NOTE: The include order is important, or you will get redefinition errors.  Put the platform sdk's directory first.
+
    Select Tools/Options
    Select the Directories Tab
       Select Include files.
@@ -50,8 +68,4 @@ Platform SDK : http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
       <path>wpdpack\Lib
       <path>Program Files\Microsoft SDK\Lib
    
- 
-
-   
- 
  
