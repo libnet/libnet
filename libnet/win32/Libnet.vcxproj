@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;..\..\WpdPack\Include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;..\..\WpdPack\Lib</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBNET_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\Libnet.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release\Libnet.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\Libnet.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>Release/Libnet-1.1.1.dll</OutputFile>
+      <ImportLibrary>.\Release\Libnet-1.1.1.lib</ImportLibrary>
+      <ModuleDefinitionFile>.\libnet_dll.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBNET_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\Libnet.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug\Libnet.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\Libnet.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\Debug\Libnet.dll</OutputFile>
+      <ImportLibrary>.\Debug\Libnet.lib</ImportLibrary>
+      <ModuleDefinitionFile>.\libnet_dll.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\libnet_advanced.c" />
+    <ClCompile Include="..\src\libnet_asn1.c" />
+    <ClCompile Include="..\src\libnet_build_802.1q.c" />
+    <ClCompile Include="..\src\libnet_build_802.1x.c" />
+    <ClCompile Include="..\src\libnet_build_802.2.c" />
+    <ClCompile Include="..\src\libnet_build_802.3.c" />
+    <ClCompile Include="..\src\libnet_build_arp.c" />
+    <ClCompile Include="..\src\libnet_build_bgp.c" />
+    <ClCompile Include="..\src\libnet_build_cdp.c" />
+    <ClCompile Include="..\src\libnet_build_data.c" />
+    <ClCompile Include="..\src\libnet_build_dhcp.c" />
+    <ClCompile Include="..\src\libnet_build_dns.c" />
+    <ClCompile Include="..\src\libnet_build_ethernet.c" />
+    <ClCompile Include="..\src\libnet_build_fddi.c" />
+    <ClCompile Include="..\src\libnet_build_gre.c" />
+    <ClCompile Include="..\src\libnet_build_hsrp.c" />
+    <ClCompile Include="..\src\libnet_build_icmp.c" />
+    <ClCompile Include="..\src\libnet_build_igmp.c" />
+    <ClCompile Include="..\src\libnet_build_ip.c" />
+    <ClCompile Include="..\src\libnet_build_ipsec.c" />
+    <ClCompile Include="..\src\libnet_build_isl.c" />
+    <ClCompile Include="..\src\libnet_build_link.c" />
+    <ClCompile Include="..\src\libnet_build_mpls.c" />
+    <ClCompile Include="..\src\libnet_build_ntp.c" />
+    <ClCompile Include="..\src\libnet_build_ospf.c" />
+    <ClCompile Include="..\src\libnet_build_rip.c" />
+    <ClCompile Include="..\src\libnet_build_rpc.c" />
+    <ClCompile Include="..\src\libnet_build_sebek.c" />
+    <ClCompile Include="..\src\libnet_build_snmp.c" />
+    <ClCompile Include="..\src\libnet_build_stp.c" />
+    <ClCompile Include="..\src\libnet_build_tcp.c" />
+    <ClCompile Include="..\src\libnet_build_token_ring.c" />
+    <ClCompile Include="..\src\libnet_build_udp.c" />
+    <ClCompile Include="..\src\libnet_build_vrrp.c" />
+    <ClCompile Include="..\src\libnet_checksum.c" />
+    <ClCompile Include="..\src\libnet_cq.c" />
+    <ClCompile Include="..\src\libnet_crc.c" />
+    <ClCompile Include="..\src\libnet_dll.c" />
+    <ClCompile Include="..\src\libnet_error.c" />
+    <ClCompile Include="..\src\libnet_if_addr.c" />
+    <ClCompile Include="..\src\libnet_init.c" />
+    <ClCompile Include="..\src\libnet_internal.c" />
+    <ClCompile Include="..\src\libnet_link_win32.c" />
+    <ClCompile Include="..\src\libnet_pblock.c" />
+    <ClCompile Include="..\src\libnet_port_list.c" />
+    <ClCompile Include="..\src\libnet_prand.c" />
+    <ClCompile Include="..\src\libnet_raw.c" />
+    <ClCompile Include="..\src\libnet_resolve.c" />
+    <ClCompile Include="..\src\libnet_version.c" />
+    <ClCompile Include="..\src\libnet_write.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="libnet_dll.def" />
+    <CustomBuild Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\win32\config.h" />
+    <ClInclude Include="..\include\libnet\libnet-asn1.h" />
+    <ClInclude Include="..\include\libnet\libnet-functions.h" />
+    <ClInclude Include="..\include\libnet\libnet-headers.h" />
+    <ClInclude Include="..\include\libnet\libnet-macros.h" />
+    <ClInclude Include="..\include\libnet\libnet-structures.h" />
+    <ClInclude Include="..\include\libnet\libnet-types.h" />
+    <ClInclude Include="..\include\win32\libnet.h" />
+    <ClInclude Include="..\src\common.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
