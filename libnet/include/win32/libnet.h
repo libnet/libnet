@@ -95,8 +95,6 @@ extern "C" {
 
 #include "stdint.h"
 
-typedef uint32_t uint; /* FIXME all uses of uint need to be fixed, it not portable */
-
 /* Libnet's unnamespaced ICMP6_ macros stomp on the enumerated versions of
    these names in the MS headers, so pre-include this header. */
 #include <iphlpapi.h> /* From the Microsoft Platform SDK */

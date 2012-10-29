@@ -49,7 +49,7 @@ main(int argc, char *argv[])
     char *filename = "/etc/passwd";
     char mode[] = "netascii";
     u_char *payload = NULL;
-    uint payload_s = 0;
+    uint32_t payload_s = 0;
     
 
     printf("libnet 1.1 packet shaping: UDP + payload[raw] == TFTP\n");
