@@ -55,6 +55,9 @@ extern "C" {
 #define LIBNET_LIL_ENDIAN 1
 #define HAVE_CONFIG_H 1
 
+/* TODO Definitions and includes below should be in a private header, libnet src needs them, libnet
+   library users don't (and they have negative side effects).
+   */
 /* Some UNIX to Win32 conversions */
 #define STDOUT_FILENO stdout
 #define snprintf _snprintf 
@@ -64,7 +67,9 @@ extern "C" {
 #define random rand
 #define close closesocket
 #define __func__ __FUNCTION__
+#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
 
 /* __FUNCTION__ available in VC ++ 7.0 (.NET) and greater */
 #if _MSC_VER < 1300
@@ -95,9 +100,6 @@ extern "C" {
 
 #include "stdint.h"
 
-/* Libnet's unnamespaced ICMP6_ macros stomp on the enumerated versions of
-   these names in the MS headers, so pre-include this header. */
-#include <iphlpapi.h> /* From the Microsoft Platform SDK */
 
 #include "../libnet/libnet-macros.h"
 #include "../libnet/libnet-headers.h"
