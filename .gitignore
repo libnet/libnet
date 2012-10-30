@@ -1,8 +1,12 @@
 *.a
+*.dll
+*.exp
 *.la
+*.lib
 *.lo
 *.loT
 *.o
+*.obj
 *.out.dSYM
 *.so.dSYM
 *~
