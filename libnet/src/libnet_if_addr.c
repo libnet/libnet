@@ -311,7 +311,9 @@ register char *errbuf)
     /* Scan the list printing every entry */
 	for (d = alldevs; d; d = d->next)
     {
-		if((!d->addresses) || (d->addresses->addr->sa_family != AF_INET))
+        if(!d->addresses)
+            continue;
+        if(d->addresses->addr->sa_family != AF_INET && d->addresses->addr->sa_family != AF_INET6)
             continue;
         if(d->flags & PCAP_IF_LOOPBACK)
             continue;
