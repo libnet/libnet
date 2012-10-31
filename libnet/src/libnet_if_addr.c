@@ -104,8 +104,7 @@ libnet_check_iface(libnet_t *l)
 #endif
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev,
-register char *errbuf)
+libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
 {
     register struct libnet_ifaddr_list *al;
     struct ifreq *ifr, *lifr, *pifr, nifr;
@@ -274,6 +273,9 @@ register char *errbuf)
     return (nipaddr);
 }
 #else
+/* WIN32 support *
+/* TODO move win32 support into win32 specific source file */
+
 /* From tcptraceroute, convert a numeric IP address to a string */
 #define IPTOSBUFFERS    12
 static int8_t *iptos(uint32_t in)
@@ -290,14 +292,13 @@ static int8_t *iptos(uint32_t in)
 }
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev,
-register char *errbuf)
+libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
 {
-    int nipaddr = 0;    int i = 0;
-
+    int nipaddr = 0;
+    int i = 0;
     static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
-    pcap_if_t *alldevs;
-    pcap_if_t *d;
+    pcap_if_t *alldevs = NULL;
+    pcap_if_t *d = NULL;
     int8_t err[PCAP_ERRBUF_SIZE];
 
     /* Retrieve the interfaces list */
@@ -309,7 +310,7 @@ register char *errbuf)
     }
 
     /* Scan the list printing every entry */
-	for (d = alldevs; d; d = d->next)
+    for (d = alldevs; d; d = d->next)
     {
         if(!d->addresses)
             continue;
@@ -370,7 +371,7 @@ libnet_select_device(libnet_t *l)
     else if (c == 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): no network interface found\n", __func__);
+                "%s(): no network interfaces found\n", __func__);
         return (-1);
     }
 	
