@@ -319,11 +319,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         if(d->flags & PCAP_IF_LOOPBACK)
             continue;
     
-		/* XXX - strdup */
         ifaddrlist[i].device = strdup(d->name);
-        ifaddrlist[i].addr = (uint32_t)
-                strdup(iptos(((struct sockaddr_in *)
-                d->addresses->addr)->sin_addr.s_addr));
+        ifaddrlist[i].addr = ((struct sockaddr_in *)d->addresses->addr)->sin_addr.s_addr;
         ++i;
         ++nipaddr;
     }
