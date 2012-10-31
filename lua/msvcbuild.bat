@@ -1,4 +1,4 @@
-@rem Script to build Lua under "Visual Studio .NET Command Prompt".
+@rem Script to build lua binding under "Visual Studio .NET Command Prompt".
 @rem Dependencies are:
 @rem   Lua
 @rem   winpcap, specifically, the winpcap developer pack
@@ -13,8 +13,9 @@
 @set WINPCAP=..\..\WpdPack
 @set DNET=..\..\libdnet-1.11-win32
 
-%MYCOMPILE% /I..\libnet\include\win32 /I..\libnet\include /I%LUA% /I%WINPCAP%\Include /I%DNET%\include *.c
-%MYLINK% /DLL /libpath:%WINPCAP%\Lib  /out:net.dll *.obj %LUA%\lua51.lib ..\libnet\win32\Debug\Libnet.lib %DNET%\lib\dnet.lib
+copy dnet.h.win32 dnet.h
+%MYCOMPILE% /I..\libnet\include /I%LUA% /I%WINPCAP%\Include /I%DNET%\include *.c
+%MYLINK% /DLL /export:luaopen_net /libpath:%WINPCAP%\Lib  /out:net.dll *.obj %LUA%\lua51.lib ..\libnet\src\libnet.lib %DNET%\lib\dnet.lib
 if exist net.dll.manifest^
   %MYMT% -manifest net.dll.manifest -outputresource:net.dll;2
 

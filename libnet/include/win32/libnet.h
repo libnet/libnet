@@ -37,7 +37,6 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <time.h>
-#include "in_systm.h"
 #include "pcap.h"
 
 
@@ -81,9 +80,8 @@ extern "C" {
 #pragma comment (lib,"wpcap")     /* Winpcap   */
 #pragma comment (lib,"packet")   
 
-/* "@LIBNET_VERSION@" will not work in VC++, so version.h doesn't get populated */
-/* FIXME this is not correct, it needs manual updating. */
-#define LIBNET_VERSION  "1.1.1"
+/* FIXME this needs manual update during release packaging. */
+#define LIBNET_VERSION  "1.1.6"
 
 /* To use Win32 native versions */
 #define WPCAP 1

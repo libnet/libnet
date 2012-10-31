@@ -37,8 +37,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <libnet.h>
 
 
-#define LUA_BUILD_AS_DLL /* To pull in LUA_API definitions for modules */
-
+#define LUA_LIB /* To pull in LUA_API definitions for modules */
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
