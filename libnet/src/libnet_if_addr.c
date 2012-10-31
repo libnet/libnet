@@ -325,6 +325,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         ++nipaddr;
     }
 
+    pcap_freealldevs(alldevs);
+
     *ipaddrp = ifaddrlist;
     return (nipaddr);
 }
