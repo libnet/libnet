@@ -60,6 +60,7 @@
  * @param err_buf will contain an error message on failure
  * @return libnet context ready for use or NULL on error.
  */
+LIBNET_API
 libnet_t *
 libnet_init(int injection_type, const char *device, char *err_buf);
 
@@ -68,6 +69,7 @@ libnet_init(int injection_type, const char *device, char *err_buf);
  * interface and frees all internal memory structures associated with l.  
  * @param l pointer to a libnet context
  */
+LIBNET_API
 void
 libnet_destroy(libnet_t *l);
 
@@ -77,6 +79,7 @@ libnet_destroy(libnet_t *l);
  * a different type using the same context.
  * @param l pointer to a libnet context
  */
+LIBNET_API
 void
 libnet_clear_packet(libnet_t *l);
 
@@ -86,6 +89,7 @@ libnet_clear_packet(libnet_t *l);
  * @param l pointer to a libnet context
  * @param ls pointer to a libnet statistics structure
  */
+LIBNET_API
 void
 libnet_stats(libnet_t *l, struct libnet_stats *ls);
 
@@ -94,6 +98,7 @@ libnet_stats(libnet_t *l, struct libnet_stats *ls);
  * @param l pointer to a libnet context
  * @return the file number of the file descriptor used for packet injection
  */
+LIBNET_API
 int 
 libnet_getfd(libnet_t *l);
 
@@ -103,6 +108,7 @@ libnet_getfd(libnet_t *l);
  * @return the canonical name of the device used for packet injection. Note 
  * it can be NULL without being an error.
  */
+LIBNET_API
 const char *
 libnet_getdevice(libnet_t *l);
 
@@ -114,6 +120,7 @@ libnet_getdevice(libnet_t *l);
  * @param ptag the ptag reference number
  * @return a pointer to the pblock buffer or NULL on error
  */
+LIBNET_API
 uint8_t *
 libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag);
 
@@ -125,6 +132,7 @@ libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag);
  * @param ptag the ptag reference number
  * @return the size of the pblock buffer
  */ 
+LIBNET_API
 uint32_t
 libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag);
 
@@ -135,6 +143,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return an error string or NULL if no error has occured
  */ 
+LIBNET_API
 char *
 libnet_geterror(libnet_t *l);
 
@@ -144,6 +153,7 @@ libnet_geterror(libnet_t *l);
  * @param l pointer to a libnet context
  * @return the size of the packet in l
  */ 
+LIBNET_API
 uint32_t
 libnet_getpacket_size(libnet_t *l);
 
@@ -152,6 +162,7 @@ libnet_getpacket_size(libnet_t *l);
  * @param l pointer to a libnet context
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 int
 libnet_seed_prand(libnet_t *l);
 
@@ -168,6 +179,7 @@ libnet_seed_prand(libnet_t *l);
  * @param mod one the of LIBNET_PR* constants
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 uint32_t
 libnet_get_prand(int mod);
 
@@ -192,6 +204,7 @@ libnet_get_prand(int mod);
  * @param mode LIBNET_ON or LIBNET_OFF
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 int
 libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode);
 
@@ -207,6 +220,7 @@ libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode);
  * @param use_name LIBNET_RESOLVE or LIBNET_DONT_RESOLVE
  * @return a pointer to presentation format string
  */
+LIBNET_API
 char *
 libnet_addr2name4(uint32_t in, uint8_t use_name);
 
@@ -223,6 +237,7 @@ libnet_addr2name4(uint32_t in, uint8_t use_name);
  * @param use_name LIBNET_RESOLVE or LIBNET_DONT_RESOLVE
  * @return network byte ordered IPv4 address or -1 (2^32 - 1) on error 
  */
+LIBNET_API
 uint32_t
 libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name);
 
@@ -233,6 +248,7 @@ extern const struct libnet_in6_addr in6addr_error;
  * @param addr address to check
  * @return 1 if addr is in6addr_error, 0 if it is not
  */
+LIBNET_API
 int
 libnet_in6_is_error(struct libnet_in6_addr addr);
 
@@ -249,12 +265,14 @@ libnet_in6_is_error(struct libnet_in6_addr addr);
  * @param use_name LIBNET_RESOLVE or LIBNET_DONT_RESOLVE
  * @return network byte ordered IPv6 address structure 
  */
+LIBNET_API
 struct libnet_in6_addr
 libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name);
 
 /**
  * Should document this baby right here.
  */
+LIBNET_API
 void
 libnet_addr2name6_r(struct libnet_in6_addr addr, uint8_t use_name,
 char *host_name, int host_name_len);
@@ -274,6 +292,7 @@ char *host_name, int host_name_len);
  * @param token_list string containing the port list primitive
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 int
 libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list);
 
@@ -288,6 +307,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list);
  * @param eport will contain the ending port number or 0
  * @return 1 on success, 0 if empty, -1 on failure
  */
+LIBNET_API
 int
 libnet_plist_chain_next_pair(libnet_plist_t *plist, uint16_t *bport, 
 uint16_t *eport); 
@@ -298,6 +318,7 @@ uint16_t *eport);
  * @param plist previously created portlist
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 int
 libnet_plist_chain_dump(libnet_plist_t *plist);
 
@@ -309,6 +330,7 @@ libnet_plist_chain_dump(libnet_plist_t *plist);
  * @return a printable string containing the port list contents on success
  * NULL on error
  */
+LIBNET_API
 char *
 libnet_plist_chain_dump_string(libnet_plist_t *plist);
 
@@ -317,6 +339,7 @@ libnet_plist_chain_dump_string(libnet_plist_t *plist);
  * @param plist previously created portlist
  * @return 1 on success, -1 on failure
  */
+LIBNET_API
 int
 libnet_plist_chain_free(libnet_plist_t *plist);
 
@@ -407,6 +430,7 @@ libnet_plist_chain_free(libnet_plist_t *plist);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_802_1q(const uint8_t *dst, const uint8_t *src, uint16_t tpi,
 uint8_t priority, uint8_t cfi, uint16_t vlan_id, uint16_t len_proto,
@@ -423,6 +447,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_802_1x(uint8_t eap_ver, uint8_t eap_type, uint16_t length, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -438,6 +463,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_802_2(uint8_t dsap, uint8_t ssap, uint8_t control,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -455,6 +481,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_802_2snap(uint8_t dsap, uint8_t ssap, uint8_t control, 
 uint8_t *oui, uint16_t type, const uint8_t* payload, uint32_t payload_s,
@@ -475,6 +502,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_802_3(const uint8_t *dst, const uint8_t *src, uint16_t len, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -494,6 +522,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ethernet(const uint8_t *dst, const uint8_t *src, uint16_t type, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -509,6 +538,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l);
 
@@ -528,6 +558,7 @@ libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_fddi(uint8_t fc, const uint8_t *dst, const uint8_t *src, uint8_t dsap,
 uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type, const uint8_t* payload,
@@ -545,6 +576,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_fddi(uint8_t fc, const uint8_t *dst, uint8_t dsap, uint8_t ssap,
 uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
@@ -568,6 +600,7 @@ uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_arp(uint16_t hrd, uint16_t pro, uint8_t hln, uint8_t pln,
 uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha, const uint8_t *tpa,
@@ -585,6 +618,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_arp(uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha,
 uint8_t *tpa, libnet_t *l);
@@ -606,6 +640,7 @@ uint8_t *tpa, libnet_t *l);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_tcp(uint16_t sp, uint16_t dp, uint32_t seq, uint32_t ack,
 uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t len, 
@@ -626,6 +661,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
@@ -642,6 +678,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_udp(uint16_t sp, uint16_t dp, uint16_t len, uint16_t sum,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -665,6 +702,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_cdp(uint8_t version, uint8_t ttl, uint16_t sum, uint16_t type,
 uint16_t value_s, const uint8_t *value, const uint8_t* payload, uint32_t payload_s,
@@ -684,6 +722,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_echo(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, const uint8_t* payload, uint32_t payload_s,
@@ -704,6 +743,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_mask(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, uint32_t mask, const uint8_t* payload,
@@ -722,6 +762,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_unreach(uint8_t type, uint8_t code, uint16_t sum,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -740,6 +781,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_redirect(uint8_t type, uint8_t code, uint16_t sum,
 uint32_t gateway, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -759,6 +801,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_timeexceed(uint8_t type, uint8_t code, uint16_t sum,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -780,6 +823,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv4_timestamp(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, uint32_t otime, uint32_t rtime, uint32_t ttime,
@@ -799,6 +843,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
         sum, uint16_t id, uint16_t seq, uint8_t *payload, uint32_t payload_s,
         libnet_t *l, libnet_ptag_t ptag);
@@ -816,6 +861,7 @@ libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_icmpv6_unreach(uint8_t type, uint8_t code, uint16_t sum,
 uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -834,6 +880,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_nsol(uint8_t type, uint8_t code,
         uint16_t sum, struct libnet_in6_addr target, uint8_t *payload, uint32_t
         payload_s, libnet_t* l, libnet_ptag_t ptag);
@@ -853,6 +900,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nsol(uint8_t type, uint8_t code,
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_nadv(uint8_t type, uint8_t code,
         uint16_t sum, uint32_t flags, struct libnet_in6_addr target, uint8_t
         *payload, uint32_t payload_s, libnet_t* l, libnet_ptag_t ptag);
@@ -866,6 +914,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nadv(uint8_t type, uint8_t code,
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_opt(uint8_t type, uint8_t* option,
         uint32_t option_s, libnet_t* l, libnet_ptag_t ptag);
 
@@ -883,6 +932,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_opt(uint8_t type, uint8_t* option,
  * 
  * @note 'reserved' was previously called 'code', which it is not, in any IGMP version.
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_igmp(uint8_t type, uint8_t reserved, uint16_t sum, uint32_t ip,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -906,6 +956,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t 
 libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
 uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,
@@ -929,6 +980,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t 
 libnet_build_ipv4_options(const uint8_t *options, uint32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
@@ -946,6 +998,7 @@ libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l);
 
@@ -964,6 +1017,7 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipv6(uint8_t tc, uint32_t fl, uint16_t len, uint8_t nh,
 uint8_t hl, struct libnet_in6_addr src, struct libnet_in6_addr dst, 
@@ -981,6 +1035,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipv6_frag(uint8_t nh, uint8_t reserved, uint16_t frag,
 uint32_t id, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1003,6 +1058,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipv6_routing(uint8_t nh, uint8_t len, uint8_t rtype,
 uint8_t segments, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1021,6 +1077,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipv6_destopts(uint8_t nh, uint8_t len, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1039,6 +1096,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1059,6 +1117,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
 libnet_t *l, libnet_ptag_t ptag);
@@ -1080,6 +1139,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_isl(uint8_t *dhost, uint8_t type, uint8_t user,
 uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
@@ -1097,6 +1157,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipsec_esp_hdr(uint32_t spi, uint32_t seq, uint32_t iv,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1112,6 +1173,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1130,6 +1192,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ipsec_ah(uint8_t nh, uint8_t len, uint16_t res,
 uint32_t spi, uint32_t seq, uint32_t auth, const uint8_t* payload,
@@ -1151,6 +1214,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
 uint16_t num_q, uint16_t num_anws_rr, uint16_t num_auth_rr,
@@ -1174,6 +1238,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_rip(uint8_t cmd, uint8_t version, uint16_t rd, uint16_t af,
 uint16_t rt, uint32_t addr, uint32_t mask, uint32_t next_hop,
@@ -1202,6 +1267,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_rpc_call(uint32_t rm, uint32_t xid, uint32_t prog_num,
 uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength,
@@ -1230,6 +1296,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_stp_conf(uint16_t id, uint8_t version, uint8_t bpdu_type,
 uint8_t flags, const uint8_t *root_id, uint32_t root_pc, const uint8_t *bridge_id,
@@ -1250,6 +1317,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_stp_tcn(uint16_t id, uint8_t version, uint8_t bpdu_type,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1271,6 +1339,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, const uint8_t *src,
 uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type,
@@ -1289,6 +1358,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, 
 uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *oui, uint16_t type,
@@ -1313,6 +1383,7 @@ libnet_t *l);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_vrrp(uint8_t version, uint8_t type, uint8_t vrouter_id,
 uint8_t priority, uint8_t ip_count, uint8_t auth_type, uint8_t advert_int,
@@ -1331,6 +1402,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_mpls(uint32_t label, uint8_t experimental, uint8_t bos,
 uint8_t ttl, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1363,6 +1435,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ntp(uint8_t leap_indicator, uint8_t version, uint8_t mode,
 uint8_t stratum, uint8_t poll, uint8_t precision, uint16_t delay_int,
@@ -1385,6 +1458,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2(uint16_t len, uint8_t type, uint32_t rtr_id,
 uint32_t area_id, uint16_t sum, uint16_t autype, const uint8_t* payload,
@@ -1404,6 +1478,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_hello(uint32_t netmask, uint16_t interval, uint8_t opts,
 uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
@@ -1420,6 +1495,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_dbd(uint16_t dgram_len, uint8_t opts, uint8_t type,
 uint32_t seqnum, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1435,6 +1511,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsr(uint32_t type, uint32_t lsid, uint32_t advrtr,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1447,6 +1524,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsu(uint32_t num, const uint8_t* payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
@@ -1466,6 +1544,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsa(uint16_t age, uint8_t opts, uint8_t type,
 uint32_t lsid, uint32_t advrtr, uint32_t seqnum, uint16_t sum, uint16_t len,
@@ -1485,6 +1564,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsa_rtr(uint16_t flags, uint16_t num, uint32_t id,
 uint32_t data, uint8_t type, uint8_t tos, uint16_t metric, const uint8_t* payload,
@@ -1499,6 +1579,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsa_net(uint32_t nmask, uint32_t rtrid, const uint8_t* payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1513,6 +1594,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsa_sum(uint32_t nmask, uint32_t metric, uint32_t tos,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1528,6 +1610,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_ospfv2_lsa_as(uint32_t nmask, uint32_t metric, uint32_t fwdaddr,
 uint32_t tag, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1544,6 +1627,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_data(const uint8_t* payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
@@ -1569,6 +1653,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_dhcpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
@@ -1597,6 +1682,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_bootpv4(uint8_t opcode, uint8_t htype, uint8_t hlen,
 uint8_t hopcount, uint32_t xid, uint16_t secs, uint16_t flags,
@@ -1608,6 +1694,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param fv see libnet_build_gre().
  * @return size, see libnet_build_gre().
  */
+LIBNET_API
 uint32_t
 libnet_getgre_length(uint16_t fv);
 
@@ -1633,6 +1720,7 @@ libnet_getgre_length(uint16_t fv);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_gre(uint16_t fv, uint16_t type, uint16_t sum,
 uint16_t offset, uint32_t key, uint32_t seq, uint16_t len,
@@ -1659,6 +1747,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_egre(uint16_t fv, uint16_t type, uint16_t sum,
 uint16_t offset, uint32_t key, uint32_t seq, uint16_t len,
@@ -1675,6 +1764,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_gre_sre(uint16_t af, uint8_t offset, uint8_t length,
 uint8_t *routing, const uint8_t* payload, uint32_t payload_s, libnet_t *l,
@@ -1685,6 +1775,7 @@ libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_gre_last_sre(libnet_t *l, libnet_ptag_t ptag);
 
@@ -1709,6 +1800,7 @@ libnet_build_gre_last_sre(libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_bgp4_header(uint8_t marker[LIBNET_BGP4_MARKER_SIZE],
 uint16_t len, uint8_t type, const uint8_t* payload, uint32_t payload_s,
@@ -1730,6 +1822,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_bgp4_open(uint8_t version, uint16_t src_as, uint16_t hold_time,
 uint32_t bgp_id, uint8_t opt_len, const uint8_t* payload, uint32_t payload_s,
@@ -1750,6 +1843,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_bgp4_update(uint16_t unfeasible_rt_len, const uint8_t *withdrawn_rt,
 uint16_t total_path_attr_len, const uint8_t *path_attributes, uint16_t info_len,
@@ -1768,6 +1862,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_bgp4_notification(uint8_t err_code, uint8_t err_subcode,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1793,6 +1888,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_sebek(uint32_t magic, uint16_t version, uint16_t type, 
 uint32_t counter, uint32_t time_sec, uint32_t time_usec, uint32_t pid,
@@ -1818,6 +1914,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_hsrp(uint8_t version, uint8_t opcode, uint8_t state, 
 uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group,
@@ -1838,6 +1935,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_build_link(const uint8_t *dst, const uint8_t *src, const uint8_t *oui, uint16_t type, 
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
@@ -1852,6 +1950,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param l pointer to a libnet context
  * @return protocol tag value on success, -1 on error
  */
+LIBNET_API
 libnet_ptag_t
 libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type,
 libnet_t *l);
@@ -1868,6 +1967,7 @@ libnet_t *l);
  * @param l pointer to a libnet context
  * @return the number of bytes written, -1 on error
  */
+LIBNET_API
 int
 libnet_write(libnet_t *l);
 
@@ -1879,6 +1979,7 @@ libnet_write(libnet_t *l);
  * @param l pointer to a libnet context
  * @return a big endian IP address suitable for use in a libnet_build function or -1
  */
+LIBNET_API
 
 uint32_t
 libnet_get_ipaddr4(libnet_t *l);
@@ -1892,6 +1993,7 @@ libnet_get_ipaddr4(libnet_t *l);
  * @param l pointer to a libnet context
  * @return well, nothing yet
  */
+LIBNET_API
 struct libnet_in6_addr
 libnet_get_ipaddr6(libnet_t *l);
 
@@ -1903,6 +2005,7 @@ libnet_get_ipaddr6(libnet_t *l);
  * @param l pointer to a libnet context
  * @return a pointer to the MAC address or NULL
  */
+LIBNET_API
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l);
 
@@ -1915,6 +2018,7 @@ libnet_get_hwaddr(libnet_t *l);
  * @param len the resulting size of the returned byte string
  * @return a byte string or NULL on failure
  */
+LIBNET_API
 uint8_t *
 libnet_hex_aton(const char *s, int *len);
 
@@ -1922,6 +2026,7 @@ libnet_hex_aton(const char *s, int *len);
  * Returns the version of libnet.
  * @return the libnet version
  */
+LIBNET_API
 const char *
 libnet_version(void);
 
@@ -1940,6 +2045,7 @@ libnet_version(void);
  * @param packet_s will contain the packet size
  * @return 1 on success, -1 on failure  
  */
+LIBNET_API
 int
 libnet_adv_cull_packet(libnet_t *l, uint8_t **packet, uint32_t *packet_s);
 
@@ -1955,6 +2061,7 @@ libnet_adv_cull_packet(libnet_t *l, uint8_t **packet, uint32_t *packet_s);
  * @param header_s will contain the header size
  * @return 1 on success, -1 on failure  
  */
+LIBNET_API
 int
 libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
 uint32_t *header_s);
@@ -1972,6 +2079,7 @@ uint32_t *header_s);
  * @param packet_s the size of the packet
  * @return the number of bytes written, or -1 on failure
  */
+LIBNET_API
 int
 libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
 
@@ -1988,6 +2096,7 @@ libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
  * @param packet_s the size of the packet
  * @return the number of bytes written, or -1 on failure
  */
+LIBNET_API
 int
 libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
 
@@ -1997,6 +2106,7 @@ libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
  * @param l pointer to a libnet context
  * @param packet a pointer to the packet to free
  */
+LIBNET_API
 void
 libnet_adv_free_packet(libnet_t *l, uint8_t *packet);
 
@@ -2030,6 +2140,7 @@ libnet_cq_add(libnet_t *l, char *label);
  * @param l pointer to a libnet context
  * @return the pointer to the removed libnet context, NULL on failure
  */
+LIBNET_API
 libnet_t *
 libnet_cq_remove(libnet_t *l);
 
@@ -2043,7 +2154,8 @@ libnet_cq_remove(libnet_t *l);
  * will fail.
  * @param label canonical name of the context to remove
  * @return the pointer to the removed libnet context, NULL on failure
- */   
+ */
+LIBNET_API   
 libnet_t *
 libnet_cq_remove_by_label(char *label);
  
@@ -2052,7 +2164,8 @@ libnet_cq_remove_by_label(char *label);
  * Returns the canonical label associated with the context.
  * @param l pointer to a libnet context
  * @return pointer to the libnet context's label
- */   
+ */
+LIBNET_API   
 const char *
 libnet_cq_getlabel(libnet_t *l);
  
@@ -2062,6 +2175,7 @@ libnet_cq_getlabel(libnet_t *l);
  * @param label canonical label of the libnet context to retrieve
  * @return the expected libnet context, NULL on failure
  */
+LIBNET_API
 libnet_t *
 libnet_cq_find_by_label(char *label);
   
@@ -2070,6 +2184,7 @@ libnet_cq_find_by_label(char *label);
  * Destroys the entire context queue, calling libnet_destroy() on each
  * member context.
  */
+LIBNET_API
 void
 libnet_cq_destroy(void);
 
@@ -2092,6 +2207,7 @@ libnet_cq_destroy(void);
  * in a single loop.
  * @return the head of the context queue
  */
+LIBNET_API
 libnet_t *
 libnet_cq_head(void);
 
@@ -2100,6 +2216,7 @@ libnet_cq_head(void);
  * Check whether the iterator is at the last context in the queue.
  * @return 1 if at the end of the context queue, 0 otherwise
  */
+LIBNET_API
 int
 libnet_cq_last(void);
 
@@ -2108,6 +2225,7 @@ libnet_cq_last(void);
  * Get next context from the context queue.
  * @return the next context from the context queue
  */
+LIBNET_API
 libnet_t *
 libnet_cq_next(void);
 
@@ -2116,12 +2234,14 @@ libnet_cq_next(void);
  * Function returns the number of libnet contexts that are in the queue.
  * @return the number of libnet contexts currently in the queue
  */
+LIBNET_API
 uint32_t
 libnet_cq_size(void);
 
 /**
  * [Context Queue]
  */
+LIBNET_API
 uint32_t
 libnet_cq_end_loop(void);
 
@@ -2130,6 +2250,7 @@ libnet_cq_end_loop(void);
  * Prints the contents of the given context.
  * @param l pointer to a libnet context
  */
+LIBNET_API
 void
 libnet_diag_dump_context(libnet_t *l);
 
@@ -2138,6 +2259,7 @@ libnet_diag_dump_context(libnet_t *l);
  * Prints the contents of every pblock.
  * @param l pointer to a libnet context
  */
+LIBNET_API
 void
 libnet_diag_dump_pblock(libnet_t *l);
 
@@ -2147,6 +2269,7 @@ libnet_diag_dump_pblock(libnet_t *l);
  * @param type pblock type
  * @return a string representing the pblock type type or "unknown" for an unknown value
  */
+LIBNET_API
 char *
 libnet_diag_dump_pblock_type(uint8_t type);
 
@@ -2169,18 +2292,21 @@ libnet_diag_dump_hex(const uint8_t *packet, uint32_t len, int swap, FILE *stream
 /*
  * [Internal] 
  */
+LIBNET_API
 int
 libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size);
 
 /*
  * [Internal] 
  */
+LIBNET_API
 int
 libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size);
 
 /*
  * [Internal] 
  */
+LIBNET_API
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size);
 
@@ -2201,6 +2327,7 @@ libnet_open_raw4(libnet_t *l);
 /*
  * [Internal] 
  */
+LIBNET_API
 int
 libnet_close_raw4(libnet_t *l);
 
@@ -2260,24 +2387,28 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len);
  * flaw. pblock_t needs a pointer in it, to a packet assembly function that can be
  * called at runtime to do assembly and checksumming.
  */
+LIBNET_API
 int
 libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const uint8_t *beg, const uint8_t * end);
 
 /*
  * [Internal] 
  */
+LIBNET_API
 uint32_t
 libnet_compute_crc(uint8_t *buf, uint32_t len);
 
 /*
  * [Internal] 
  */
+LIBNET_API
 uint16_t
 libnet_ip_check(uint16_t *addr, int len);
 
 /*
  * [Internal] 
  */
+LIBNET_API
 int
 libnet_in_cksum(uint16_t *addr, int len);
 
@@ -2288,6 +2419,7 @@ libnet_in_cksum(uint16_t *addr, int len);
  * function will search the pblock list for the specified protocol block 
  * and return a pointer to it.
  */
+LIBNET_API
 libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, 
 uint8_t type);
@@ -2297,6 +2429,7 @@ uint8_t type);
  * Function creates the pblock list if l->protocol_blocks == NULL or appends
  * an entry to the doubly linked list.
  */
+LIBNET_API
 libnet_pblock_t *
 libnet_pblock_new(libnet_t *l, uint32_t b_len);
 
@@ -2304,6 +2437,7 @@ libnet_pblock_new(libnet_t *l, uint32_t b_len);
  * [Internal] 
  * Function swaps two pblocks in memory.
  */
+LIBNET_API
 int
 libnet_pblock_swap(libnet_t *l, libnet_ptag_t ptag1, libnet_ptag_t ptag2);
 
@@ -2311,6 +2445,7 @@ libnet_pblock_swap(libnet_t *l, libnet_ptag_t ptag1, libnet_ptag_t ptag2);
  * [Internal] 
  * Function inserts ptag2 before ptag1 in the doubly linked list.
  */
+LIBNET_API
 int
 libnet_pblock_insert_before(libnet_t *l, libnet_ptag_t ptag1,
 libnet_ptag_t ptag2);
@@ -2319,6 +2454,7 @@ libnet_ptag_t ptag2);
  * [Internal] 
  * Function removes a pblock from context 
  */
+LIBNET_API
 void
 libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p);
 
@@ -2328,6 +2464,7 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p);
  * ptag with a monotonically increasing variable kept in l.  This way each
  * pblock has a succesively increasing ptag identifier.
  */
+LIBNET_API
 libnet_ptag_t
 libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, uint8_t type);
 
@@ -2336,6 +2473,7 @@ libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h, uint8_t type);
  * [Internal] 
  * Function locates a given block by it's ptag. 
  */
+LIBNET_API
 libnet_pblock_t *
 libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag);
 
@@ -2343,6 +2481,7 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag);
  * [Internal] 
  * Function copies protocol block data over.
  */
+LIBNET_API
 int
 libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t len);
 
@@ -2350,6 +2489,7 @@ libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t 
  * [Internal] 
  * Function sets pblock flags.
  */
+LIBNET_API
 void
 libnet_pblock_setflags(libnet_pblock_t *p, uint8_t flags);
 
@@ -2358,6 +2498,7 @@ libnet_pblock_setflags(libnet_pblock_t *p, uint8_t flags);
  * Function returns the protocol number for the protocol block type.  If
  * the type is unknown, the function defaults to returning IPPROTO_IP.
  */
+LIBNET_API
 int
 libnet_pblock_p2p(uint8_t type);
 
@@ -2366,6 +2507,7 @@ libnet_pblock_p2p(uint8_t type);
  * Function assembles the protocol blocks into a packet, checksums are
  * calculated if that was requested.
  */
+LIBNET_API
 int
 libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size);
 

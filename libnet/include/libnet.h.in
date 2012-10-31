@@ -111,6 +111,10 @@ extern "C" {
 
 #define @ENDIANESS@ 1
 
+#ifndef LIBNET_API
+#define LIBNET_API
+#endif
+
 #include "./libnet/libnet-types.h"
 #include "./libnet/libnet-macros.h"
 #include "./libnet/libnet-headers.h"

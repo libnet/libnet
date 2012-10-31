@@ -82,7 +82,8 @@ extern "C" {
 #pragma comment (lib,"packet")   
 
 /* "@LIBNET_VERSION@" will not work in VC++, so version.h doesn't get populated */
-#define VERSION  "1.1.1"
+/* FIXME this is not correct, it needs manual updating. */
+#define LIBNET_VERSION  "1.1.1"
 
 /* To use Win32 native versions */
 #define WPCAP 1
@@ -98,14 +99,14 @@ extern "C" {
 #include <errno.h>
 #include <stdarg.h>
 
-#include "stdint.h"
+#define LIBNET_API __declspec(dllexport)
 
-
-#include "../libnet/libnet-macros.h"
-#include "../libnet/libnet-headers.h"
-#include "../libnet/libnet-structures.h"
-#include "../libnet/libnet-asn1.h"
-#include "../libnet/libnet-functions.h"
+#include "libnet/stdint.h"
+#include "libnet/libnet-macros.h"
+#include "libnet/libnet-headers.h"
+#include "libnet/libnet-structures.h"
+#include "libnet/libnet-asn1.h"
+#include "libnet/libnet-functions.h"
 
 #ifdef __cplusplus
 }
