@@ -108,6 +108,38 @@ static int get_dlpi_ppa(int, const int8_t *, int, int8_t *);
 /* XXX Needed by HP-UX (at least) */
 static bpf_u_int32 ctlbuf[MAXDLBUF];
 
+/* Return a pointer to the last character in 'in' that is not in 's',
+ * or NULL if no such character exists. */
+static char *find_last_not_of(char *in, const char *s)
+{
+  char* cur;
+  cur = in + strlen(in);
+  for(; cur != in; cur--) {
+    if (!strchr(s, *cur)) {
+      break;
+    }
+  }
+  return cur == in ? NULL : cur;
+}
+
+/* For a given device name, return the trailing number, called unit number. */
+static char *dlpi_unit(char *dev)
+{
+  char* ret;
+  if (!*dev) {
+    return NULL;
+  }
+  ret = find_last_not_of(dev, "0123456789");
+  if (!ret) {
+    ret = dev;
+  } else {
+    ret++;
+    if (!*ret) {
+      return NULL;
+    }
+  }
+  return ret;
+}
 
 int
 libnet_open_link(libnet_t *l)
@@ -130,7 +162,7 @@ libnet_open_link(libnet_t *l)
     /*
      *  Determine device and ppa
      */
-    cp = strpbrk(l->device, "0123456789");
+    cp = dlpi_unit(l->device);
     if (cp == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -182,7 +214,7 @@ libnet_open_link(libnet_t *l)
      *  Try device without unit number
      */
     strcpy(dname2, dname);
-    cp = strchr(dname, *cp);
+    cp = dlpi_unit(dname);
     *cp = '\0';
 
     l->fd = open(dname, O_RDWR);
