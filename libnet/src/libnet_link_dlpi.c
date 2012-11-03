@@ -122,23 +122,73 @@ static char *find_last_not_of(char *in, const char *s)
   return cur == in ? NULL : cur;
 }
 
-/* For a given device name, return the trailing number, called unit number. */
-static char *dlpi_unit(char *dev)
+/* Split device into device type and unit number.
+ * Return >0 on success. */
+static int
+dlpi_unit(const char *dev, int *namelen, int *unit)
 {
-  char* ret;
-  if (!*dev) {
-    return NULL;
-  }
-  ret = find_last_not_of(dev, "0123456789");
-  if (!ret) {
-    ret = dev;
-  } else {
-    ret++;
-    if (!*ret) {
-      return NULL;
+    char *p;
+    char *eos;
+    if (!*dev) {
+        return 0;
     }
-  }
-  return ret;
+    p = find_last_not_of(dev, "0123456789");
+    if (!p) {
+        return 0;
+    }
+    p++;
+    if (!*p) {
+        return 0;
+    }
+    *unit = strtol(p, NULL, 10);
+    *namelen = p - dev;
+    return 1;
+}
+
+/* Sometimes the network device is at /dev/<ifname>, and sometimes at
+ * /dev/net/<ifname>. Sometimes both. Sometimes with unit number, sometimes
+ * without.
+ * This function tries to find the device, and won't be stopped just because
+ * it tried to open a directory. (e.g. interface net0 would try to open
+ * /dev/net).
+ */
+static int
+try_open_dev(libnet_t *l, const char *dev, int unit)
+{
+    const char *prefixes[] = {
+        DLPI_DEV_PREFIX,
+        "/dev",
+        "/dev/net",
+        "",
+        NULL
+    };
+    int ret;
+    char fullpath[MAXPATHLEN];
+    int cur_prefix;
+
+    for (cur_prefix = 0; prefixes[cur_prefix]; cur_prefix++) {
+        snprintf(fullpath, sizeof(fullpath),
+                 "%s/%s", prefixes[cur_prefix], dev);
+        if (0 <= (ret = open(fullpath, O_RDWR))) {
+            return ret;
+        }
+        if (errno != ENOENT && errno != EISDIR) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
+                     __func__, fullpath, strerror(errno));
+            return -1;
+        }
+        snprintf(fullpath, sizeof(fullpath),
+                 "%s/%s%d", prefixes[cur_prefix], dev, unit);
+        if (0 <= (ret = open(fullpath, O_RDWR))) {
+            return ret;
+        }
+        if (errno != ENOENT && errno != EISDIR) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
+                     __func__, fullpath, strerror(errno));
+            return -1;
+        }
+    }
+    return -1;
 }
 
 int
@@ -146,40 +196,33 @@ libnet_open_link(libnet_t *l)
 {
     register int8_t *cp;
     int8_t *eos;
-    register int ppa;
+    int ppa;
     register dl_info_ack_t *infop;
     bpf_u_int32 buf[MAXDLBUF];
-    int8_t dname[100];
-#ifndef HAVE_DEV_DLPI
-    int8_t dname2[100];
-#endif
+    int namelen;
+    int8_t dname[MAXPATHLEN];
 
     if (l == NULL)
     { 
         return (-1);
     } 
 
+    memset(&dname, 0, sizeof(dname));
+
     /*
      *  Determine device and ppa
      */
-    cp = dlpi_unit(l->device);
-    if (cp == NULL)
-    {
+    if (!dlpi_unit(l->device, &namelen, &ppa)) {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %s is missing unit number\n", __func__, l->device);
+                "%s(): %s has bad device type or unit number\n",
+		 __func__, l->device);
         goto bad;
     }
-    ppa = strtol(cp, &eos, 10);
-    if (*eos != '\0')
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %s bad unit number\n", __func__, l->device);
-        goto bad;
-    }
+    strncpy(dname, l->device, namelen);
 
+#ifdef HAVE_DEV_DLPI
     if (*(l->device) == '/')
     {
-        memset(&dname, 0, sizeof(dname));
         strncpy(dname, l->device, sizeof(dname) - 1);
         dname[sizeof(dname) - 1] = '\0';
     }
@@ -187,7 +230,7 @@ libnet_open_link(libnet_t *l)
     {
         sprintf(dname, "%s/%s", DLPI_DEV_PREFIX, l->device);
     }
-#ifdef HAVE_DEV_DLPI
+
     /*
      *  Map network device to /dev/dlpi unit
      */
@@ -196,8 +239,6 @@ libnet_open_link(libnet_t *l)
     l->fd = open(cp, O_RDWR);
     if (l->fd == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
-                __func__, cp, strerror(errno));
         goto bad;
     }
 
@@ -213,45 +254,9 @@ libnet_open_link(libnet_t *l)
     /*
      *  Try device without unit number
      */
-    strcpy(dname2, dname);
-    cp = dlpi_unit(dname);
-    *cp = '\0';
-
-    l->fd = open(dname, O_RDWR);
-    if (l->fd == -1)
-    {
-        if (errno != ENOENT)
-        {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
-                    __func__, dname, strerror(errno));
-            goto bad;
-        }
-
-        /*
-         *  Try again with unit number
-         */
-        l->fd = open(dname2, O_RDWR);
-        if (l->fd == -1)
-        {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
-                    __func__, dname2, strerror(errno));
-            goto bad;
-        }
-
-        cp = dname2;
-        while (*cp && !isdigit((int)*cp))
-        {
-            cp++;
-        }
-        if (*cp)
-        {
-            ppa = atoi(cp);
-        }
-        else
-        /*
-         *  XXX Assume unit zero
-         */
-        ppa = 0;
+    l->fd = try_open_dev(l, dname, ppa);
+    if (l->fd == -1) {
+        goto bad;
     }
 #endif
     /*
