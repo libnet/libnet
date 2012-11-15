@@ -9,13 +9,15 @@
 @set MYLINK=link /nologo
 @set MYMT=mt /nologo
 
-@set LUA=..\..\lua-5.1\src
+@set LUA=..\..\lua\src
 @set WINPCAP=..\..\WpdPack
-@set DNET=..\..\libdnet-1.11-win32
+@set DNET=..\..\libdnet
 
 copy dnet.h.win32 dnet.h
 %MYCOMPILE% /I..\libnet\include /I%LUA% /I%WINPCAP%\Include /I%DNET%\include *.c
 %MYLINK% /DLL /export:luaopen_net /libpath:%WINPCAP%\Lib  /out:net.dll *.obj %LUA%\lua51.lib ..\libnet\src\libnet.lib %DNET%\lib\dnet.lib
 if exist net.dll.manifest^
   %MYMT% -manifest net.dll.manifest -outputresource:net.dll;2
+
+exit /b %errorlevel%
 

@@ -20,3 +20,5 @@ if exist libnet.dll.manifest^
   %MYMT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
 cd ..
 
+exit /b %errorlevel%
+
