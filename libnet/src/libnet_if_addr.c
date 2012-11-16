@@ -334,7 +334,6 @@ int
 libnet_select_device(libnet_t *l)
 {
     int c, i;
-    char err_buf[LIBNET_ERRBUF_SIZE];
     struct libnet_ifaddr_list *address_list, *al;
     uint32_t addr;
 
@@ -359,7 +358,7 @@ libnet_select_device(libnet_t *l)
     /*
      *  Number of interfaces.
      */
-    c = libnet_ifaddrlist(&address_list, l->device, err_buf);
+    c = libnet_ifaddrlist(&address_list, l->device, l->err_buf);
     if (c < 0)
     {
         /* err msg set in libnet_ifaddrlist() */
