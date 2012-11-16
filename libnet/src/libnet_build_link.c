@@ -52,7 +52,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
                     l, ptag);
     }
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): linktype %d not supported\n", __func__, l->link_type);
+            "%s(): linktype %d not supported", __func__, l->link_type);
     return -1;
 }
 
@@ -71,7 +71,7 @@ libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, lib
                    LIBNET_SAP_SNAP, 0x03, org, TOKEN_RING_TYPE_IP, l));
     }
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): linktype %d not supported\n", __func__, l->link_type);
+            "%s(): linktype %d not supported", __func__, l->link_type);
     return (-1);
 }
 

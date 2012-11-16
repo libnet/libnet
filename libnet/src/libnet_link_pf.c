@@ -56,7 +56,7 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     l->fd = pfopen(device, O_RDWR);
     if (l->fd < 0)
     {
-        sprintf(ebuf, "pf open: %s: %s\n\your system may not be properly configured; see \"man packetfilter(4)\"\n",
+        sprintf(ebuf, "pf open: %s: %s\n\your system may not be properly configured; see \"man packetfilter(4)\"",
             device, strerror(errno));
         goto bad;
     }
@@ -154,7 +154,7 @@ libnet_write_link_layer(struct libnet_link_int *l, const int8_t *device,
     if (c != len)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "libnet_write_link: %d bytes written (%s)\n", c,
+            "libnet_write_link: %d bytes written (%s)", c,
             strerror(errno));
     }
     return (c);

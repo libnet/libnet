@@ -50,7 +50,7 @@ libnet_seed_prand(libnet_t *l)
     if (gettimeofday(&seed, NULL) == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): cannot gettimeofday\n", __func__);
+                "%s(): cannot gettimeofday", __func__);
         return (-1);
     }
 

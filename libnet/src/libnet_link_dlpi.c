@@ -173,7 +173,7 @@ try_open_dev(libnet_t *l, const char *dev, int unit)
             return ret;
         }
         if (errno != ENOENT && errno != EISDIR) {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s",
                      __func__, fullpath, strerror(errno));
             return -1;
         }
@@ -183,7 +183,7 @@ try_open_dev(libnet_t *l, const char *dev, int unit)
             return ret;
         }
         if (errno != ENOENT && errno != EISDIR) {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s\n",
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): %s: %s",
                      __func__, fullpath, strerror(errno));
             return -1;
         }
@@ -214,7 +214,7 @@ libnet_open_link(libnet_t *l)
      */
     if (!dlpi_unit(l->device, &namelen, &ppa)) {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %s has bad device type or unit number\n",
+                "%s(): %s has bad device type or unit number",
 		 __func__, l->device);
         goto bad;
     }
@@ -312,7 +312,7 @@ libnet_open_link(libnet_t *l)
             l->link_offset  = 0x16;
             break;
         default:
-            sprintf(l->err_buf, "%s(): unknown mac type 0x%lu\n", __func__,
+            sprintf(l->err_buf, "%s(): unknown mac type 0x%lu", __func__,
                     (uint32_t) infop->dl_mac_type);
             goto bad;
     }
@@ -323,7 +323,7 @@ libnet_open_link(libnet_t *l)
      */
     if (strioctl(l->fd, DLIOCRAW, 0, NULL) < 0)
     {
-        sprintf(l->err_buf, "%s(): DLIOCRAW: %s\n", __func__, strerror(errno));
+        sprintf(l->err_buf, "%s(): DLIOCRAW: %s", __func__, strerror(errno));
         goto bad;
     }
 #endif
@@ -350,7 +350,7 @@ int flags)
 
     if (putmsg(fd, &ctl, (struct strbuf *) NULL, flags) < 0)
     {
-        sprintf(ebuf, "%s(): putmsg \"%s\": %s\n", __func__, what,
+        sprintf(ebuf, "%s(): putmsg \"%s\": %s", __func__, what,
                 strerror(errno));
         return (-1);
     }
@@ -371,7 +371,7 @@ recv_ack(int fd, int size, const int8_t *what, int8_t *bufp, int8_t *ebuf)
     flags = 0;
     if (getmsg(fd, &ctl, (struct strbuf*)NULL, &flags) < 0)
     {
-        sprintf(ebuf, "%s(): %s getmsg: %s\n", __func__, what, strerror(errno));
+        sprintf(ebuf, "%s(): %s getmsg: %s", __func__, what, strerror(errno));
         return (-1);
     }
 
@@ -568,7 +568,7 @@ register int8_t *ebuf)
 
     if (ip->dl_hdw_state == HDW_DEAD)
     {
-        sprintf(ebuf, "%s: hardware state: DOWN\n", device);
+        sprintf(ebuf, "%s: hardware state: DOWN", device);
         return (-1);
     }
     return ((int)ip->dl_ppa);
@@ -728,7 +728,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     if (c == -1)                      
     {                    
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "libnet_write_link(): %d bytes written (%s)\n", c,
+                "libnet_write_link(): %d bytes written (%s)", c,
                 strerror(errno));
         return (-1);
     }
@@ -757,7 +757,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     if (c == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "libnet_write_link: %d bytes written (%s)\n", c,
+                "libnet_write_link: %d bytes written (%s)", c,
                 strerror(errno));
         return (-1);
     }

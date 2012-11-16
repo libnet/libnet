@@ -83,7 +83,7 @@ libnet_bpf_open(char *err_buf)
 
     if (fd == -1)
     {
-        snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): (%s): %s\n",
+        snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s(): open(): (%s): %s",
                 __func__, device, strerror(errno));
     }
     return (fd);
@@ -108,7 +108,7 @@ libnet_open_link(libnet_t *l)
 
     if (l->device == NULL)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): NULL device\n", 
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): NULL device", 
                 __func__);
         goto bad;
     }
@@ -124,7 +124,7 @@ libnet_open_link(libnet_t *l)
      */
     if (ioctl(l->fd, BIOCVERSION, (caddr_t)&bv) < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCVERSION: %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCVERSION: %s",
                 __func__, strerror(errno));
         goto bad;
     }
@@ -132,7 +132,7 @@ libnet_open_link(libnet_t *l)
     if (bv.bv_major != BPF_MAJOR_VERSION || bv.bv_minor < BPF_MINOR_VERSION)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): kernel bpf filter out of date\n", __func__);
+                "%s(): kernel bpf filter out of date", __func__);
         goto bad;
     }
 
@@ -144,7 +144,7 @@ libnet_open_link(libnet_t *l)
 
     if (ioctl(l->fd, BIOCSETIF, (caddr_t)&ifr) == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCSETIF: (%s): %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCSETIF: (%s): %s",
                 __func__, l->device, strerror(errno));
         goto bad;
     }
@@ -154,7 +154,7 @@ libnet_open_link(libnet_t *l)
      */
     if (ioctl(l->fd, BIOCGDLT, (caddr_t)&v) == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCGDLT: %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCGDLT: %s",
                 __func__, strerror(errno));
         goto bad;
     }
@@ -166,7 +166,7 @@ libnet_open_link(libnet_t *l)
 #if defined(BIOCGHDRCMPLT) && defined(BIOCSHDRCMPLT) && !(__APPLE__)
     if (ioctl(l->fd, BIOCSHDRCMPLT, &spoof_eth_src) == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCSHDRCMPLT: %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): BIOCSHDRCMPLT: %s",
                 __func__, strerror(errno));
         goto bad;
     }
@@ -245,7 +245,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     if (c != size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%s)\n", __func__, c, strerror(errno));
+                "%s(): %d bytes written (%s)", __func__, c, strerror(errno));
     }
     return (c);
 }
@@ -285,7 +285,7 @@ libnet_get_hwaddr(libnet_t *l)
 
     if (sysctl(mib, 6, NULL, &len, NULL, 0) == -1)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): sysctl(): %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): sysctl(): %s",
                 __func__, strerror(errno));
         return (NULL);
     }
@@ -293,13 +293,13 @@ libnet_get_hwaddr(libnet_t *l)
     buf = (int8_t *)malloc(len);
     if (buf == NULL)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s",
                 __func__, strerror(errno));
         return (NULL);
     }
     if (sysctl(mib, 6, buf, &len, NULL, 0) < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): sysctl(): %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): sysctl(): %s",
                 __func__, strerror(errno));
         free(buf);
         return (NULL);

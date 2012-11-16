@@ -325,7 +325,7 @@ libnet_ptag_t ptag)
 
     if ((routing && !length) || (!routing && length))
     {
-        sprintf(l->err_buf, "%s(): routing inconsistency\n", __func__);
+        sprintf(l->err_buf, "%s(): routing inconsistency", __func__);
         goto bad;
     }
 

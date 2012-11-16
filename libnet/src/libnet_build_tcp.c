@@ -49,7 +49,7 @@ libnet_build_tcp(
     if (payload_s && !payload)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			    "%s(): payload inconsistency\n", __func__);
+			    "%s(): payload inconsistency", __func__);
         return -1;
     }
 
@@ -200,7 +200,7 @@ libnet_ptag_t ptag)
     if (options_s > LIBNET_MAXOPTION_SIZE)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): options list is too large %d\n", __func__, options_s);
+            "%s(): options list is too large %d", __func__, options_s);
         return (-1);
     }
 

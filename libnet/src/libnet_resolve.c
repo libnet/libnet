@@ -127,7 +127,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
             if (!(host_ent = gethostbyname(host_name)))
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): %s\n", __func__, hstrerror(h_errno));
+                        "%s(): %s", __func__, hstrerror(h_errno));
                 /* XXX - this is actually 255.255.255.255 */
                 return (-1);
             }
@@ -146,7 +146,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
             if (l)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): expecting dots and decimals\n", __func__);
+                    "%s(): expecting dots and decimals", __func__);
             }
             /* XXX - this is actually 255.255.255.255 */
             return (-1);
@@ -168,7 +168,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
                         if (l)
                         {
                             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                            "%s(): value greater than 255\n", __func__);
+                            "%s(): value greater than 255", __func__);
                         }
                         /* XXX - this is actually 255.255.255.255 */
                         return (-1);
@@ -244,7 +244,7 @@ libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
         if (l)
         {        
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't resolve IPv6 addresses\n", __func__);
+                "%s(): can't resolve IPv6 addresses", __func__);
         }
         return (in6addr_error);
 #else
@@ -254,7 +254,7 @@ libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
                 sizeof(struct in_addr), AF_INET6, NULL)))
 #else
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): %s\n", __func__, strerror(errno));
+                "%s(): %s", __func__, strerror(errno));
         return (in6addr_error);
 #endif
 #else
@@ -275,7 +275,7 @@ libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
         if (l)
         {        
                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't resolve IPv6 addresses.\n", __func__);
+                "%s(): can't resolve IPv6 addresses.", __func__);
         }
         return (in6addr_error);
 #else
@@ -284,7 +284,7 @@ libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name)
             if (l)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): invalid IPv6 address\n", __func__);
+                    "%s(): invalid IPv6 address", __func__);
             }
             return (in6addr_error);
         }
@@ -311,7 +311,7 @@ libnet_get_ipaddr6(libnet_t *l)
     if (getifaddrs(&ifaddr) != 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): getifaddrs(): %s\n", __func__, strerror(errno));
+                "%s(): getifaddrs(): %s", __func__, strerror(errno));
         return (in6addr_error);
     }
 
@@ -344,7 +344,7 @@ struct libnet_in6_addr
 libnet_get_ipaddr6(libnet_t *l)
 {
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-           "%s(): not yet Implemented\n", __func__);
+           "%s(): not yet Implemented", __func__);
     return (in6addr_error);
 }
 #endif /* WIN32 */
@@ -367,7 +367,7 @@ libnet_get_ipaddr4(libnet_t *l)
     if (fd == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): socket(): %s\n", __func__, strerror(errno));
+                "%s(): socket(): %s", __func__, strerror(errno));
         return (-1);
     }
 
@@ -390,7 +390,7 @@ libnet_get_ipaddr4(libnet_t *l)
     if (ioctl(fd, SIOCGIFADDR, (int8_t*) &ifr) < 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): ioctl(): %s\n", __func__, strerror(errno));
+                "%s(): ioctl(): %s", __func__, strerror(errno));
         close(fd);
         return (-1);
     }

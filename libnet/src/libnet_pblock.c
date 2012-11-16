@@ -73,7 +73,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t typ
         if (p->buf == NULL)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't resize pblock buffer: %s\n", __func__,
+                    "%s(): can't resize pblock buffer: %s", __func__,
                     strerror(errno));
             return (NULL);
         }
@@ -100,7 +100,7 @@ static void* zmalloc(libnet_t* l, uint32_t size, const char* func)
     if(v)
         memset(v, 0, size);
     else
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s\n", func, 
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s", func, 
                 strerror(errno));
     return v;
 }
@@ -253,7 +253,7 @@ libnet_pblock_find(libnet_t *l, libnet_ptag_t ptag)
         }
     }
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): couldn't find protocol block\n", __func__);
+            "%s(): couldn't find protocol block", __func__);
     return (NULL);
 }
 
@@ -263,14 +263,14 @@ libnet_pblock_append(libnet_t *l, libnet_pblock_t *p, const void *buf, uint32_t 
     if (len && !buf)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-			    "%s(): payload inconsistency\n", __func__);
+			    "%s(): payload inconsistency", __func__);
         return -1;
     }
 
     if (p->copied + len > p->b_len)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): memcpy would overflow buffer\n", __func__);
+                "%s(): memcpy would overflow buffer", __func__);
         return (-1);
     }
     memcpy(p->buf + p->copied, buf, len);
@@ -352,7 +352,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
     }
     if (*packet == NULL)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s",
                 __func__, strerror(errno));
         return (-1);
     }
@@ -379,7 +379,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                     (l->pblock_end->type != LIBNET_PBLOCK_802_3_H))
                 {
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                    "%s(): packet assembly cannot find a layer 2 header\n",
+                    "%s(): packet assembly cannot find a layer 2 header",
                     __func__);
                     goto err;
                 }
@@ -388,7 +388,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                 if ((l->pblock_end->type != LIBNET_PBLOCK_IPV4_H))
                 {
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                    "%s(): packet assembly cannot find an IPv4 header\n",
+                    "%s(): packet assembly cannot find an IPv4 header",
                      __func__);
                     goto err;
                 }
@@ -397,7 +397,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                 if ((l->pblock_end->type != LIBNET_PBLOCK_IPV6_H))
                 {
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                    "%s(): packet assembly cannot find an IPv6 header\n",
+                    "%s(): packet assembly cannot find an IPv6 header",
                      __func__);
                     goto err;
                 }
@@ -405,7 +405,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
             default:
                 /* we should not end up here ever */
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): suddenly the dungeon collapses -- you die\n",
+                "%s(): suddenly the dungeon collapses -- you die",
                  __func__);
                 goto err;
             break;

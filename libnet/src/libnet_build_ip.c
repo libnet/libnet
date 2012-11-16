@@ -126,14 +126,14 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         else
         {
              snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                     "%s(): IPv4 data pblock not found\n", __func__);
+                     "%s(): IPv4 data pblock not found", __func__);
         }
     }
 
     if (payload_s && !payload)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): payload inconsistency\n", __func__);
+                 "%s(): payload inconsistency", __func__);
         goto bad;
     }
 
@@ -335,7 +335,7 @@ libnet_ptag_t ptag)
     if (options_s > LIBNET_MAXOPTION_SIZE)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): options list is too large %d\n", __func__, options_s);
+            "%s(): options list is too large %d", __func__, options_s);
         return (-1);
     }
 
@@ -425,7 +425,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (LIBNET_IPV6_H + payload_s > IP_MAXPACKET)
     {  
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): IP packet too large\n", __func__);
+                 "%s(): IP packet too large", __func__);
         return (-1);
     }  
        
@@ -491,7 +491,7 @@ libnet_ptag_t ptag)
     if (LIBNET_IPV6_FRAG_H + payload_s > IP_MAXPACKET)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): IP packet too large\n", __func__);
+                 "%s(): IP packet too large", __func__);
         return (-1);
     }
 
@@ -560,7 +560,7 @@ libnet_ptag_t ptag)
     if (LIBNET_IPV6_ROUTING_H + payload_s > IP_MAXPACKET)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): IP packet too large\n", __func__);
+                 "%s(): IP packet too large", __func__);
         return (-1);
     }
 
@@ -628,7 +628,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (LIBNET_IPV6_DESTOPTS_H + payload_s > IP_MAXPACKET)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): IP packet too large\n", __func__);
+                 "%s(): IP packet too large", __func__);
         return (-1);
     }
 
@@ -694,7 +694,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (LIBNET_IPV6_HBHOPTS_H + payload_s > IP_MAXPACKET)
     {
          snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): IP packet too large\n", __func__);
+                 "%s(): IP packet too large", __func__);
         return (-1);
     }
 

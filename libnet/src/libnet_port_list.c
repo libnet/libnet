@@ -70,7 +70,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
         if (!valid_token)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "libnet_build_plist_chain: illegal token # %d (%c)\n",
+                    "libnet_build_plist_chain: illegal token # %d (%c)",
                     i + 1,
                     token_list[i]);
             *plist = NULL;
@@ -84,7 +84,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
     if (!(*plist))
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "libnet_build_plist_chain: malloc %s\n", strerror(errno));
+                    "libnet_build_plist_chain: malloc %s", strerror(errno));
         *plist = NULL;
         return (-1);
     }
@@ -99,7 +99,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
     {
         all_lists = all_lists_tmp;
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "libnet_build_plist_chain: realloc %s\n", strerror(errno));
+                    "libnet_build_plist_chain: realloc %s", strerror(errno));
         *plist = NULL;
         return(-1);
     }
@@ -123,7 +123,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
             if (!tmp->next)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "libnet_build_plist_chain: malloc %s\n", strerror(errno));
+                    "libnet_build_plist_chain: malloc %s", strerror(errno));
                 /*
                  *  XXX - potential memory leak if other nodes are allocated
                  *  but not freed.

@@ -55,7 +55,7 @@ libnet_open_link(libnet_t *l)
     if (l->device == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): NULL device\n", __func__);
+                "%s(): NULL device", __func__);
         return (-1);
     }
 
@@ -67,7 +67,7 @@ libnet_open_link(libnet_t *l)
     {
         dwErrorCode=GetLastError();
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): unable to open the driver, error Code : %lx\n",
+                "%s(): unable to open the driver, error Code : %lx",
                 __func__, dwErrorCode); 
         return (-1);
     }
@@ -96,7 +96,7 @@ libnet_open_link(libnet_t *l)
 				break;
 			case NdisMediumWan:
 				snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s():, WinPcap has disabled support for Network type (%d)\n",
+                 "%s():, WinPcap has disabled support for Network type (%d)",
                  __func__, IFType.LinkType);
 				return (-1);
 				break;
@@ -108,7 +108,7 @@ libnet_open_link(libnet_t *l)
 				break;
 			default:
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                         "%s(): network type (%d) is not supported\n",
+                         "%s(): network type (%d) is not supported",
                          __func__, IFType.LinkType);
                 return (-1);
                 break;
@@ -118,7 +118,7 @@ libnet_open_link(libnet_t *l)
     {
         dwErrorCode=GetLastError();
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): unable to determine the network type, error Code : %lx\n",
+            "%s(): unable to determine the network type, error Code : %lx",
                 __func__, dwErrorCode);
         return (-1);
     }
@@ -147,7 +147,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     if ((lpPacket = PacketAllocatePacket()) == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): failed to allocate the LPPACKET structure\n", __func__);
+                "%s(): failed to allocate the LPPACKET structure", __func__);
 		return (-1);
     }
     PacketInitPacket(lpPacket, packet, size);
@@ -183,7 +183,7 @@ libnet_get_hwaddr(libnet_t *l)
         if (libnet_select_device(l) == -1)
         {   
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't figure out a device to use\n", __func__);
+                    "%s(): can't figure out a device to use", __func__);
             return (NULL);
         }
     }
@@ -192,7 +192,7 @@ libnet_get_hwaddr(libnet_t *l)
 	if (mac == NULL)
 	{
 		snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): calloc error\n", __func__);
+                    "%s(): calloc error", __func__);
 		return (NULL);
 	}
 
@@ -201,7 +201,7 @@ libnet_get_hwaddr(libnet_t *l)
 	if (OidData == NULL)
 	{
 	     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-				 "%s(): OidData is NULL\n", __func__);
+				 "%s(): OidData is NULL", __func__);
 	    return(NULL);
 	}
 

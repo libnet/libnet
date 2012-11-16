@@ -124,7 +124,7 @@ uint8_t *tpa, libnet_t *l)
         default:
             hrd = 0;
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): unsupported link type\n", __func__);
+                    "%s(): unsupported link type", __func__);
             return (-1);
         /* add other link-layers */
     }

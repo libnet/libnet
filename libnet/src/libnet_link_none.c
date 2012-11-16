@@ -32,7 +32,7 @@
 static void nosupport(libnet_t* l)
 {
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): no link support on this platform\n", __func__);
+            "%s(): no link support on this platform", __func__);
 }
 
 int

@@ -50,7 +50,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             !(((l->injection_type) & LIBNET_ADV_MASK)))
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): called with non-link layer wire injection primitive\n",
+                "%s(): called with non-link layer wire injection primitive",
                 __func__);
         p = NULL;
         goto bad;
@@ -119,7 +119,7 @@ libnet_t *l)
             !(((l->injection_type) & LIBNET_ADV_MASK)))
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): called with non-link layer wire injection primitive\n",
+                "%s(): called with non-link layer wire injection primitive",
                 __func__);         
         p = NULL;
         goto bad;

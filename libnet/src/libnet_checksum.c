@@ -126,7 +126,7 @@ static int check_ip_payload_size(libnet_t*l, const uint8_t *iphdr, int ip_hl, in
     if((iphdr+ip_hl+h_len) > end)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): ip payload not inside packet (pktsz %d, iphsz %d, payloadsz %d)\n", func,
+                "%s(): ip payload not inside packet (pktsz %d, iphsz %d, payloadsz %d)", func,
 		(int)(end - iphdr), ip_hl, h_len);
         return -1;
     }
@@ -187,7 +187,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
     if(iphdr < beg || (iphdr+sizeof(*iph_p)) > end)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): ipv4 hdr not inside packet (where %d, size %d)\n", __func__,
+            "%s(): ipv4 hdr not inside packet (where %d, size %d)", __func__,
 	    (int)(iphdr-beg), (int)(end-beg));
         return -1;
     }
@@ -204,7 +204,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         if((uint8_t*)(ip6h_p+1) > end)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): ipv6 hdr not inside packet\n", __func__);
+                    "%s(): ipv6 hdr not inside packet", __func__);
             return -1;
         }
     }
@@ -216,7 +216,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
     if((iphdr+ip_hl) > end)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): ip hdr len not inside packet\n", __func__);
+            "%s(): ip hdr len not inside packet", __func__);
         return -1;
     }
 
@@ -373,7 +373,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
                 !(fv & (GRE_CSUM|GRE_VERSION_1)))
 	    {
 		snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't compute GRE checksum (wrong flags_ver bits: 0x%x )\n",  __func__, fv);
+                "%s(): can't compute GRE checksum (wrong flags_ver bits: 0x%x )",  __func__, fv);
 		return (-1);
 	    }
 	    sum = libnet_in_cksum((uint16_t *)greh_p, h_len);
@@ -489,7 +489,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             if((iphdr+h_len) > end)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): cdp payload not inside packet\n", __func__);
+                        "%s(): cdp payload not inside packet", __func__);
                 return -1;
             }
 
@@ -512,7 +512,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         default:
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): unsupported protocol %d\n", __func__, protocol);
+                "%s(): unsupported protocol %d", __func__, protocol);
             return (-1);
         }
     }

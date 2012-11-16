@@ -81,14 +81,14 @@ libnet_cq_add(libnet_t *l, char *label)
     if (cq_is_wlocked()) 
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't add, context queue is write locked\n", __func__);
+                "%s(): can't add, context queue is write locked", __func__);
         return (-1);
     }
   
     /* ensure there is a label */
     if (label == NULL)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): empty label\n",
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): empty label",
                 __func__);
         return (-1);
     }
@@ -100,7 +100,7 @@ libnet_cq_add(libnet_t *l, char *label)
         if (l_cq == NULL)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't malloc initial context queue: %s\n",
+                    "%s(): can't malloc initial context queue: %s",
                     __func__, strerror(errno));
             return (-1);
         }
@@ -131,7 +131,7 @@ libnet_cq_add(libnet_t *l, char *label)
     if (l_cq == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't malloc new context queue: %s\n",
+                "%s(): can't malloc new context queue: %s",
                 __func__, strerror(errno));
         return (-1);
     }
@@ -163,7 +163,7 @@ libnet_cq_remove(libnet_t *l)
     if (l_cq == NULL) 
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't remove from empty context queue\n", __func__);
+                "%s(): can't remove from empty context queue", __func__);
         return (NULL);
     }
 
@@ -176,7 +176,7 @@ libnet_cq_remove(libnet_t *l)
     if (cq_is_wlocked()) 
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): can't remove, context queue is write locked\n",
+                "%s(): can't remove, context queue is write locked",
                 __func__);
         return (NULL);
     }
@@ -184,7 +184,7 @@ libnet_cq_remove(libnet_t *l)
     if ((p = libnet_cq_find_internal(l)) == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): context not present in context queue\n", __func__);
+                "%s(): context not present in context queue", __func__);
         return (NULL);
     }
 
@@ -275,13 +275,13 @@ libnet_cq_dup_check(libnet_t *l, char *label)
         if (p->context == l)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): context already in context queue\n", __func__);
+                "%s(): context already in context queue", __func__);
             return (1);
         }
         if (strncmp(p->context->label, label, LIBNET_LABEL_SIZE) == 0)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): duplicate label %s\n", __func__, label);
+                    "%s(): duplicate label %s", __func__, label);
             return (1);
         }
     }

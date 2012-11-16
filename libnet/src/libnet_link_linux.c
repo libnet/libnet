@@ -141,7 +141,7 @@ libnet_open_link(libnet_t *l)
 
         default:
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "unknown physical layer type 0x%x\n",
+                "unknown physical layer type 0x%x",
                 ifr.ifr_hwaddr.sa_family);
         goto bad;
     }
@@ -157,7 +157,7 @@ libnet_open_link(libnet_t *l)
     if (setsockopt(l->fd, SOL_SOCKET, SO_BROADCAST, &n, sizeof(n)) == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-		 "%s: set SO_BROADCAST failed: %s\n",
+		 "%s: set SO_BROADCAST failed: %s",
 		 __func__, strerror(errno));
         goto bad;
     }
@@ -242,7 +242,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     if (c != size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "libnet_write_link(): only %d bytes written (%s)\n", c,
+                "libnet_write_link(): only %d bytes written (%s)", c,
                 strerror(errno));
     }
     return (c);
@@ -270,7 +270,7 @@ libnet_get_hwaddr(libnet_t *l)
         if (libnet_select_device(l) == -1)
         {   
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "libnet_get_hwaddr: can't figure out a device to use\n");
+                    "libnet_get_hwaddr: can't figure out a device to use");
             return (NULL);
         }
     }

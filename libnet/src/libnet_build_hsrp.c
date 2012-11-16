@@ -77,7 +77,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (payload_s && !payload)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): payload inconsistency\n", __func__);
+                "%s(): payload inconsistency", __func__);
         goto bad;
     }
  

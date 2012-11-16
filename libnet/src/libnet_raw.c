@@ -85,7 +85,7 @@ libnet_open_raw4(libnet_t *l)
     if (l->fd == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): SOCK_RAW allocation failed: %s\n",
+                "%s(): SOCK_RAW allocation failed: %s",
 		 __func__, strerror(errno));
         goto bad;
     }
@@ -108,7 +108,7 @@ libnet_open_raw4(libnet_t *l)
 
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): set IP_HDRINCL failed: %s\n",
+                "%s(): set IP_HDRINCL failed: %s",
                 __func__, strerror(errno));
         goto bad;
     }
@@ -127,7 +127,7 @@ libnet_open_raw4(libnet_t *l)
     if (getsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, &len) < 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-		 "%s(): get SO_SNDBUF failed: %s\n",
+		 "%s(): get SO_SNDBUF failed: %s",
 		 __func__, strerror(errno));
         goto bad;
     }
@@ -141,7 +141,7 @@ libnet_open_raw4(libnet_t *l)
                 break;
             }
              snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                     "%s(): set SO_SNDBUF failed: %s\n",
+                     "%s(): set SO_SNDBUF failed: %s",
                      __func__, strerror(errno));
              goto bad;
         }
@@ -160,7 +160,7 @@ libnet_open_raw4(libnet_t *l)
     if (setsockopt(l->fd, SOL_SOCKET, SO_BROADCAST, nptr, sizeof(n)) == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): set SO_BROADCAST failed: %s\n",
+                "%s(): set SO_BROADCAST failed: %s",
                 __func__, strerror(errno));
         goto bad;
     }
@@ -218,7 +218,7 @@ libnet_open_raw6(libnet_t *l)
     if (l->fd == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): SOCK_RAW allocation failed: %s\n", __func__,
+                "%s(): SOCK_RAW allocation failed: %s", __func__,
                 strerror(errno));
         goto bad;
     }
@@ -227,14 +227,14 @@ libnet_open_raw6(libnet_t *l)
     if (setsockopt(l->fd, SOL_SOCKET, SO_BROADCAST, oneptr, sizeof(one)) == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): set SO_BROADCAST failed: %s\n", __func__,
+                "%s(): set SO_BROADCAST failed: %s", __func__,
                 strerror(errno));
         goto bad;
     }
     if(l->device != NULL)
         if(setsockopt(l->fd, SOL_SOCKET, SO_BINDTODEVICE, l->device, strlen(l->device)) == -1) {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): set SO_BINDTODEVICE failed: %s\n", __func__, strerror(errno));
+                "%s(): set SO_BINDTODEVICE failed: %s", __func__, strerror(errno));
             goto bad;
         }
 

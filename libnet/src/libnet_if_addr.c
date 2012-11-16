@@ -55,7 +55,7 @@ libnet_check_iface(libnet_t *l)
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() socket: %s\n", __func__,
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() socket: %s", __func__,
                 strerror(errno));
         return (-1);
     }
@@ -67,14 +67,14 @@ libnet_check_iface(libnet_t *l)
 
     if (res < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() ioctl: %s\n", __func__,
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() ioctl: %s", __func__,
                 strerror(errno));
     }
     else
     {
         if ((ifr.ifr_flags & IFF_UP) == 0)
         {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): %s is down\n",
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): %s is down",
                     __func__, l->device);
 	    res = -1;
         }
@@ -125,7 +125,7 @@ register char *errbuf)
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
-	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s\n",
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s",
                 __func__, strerror(errno));
 	return (-1);
     }
@@ -134,7 +134,7 @@ register char *errbuf)
     if ((fp = fopen(PROC_DEV_FILE, "r")) == NULL)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): fopen(proc_dev_file) failed: %s\n",  __func__,
+                "%s(): fopen(proc_dev_file) failed: %s",  __func__,
                 strerror(errno));
 	return (-1);
     }
@@ -147,7 +147,7 @@ register char *errbuf)
     if(ioctl(fd, SIOCGIFCONF, &ifc) < 0)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): ioctl(SIOCGIFCONF) error: %s\n", 
+                "%s(): ioctl(SIOCGIFCONF) error: %s", 
                 __func__, strerror(errno));
 #ifdef HAVE_LINUX_PROCFS
 	fclose(fp);
@@ -219,7 +219,7 @@ register char *errbuf)
             if (errno != EADDRNOTAVAIL)
             {
                 snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                        "%s(): SIOCGIFADDR: dev=%s: %s\n", __func__, device,
+                        "%s(): SIOCGIFADDR: dev=%s: %s", __func__, device,
                         strerror(errno));
                 close(fd);
 #ifdef HAVE_LINUX_PROCFS
@@ -243,7 +243,7 @@ register char *errbuf)
         if ((al->device = strdup(device)) == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
-                    "%s(): strdup not enough memory\n", __func__);
+                    "%s(): strdup not enough memory", __func__);
 #ifdef HAVE_LINUX_PROCFS
             fclose(fp);
 #endif
@@ -263,7 +263,7 @@ register char *errbuf)
     if (ferror(fp))
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): ferror: %s\n", __func__, strerror(errno));
+                "%s(): ferror: %s", __func__, strerror(errno));
 	fclose(fp);
 	return (-1);
     }
@@ -304,7 +304,7 @@ register char *errbuf)
     if (pcap_findalldevs(&alldevs, err) == -1)
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
-                "%s(): error in pcap_findalldevs: %s\n", __func__, err);
+                "%s(): error in pcap_findalldevs: %s", __func__, err);
         return (-1);
     }
 
@@ -367,7 +367,7 @@ libnet_select_device(libnet_t *l)
     else if (c == 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): no network interface found\n", __func__);
+                "%s(): no network interface found", __func__);
         return (-1);
     }
 	
@@ -394,7 +394,7 @@ libnet_select_device(libnet_t *l)
         if (i <= 0)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't find interface for IP %s\n", __func__,
+                    "%s(): can't find interface for IP %s", __func__,
                     l->device);
 	    goto bad;
         }

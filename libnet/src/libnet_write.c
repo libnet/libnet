@@ -67,7 +67,7 @@ libnet_write(libnet_t *l)
             if (len > LIBNET_MAX_PACKET)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): packet is too large (%d bytes)\n",
+                        "%s(): packet is too large (%d bytes)",
                         __func__, len);
                 goto done;
             }
@@ -83,7 +83,7 @@ libnet_write(libnet_t *l)
             break;
         default:
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): unsuported injection type\n", __func__);
+                        "%s(): unsuported injection type", __func__);
             goto done;
     }
 
@@ -206,7 +206,7 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
     if (packet == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): failed to allocate packet\n", __func__);
+                "%s(): failed to allocate packet", __func__);
         return (-1);
     }
 	
@@ -251,7 +251,7 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
         case NdisMediumArcnet878_2:
         default:
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): network type (%d) is not supported\n", __func__,
+                "%s(): network type (%d) is not supported", __func__,
                 type.LinkType);
             return (-1);
             break;
@@ -261,7 +261,7 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
     if ((lpPacket = PacketAllocatePacket()) == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): failed to allocate the LPPACKET structure\n", __func__);
+                "%s(): failed to allocate the LPPACKET structure", __func__);
 	    return (-1);
     }
     
@@ -359,11 +359,11 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
     {
 #if !(__WIN32__)
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%s)\n", __func__, c,
+                "%s(): %d bytes written (%s)", __func__, c,
                 strerror(errno));
 #else /* __WIN32__ */
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%d)\n", __func__, c,
+                "%s(): %d bytes written (%d)", __func__, c,
                 WSAGetLastError());
 #endif /* !__WIN32__ */
     }
@@ -374,7 +374,7 @@ int
 libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
 #if defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6
-    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support\n",
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support",
             __func__, strerror(errno));
     return (-1);
 }
@@ -400,11 +400,11 @@ libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
     {
 #if !(__WIN32__)
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%s)\n", __func__, c,
+                "%s(): %d bytes written (%s)", __func__, c,
                 strerror(errno));
 #else /* __WIN32__ */
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%d)\n", __func__, c,
+                "%s(): %d bytes written (%d)", __func__, c,
                 WSAGetLastError());
 #endif /* !__WIN32__ */
     }
