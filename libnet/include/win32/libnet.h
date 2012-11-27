@@ -37,7 +37,6 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <time.h>
-#include "in_systm.h"
 #include "pcap.h"
 
 
@@ -55,14 +54,21 @@ extern "C" {
 #define LIBNET_LIL_ENDIAN 1
 #define HAVE_CONFIG_H 1
 
+/* TODO Definitions and includes below should be in a private header, libnet src needs them, libnet
+   library users don't (and they have negative side effects).
+   */
 /* Some UNIX to Win32 conversions */
 #define STDOUT_FILENO stdout
 #define snprintf _snprintf 
+#define strdup _strdup
 #define write _write
 #define open _open
 #define random rand
 #define close closesocket
 #define __func__ __FUNCTION__
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 /* __FUNCTION__ available in VC ++ 7.0 (.NET) and greater */
 #if _MSC_VER < 1300
@@ -74,8 +80,8 @@ extern "C" {
 #pragma comment (lib,"wpcap")     /* Winpcap   */
 #pragma comment (lib,"packet")   
 
-/* "@LIBNET_VERSION@" will not work in VC++, so version.h doesn't get populated */
-#define VERSION  "1.1.1"
+/* FIXME this needs manual update during release packaging. */
+#define LIBNET_VERSION  "1.1.6"
 
 /* To use Win32 native versions */
 #define WPCAP 1
@@ -90,11 +96,15 @@ extern "C" {
 #include <ctype.h>
 #include <errno.h>
 #include <stdarg.h>
-#include "../libnet/libnet-macros.h"
-#include "../libnet/libnet-headers.h"
-#include "../libnet/libnet-structures.h"
-#include "../libnet/libnet-asn1.h"
-#include "../libnet/libnet-functions.h"
+
+#define LIBNET_API __declspec(dllexport)
+
+#include "libnet/stdint.h"
+#include "libnet/libnet-macros.h"
+#include "libnet/libnet-headers.h"
+#include "libnet/libnet-structures.h"
+#include "libnet/libnet-asn1.h"
+#include "libnet/libnet-functions.h"
 
 #ifdef __cplusplus
 }

@@ -32,10 +32,17 @@
  *
  */
 
+/* MSVC warns about snprintf. This needs to be defined before the declaration of _snprintf is seen. */
+#define _CRT_SECURE_NO_WARNINGS
+
+/* Libnet's unnamespaced ICMP6_ macros stomp on the enumerated versions of
+   these names in the MS headers, so pre-include this header. */
+#include <winsock2.h>
+#include <iphlpapi.h> /* From the Microsoft Platform SDK */
+
 #include "common.h"
 
 #include <winsock2.h>
-#include <iphlpapi.h> /* From the Microsoft Platform SDK */
 #include <assert.h>
 #include <Packet32.h>
 #include <Ntddndis.h>
@@ -148,8 +155,9 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): failed to allocate the LPPACKET structure", __func__);
-		return (-1);
+        return (-1);
     }
+    /* FIXME Packet* arguments aren't const, are they actually modified? That would be a problem, we can't modify our input */
     PacketInitPacket(lpPacket, packet, size);
 
     /* PacketSendPacket returns a BOOLEAN */
@@ -226,15 +234,10 @@ libnet_get_hwaddr(libnet_t *l)
 			mac->ether_addr_octet[i] = OidData->Data[i];
 		}
 	}
-        free(OidData);
-	return(mac);
+    free(OidData);
+    return(mac);
 }
 
-struct hostent *gethostbyname2(const int8_t *name, int af) 
-{
-   /* XXX not implemented */
-   return(NULL);
-}
 
 BYTE *
 libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)

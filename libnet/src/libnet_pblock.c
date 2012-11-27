@@ -31,6 +31,7 @@
  */
 
 #include "common.h"
+#include <assert.h>
 
 libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t type)

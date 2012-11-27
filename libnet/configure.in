@@ -300,10 +300,10 @@ AC_ARG_ENABLE([samples],
 
 AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
 
-AC_OUTPUT(Makefile src/Makefile win32/Makefile \
+AC_OUTPUT(Makefile src/Makefile \
 	include/Makefile \
 	include/libnet/Makefile include/win32/Makefile \
 	sample/Makefile doc/Makefile \
 	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
-	version.h include/libnet.h libnet-config)
+	include/libnet.h libnet-config)
 dnl EOF

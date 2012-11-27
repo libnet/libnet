@@ -36,6 +36,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "libnet_decode.h"
 #include <libnet.h>
 
+
+#define LUA_LIB /* To pull in LUA_API definitions for modules */
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -1294,6 +1296,8 @@ static int lnet_chksum(lua_State *L)
     return 1;
 }
 
+#ifndef _WIN32
+/* TODO see http://stackoverflow.com/questions/7827062/is-there-a-windows-equivalent-of-nanosleep */
 /*-
 -- remaining = net.nanosleep(seconds)
 
@@ -1324,6 +1328,7 @@ static int lnet_nanosleep(lua_State *L)
     }
 }
 
+/* TODO use GetSystemTime or GetSystemTimeAsFileTime */
 /*-
     t = net.gettimeofday()
 
@@ -1342,6 +1347,8 @@ static int lnet_gettimeofday(lua_State *L)
         return 1;
     }
 }
+
+#endif
 
 /*-
 -- net.init(injection, device)
@@ -1415,8 +1422,10 @@ static const luaL_reg net[] =
   {"pton", lnet_pton},
   {"htons", lnet_htons},
   {"checksum", lnet_chksum},
+#ifndef _WIN32
   {"nanosleep", lnet_nanosleep},
   {"gettimeofday", lnet_gettimeofday},
+#endif
   {"init", lnet_init},
   {NULL, NULL}
 };

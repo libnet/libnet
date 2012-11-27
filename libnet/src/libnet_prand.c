@@ -62,7 +62,11 @@ libnet_seed_prand(libnet_t *l)
     return (1);
 }
 
-
+/* FIXME this code makes no sense. On unix we use random(), which
+ * is intended to have no security, and under win32 we use cryptographically
+ * strong entropy source? If necessary, why aren't we using /dev/random
+ * on unix? What's going on here?
+ */
 uint32_t
 libnet_get_prand(int mod)
 {

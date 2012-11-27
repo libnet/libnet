@@ -44,7 +44,7 @@ static libnet_cqd_t l_cqd = {0, CQ_LOCK_UNLOCKED, NULL};
 
 
 static int
-set_cq_lock(uint x) 
+set_cq_lock(uint32_t x) 
 {
     if (check_cq_lock(x))
     {
@@ -56,7 +56,7 @@ set_cq_lock(uint x)
 }
 
 static int
-clear_cq_lock(uint x) 
+clear_cq_lock(uint32_t x) 
 {
     if (!check_cq_lock(x))
     {

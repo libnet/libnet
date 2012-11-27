@@ -41,7 +41,7 @@ libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
 {
 
     uint32_t n, h;
-    uint offset;
+    uint32_t offset;
     libnet_pblock_t *p;
     struct libnet_dnsv4_hdr dns_hdr;
 

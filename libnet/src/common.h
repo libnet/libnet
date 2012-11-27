@@ -27,15 +27,17 @@
  *
  */
 
-#include "../include/config.h"
-
 #if (_WIN32) || (__CYGWIN__)
 
-#include "../include/win32/libnet.h"
+/* MSVC warns about snprintf */
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "../include/win32/config.h"
+#include "../include/win32/libnet.h"
 
 #else
 
+#include "../include/config.h"
 #include "../include/libnet.h"
 
 #include <assert.h>

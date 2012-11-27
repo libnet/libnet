@@ -30,19 +30,16 @@
  *
  */
 
-#if (!(_WIN32) || (__CYGWIN__))
-#include <unistd.h>
-#include "../version.h"
-#else
-#include "../include/win32/libnet.h"
-#endif
+#include "common.h"
 
 #ifndef STDOUT_FILENO
 #define STDOUT_FILENO 1
 #endif
 
-static const char banner[] = "libnet version "VERSION"";
+static const char banner[] = "libnet version " LIBNET_VERSION "";
 
+#if 0
+/* FIXME can find no sign this is used anywhere */
 void
 __libnet_print_vers(void)
 {
@@ -55,6 +52,7 @@ __libnet_print_vers(void)
      (void)write(STDOUT_FILENO, banner, sizeof(banner) - 1);
 #endif
 }
+#endif
 
 const char *
 libnet_version(void)

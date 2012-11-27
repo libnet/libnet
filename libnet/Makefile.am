@@ -8,7 +8,7 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-SUBDIRS = include src sample doc win32
+SUBDIRS = include src sample doc
 
 EXTRA_DIST = Makefile.am.common
 
