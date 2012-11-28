@@ -88,7 +88,6 @@ extern "C" {
 # include <ws2tcpip.h>
 # include <windows.h>
 # include <winsock2.h>
-# include <win32/in_systm.h>
 #endif /* __WIN32__ */
 
 #if !(__linux__) && !(__WIN32__) && !(__APPLE__) && !(__CYGWIN__) && !(__GNU__)
