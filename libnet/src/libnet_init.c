@@ -168,7 +168,7 @@ libnet_getfd(libnet_t *l)
         return (-1);
     } 
 
-    return (l->fd);
+    return (int)(l->fd);
 }
 
 const char *

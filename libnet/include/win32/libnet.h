@@ -58,7 +58,9 @@ extern "C" {
    library users don't (and they have negative side effects).
    */
 /* Some UNIX to Win32 conversions */
+#ifndef STDOUT_FILENO
 #define STDOUT_FILENO stdout
+#endif
 #define snprintf _snprintf 
 #define strdup _strdup
 #define write _write
@@ -75,17 +77,21 @@ extern "C" {
 #define __FUNCTION__ __FILE__
 #endif
 
+#ifdef _MSC_VER // the following is only supported by MSVC and not by MinGW/MSys environements
 #pragma comment (lib,"ws2_32")    /* Winsock 2 */
 #pragma comment (lib,"iphlpapi")  /* IP Helper */
 #pragma comment (lib,"wpcap")     /* Winpcap   */
 #pragma comment (lib,"packet")   
+#endif
 
 /* FIXME this needs manual update during release packaging. */
 #define LIBNET_VERSION  "1.1.6"
 
 /* To use Win32 native versions */
 #define WPCAP 1
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
