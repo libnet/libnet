@@ -77,7 +77,7 @@ libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
      * anyway.
      */
     memset(&dns_hdr, 0, sizeof(dns_hdr));
-    dns_hdr.h_len       = htons(n - sizeof (dns_hdr.h_len));
+    dns_hdr.h_len       = htons((u_short)(n - sizeof (dns_hdr.h_len)));
     dns_hdr.id          = htons(id);
     dns_hdr.flags       = htons(flags);
     dns_hdr.num_q       = htons(num_q);
