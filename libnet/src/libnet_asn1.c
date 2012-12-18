@@ -265,7 +265,7 @@ libnet_build_asn1_length(uint8_t *data, int *datalen, int len)
         *data++ = (uint8_t)((len >> 8) & 0xFF);
         *data++ = (uint8_t)(len & 0xFF);
     }
-    *datalen -= (data - start_data);
+    *datalen -= (int)(data - start_data);
     return (data);
 }
 
