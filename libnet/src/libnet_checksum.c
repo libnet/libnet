@@ -231,7 +231,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             struct libnet_tcp_hdr *tcph_p =
                 (struct libnet_tcp_hdr *)(iphdr + ip_hl);
 
-	    h_len = end - (uint8_t*) tcph_p; /* ignore h_len, sum the packet we've coalesced */
+	    h_len = (int)(end - (uint8_t*) tcph_p); /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -285,7 +285,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             struct libnet_udp_hdr *udph_p =
                 (struct libnet_udp_hdr *)(iphdr + ip_hl);
 
-	    h_len = end - (uint8_t*) udph_p; /* ignore h_len, sum the packet we've coalesced */
+	    h_len = (int)(end - (uint8_t*) udph_p); /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -308,7 +308,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             struct libnet_icmpv4_hdr *icmph_p =
                 (struct libnet_icmpv4_hdr *)(iphdr + ip_hl);
 
-            h_len = end - (uint8_t*) icmph_p; /* ignore h_len, sum the packet we've coalesced */
+            h_len = (int)(end - (uint8_t*) icmph_p); /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -330,7 +330,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             struct libnet_icmpv6_hdr *icmph_p =
                 (struct libnet_icmpv6_hdr *)(iphdr + ip_hl);
 
-            h_len = end - (uint8_t*) icmph_p; /* ignore h_len, sum the packet we've coalesced */
+            h_len = (int)(end - (uint8_t*) icmph_p); /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 
@@ -349,7 +349,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
             struct libnet_igmp_hdr *igmph_p =
                 (struct libnet_igmp_hdr *)(iphdr + ip_hl);
 
-	    h_len = end - (uint8_t*) igmph_p; /* ignore h_len, sum the packet we've coalesced */
+	    h_len = (int)(end - (uint8_t*) igmph_p); /* ignore h_len, sum the packet we've coalesced */
 
             CHECK_IP_PAYLOAD_SIZE();
 

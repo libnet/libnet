@@ -36,11 +36,20 @@
    with conditionals on __WIN32__ that are never reachable, what happened?
    */
 #if defined (__WIN32__)
+#if !(__CYGWIN__)
+SOCKET
+libnet_open_raw4(libnet_t *l)
+{
+    return (SOCKET)(libnet_open_link(l));
+}
+#else
 int
 libnet_open_raw4(libnet_t *l)
 {
     return (libnet_open_link(l));
 }
+#endif
+
 
 int
 libnet_open_raw6(libnet_t *l)
