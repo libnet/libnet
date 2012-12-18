@@ -58,7 +58,9 @@ extern "C" {
    library users don't (and they have negative side effects).
    */
 /* Some UNIX to Win32 conversions */
+#ifndef STDOUT_FILENO
 #define STDOUT_FILENO stdout
+#endif
 #define snprintf _snprintf 
 #define strdup _strdup
 #define write _write
@@ -85,7 +87,9 @@ extern "C" {
 
 /* To use Win32 native versions */
 #define WPCAP 1
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
