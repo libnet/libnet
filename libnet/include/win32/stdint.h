@@ -29,12 +29,9 @@
 // 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MSC_VER // [
-#error "Use this header only with Microsoft Visual C++ compilers!"
-#endif // _MSC_VER ]
-
-#ifndef _MSC_STDINT_H_ // [
+#if !defined(_MSC_STDINT_H_) && !defined(_STDINT_H) // [
 #define _MSC_STDINT_H_
+#define _STDINT_H // avoid redefinitions by GNU libc's stdint.h
 
 #if _MSC_VER > 1000
 #pragma once
