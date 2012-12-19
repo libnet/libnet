@@ -58,7 +58,6 @@ extern "C" {
    library users don't (and they have negative side effects).
    */
 /* Some UNIX to Win32 conversions */
-#define STDOUT_FILENO stdout
 #define snprintf _snprintf 
 #define strdup _strdup
 #define write _write

@@ -2,7 +2,7 @@
  *  $Id: libnet_version.c,v 1.7 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
- *  libnet_version.c - dummy version function to define version info
+ *  libnet_version.c - version function to return version info
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
  *  All rights reserved.
@@ -32,27 +32,7 @@
 
 #include "common.h"
 
-#ifndef STDOUT_FILENO
-#define STDOUT_FILENO 1
-#endif
-
 static const char banner[] = "libnet version " LIBNET_VERSION "";
-
-#if 0
-/* FIXME can find no sign this is used anywhere */
-void
-__libnet_print_vers(void)
-{
-    /*
-     *  We don't check for error cos we really don't care.
-     */
-#if defined (__WIN32__)
-     fprintf(stdout, "%s", banner);
-#else
-     (void)write(STDOUT_FILENO, banner, sizeof(banner) - 1);
-#endif
-}
-#endif
 
 const char *
 libnet_version(void)
@@ -60,4 +40,3 @@ libnet_version(void)
     return (banner);
 }
 
-/* EOF */
