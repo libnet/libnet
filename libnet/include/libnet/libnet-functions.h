@@ -2310,19 +2310,11 @@ LIBNET_API
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size);
 
-#if ((__WIN32__) && !(__CYGWIN__))
-/*
- * [Internal] 
- */
-SOCKET
-libnet_open_raw4(libnet_t *l);
-#else
 /*
  * [Internal] 
  */
 int
 libnet_open_raw4(libnet_t *l);
-#endif
 
 /*
  * [Internal] 
