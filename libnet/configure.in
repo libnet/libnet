@@ -10,7 +10,7 @@ AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER([include/config.h])
+AC_CONFIG_HEADERS([include/config.h])
 AM_MAINTAINER_MODE
 
 dnl
