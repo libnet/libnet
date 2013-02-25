@@ -4,9 +4,9 @@ dnl All rights reserved.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libnet, 1.1.6)
+AC_INIT([libnet],[1.1.6])
 AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
@@ -21,11 +21,7 @@ AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
 dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
-ifdef(
-      [LT_INIT],
-      [LT_INIT],
-      [AC_PROG_LIBTOOL]
-)
+LT_INIT
 
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
@@ -300,10 +296,11 @@ AC_ARG_ENABLE([samples],
 
 AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
 
-AC_OUTPUT(Makefile src/Makefile \
+AC_CONFIG_FILES([Makefile src/Makefile \
 	include/Makefile \
 	include/libnet/Makefile include/win32/Makefile \
 	sample/Makefile doc/Makefile \
 	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
-	include/libnet.h libnet-config)
+	include/libnet.h libnet-config])
+AC_OUTPUT
 dnl EOF
