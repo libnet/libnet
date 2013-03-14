@@ -32,13 +32,7 @@
 /* MSVC warns about snprintf */
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "../include/win32/config.h"
-#include "../include/win32/libnet.h"
-
 #else
-
-#include "../include/config.h"
-#include "../include/libnet.h"
 
 #include <assert.h>
 
@@ -55,4 +49,7 @@
 /* TODO - HAVE_OS_PROTO_H is never defined, but used in some files, delete it */
 
 #endif
+
+#include "../include/config.h"
+#include "../include/libnet.h"
 

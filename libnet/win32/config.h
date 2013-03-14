@@ -1,14 +1,6 @@
-/* include/config.h.in.  Generated from configure.in by autoheader.  */
-/*
-dnl $Id: config.h,v 1.4 2004/01/03 20:31:00 mike Exp $
-dnl
-dnl Libnet autoconfiguration acconfig.h file
-dnl Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
-dnl All rights reserved.
-dnl
-dnl Process this file with autoheader to produce a config.h file.
-dnl
-*/
+/* win32/config.h  Originally generated from configure.in by autoheader.  */
+/* Static win32 config.h, copied into include/ by msvcbuild.bat when
+   building without autotools. */
 
 #undef LIBNET_BSDISH_OS
 #undef LIBNET_BSD_BYTE_SWAP

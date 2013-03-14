@@ -298,7 +298,7 @@ AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
 
 AC_CONFIG_FILES([Makefile src/Makefile \
 	include/Makefile \
-	include/libnet/Makefile include/win32/Makefile \
+	include/libnet/Makefile win32/Makefile \
 	sample/Makefile doc/Makefile \
 	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
 	include/libnet.h libnet-config])

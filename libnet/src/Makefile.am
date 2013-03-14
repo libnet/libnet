@@ -8,7 +8,7 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-EXTRA_DIST = libnet_dll.c
+EXTRA_DIST = libnet_dll.c common.h
 
 lib_LTLIBRARIES = libnet.la
 

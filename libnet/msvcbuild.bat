@@ -10,8 +10,10 @@
 @rem relative to C code in src/
 @set WINPCAP=..\..\..\WpdPack
 
-copy include\win32\libnet.h include\
-copy include\win32\stdint.h include\libnet\
+copy win32\libnet.h include\
+copy win32\stdint.h include\libnet\
+copy win32\config.h include\
+copy win32\getopt.h include\
 
 cd src
 %MYCOMPILE% /I..\include /I%WINPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c

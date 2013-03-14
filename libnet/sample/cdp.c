@@ -35,11 +35,7 @@
  */
 
 #if (HAVE_CONFIG_H)
-#if ((_WIN32) && !(__CYGWIN__)) 
-#include "../include/win32/config.h"
-#else
 #include "../include/config.h"
-#endif
 #endif
 #include "./libnet_test.h"
 

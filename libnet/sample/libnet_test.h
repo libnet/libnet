@@ -9,12 +9,11 @@
 #ifndef __LIBNET_TEST_H
 #define __LIBNET_TEST_H
 
-#ifndef _WIN32
-#include "../include/libnet.h"
-#else
-#include "../include/win32/libnet.h"
-#include "../include/win32/getopt.h"
+#if (HAVE_CONFIG_H)
+#include "../include/config.h"
 #endif
+
+#include "../include/libnet.h"
 
 #define libnet_timersub(tvp, uvp, vvp)                                  \
         do {                                                            \
@@ -40,7 +39,7 @@ u_char org_code[3] = {0x00, 0x00, 0x00};
 void usage(char *);
 
 #if defined(__WIN32__)
-#include <win32/getopt.h>
+#include <getopt.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #ifndef _WIN32
