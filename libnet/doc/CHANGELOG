@@ -4,6 +4,55 @@
                                http://www.packetfactory.net/libnet
 ===============================================================================
 
+
+- 1.2
+
+    - Prepare for 1.2 release candidate. (Sam Roberts)
+    - Bump libnet versions in preparation for 1.2 release. (Sam Roberts)
+    - Cleaned up references to win32 pre-generated headers (Sam Roberts)
+    - VERSION is ancient and unused (Barak A. Pearlmutter)
+    - autoupdate configure.ac (Barak A. Pearlmutter)
+    - Simplify autogen.sh (suggested by Barak A. Pearlmutter) (Sam Roberts)
+    - Ignore doxygen javascript output (Sam Roberts)
+    - remove autoreconf-installed file (Barak A. Pearlmutter)
+    - Use +AC_CONFIG_HEADERS instead of AM_CONFIG_HEADER (Sam Roberts)
+    - Automatic link options ("#pragma comment(lib, ...)") are only for MSVC (ThomasVolkert)
+    - Added guards around definitions of _GNU_SOURCE to avoid redefinitions (ThomasVolkert)
+    - Avoids several warnings for MS C/C++ compiler (ThomasVolkert)
+    - libnet_open_raw4 doesn't return a SOCKET on win32 (Sam Roberts)
+    - Remove unused STDOUT_FILENO, and dead code that used to use it. (Sam Roberts)
+    - Removed references to removed win32/in_systm.h (Sam Roberts)
+    - git ignore doxygen output (Sam Roberts)
+    - Remove automake reference to win32 header that has been removed. (Sam Roberts)
+    - Fixes error messages sometimes include newline, sometimes not. (Sam Roberts)
+    - Properly set l->err_buf if libnet_ifaddrlist() fails. (Thomas Habets)
+    - Pass build errors to caller of batch files. (Sam Roberts)
+    - dlpi: Try harder to find the device for the interface. (Thomas Habets)
+    - dlpi: Correctly extract the unit number from devices with numbers in their name. (Thomas Habets)
+    - Make interface selection work for interfaces with multiple addresses on them. (Sam Roberts)
+    - memory leak fixed, device list needs to freed after use (Sam Roberts)
+    - uint32 address properly initialized with an address (Sam Roberts)
+    - Reformatted and commented win32 specific code. (Sam Roberts)
+    - Interface selection was ignoring interfaces with ipv6. (Sam Roberts)
+    - Use simple batch file to build for win32. (Sam Roberts)
+    - Use LIBNET_API on public functions, instead of an export file. (Sam Roberts)
+    - Note about libnet_get_prand being secure only on windows. (Sam Roberts)
+    - ignore visual studio output artifacts (Sam Roberts)
+    - Don't need iphlpapi.h included. (Sam Roberts)
+    - Libnet.vcxproj file gained a ProjectGUID property. Hm. (Sam Roberts)
+    - visual studio 2010 project files (Sam Roberts)
+    - Convert uses of non-standard uint to uint32_t. (Sam Roberts)
+    - Compiled on win32 with Visual Studio 2010. (Sam Roberts)
+    - Add build instructions for Visual Studio 2010 (Sam Roberts)
+    - Documentation typo, valid should be invalid. (Sam Roberts)
+    - Replace usage of non-standard uint type with uint32_t. (Sam Roberts)
+    - define INET6 on IRIX, making libnet compile cleanly. (Thomas Habets)
+    - Use LIBNET_BSDISH_OS and LIBNET_BSD_BYTE_SWAP on all darwin architectures. (Kimmo Suominen)
+    - Added BSD byteswap for Darwin. Otherwise sendto() returns EINVAL (Emilio Escobar)
+    - Use a common header to trim cut and paste include blocks. (Sam Roberts)
+    - netinet/in.h is needed for IPPROTO_ and sockaddr_in (reported by Dirk Meyer) (Sam Roberts)
+
+
 - 1.1.6
 
     - Note about why including libnet.h breaks dnet.h/dumbnet.h (Sam Roberts)

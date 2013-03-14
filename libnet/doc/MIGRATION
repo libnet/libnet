@@ -5,7 +5,7 @@
 ===============================================================================
 
 
-    MIGRATING YOUR CODE AND QUICKSTART
+    MIGRATING YOUR CODE TO LIBNET 1.1 AND QUICKSTART
 
     Using Libnet 1.1 you will find it MUCH simpler to build and write packets
     than before.  Instead of the previous five steps (initialize memory,

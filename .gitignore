@@ -27,8 +27,10 @@ install-sh
 jquery.js
 libnet*.changes
 libnet*.deb
-libnet-1.1.?
-libnet-1.1.?.tar.gz
+libnet-1.?
+libnet-1.?.?
+libnet-1.?.?.tar.gz
+libnet-1.?.tar.gz
 libnet-config
 libnet/*-stamp
 libnet/debian

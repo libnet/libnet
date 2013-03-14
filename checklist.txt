@@ -7,7 +7,11 @@ Pre-release:
 
 Use ../ChangeLog to update changelog.
 
-- configure.in
+- README.txt, libnet/README
+
+Sync these.
+
+- configure.ac
 
 Update version.
 
@@ -24,7 +28,7 @@ Update LDFLAGS' version-info.
 
 - Push it, ../Push
 
-- Announce release-candidate on libnet-dev-announce
+- Announce release-candidate on libnet-dev-announce and to people in doc/CONTRIB
 
 
 - Announce release on libnet-dev-announce

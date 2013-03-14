@@ -1,13 +1,22 @@
-Upstream on libnet was dead.
+===============================================================================
+    LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
+        http://www.packetfactory.net/libnet
 
-Debian and Fedora had unmerged patches.
+    LIBNET 1.1.3 and later (c) 2009 - 2013 Sam Roberts <vieuxtech@gmail.com>
+        http://github.com/sam-github/libnet
+===============================================================================
 
-I had patches to ip_offset handling (used for IP checksumming) to fix memory
-corruption bugs, and I had the start of Lua bindings.
+libnet provides a fairly portable framework for network packet construction
+an injection.
 
-I forked from packetfactory.net and am maintaining and rereleasing libnet.
+It is widely used, but had become unmaintained at packetfactory.net, and it's
+author is unreachable.
 
-Contact Sam Roberts <vieuxtech@gmail.com> if you have bugs or patches to contribute.
+This version was forked from the 1.1.3 release candidate, then bug fixed,
+actively maintained, and rereleased.
+
+Contact Sam Roberts <vieuxtech@gmail.com> if you have patches, find bugs, or
+have issues porting or building against it.
 
 Newest code is at:
 
@@ -16,4 +25,22 @@ Newest code is at:
 Releases are at:
 
   http://sourceforge.net/projects/libnet-dev/
+
+Some old docs are at:
+
+  http://packetfactory.openwall.net/projects/libnet/index.html
+
+    A C library for portable packet creation and injection.
+ 
+    Libnet is an API to help with the construction and handling of network
+    packets.  It provides a portable framework for low-level network
+    packet writing and handling (use libnet in conjunction with libpcap and
+    you can write some really cool stuff).  Libnet includes packet creation
+    at the IP layer and at the link layer as well as a host of supplementary
+    and complementary functionality.  Libnet is very handy with which to
+    write network tools and network test code.  See the manpage and sample
+    test code for more detailed information.
+    
+    Your old code (circa libnet-1.0.x) WILL NOT WORK with libnet-1.1.x.
+    Read doc/MIGRATION for easy steps on porting your old code.
 

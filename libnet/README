@@ -1,17 +1,22 @@
 ===============================================================================
-    $Id: README,v 1.4 2004/03/01 20:26:11 mike Exp $
     LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
-    http://www.packetfactory.net/libnet
-    LIBNET 1.1.3+ (c) 2009 - 2012 Sam Roberts <vieuxtech@gmail.com>
+        http://www.packetfactory.net/libnet
+
+    LIBNET 1.1.3 and later (c) 2009 - 2013 Sam Roberts <vieuxtech@gmail.com>
+        http://github.com/sam-github/libnet
 ===============================================================================
 
+libnet provides a fairly portable framework for network packet construction
+an injection.
 
-libnet has become unmaintained at packetfactory.net, and it's author is unreachable.
+It is widely used, but had become unmaintained at packetfactory.net, and it's
+author is unreachable.
 
 This version was forked from the 1.1.3 release candidate, then bug fixed,
 actively maintained, and rereleased.
 
-Contact Sam Roberts <vieuxtech@gmail.com> if you have patches or have found bugs.
+Contact Sam Roberts <vieuxtech@gmail.com> if you have patches, find bugs, or
+have issues porting or building against it.
 
 Newest code is at:
 
@@ -39,4 +44,3 @@ Some old docs are at:
     Your old code (circa libnet-1.0.x) WILL NOT WORK with libnet-1.1.x.
     Read doc/MIGRATION for easy steps on porting your old code.
 
-EOF
