@@ -74,6 +74,7 @@ libnet_la_LIBADD = @LTLIBOBJS@
 #
 # New APIs, backwards compatible, increment current and age.
 # Bug fix, no new APIs, increment revision.
+# Not backwards compatible, increment current, reset revision and age to 0.
 #
 # Note:
 # 1.1.2.1-fork is 5:0:4
@@ -81,6 +82,7 @@ libnet_la_LIBADD = @LTLIBOBJS@
 # 1.1.4 was 6:0:5 -> probably an error on my part
 # 1.1.5 is 7:0:6 -> new APIs, backwards compat
 # 1.1.6 is 8:0:7 -> new APIs, backwards compat
+# 1.2   is 9:0:0 -> new APIs, removed __libnet_print_vers (internal, should not have been used, but linkable) APIs
 
-libnet_la_LDFLAGS = -version-info 8:0:7 -Wl
+libnet_la_LDFLAGS = -version-info 9:0:0 -Wl
 
