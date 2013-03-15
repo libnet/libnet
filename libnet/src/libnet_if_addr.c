@@ -274,7 +274,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 }
 #else
 /* WIN32 support *
-/* TODO move win32 support into win32 specific source file */
+ * TODO move win32 support into win32 specific source file */
 
 /* From tcptraceroute, convert a numeric IP address to a string */
 #define IPTOSBUFFERS    12
