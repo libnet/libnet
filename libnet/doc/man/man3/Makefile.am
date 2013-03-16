@@ -1,3 +1,3 @@
-man3_MANS      = $(srcdir)/*.3
-EXTRA_DIST     = $(srcdir)/*.3
+man3_MANS      = $(srcdir)/libnet*.3
+EXTRA_DIST     = $(srcdir)/libnet*.3
 
