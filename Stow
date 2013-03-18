@@ -3,7 +3,8 @@
 set -x
 set -e
 
-(cd /usr/local/stow && sudo stow -D libnet)
+(cd /usr/local/stow && sudo stow -D libnet libnet-*)
+
 sudo rm -rf /usr/local/stow/libnet
 sudo mkdir -p /usr/local/stow/libnet
 
