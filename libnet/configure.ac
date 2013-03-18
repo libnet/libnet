@@ -30,6 +30,19 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 
+AC_MSG_CHECKING(for socklen_t)
+AC_TRY_COMPILE([
+        #include <sys/types.h>
+        #include <sys/socket.h>
+        ],
+        [ socklen_t x; ],
+        have_socklen_t=yes,
+        have_socklen_t=no)
+if test "x$have_socklen_t" = "xyes"; then
+        AC_DEFINE(HAVE_SOCKLEN_T, 1, [define if socklen_t is defined])
+fi
+AC_MSG_RESULT($have_socklen_t)
+
 dnl
 dnl And some custom things
 dnl

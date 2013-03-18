@@ -32,6 +32,10 @@
 
 #include "common.h"
 
+#ifndef HAVE_SOCKLEN_T
+typedef int socklen_t
+#endif
+
 /* TODO this doesn't make any sense, the code in the #else branch is littered
    with conditionals on __WIN32__ that are never reachable, what happened?
    */
@@ -63,7 +67,7 @@ libnet_close_raw6(libnet_t *l)
 int
 libnet_open_raw4(libnet_t *l)
 {
-    int len; /* now supposed to be socklen_t, but maybe old systems used int? */
+    socklen_t len;
 
 #if !(__WIN32__)
      int n = 1;
