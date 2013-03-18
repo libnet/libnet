@@ -72,9 +72,20 @@ libnet_la_LIBADD = @LTLIBOBJS@
 #
 # Form is current:revision:age.
 #
-# New APIs, backwards compatible, increment current and age.
-# Bug fix, no new APIs, increment revision.
-# Not backwards compatible, increment current, reset revision and age to 0.
+# Here are a set of rules to help you update your library version
+# information:
+#
+# 1. If the library source code has changed at all since the last
+# update, then increment REVISION (`C:R:A' becomes `C:r+1:A').
+#
+# 2. If any interfaces have been added, removed, or changed since the
+# last update, increment CURRENT, and set REVISION to 0.
+#
+# 3. If any interfaces have been added since the last public release,
+# then increment AGE.
+#
+# 4. If any interfaces have been removed since the last public release,
+# then set AGE to 0.
 #
 # Note:
 # 1.1.2.1-fork is 5:0:4
