@@ -160,7 +160,8 @@ libnet_getpacket_size(libnet_t *l);
 /**
  * Seeds the psuedo-random number generator.
  * @param l pointer to a libnet context
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -177,7 +178,8 @@ libnet_seed_prand(libnet_t *l);
  * LIBNET_PRu32  0 - 4294967295
  *
  * @param mod one the of LIBNET_PR* constants
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 uint32_t
@@ -202,7 +204,8 @@ libnet_get_prand(int mod);
  * @param l pointer to a libnet context
  * @param ptag the ptag reference number
  * @param mode LIBNET_ON or LIBNET_OFF
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -235,7 +238,8 @@ libnet_addr2name4(uint32_t in, uint8_t use_name);
  * @param host_name pointer to a string containing a presentation format host
  * name
  * @param use_name LIBNET_RESOLVE or LIBNET_DONT_RESOLVE
- * @return network byte ordered IPv4 address or -1 (2^32 - 1) on error 
+ * @return address in network byte order
+ * @retval -1 (2^32 - 1) on error 
  */
 LIBNET_API
 uint32_t
@@ -246,7 +250,8 @@ extern const struct libnet_in6_addr in6addr_error;
 /**
  * Check a libnet_in6_addr structure for identity with in6addr_error.
  * @param addr address to check
- * @return 1 if addr is in6addr_error, 0 if it is not
+ * @retval 1 if addr is in6addr_error
+ * @retval 0 if it is not
  */
 LIBNET_API
 int
@@ -290,7 +295,8 @@ char *host_name, int host_name_len);
  * @param l pointer to a libnet context
  * @param plist if successful, will refer to the portlist, if not, NULL
  * @param token_list string containing the port list primitive
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -305,7 +311,9 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list);
  * @param plist previously created portlist
  * @param bport will contain the beginning port number or 0
  * @param eport will contain the ending port number or 0
- * @return 1 on success, 0 if empty, -1 on failure
+ * @retval 1 on success
+ * @retval 0 if empty
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -316,7 +324,8 @@ uint16_t *eport);
  * Runs through the port list and prints the contents of the port list chain
  * list to stdout.
  * @param plist previously created portlist
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -327,8 +336,7 @@ libnet_plist_chain_dump(libnet_plist_t *plist);
  * list to string. This function uses strdup and is not re-entrant.  It also
  * has a memory leak and should not really be used.
  * @param plist previously created portlist
- * @return a printable string containing the port list contents on success
- * NULL on error
+ * @return a printable string containing the port list contents on success or NULL on error
  */
 LIBNET_API
 char *
@@ -337,7 +345,8 @@ libnet_plist_chain_dump_string(libnet_plist_t *plist);
 /**
  * Frees all memory associated with port list chain.
  * @param plist previously created portlist
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -428,7 +437,8 @@ libnet_plist_chain_free(libnet_plist_t *plist);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -445,7 +455,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -461,7 +472,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -479,7 +491,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -500,7 +513,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -520,7 +534,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -536,7 +551,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param dst destination ethernet address
  * @param type upper layer protocol type
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -556,7 +572,8 @@ libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -574,7 +591,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param oui IEEE organizational code
  * @param type upper layer protocol 
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -598,7 +616,8 @@ uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -616,7 +635,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param tha target hardware address
  * @param tpa targer protocol address
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -638,7 +658,8 @@ uint8_t *tpa, libnet_t *l);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -659,7 +680,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param options_s length of options string
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -676,7 +698,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -700,7 +723,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -720,7 +744,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -741,7 +766,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -760,7 +786,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -779,7 +806,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -799,7 +827,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -821,7 +850,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -841,7 +871,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
@@ -859,7 +890,8 @@ libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -878,7 +910,8 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_nsol(uint8_t type, uint8_t code,
@@ -898,7 +931,8 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nsol(uint8_t type, uint8_t code,
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_nadv(uint8_t type, uint8_t code,
@@ -912,7 +946,8 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nadv(uint8_t type, uint8_t code,
  * @param option_s size of option data (will be padded out to an 8-byte boundary)
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t libnet_build_icmpv6_ndp_opt(uint8_t type, uint8_t* option,
@@ -928,7 +963,8 @@ libnet_ptag_t libnet_build_icmpv6_ndp_opt(uint8_t type, uint8_t* option,
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  * 
  * @note 'reserved' was previously called 'code', which it is not, in any IGMP version.
  */
@@ -954,7 +990,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t 
@@ -978,7 +1015,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param options_s length of options string
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t 
@@ -996,7 +1034,8 @@ libnet_ptag_t ptag);
  * @param prot upper layer protocol
  * @param dst destination IPv4 address (little endian)
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1015,7 +1054,8 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1033,7 +1073,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1056,7 +1097,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1075,7 +1117,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1094,7 +1137,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1115,7 +1159,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param dst destination IPv6 address
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1137,7 +1182,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1155,7 +1201,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1171,7 +1218,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1190,7 +1238,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1212,7 +1261,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1236,7 +1286,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1265,7 +1316,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1294,7 +1346,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1315,7 +1368,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1337,7 +1391,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1356,7 +1411,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param oui Organizationally Unique Identifier
  * @param type upper layer protocol type
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1381,7 +1437,8 @@ libnet_t *l);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1400,7 +1457,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1433,7 +1491,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1456,7 +1515,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1476,7 +1536,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1493,7 +1554,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1509,7 +1571,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1522,7 +1585,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1542,7 +1606,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1562,7 +1627,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1577,7 +1643,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1592,7 +1659,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1608,7 +1676,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1625,7 +1694,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1651,7 +1721,8 @@ libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1680,7 +1751,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1692,7 +1764,8 @@ libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * @param fv see libnet_build_gre().
- * @return size, see libnet_build_gre().
+ * @return size
+ * @see libnet_build_gre().
  */
 LIBNET_API
 uint32_t
@@ -1718,7 +1791,8 @@ libnet_getgre_length(uint16_t fv);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1745,7 +1819,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1762,7 +1837,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1773,7 +1849,8 @@ libnet_ptag_t ptag);
 /**
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1798,7 +1875,8 @@ libnet_build_gre_last_sre(libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1820,7 +1898,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1841,7 +1920,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1860,7 +1940,8 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1886,7 +1967,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1912,7 +1994,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1933,7 +2016,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1948,7 +2032,8 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param oui Organizationally Unique Identifier (unused for Ethernet)
  * @param type the upper layer protocol type
  * @param l pointer to a libnet context
- * @return protocol tag value on success, -1 on error
+ * @return protocol tag value on success
+ * @retval -1 on error
  */
 LIBNET_API
 libnet_ptag_t
@@ -1965,7 +2050,8 @@ libnet_t *l);
  * also bump up the internal libnet stat counters which are retrievable via
  * libnet_stats().
  * @param l pointer to a libnet context
- * @return the number of bytes written, -1 on error
+ * @return the number of bytes written
+ * @retval -1 on error
  */
 LIBNET_API
 int
@@ -1977,10 +2063,10 @@ libnet_write(libnet_t *l);
  * will attempt to find one. If the function fails and returns -1 a call to 
  * libnet_geterrror() will tell you why.
  * @param l pointer to a libnet context
- * @return a big endian IP address suitable for use in a libnet_build function or -1
+ * @return a big endian IP address suitable for use in a libnet_build function
+ * @retval -1
  */
 LIBNET_API
-
 uint32_t
 libnet_get_ipaddr4(libnet_t *l);
 
@@ -1991,7 +2077,7 @@ libnet_get_ipaddr4(libnet_t *l);
  * call to libnet_geterrror() will tell you why.
  * This function is not yet implemented for Win32 platforms.
  * @param l pointer to a libnet context
- * @return well, nothing yet
+ * @retval in6addr_error on failure
  */
 LIBNET_API
 struct libnet_in6_addr
@@ -2043,7 +2129,8 @@ libnet_version(void);
  * @param l pointer to a libnet context
  * @param packet will contain the wire-ready packet
  * @param packet_s will contain the packet size
- * @return 1 on success, -1 on failure  
+ * @retval 1 on success
+ * @retval -1 on failure  
  */
 LIBNET_API
 int
@@ -2059,7 +2146,8 @@ libnet_adv_cull_packet(libnet_t *l, uint8_t **packet, uint32_t *packet_s);
  * @param ptag the ptag referencing the header to pull
  * @param header will contain the header
  * @param header_s will contain the header size
- * @return 1 on success, -1 on failure  
+ * @retval 1 on success
+ * @retval -1 on failure  
  */
 LIBNET_API
 int
@@ -2077,7 +2165,8 @@ uint32_t *header_s);
  * @param l pointer to a libnet context
  * @param packet a pointer to the packet to inject
  * @param packet_s the size of the packet
- * @return the number of bytes written, or -1 on failure
+ * @return the number of bytes written
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -2094,7 +2183,8 @@ libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s);
  * @param l pointer to a libnet context
  * @param packet a pointer to the packet to inject
  * @param packet_s the size of the packet
- * @return the number of bytes written, or -1 on failure
+ * @return the number of bytes written
+ * @retval -1 on failure
  */
 LIBNET_API
 int
@@ -2121,7 +2211,8 @@ libnet_adv_free_packet(libnet_t *l, uint8_t *packet);
  * locked, this function will fail.
  * @param l pointer to a libnet context
  * @param label a canonical name given to recognize the new context, no longer than LIBNET_LABEL_SIZE
- * @return 1 on success, -1 on failure
+ * @retval 1 on success
+ * @retval -1 on failure
 */
 int 
 libnet_cq_add(libnet_t *l, char *label);
@@ -2138,7 +2229,8 @@ libnet_cq_add(libnet_t *l, char *label);
  * queue by canonical name and would use libnet_cq_remove_by_label(). If the
  * context queue is write locked, this function will fail.
  * @param l pointer to a libnet context
- * @return the pointer to the removed libnet context, NULL on failure
+ * @return the pointer to the removed libnet context
+ * @retval NULL on failure
  */
 LIBNET_API
 libnet_t *
@@ -2153,7 +2245,8 @@ libnet_cq_remove(libnet_t *l);
  * to libnet_destroy(). If the context queue is write locked, this function
  * will fail.
  * @param label canonical name of the context to remove
- * @return the pointer to the removed libnet context, NULL on failure
+ * @return the pointer to the removed libnet context
+ * @retval NULL on failure
  */
 LIBNET_API   
 libnet_t *
@@ -2173,7 +2266,8 @@ libnet_cq_getlabel(libnet_t *l);
  * [Context Queue] 
  * Locates a libnet context from the queue, indexed by a canonical label.
  * @param label canonical label of the libnet context to retrieve
- * @return the expected libnet context, NULL on failure
+ * @return the expected libnet context
+ * @retval NULL on failure
  */
 LIBNET_API
 libnet_t *
@@ -2214,7 +2308,8 @@ libnet_cq_head(void);
 /**
  * [Context Queue] 
  * Check whether the iterator is at the last context in the queue.
- * @return 1 if at the end of the context queue, 0 otherwise
+ * @retval 1 if at the end of the context queue
+ * @retval 0 otherwise
  */
 LIBNET_API
 int
@@ -2267,7 +2362,8 @@ libnet_diag_dump_pblock(libnet_t *l);
  * [Diagnostic] 
  * Returns the canonical name of the pblock type.
  * @param type pblock type
- * @return a string representing the pblock type type or "unknown" for an unknown value
+ * @return a string representing the pblock type type
+ * @retval "unknown" for an unknown value
  */
 LIBNET_API
 char *
