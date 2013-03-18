@@ -137,7 +137,7 @@ main(int argc, char **argv)
                 cport,                              /* destination port */
                 LIBNET_UDP_H + payload_s,           /* packet size */
                 0,                                  /* checksum */
-                payload,                            /* payload */
+                (uint8_t *)payload,                 /* payload */
                 payload_s,                          /* payload size */
                 l,                                  /* libnet handle */
                 udp);                               /* libnet id */
@@ -208,13 +208,15 @@ main(int argc, char **argv)
 #endif
 
     libnet_timersub(&e, &s, &r);
-    fprintf(stderr, "Total time spent in loop: %d.%d\n", r.tv_sec, r.tv_usec);
+    fprintf(stderr, "Total time spent in loop: %d.%d\n", (int)r.tv_sec,
+		    (int)r.tv_usec);
 
     libnet_stats(l, &ls);
     fprintf(stderr, "Packets sent:  %lld\n"
                     "Packet errors: %lld\n"
                     "Bytes written: %lld\n",
-                    ls.packets_sent, ls.packet_errors, ls.bytes_written);
+                    (long long)ls.packets_sent, (long long)ls.packet_errors,
+		    (long long)ls.bytes_written);
     libnet_destroy(l);
     return (EXIT_SUCCESS);
 bad:

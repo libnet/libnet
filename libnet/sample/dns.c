@@ -134,7 +134,7 @@ main(int argc, char *argv[])
 	0,             /* num_anws_rr */
 	0,             /* num_auth_rr */
 	0,             /* num_addi_rr */
-	payload,
+	(uint8_t *)payload,
 	payload_s,
 	l,
 	0

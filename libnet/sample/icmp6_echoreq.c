@@ -126,7 +126,7 @@ main(int argc, char **argv)
 			char payload[56];
 			int i;
 			for (i=0; i<56; i++) payload[i]='A'+((char)(i%26));
-			t = libnet_build_icmpv4_echo(ICMP6_ECHO,0,0,1,0,payload,sizeof(payload),l,t);
+			t = libnet_build_icmpv4_echo(ICMP6_ECHO,0,0,1,0,(uint8_t *)payload,sizeof(payload),l,t);
 
             if (build_ip)
             {

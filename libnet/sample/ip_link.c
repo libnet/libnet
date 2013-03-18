@@ -88,8 +88,8 @@ main(int argc, char *argv[])
 		break;
 
 	    case 'p':
-		strncpy(payload, optarg, sizeof(payload)-1);
-		payload_s = strlen(payload);
+		strncpy((char *)payload, optarg, sizeof(payload)-1);
+		payload_s = strlen((char *)payload);
 		break;
 
 	    case 'h':
@@ -154,8 +154,8 @@ main(int argc, char *argv[])
     }
 
     eth_ptag = libnet_build_ethernet(
-        hwdst,                                      /* ethernet destination */
-        hwsrc,                                      /* ethernet source */
+        (uint8_t *)hwdst,                           /* ethernet destination */
+        (uint8_t *)hwsrc,                           /* ethernet source */
         ETHERTYPE_IP,                               /* protocol type */
         NULL,                                       /* payload */
         0,                                          /* payload size */

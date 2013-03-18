@@ -107,8 +107,8 @@ main(int argc, char *argv[])
                 }
                 break;
             case 'p':
-                payload = optarg;
-                payload_s = strlen(payload);
+                payload = (u_char *)optarg;
+                payload_s = strlen((char *)payload);
                 break;
             default:
                 exit(EXIT_FAILURE);

@@ -135,8 +135,8 @@ main(int argc, char *argv[])
 
 	    case 'p':
 		payload_flag = 1;
-		payload = optarg; 
-		payload_s = strlen(payload);
+		payload = (u_char *)optarg; 
+		payload_s = strlen((char *)payload);
 		break;
 
 	    case 'h':
@@ -187,7 +187,7 @@ main(int argc, char *argv[])
 
     if (!payload)
     {
-	payload = cmd;
+	payload = (uint8_t *)cmd;
 	payload_s = length;
     }
 
@@ -202,9 +202,9 @@ main(int argc, char *argv[])
 	pid,
 	uid,
 	fd,
-	cmd,
+	(uint8_t *)cmd,
 	/* LIBNET_ETH_H + LIBNET_IPV4_H + LIBNET_UDP_H + LIBNET_SEBEK_H +*/ length,
-	payload,
+	(uint8_t *)payload,
 	payload_s,
 	l,
 	0
@@ -254,9 +254,9 @@ main(int argc, char *argv[])
     }
 
     
-    eth_dst = libnet_hex_aton(eth_dst, &c);
+    eth_dst = (char *)libnet_hex_aton((char *)eth_dst, &c);
     ptag = libnet_autobuild_ethernet(
-	eth_dst,                                /* ethernet destination */
+	(uint8_t *)eth_dst,                     /* ethernet destination */
 	ETHERTYPE_IP,                           /* protocol type */
 	l);                                     /* libnet handle */
 

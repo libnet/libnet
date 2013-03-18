@@ -124,7 +124,7 @@ main(int argc, char *argv[])
 		break;
 
 	    case 'p':
-		payload = optarg;
+		payload = (u_char *)optarg;
 		break;
 
 	    case 'S':
@@ -156,7 +156,7 @@ main(int argc, char *argv[])
 
     if (payload && !payload_s)
     {
-	payload_s = strlen(payload);
+	payload_s = strlen((char *)payload);
     }
 
     length = LIBNET_BGP4_OPEN_H + payload_s;

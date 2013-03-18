@@ -82,7 +82,7 @@ main(int argc, char *argv[])
     index += 5;
 
     /* this TLV is handled by the libnet builder */
-    value = argv[2];
+    value = (u_char *)argv[2];
     len = strlen(argv[2]);
 
     /* build CDP header */

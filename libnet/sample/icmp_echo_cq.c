@@ -143,7 +143,7 @@ main(int argc, char **argv)
             0,                                    /* checksum */
             src_ip,                               /* source IP */
             dst_ip,                               /* destination IP */
-            payload,                              /* payload */
+            (uint8_t *)payload,                   /* payload */
             payload_s,                            /* payload size */
             l,                                    /* libnet handle */
             0);

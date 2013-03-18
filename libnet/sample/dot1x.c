@@ -68,7 +68,7 @@ main(int argc, char *argv[])
             0,
             LIBNET_802_1X_PACKET,
             sizeof(payload),
-            payload,
+            (uint8_t *)payload,
             sizeof(payload),
             l,
             0);

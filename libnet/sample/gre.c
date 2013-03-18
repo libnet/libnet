@@ -177,7 +177,7 @@ main(int argc, char *argv[])
 		gre_flags|=GRE_CSUM;
                 break;
 	    case 'r':
-		routing = optarg;
+		routing = (u_char *)optarg;
 		gre_flags|=GRE_ROUTING;
                 break;
 	    case 'k':
@@ -316,11 +316,11 @@ main(int argc, char *argv[])
 	    fprintf(stderr, "Can't build GRE last SRE header: %s\n", libnet_geterror(l));
 	    goto bad;
 	}
-	size += LIBNET_GRE_SRE_H + strlen(routing);
+	size += LIBNET_GRE_SRE_H + strlen((char *)routing);
 	t = libnet_build_gre_sre(
 	    GRE_IP,                                 /* address family */
 	    0,                                      /* offset */
-	    strlen(routing),                        /* routing length */
+	    strlen((char *)routing),                /* routing length */
 	    routing,                                /* routing info */
 	    NULL,                                   /* payload */
 	    0,                                      /* payload size */
@@ -379,8 +379,8 @@ main(int argc, char *argv[])
     } 
 
     t = libnet_autobuild_ethernet(
-            "11:11:11:11:11:11",                                    /* ethernet destination */
-            ETHERTYPE_IP,                          /* protocol type */
+            (uint8_t *)"11:11:11:11:11:11",         /* ethernet destination */
+            ETHERTYPE_IP,                           /* protocol type */
             l);                                     /* libnet handle */
     if (t == -1)
     {

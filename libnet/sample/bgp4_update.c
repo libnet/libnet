@@ -95,7 +95,7 @@
                                                                                \
     if (ptr && !size)                                                          \
     {                                                                          \
-	size = strlen(ptr);                                                    \
+	size = strlen((char *)ptr);                                            \
     }                                                                          
 
 
@@ -169,12 +169,12 @@ main(int argc, char *argv[])
                 break;
 
 	    case 'p':
-		payload = optarg;
-		payload_s = strlen(payload);
+		payload = (u_char *)optarg;
+		payload_s = strlen((char *)payload);
 		break;
 
 	    case 'w':
-		withdraw_rt = optarg;
+		withdraw_rt = (u_char *)optarg;
 		break;
 
 	    case 'W':
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 		break;
 
 	    case 'a':
-		attr = optarg;
+		attr = (u_char *)optarg;
 		break;
 
 	    case 'A':
@@ -190,7 +190,7 @@ main(int argc, char *argv[])
 		break;
 
 	    case 'i':
-		info = optarg;
+		info = (u_char *)optarg;
 		break;
 
 	    case 'I':

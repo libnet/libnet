@@ -136,7 +136,7 @@ main(int argc, char *argv[])
         0,
         0,
         NULL,
-        payload,
+        (uint8_t *)payload,
         payload_s,
         l,
         0);
