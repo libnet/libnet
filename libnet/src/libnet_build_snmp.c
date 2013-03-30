@@ -33,7 +33,7 @@
 #include "common.h"
 
 libnet_ptag_t
-libnet_build_snmp()
+libnet_build_snmp(void)
 {
     /*
      *  We need an ASN.1 BER encoder before we can write this.
