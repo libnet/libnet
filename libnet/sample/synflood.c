@@ -92,7 +92,7 @@ main(int argc, char **argv)
                 }
                 *cp++ = 0;
                 dst_prt = (u_short)atoi(cp);
-                if ((dst_ip = libnet_name2addr4(l, optarg, 1)) == -1)
+                if ((dst_ip = libnet_name2addr4(l, optarg, LIBNET_RESOLVE)) == -1)
                 {
                     fprintf(stderr, "Bad IP address: %s\n", optarg);
                     exit(EXIT_FAILURE);
