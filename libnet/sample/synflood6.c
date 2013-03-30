@@ -154,7 +154,7 @@ main(int argc, char **argv)
             if (build_ip)
             {
                 build_ip = 0;				
-		printf("Packet len = %ld\n",LIBNET_ICMPV6_H+sizeof(payload));
+		printf("Packet len = %ld\n", (long)LIBNET_ICMPV6_H+sizeof(payload));
                 libnet_build_ipv6(0,0,
  				    LIBNET_TCP_H,
  		            IPPROTO_TCP,
