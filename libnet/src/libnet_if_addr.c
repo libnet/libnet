@@ -390,7 +390,7 @@ libnet_select_device(libnet_t *l)
     al = address_list;
     if (l->device)
     {
-	addr = libnet_name2addr4(l, l->device, 0);
+        addr = libnet_name2addr4(l, l->device, LIBNET_DONT_RESOLVE);
 
         for (i = c; i; --i, ++address_list)
         {

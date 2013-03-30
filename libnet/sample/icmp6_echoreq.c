@@ -85,7 +85,7 @@ main(int argc, char **argv)
                 }
                 *cp++ = 0;
                 dst_prt = (u_short)atoi(cp);
-				dst_ip = libnet_name2addr6(l, optarg, 1);
+                dst_ip = libnet_name2addr6(l, optarg, LIBNET_RESOLVE);
                 if (strncmp((char*)&dst_ip,(char*)&in6addr_error,sizeof(in6addr_error))==0)
                 {
                     fprintf(stderr, "Bad IP6 address: %s\n", optarg);
