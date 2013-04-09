@@ -6,7 +6,19 @@
 
 
 - 1.2
-
+    - Prepare for 1.2 release candidate 2 (Sam Roberts)
+    - libnet: libnet_build_snmp fix warning (Gilles Espinasse)
+    - libnet: use LIBNET_*RESOLVE const in libnet_name2addr* (Gilles Espinasse)
+    - libnet: fix i486 sample synflood6 warning (Gilles Espinasse)
+    - Better description of .so revioning. (Sam Roberts)
+    - Fix gcc warnings. (Stefanos Harhalakis)
+    - Use @retval for correct man page formatting. (Sam Roberts)
+    - Hide undocumented in auto-generated documentation. (Sam Roberts)
+    - Check for socklen_t (suggested by g.esp and Stefanos Harhalakis) (Sam Roberts)
+    - Update to doxygen 1.8 (Sam Roberts)
+    - Only distribute man pages for libnet headers. (Reported by g.esp) (Sam Roberts)
+    - libnet: update for obsolete INCLUDE directive (Gilles Espinasse)
+    - Fix warning inside comment (Gilles Espinasse)
     - Prepare for 1.2 release candidate. (Sam Roberts)
     - Bump libnet versions in preparation for 1.2 release. (Sam Roberts)
     - Cleaned up references to win32 pre-generated headers (Sam Roberts)
