@@ -15,6 +15,8 @@
 
 #include "../include/libnet.h"
 
+#include <netinet/in.h>
+
 #define libnet_timersub(tvp, uvp, vvp)                                  \
         do {                                                            \
                 (vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;          \
