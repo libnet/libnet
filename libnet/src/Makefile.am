@@ -95,5 +95,5 @@ libnet_la_LIBADD = @LTLIBOBJS@
 # 1.1.6 is 8:0:7 -> new APIs, backwards compat
 # 1.2   is 9:0:0 -> new APIs, removed __libnet_print_vers (internal, should not have been used, but linkable) APIs
 
-libnet_la_LDFLAGS = -version-info 9:0:0 -Wl
+libnet_la_LDFLAGS = -version-info 9:0:0
 
