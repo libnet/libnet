@@ -29,7 +29,7 @@
  *
  */
 
-#include "common"
+#include "common.h"
 #include "packet32.h"
 
 BOOL WINAPI DllMain(HINSTANCE hinst, ULONG fdwReason, LPVOID lpReserved)
