@@ -314,7 +314,11 @@ libnet_get_hwaddr(libnet_t *l)
         if (ifm->ifm_type == RTM_IFINFO)
         {
             sdl = (struct sockaddr_dl *)(ifm + 1);
-            if (sdl->sdl_type != IFT_ETHER)
+            if (sdl->sdl_type != IFT_ETHER
+                && sdl->sdl_type != IFT_FASTETHER
+                && sdl->sdl_type != IFT_FASTETHERFX
+                && sdl->sdl_type != IFT_GIGABITETHERNET
+                && sdl->sdl_type != IFT_L2VLAN)
                 continue;
             if (strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
             {
@@ -324,6 +328,12 @@ libnet_get_hwaddr(libnet_t *l)
         }
     }
     free(buf);
+    if (next == end) {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "%s(): interface %s of known type not found.",
+                 __func__, l->device);
+        return NULL;
+    }
     return (&ea);
 }
 
