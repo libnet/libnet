@@ -43,6 +43,9 @@
  * included.
  */
 #include <netinet/in.h>
+#ifndef IPPROTO_MH		
+#define IPPROTO_MH		135	/* IPv6 mobility header		*/
+#endif
 
 /* TODO - should ../include/gnuc.h be included here? */
 
