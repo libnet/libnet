@@ -201,11 +201,50 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         ip6h_p = (struct libnet_ipv6_hdr *)iph_p;
         iph_p = NULL;
         ip_hl   = 40;
+        uint8_t ip_nh = ip6h_p->ip_nh;
+
         if((uint8_t*)(ip6h_p+1) > end)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                     "%s(): ipv6 hdr not inside packet", __func__);
             return -1;
+        }
+
+        /* FIXME this entire fragile exercise would be avoided if we just passed
+         * in the pointer to the protocol block 'q' we are checksumming, which
+         * we know.
+         */
+        while (ip_nh != protocol && (uint8_t*)ip6h_p + ip_hl + 1 < end)
+        {
+            /* next header is not the upper layer protocol */
+           switch (ip_nh)
+           {
+              case IPPROTO_DSTOPTS:
+              case IPPROTO_HOPOPTS:
+              case IPPROTO_ROUTING:
+              case IPPROTO_FRAGMENT:
+              case IPPROTO_AH:
+              case IPPROTO_ESP:
+              case IPPROTO_MH:
+                 /*
+                  * count option headers to the header length for
+                  * checksum processing
+                  */
+                 /* Common structure of ipv6 ext headers is:
+                  *  uint8: next header protocol
+                  *  uint8: length of this header, in multiples of 8, not
+                  *    including first eight octets
+                  * The pointer arithmetic below follows from above.
+                  */
+                 ip_nh = *((uint8_t*)ip6h_p+ip_hl); /* next next header */
+                 ip_hl += (*((uint8_t*)ip6h_p+ip_hl+1)+1)*8; /* ext header length */
+                 break;
+              default:
+                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "%s(): unsupported extension header (%d)", __func__, ip_nh);
+                 return -1;
+           }
+
         }
     }
     else
