@@ -64,11 +64,9 @@ libnet_close_raw6(libnet_t *l)
     return (libnet_close_link_interface(l));
 }
 #else
-int
-libnet_open_raw4(libnet_t *l)
-{
-    socklen_t len;
 
+static int libnet_finish_setup_socket(libnet_t *l)
+{
 #if !(__WIN32__)
      int n = 1;
 #if (__svr4__)
@@ -76,47 +74,10 @@ libnet_open_raw4(libnet_t *l)
 #else
     int *nptr = &n;
 #endif  /* __svr4__ */
-#else 
+#else
 	BOOL n;
 #endif
-
-    if (l == NULL)
-    { 
-        return (-1);
-    } 
-
-    l->fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-    if (l->fd == -1)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): SOCK_RAW allocation failed: %s",
-		 __func__, strerror(errno));
-        goto bad;
-    }
-
-#ifdef IP_HDRINCL
-/* 
- * man raw
- *
- * The IPv4 layer generates an IP header when sending a packet unless
- * the IP_HDRINCL socket option is enabled on the socket.  When it
- * is enabled, the packet must contain an IP header.  For
- * receiving the IP header is always included in the packet.
- */
-#if !(__WIN32__)
-    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, nptr, sizeof(n)) == -1)
-#else
-    n = TRUE;
-    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1)
-#endif
-
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
-                "%s(): set IP_HDRINCL failed: %s",
-                __func__, strerror(errno));
-        goto bad;
-    }
-#endif /*  IP_HDRINCL  */
+    int len;
 
 #ifdef SO_SNDBUF
 
@@ -130,7 +91,7 @@ libnet_open_raw4(libnet_t *l)
     len = sizeof(n);
     if (getsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, &len) < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
 		 "%s(): get SO_SNDBUF failed: %s",
 		 __func__, strerror(errno));
         goto bad;
@@ -138,13 +99,13 @@ libnet_open_raw4(libnet_t *l)
     
     for (n += 128; n < 1048576; n += 128)
     {
-        if (setsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, len) < 0) 
+        if (setsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, len) < 0)
         {
             if (errno == ENOBUFS)
             {
                 break;
             }
-             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
+             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                      "%s(): set SO_SNDBUF failed: %s",
                      __func__, strerror(errno));
              goto bad;
@@ -169,10 +130,87 @@ libnet_open_raw4(libnet_t *l)
         goto bad;
     }
 #endif  /*  SO_BROADCAST  */
+
+#if (__linux__)
+    if(l->device != NULL)
+        if(setsockopt(l->fd, SOL_SOCKET, SO_BINDTODEVICE, l->device, strlen(l->device)) == -1) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): set SO_BINDTODEVICE failed: %s", __func__, strerror(errno));
+            goto bad;
+        }
+#endif  /* __linux__ */
+
+    return 0;
+
+bad:
+    return (-1);
+}
+
+
+
+
+int
+libnet_open_raw4(libnet_t *l)
+{
+    socklen_t len;
+
+#if !(__WIN32__)
+     int n = 1;
+#if (__svr4__)
+     void *nptr = &n;
+#else
+    int *nptr = &n;
+#endif  /* __svr4__ */
+#else
+	BOOL n;
+#endif
+
+    if (l == NULL)
+    {
+        return (-1);
+    }
+
+    l->fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
+    if (l->fd == -1)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): SOCK_RAW allocation failed: %s",
+		 __func__, strerror(errno));
+        goto bad;
+    }
+
+#ifdef IP_HDRINCL
+/*
+ * man raw
+ *
+ * The IPv4 layer generates an IP header when sending a packet unless
+ * the IP_HDRINCL socket option is enabled on the socket.  When it
+ * is enabled, the packet must contain an IP header.  For
+ * receiving the IP header is always included in the packet.
+ */
+#if !(__WIN32__)
+    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, nptr, sizeof(n)) == -1)
+#else
+    n = TRUE;
+    if (setsockopt(l->fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1)
+#endif
+
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): set IP_HDRINCL failed: %s",
+                __func__, strerror(errno));
+        goto bad;
+    }
+#endif /*  IP_HDRINCL  */
+
+
+    if (libnet_finish_setup_socket(l) == -1)
+        goto bad;
+
     return (l->fd);
 
 bad:
-    return (-1);    
+    return (-1);
 }
 
 
@@ -227,22 +265,10 @@ libnet_open_raw6(libnet_t *l)
         goto bad;
     }
 
-#if (__linux__)
-    if (setsockopt(l->fd, SOL_SOCKET, SO_BROADCAST, oneptr, sizeof(one)) == -1)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): set SO_BROADCAST failed: %s", __func__,
-                strerror(errno));
-        goto bad;
-    }
-    if(l->device != NULL)
-        if(setsockopt(l->fd, SOL_SOCKET, SO_BINDTODEVICE, l->device, strlen(l->device)) == -1) {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): set SO_BINDTODEVICE failed: %s", __func__, strerror(errno));
-            goto bad;
-        }
 
-#endif  /* __linux__ */
+    if (libnet_finish_setup_socket(l) == -1)
+        goto bad;
+
     return (l->fd);
 
 bad:
