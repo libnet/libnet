@@ -315,9 +315,16 @@ libnet_get_hwaddr(libnet_t *l)
         {
             sdl = (struct sockaddr_dl *)(ifm + 1);
             if (sdl->sdl_type != IFT_ETHER
+#ifdef IFT_FASTETHER
                 && sdl->sdl_type != IFT_FASTETHER
+#endif
+#ifdef IFT_FASTETHERFX
                 && sdl->sdl_type != IFT_FASTETHERFX
+#endif
+#ifdef IFT_GIGABITETHERNET
                 && sdl->sdl_type != IFT_GIGABITETHERNET
+#endif
+
                 && sdl->sdl_type != IFT_L2VLAN)
                 continue;
             if (strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
