@@ -2,7 +2,10 @@
 
 set -e
 
-make -C doc doc
+if ! make -C doc doc; then
+  echo "You must have doxygen installed."
+  exit -1
+fi
 make
 make dist && mv libnet-1*.tar.gz ..
 
