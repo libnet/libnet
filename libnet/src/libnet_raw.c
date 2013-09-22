@@ -169,6 +169,16 @@ libnet_open_raw4(libnet_t *l)
         goto bad;
     }
 #endif  /*  SO_BROADCAST  */
+
+#if (__linux__)
+    if(l->device != NULL)
+        if(setsockopt(l->fd, SOL_SOCKET, SO_BINDTODEVICE, l->device, strlen(l->device)) == -1) {
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                "%s(): set SO_BINDTODEVICE failed: %s", __func__, strerror(errno));
+            goto bad;
+        }
+#endif  /* __linux__ */
+
     return (l->fd);
 
 bad:
