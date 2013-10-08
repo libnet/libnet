@@ -15,7 +15,10 @@
 
 #include "../include/libnet.h"
 
-#include <netinet/in.h>
+#if (_WIN32) || (__CYGWIN__)
+#else
+# include <netinet/in.h>
+#endif
 
 #define libnet_timersub(tvp, uvp, vvp)                                  \
         do {                                                            \
