@@ -38,14 +38,7 @@
 
 #include <sys/types.h>
 
-/* IPPROTO_ and sockaddr_ definitions are here. They are often
- * implicitly pulled in, but some systems need them explicitly
- * included.
- */
 #include <netinet/in.h>
-#ifndef IPPROTO_MH
-#define IPPROTO_MH		135	/* IPv6 mobility header		*/
-#endif
 
 /* TODO - should ../include/gnuc.h be included here? */
 
@@ -56,3 +49,10 @@
 #include "../include/config.h"
 #include "../include/libnet.h"
 
+/* IPPROTO_ and sockaddr_ definitions are here. They are often
+ * implicitly pulled in, but some systems need them explicitly
+ * included.
+ */
+#ifndef IPPROTO_MH
+#define IPPROTO_MH		135	/* IPv6 mobility header		*/
+#endif
