@@ -7,6 +7,18 @@
 
 - 1.2
 
+    - Prepare for 1.2 release candidate 3 (Sam Roberts)
+    - Remove obsolete SYMBOL_CACHE_SIZE from doxygen.conf (Sam Roberts)
+    - For samples, netinet/in.h is not on windows (Sam Roberts)
+    - Fix errors with missing IPPROTO_MH on windows (Sam Roberts)
+    - Factorize socket setup code for socket opening (Eric Leblond)
+    - Fix build error in Mac OS X (allfro)
+    - Insource comments and whitespace cleanups (Sam Roberts)
+    - Fix #34 correct checksum caculation when IPv6 extension headers being used (Alexander Koeppe)
+    - Make libnet_get_hwaddr() work with 802.1q interfaces in bpf (BSD). (Thomas Habets)
+    - Update libnet_dll.c (dlwdlw)
+    - Update libnet_raw.c (dlwdlw)
+    - Update CHANGELOG (Sam Roberts)
     - libnet: Remove unneeded trailing -Wl from -version-info line (Gilles Espinasse)
     - Prepare for 1.2 release candidate 2 (Sam Roberts)
     - libnet: libnet_build_snmp fix warning (Gilles Espinasse)
