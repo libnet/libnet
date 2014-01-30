@@ -337,6 +337,8 @@ libnet_cq_destroy()
         libnet_destroy(tmp->context);
         free(tmp);
     }
+    l_cq = NULL;
+    memset(&l_cqd, 0, sizeof(l_cqd));
 }
 
 libnet_t *
