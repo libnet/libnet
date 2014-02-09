@@ -17,6 +17,9 @@
 
 #include <netinet/in.h>
 
+#define DOT "."		/* the ip.ip.ip.ip.port seperator */
+#define IPPORT_FORMAT 5     /* the ip.ip.ip.port field number */
+
 #define libnet_timersub(tvp, uvp, vvp)                                  \
         do {                                                            \
                 (vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;          \
@@ -39,6 +42,37 @@ u_char tr_dst[6]   = {0x00, 0x10, 0x67, 0x00, 0xb1, 0x86};
 u_char org_code[3] = {0x00, 0x00, 0x00};
 
 void usage(char *);
+int checkformat(char*);
+
+int checkformat(char *szStr)
+{
+	int iCount = 0;
+	char *szDup, *szFree;
+	char *szToken;
+
+	szFree = szDup = strdup(szStr);
+
+	szToken = strtok(szDup, DOT);
+
+	while( szToken != NULL)
+	{
+		iCount++;
+
+		szToken = strtok(NULL, DOT);
+	}
+
+	free(szFree);
+
+	if (iCount == IPPORT_FORMAT)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+
+}
 
 #if defined(__WIN32__)
 #include <getopt.h>

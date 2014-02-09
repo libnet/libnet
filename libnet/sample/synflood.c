@@ -85,6 +85,11 @@ main(int argc, char **argv)
              *  just the IP address, and cp points to the port.
              */
             case 't':
+				if (!checkformat(optarg))
+				{
+					usage(argv[0]);
+					exit(EXIT_FAILURE);
+				}
                 if (!(cp = strrchr(optarg, '.')))
                 {
                     usage(argv[0]);
