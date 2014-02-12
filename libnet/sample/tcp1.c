@@ -60,7 +60,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "libnet_init() failed: %s", errbuf);
         exit(EXIT_FAILURE); 
     }
-	
+    
     src_ip  = 0;
     dst_ip  = 0;
     src_prt = 0;
@@ -78,11 +78,11 @@ main(int argc, char *argv[])
              *  just the IP address, and cp points to the port.
              */
             case 'd':
-				if (!checkformat(optarg))
-				{
-					usage(argv[0]);
-					exit(EXIT_FAILURE);
-				}
+                if (!checkformat(optarg))
+                {
+                    usage(argv[0]);
+                    exit(EXIT_FAILURE);
+                }
                 if (!(cp = strrchr(optarg, '.')))
                 {
                     usage(argv[0]);
@@ -96,11 +96,11 @@ main(int argc, char *argv[])
                 }
                 break;
             case 's':
-				if (!checkformat(optarg))
-				{
-					usage(argv[0]);
-					exit(EXIT_FAILURE);
-				}
+                if (!checkformat(optarg))
+                {
+                    usage(argv[0]);
+                    exit(EXIT_FAILURE);
+                }
                 if (!(cp = strrchr(optarg, '.')))
                 {
                     usage(argv[0]);
@@ -149,7 +149,7 @@ main(int argc, char *argv[])
         0,                                          /* checksum */
         10,                                          /* urgent pointer */
         LIBNET_TCP_H + 20 + payload_s,              /* TCP packet size */
-	(uint8_t*)payload,                         /* payload */
+        (uint8_t*)payload,                         /* payload */
         payload_s,                                  /* payload size */
         l,                                          /* libnet handle */
         0);                                         /* libnet id */
@@ -158,10 +158,10 @@ main(int argc, char *argv[])
         fprintf(stderr, "Can't build TCP header: %s\n", libnet_geterror(l));
         goto bad;
     }
-	
+    
     t = libnet_build_ipv4(
         LIBNET_IPV4_H + LIBNET_TCP_H + 20 + payload_s,/* length */
-      	0,                                          /* TOS */
+        0,                                          /* TOS */
         242,                                        /* IP ID */
         0,                                          /* IP Frag */
         64,                                         /* TTL */
@@ -192,7 +192,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "Can't build ethernet header: %s\n", libnet_geterror(l));
         goto bad;
     }
-	
+    
     /*
      *  Write it to the wire.
      */

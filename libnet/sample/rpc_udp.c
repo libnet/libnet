@@ -85,11 +85,11 @@ main(int argc, char *argv[])
              *  just the IP address, and cp points to the port.
              */
             case 'd':
-				if (!checkformat(optarg))
-				{
-					usage(argv[0]);
-					exit(EXIT_FAILURE);
-				}
+                if (!checkformat(optarg))
+                {
+                    usage(argv[0]);
+                    exit(EXIT_FAILURE);
+                }
                 if (!(cp = strrchr(optarg, '.')))
                 {
                     usage(argv[0]);
@@ -102,11 +102,11 @@ main(int argc, char *argv[])
                 }
                 break;
             case 's':
-				if (!checkformat(optarg))
-				{
-					usage(argv[0]);
-					exit(EXIT_FAILURE);
-				}
+                if (!checkformat(optarg))
+                {
+                    usage(argv[0]);
+                    exit(EXIT_FAILURE);
+                }
                 if (!(cp = strrchr(optarg, '.')))
                 {
                     usage(argv[0]);

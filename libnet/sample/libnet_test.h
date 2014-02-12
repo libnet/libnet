@@ -17,7 +17,7 @@
 
 #include <netinet/in.h>
 
-#define DOT "."		/* the ip.ip.ip.ip.port seperator */
+#define DOT "."     /* the ip.ip.ip.ip.port seperator */
 #define IPPORT_FORMAT 5     /* the ip.ip.ip.port field number */
 
 #define libnet_timersub(tvp, uvp, vvp)                                  \
@@ -46,31 +46,31 @@ int checkformat(char*);
 
 int checkformat(char *szStr)
 {
-	int iCount = 0;
-	char *szDup, *szFree;
-	char *szToken;
+    int iCount = 0;
+    char *szDup, *szFree;
+    char *szToken;
 
-	szFree = szDup = strdup(szStr);
+    szFree = szDup = strdup(szStr);
 
-	szToken = strtok(szDup, DOT);
+    szToken = strtok(szDup, DOT);
 
-	while( szToken != NULL)
-	{
-		iCount++;
+    while( szToken != NULL)
+    {
+        iCount++;
 
-		szToken = strtok(NULL, DOT);
-	}
+        szToken = strtok(NULL, DOT);
+    }
 
-	free(szFree);
+    free(szFree);
 
-	if (iCount == IPPORT_FORMAT)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+    if (iCount == IPPORT_FORMAT)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 
 }
 
