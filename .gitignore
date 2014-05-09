@@ -11,7 +11,7 @@
 *.so.dSYM
 *~
 .*.swp
-.libs
+.libs/
 Makefile
 Makefile.in
 aclocal.m4
