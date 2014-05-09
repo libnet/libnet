@@ -14,3 +14,8 @@ SUBDIRS = include src sample doc win32
 
 EXTRA_DIST  = Makefile.am.common msvcbuild.bat
 EXTRA_DIST += README.win32 map-pblock-types
+
+if ENABLE_DOXYGEN
+all: @DX_DOCDIR@/@PACKAGE@.tag
+@DX_RULES@
+endif

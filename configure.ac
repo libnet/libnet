@@ -9,7 +9,7 @@ AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} 
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign subdir-objects no-dependencies -Wall])
 AC_CONFIG_HEADERS([include/config.h])
 
 dnl
@@ -20,7 +20,28 @@ AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
 dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
+AM_PROG_AR
 LT_INIT
+
+dnl
+dnl Check for DOxygen and enable its features
+dnl
+
+# See /usr/share/aclocal/ax_prog_doxygen.m4 and
+# http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
+
+DX_DOXYGEN_FEATURE(ON)
+DX_DOT_FEATURE(ON)
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(ON)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(ON)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf])
+AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
 
 dnl
 dnl Check for headers
