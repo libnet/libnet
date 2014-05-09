@@ -5,5 +5,5 @@ set -e
 
 sh ./autogen.sh
 
-CFLAGS="-O0 -g -Wall" ./configure --with-pic --enable-maintainer-mode --enable-dependency-tracking --enable-shared=yes
+CFLAGS="-O0 -g -Wall" ./configure --with-pic --enable-dependency-tracking --enable-shared=yes
 
