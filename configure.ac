@@ -11,7 +11,6 @@ AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([include/config.h])
-AM_MAINTAINER_MODE
 
 dnl
 dnl Check for the usual programs
