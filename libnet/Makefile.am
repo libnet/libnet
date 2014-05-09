@@ -18,6 +18,12 @@ bin_SCRIPTS = libnet-config
 
 MOSTLYCLEANFILES =
 
+if ENABLE_DOXYGEN
+# Include DOxygen support
+all: @DX_DOCDIR@/@PACKAGE@.tag
+@DX_RULES@
+endif
+
 if ENABLE_PKGCONFIG
 # support "pkg-config net"
 net.pc:

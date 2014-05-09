@@ -5,7 +5,6 @@
 # All rights reserved.
 #
 
-AUTOMAKE_OPTIONS = foreign no-dependencies
 
 DISTCLEANFILES = *~
 
