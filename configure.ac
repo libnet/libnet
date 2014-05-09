@@ -30,13 +30,10 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 
 AC_MSG_CHECKING(for socklen_t)
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
         #include <sys/types.h>
         #include <sys/socket.h>
-        ],
-        [ socklen_t x; ],
-        have_socklen_t=yes,
-        have_socklen_t=no)
+        ]], [[ socklen_t x; ]])],[have_socklen_t=yes],[have_socklen_t=no])
 if test "x$have_socklen_t" = "xyes"; then
         AC_DEFINE(HAVE_SOCKLEN_T, 1, [define if socklen_t is defined])
 fi
