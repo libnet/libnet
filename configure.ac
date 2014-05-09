@@ -22,6 +22,10 @@ dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
 LT_INIT
 
+dnl
+dnl Check for headers
+dnl
+
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
 AC_CHECK_FUNCS([getifaddrs])
