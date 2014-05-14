@@ -29,8 +29,19 @@
 
 #if (_WIN32) || (__CYGWIN__)
 
-/* MSVC warns about snprintf */
-#define _CRT_SECURE_NO_WARNINGS
+  /* MSVC warns about snprintf */
+  #define _CRT_SECURE_NO_WARNINGS
+
+  #include <pcap/pcap.h>
+  #include <Packet32.h>
+  #include <malloc.h>    /* alloca() */
+
+  #ifdef __MINGW32__
+    #include <ddk/ndis.h>
+    #include <ddk/ntddndis.h>
+  #else
+    #include <Ntddndis.h>
+  #endif
 
 #else
 
