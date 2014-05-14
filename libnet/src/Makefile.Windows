@@ -180,7 +180,7 @@ install_gcc: $(TARGETS)
 
 install_cl: $(TARGETS)
 	cp --update libnet.lib libnet_imp.lib $(INSTALL_ROOT)/lib
-	cp --update libnet.dll                $(INSTALL_ROOT)/bin
+	cp --update libnet.dll libnet.pdb     $(INSTALL_ROOT)/bin
 
 #
 # For CC=cl, the ../include/libnet/*.h includes stdint.h.
@@ -284,7 +284,7 @@ clean: clean_$(CC)
 clean_gcc: ;
 
 clean_cl:
-	rm -f vc*.pdb
+	rm -f libnet.pdb vc*.pdb
 
 vclean realclean: clean
 	rm -f $(TARGETS)  $(GENERATED) libnet.map .depend.Windows
