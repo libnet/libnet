@@ -12,6 +12,8 @@ SUBDIRS = include src sample doc win32
 
 EXTRA_DIST = Makefile.am.common msvcbuild.bat
 
+EXTRA_DIST += README.win32 autogen.sh map-pblock-types
+
 bin_SCRIPTS = libnet-config
 
 MOSTLYCLEANFILES =
