@@ -36,24 +36,24 @@
  * @brief toplevel libnet header file
  */
 
-/** 
+/**
  * @mainpage Libnet Packet Assembly Library
  *
  * @section intro Overview
  *
- * Libnet is a high-level API (toolkit) allowing the application programmer to 
- * construct and inject network packets. It provides a portable and simplified 
- * interface for low-level network packet shaping, handling and injection. 
- * Libnet hides much of the tedium of packet creation from the application 
- * programmer such as multiplexing, buffer management, arcane packet header 
- * information, byte-ordering, OS-dependent issues, and much more. Libnet 
+ * Libnet is a high-level API (toolkit) allowing the application programmer to
+ * construct and inject network packets. It provides a portable and simplified
+ * interface for low-level network packet shaping, handling and injection.
+ * Libnet hides much of the tedium of packet creation from the application
+ * programmer such as multiplexing, buffer management, arcane packet header
+ * information, byte-ordering, OS-dependent issues, and much more. Libnet
  * features portable packet creation interfaces at the IP layer and link layer,
- * as well as a host of supplementary and complementary functionality. Using 
+ * as well as a host of supplementary and complementary functionality. Using
  * libnet, quick and simple packet assembly applications can be whipped up with
- * little effort. With a bit more time, more complex programs can be written 
- * (Traceroute and ping were easily rewritten using libnet and 
+ * little effort. With a bit more time, more complex programs can be written
+ * (Traceroute and ping were easily rewritten using libnet and
  * <a href="www.tcpdump.org">libpcap</a>).
- */ 
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,10 +61,13 @@ extern "C" {
 
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
+
+#if !defined(_MSC_VER)
+# include <unistd.h>
+#endif
 
 #if !defined(__WIN32__)
 # include <sys/ioctl.h>
@@ -112,6 +115,13 @@ extern "C" {
 
 #ifndef LIBNET_API
 #define LIBNET_API
+#endif
+
+/* This must be copied from "libnet/win32/stdint.h" to "libnet/include/libnet/stdint.h"
+ * at build time. Yikes!
+ */
+#if defined(_MSC_VER)
+# include "./libnet/stdint.h"
 #endif
 
 #include "./libnet/libnet-types.h"
