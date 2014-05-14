@@ -77,3 +77,9 @@ test_ipv6_icmpv4_SOURCES = test_ipv6_icmpv4.c
 EXTRA_DIST = libnet_test.h
 
 LDADD 			= $(top_builddir)/src/libnet.la
+
+EXTRA_DIST += arp-new.c win32/arp/arp.vcproj win32/cdp/cdp.vcproj	\
+ win32/dhcp_discover/dhcp_discover.vcproj win32/dns/dns.vcproj		\
+ win32/get_addr/get_addr.vcproj win32/getopt.c				\
+ win32/icmp_echo_cq/icmp_echo_cq.vcproj win32/tcp1/tcp1.vcproj		\
+ win32/udp1/dns.vcproj win32/udp1/udp1.vcproj
