@@ -57,7 +57,7 @@
 
 #endif
 
-#include "../include/config.h"
+#include "config.h"
 #include "../include/libnet.h"
 
 /* IPPROTO_ and sockaddr_ definitions are here. They are often
