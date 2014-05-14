@@ -33,7 +33,8 @@
 #define __LIBNET_STRUCTURES_H
 
 #if ((__WIN32__) && !(__CYGWIN__))
-#include "Packet32.h"
+#include <pcap.h>
+#include <Packet32.h>
 #endif
 
 /* port list chain structure */
