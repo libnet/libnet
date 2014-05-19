@@ -13,3 +13,25 @@ SUBDIRS = include src sample doc win32
 EXTRA_DIST = Makefile.am.common msvcbuild.bat
 
 bin_SCRIPTS = libnet-config
+
+MOSTLYCLEANFILES =
+
+if ENABLE_PKGCONFIG
+# support "pkg-config net"
+net.pc:
+	echo 'prefix=$(prefix)'						>  $@
+	echo 'exec_prefix=$(exec_prefix)'				>> $@
+	echo 'includedir=$(includedir)'					>> $@
+	echo 'libdir=$(libdir)'						>> $@
+	echo								>> $@
+	echo 'Name: $(PACKAGE_TARNAME)'					>> $@
+	echo 'Description: $(PACKAGE_NAME)'				>> $@
+	echo 'URL: $(PACKAGE_URL)'					>> $@
+	echo 'Version: $(PACKAGE_VERSION)'				>> $@
+	echo 'Cflags: -I$(includedir)'					>> $@
+	echo 'Libs: -L$(libdir) -lnet'					>> $@
+	echo 'Libs.private: $(LDFLAGS) $(LIBS) $(LIBNET_CONFIG_LIBS)'	>> $@
+	echo '# compiled with: $(LIBNET_CONFIG_DEFINES)'		>> $@
+pkgconfig_DATA = net.pc
+MOSTLYCLEANFILES += net.pc
+endif ENABLE_PKGCONFIG

@@ -309,6 +309,11 @@ AC_ARG_ENABLE([samples],
 
 AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
 
+AC_ARG_ENABLE([pkgconfig],
+    [AS_HELP_STRING([--enable-pkgconfig],[generate pkg-config .pc file])])
+AM_CONDITIONAL([ENABLE_PKGCONFIG], [test x"$enable_pkgconfig" = xyes])
+PKG_INSTALLDIR
+
 AC_CONFIG_FILES([Makefile src/Makefile \
 	include/Makefile \
 	include/libnet/Makefile win32/Makefile \
