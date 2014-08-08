@@ -409,14 +409,13 @@ libnet_get_ipaddr4(libnet_t *l)
 uint32_t
 libnet_get_ipaddr4(libnet_t *l)
 {
-    long npflen = 0;
+    long npflen = 1;
     struct sockaddr_in sin;
     struct npf_if_addr ipbuff;
 
     memset(&sin,0,sizeof(sin));
     memset(&ipbuff,0,sizeof(ipbuff));
 
-    npflen = sizeof(ipbuff);
     if (PacketGetNetInfoEx(l->device, &ipbuff, &npflen))
     {
         sin = *(struct sockaddr_in *)&ipbuff.IPAddress;
