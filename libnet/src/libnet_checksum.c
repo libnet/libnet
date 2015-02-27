@@ -180,8 +180,9 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
     /* will need to update this for ipv6 at some point */
     struct libnet_ipv4_hdr *iph_p = (struct libnet_ipv4_hdr *)iphdr;
     struct libnet_ipv6_hdr *ip6h_p = NULL; /* default to not using IPv6 */
-    int ip_hl   = 0;
-    int sum     = 0;
+    int ip_hl = 0;
+    int sum = 0;
+    uint8_t ip_nh = 0;
 
     /* Check for memory under/over reads/writes. */
     if(iphdr < beg || (iphdr+sizeof(*iph_p)) > end)
@@ -201,7 +202,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
         ip6h_p = (struct libnet_ipv6_hdr *)iph_p;
         iph_p = NULL;
         ip_hl   = 40;
-        uint8_t ip_nh = ip6h_p->ip_nh;
+        ip_nh = ip6h_p->ip_nh;
 
         if((uint8_t*)(ip6h_p+1) > end)
         {
