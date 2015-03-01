@@ -167,7 +167,7 @@ main(int argc, char *argv[])
 
     if (payload_flag)
     {
-	memset(cmd, 0, sizeof(cmd));
+	memset(cmd, 0, length);
 	memcpy(cmd, payload, (payload_s < 12 ? payload_s : 12));
 	length = payload_s;
     }
