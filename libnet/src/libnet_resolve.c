@@ -112,7 +112,7 @@ libnet_addr2name4_r(uint32_t in, uint8_t use_name, char *hostname,
 }
 
 uint32_t
-libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name)
+libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name)
 {
     struct in_addr addr;
     struct hostent *host_ent; 
