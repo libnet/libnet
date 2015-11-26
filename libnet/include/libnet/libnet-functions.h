@@ -243,7 +243,7 @@ libnet_addr2name4(uint32_t in, uint8_t use_name);
  */
 LIBNET_API
 uint32_t
-libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name);
+libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name);
 
 extern const struct libnet_in6_addr in6addr_error;
 
