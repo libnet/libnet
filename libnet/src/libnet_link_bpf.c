@@ -327,7 +327,8 @@ libnet_get_hwaddr(libnet_t *l)
 
                 && sdl->sdl_type != IFT_L2VLAN)
                 continue;
-            if (strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
+            if (sdl->sdl_nlen == strlen(l->device)
+                && strncmp(&sdl->sdl_data[0], l->device, sdl->sdl_nlen) == 0)
             {
                 memcpy(ea.ether_addr_octet, LLADDR(sdl), ETHER_ADDR_LEN);
                 break;
