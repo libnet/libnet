@@ -1,0 +1,99 @@
+#
+# libnet samples for MingW32 + MSVC
+# by G. Vanem <gvanem@yahoo.no>, Jan 2009
+#
+
+#
+# Change path to suite your setup.
+# NB! MingW requires a drive-letter first unless this is a relative path.
+#
+PCAP_ROOT     = ../../../libpcap
+WINPCAP_ROOT  = ../../../libpcap/WinPcap
+
+ifeq ($(CC),gcc)
+  O       = o
+  CFLAGS  = -Wall -O2 -g
+  LDFLAGS = -s -Wl,--print-map,--sort-common
+else
+  O       = obj
+  CFLAGS  = -nologo -MD -W2 -O2 -Zi -I../win32
+  LDFLAGS = -nologo
+endif
+
+CFLAGS += -I../include -I$(PCAP_ROOT) -I$(PCAP_ROOT)/Win32/Include \
+          -I$(WINPCAP_ROOT)/Include -D_WIN32 -D__WIN32__
+
+ifeq ($(CC),gcc)
+  LIBNET_LIB = ../src/libnet.dll.a
+  EXT_LIBS   = -lws2_32
+else
+  LIBNET_LIB = ../src/libnet_imp.lib
+  EXT_LIBS   = ws2_32.lib
+endif
+
+SOURCES = arp.c bgp4_hdr.c bgp4_notification.c bgp4_open.c bgp4_update.c cdp.c \
+          dhcp_discover.c get_addr.c gre.c icmp6_echoreq.c icmp_timestamp.c    \
+          ip_link.c icmp_unreach.c ieee.c isl.c ntp.c ospf_hello.c ospf_lsa.c  \
+          ping_of_death.c stp.c synflood.c synflood6.c synflood6_frag.c tcp1.c \
+          tcp2.c tftp.c udp1.c udp2.c sebek.c dns.c dot1x.c fddi_tcp1.c \
+          fddi_tcp2.c icmp_echo_cq.c icmp_redirect.c icmp_timeexceed.c \
+          mpls.c rpc_tcp.c rpc_udp.c smurf.c tring_tcp1.c tring_tcp2.c
+
+PROGRAMS = $(SOURCES:.c=.exe)
+
+ifeq ($(CC),cl)
+  OBJECTS = $(SOURCES:.c=.obj) getopt.obj
+endif
+
+####### LINK MACRO (EXE) ################
+#
+# arg1, $(1): The name of the .c-file.
+# arg2, $(2): The name of the produced EXE.
+# arg3, $(3): The rest of the link arguments.
+#
+ifeq ($(CC),cl)
+  define link_EXE
+	@echo 'Building $(2)'
+	link $(LDFLAGS) -verbose $(basename $(1)).obj getopt.obj -out:$(strip $(2)) $(3) > tmp.map
+	@cat tmp.map >> $(basename $(1)).map
+	@echo
+  endef
+else
+  define link_EXE
+	@echo 'Building $(2)'
+	$(CC) $(CFLAGS) $(LDFLAGS) $(1) -o $(2) $(3) > $(basename $(2)).map
+	@echo
+  endef
+endif
+
+all: check_cc $(PROGRAMS)
+	@echo 'libnet samples for CC=$(CC) done.'
+
+check_cc:
+ifneq ($(CC),gcc)
+  ifneq ($(CC),cl)
+    $(error "Usage: make -f Makefile.Windows CC=[gcc|cl] [depend | all | clean].")
+  endif
+endif
+
+#
+# For MSVC it's a lot faster to compile all .c-files in one go.
+#
+$(OBJECTS): $(SOURCES) win32/getopt.c
+	$(CC) $(CFLAGS) -c -MP -Fo.\\ $^
+
+%.exe: %.c $(OBJECTS) $(LIBNET_LIB)
+	$(call link_EXE, $*.c, $*.exe, $(LIBNET_LIB) $(EXT_LIBS))
+
+realclean vclean clean:
+	rm -f $(PROGRAMS) $(PROGRAMS:.exe=.map) .depend.Windows
+ifeq ($(CC),cl)
+	rm -f $(OBJECTS) vc*.pdb tmp.map
+endif
+
+REPLACE = sed -e 's/\(.*\)\.o: /\n\1.exe: /'
+
+depend:
+	gcc -MM -D_MSC_VER $(filter -D% -I%, $(CFLAGS)) $(SOURCES) | $(REPLACE) > .depend.Windows
+
+-include .depend.Windows
