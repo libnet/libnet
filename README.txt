@@ -9,7 +9,7 @@
 libnet provides a fairly portable framework for network packet construction
 an injection.
 
-It is widely used, but had become unmaintained at packetfactory.net, and it's
+It is widely used, but had become unmaintained at packetfactory.net, and its
 author is unreachable.
 
 This version was forked from the 1.1.3 release candidate, then bug fixed,

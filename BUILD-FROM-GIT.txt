@@ -1,4 +1,20 @@
-I build from git using some top-level scripts. General procedure is
+I build from git using some top-level scripts. 
+
+Minimum dependencies are:
+
+	build-essential (obviously)
+	autoconf
+	libtool
+	libpcap-dev
+	doxygen
+
+To create Debian package you also need:
+
+	debhelper
+	sharutils
+	quilt
+
+General procedure is:
 
     git clone .../libnet.git
     cd libnet/libnet

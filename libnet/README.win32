@@ -1,17 +1,21 @@
 Run msvcbuild.bat to build for Win32 with MSVC.
 
-The batch file depends on the MSVC build environment being set (PATH, etc.),
-this can be done with Visual Studio's vsvars32.bat, or by starting a Visual
-Studio shell.
+The batch file takes arguments and  sets the appropriate path
+and environment for the desired built by running either vsvars32.bat (for x86),
+vcvars64.bat (for x64) or vcvarsall.bat (for Cross development). Type "msvcbuild.bat help"
+for a decription and all available options. If no argument is specified, x86 is assumed.
 
-The batch file copies pre-prepared headers out of win32/, avoiding the
-requirement for a gnu (cygwin or mingw) build environment.
+The batch file copies pre-prepared headers out of win32/, avoiding the requirement for a gnu 
+(cygwin or mingw) build environment.
 
 The batch file hard-codes the location of the WinPcap developer's tools,
 you may have to modify it for your environment, or install the developer's
 pack in the expected location.
 
+Make sure this script is executed from a Visual Studio Command Prompt.
+
 For Visual Studio 2010, the shell can be found at:
 
     Program Files >> Microsoft Visual Studio 2010 >> Visual Studio Tools >> Visual Studio Command Prompt
-
+	
+After building, libnet libraries and .obj files are found in newly created win32/win64 folders in libnet's root directory.
