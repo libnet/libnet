@@ -1,0 +1,11 @@
+
+install:
+- appveyor DownloadFile http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+- 7z x .\WpdPack_4_1_2.zip -o..
+
+before_build:
+- cd C:\projects\libnet\libnet
+
+build_script:
+- msvcbuild.bat
+- msvcbuild.bat x64
