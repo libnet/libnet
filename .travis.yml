@@ -1,4 +1,6 @@
 language: c
+script:
+  sudo make install
 branches:
   only:
   - master
@@ -10,7 +12,7 @@ os:
 # I "sadly" don't have Mac. Not sure what dependencies are necessary to build libnet there. Uncomment and adjust line 14 if you do.
 # - osx
 before_install:
-    - if [ ${TRAVIS_OS_NAME} = "linux" ]; then sudo apt-get update -qq; sudo apt-get install build-essential autoconf libtool libpcap-dev doxygen; fi
+    - if [ ${TRAVIS_OS_NAME} = "linux" ]; then sudo apt-get update -qq; sudo apt-get install doxygen libpcap-dev; fi
 #   - if [ ${TRAVIS_OS_NAME} = "osx" ]; then brew update; brew install libpcap; fi
 install:  cd libnet && ../Prepare && ../Build
 #add email if you want to get notified
