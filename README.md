@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/9ic7kmwektgornlg?svg=true)](https://ci.appveyor.com/project/sgeto/libnet)	[![Build Status](https://travis-ci.org/sgeto/libnet.svg?branch=master)](https://travis-ci.org/sgeto/libnet)
+
 ===============================================================================
     LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
         http://www.packetfactory.net/libnet

@@ -1,9 +1,9 @@
 @echo off
 
-@rem Script to build libnet under "VS2013 x64 Cross Tools Command Prompt" or "VS2013 x64 Native Tools Command Prompt 
+@rem Script to build libnet under VS2015 Developer Command Prompt 
 @rem Dependencies are:
 @rem winpcap, specifically, the winpcap developer pack
-@rem We assume WpdPack\ and libnet-master\ to have the same path, and that this script is executed from a VS Developer Command Prompt
+@rem We assume WpdPack\ and libnet-master\ to have the same path, and that this script is executed from a VS2015 Developer Command Prompt
 
 @if "%1" == "" goto x86
 @setlocal
@@ -15,12 +15,12 @@
 @endlocal
 
 :x86
-if not exist "%VCINSTALLDIR%bin\vcvars32.bat" goto missing32
+if not exist "%VCINSTALLDIR%bin\vcvars32.bat" goto path
 call "%VCINSTALLDIR%bin\vcvars32.bat"
 goto msvcbuild32
 
 :x64
-if not exist "%VCINSTALLDIR%bin\amd64\vcvars64.bat" goto missing64
+if not exist "%VCINSTALLDIR%bin\amd64\vcvars64.bat" goto path
 call "%VCINSTALLDIR%bin\amd64\vcvars64.bat"
 goto msvcbuild64
 
@@ -103,22 +103,15 @@ echo and that this script is executed from a Developer Command Prompt.
 echo :
 goto end
 
-:missing32
-echo Could not find vcvars32.bat. 
-echo Either Visual Studio or the C++ Build SKU is not installed,
-echo or this script is not executed from a Developer Command Prompt.
-goto end
+:path
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
+if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat" goto fail
+goto %1
 
-:missing64
-echo Could not find vcvars64.bat. 
-echo Either Visual Studio or the C++ Build SKU is not installed,
-echo or this script is not executed from a Developer Command Prompt.
-goto end
-
-:missingCross
-echo Could not find vcvarsall.bat. 
-echo Either Visual Studio or the C++ Build SKU is not installed,
-echo or this script is not executed from a Developer Command Prompt.
+:fail
+echo Visual Studio or the C++ Build SKU do not seem to be installed.
+echo Please Install either of them or try to executed this script
+echo from a Developer Command Prompt.
 goto end
 
 :end
