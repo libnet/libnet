@@ -3,13 +3,11 @@ install:
 - appveyor DownloadFile http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
 - 7z x .\WpdPack_4_1_2.zip -o..
 
-environment:
-  VsDevCmd.bat= "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\\Tools\VsDevCmd.bat"
-
 before_build:
 - cd C:\projects\libnet\libnet
 
 build_script:
+- set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\
 - VsDevCmd.bat
 - msvcbuild.bat
 - msvcbuild.bat x64
