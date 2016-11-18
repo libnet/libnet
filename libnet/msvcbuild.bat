@@ -1,10 +1,13 @@
-@echo off
+@echo on
 
 @rem Script to build libnet under VS2015 Developer Command Prompt 
 @rem Dependencies are:
 @rem winpcap, specifically, the winpcap developer pack
-@rem We assume WpdPack\ and libnet-master\ to have the same path, and that this script is executed from a VS2015 Developer Command Prompt
+@rem We assume WpdPack\ and libnet-master\ to have the same path, 
+@rem and that this script is executed from either a VS2015 Developer Command Prompt
+@rem or an elevated Command Prompt
 
+:start
 @if "%1" == "" goto x86
 @setlocal
 @set userinput=%1
@@ -106,7 +109,7 @@ goto end
 :path
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
 if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat" goto fail
-goto %1
+goto start
 
 :fail
 echo Visual Studio or the C++ Build SKU do not seem to be installed.
