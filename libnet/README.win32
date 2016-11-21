@@ -1,7 +1,7 @@
 Run msvcbuild.bat to build for Win32 with MSVC.
 
 The batch file takes arguments and sets the appropriate path
-and environment for the desired built by running either vsvars32.bat (for x86),
+and environment variables for the desired built by running either vsvars32.bat (for x86),
 vcvars64.bat (for x64) or vcvarsall.bat (for Cross development). Type "msvcbuild.bat help"
 for a decription and all available options. If no argument is specified, x86 is assumed.
 
@@ -18,4 +18,4 @@ For Visual Studio 2015, the shell can be found at:
 
     Program Files (x86) >> Microsoft Visual Studio 14.0 >> Common7 >> Tools >> VsDevCmd.bat
 	
-After building, libnet libraries and .obj files are found in newly created win32/win64 folders in libnet's root directory.
+After building, libnet libraries and .obj files are found in newly created "<libnet-root>\libnet\src\[Win32|Win64]\" "<libnet-root>\libnet\lib\[x86|x64]\" respectively.
