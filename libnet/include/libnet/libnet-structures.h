@@ -33,6 +33,7 @@
 #define __LIBNET_STRUCTURES_H
 
 #if ((__WIN32__) && !(__CYGWIN__))
+#include <pcap.h>
 #include "Packet32.h"
 #endif
 

@@ -36,6 +36,7 @@ libnet-1.?.tar.gz
 libnet-config
 libnet/*-stamp
 libnet/debian
+libnet/doc/*.db
 libnet/doc/html/*.css
 libnet/doc/html/*.gif
 libnet/doc/html/*.html

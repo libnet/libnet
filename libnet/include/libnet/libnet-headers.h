@@ -1,5 +1,4 @@
 /*
- *  $Id: libnet-headers.h,v 1.15 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-headers.h - Network routine library headers header file
  *
@@ -112,6 +111,11 @@
 #define LIBNET_UDP_H            0x08    /**< UDP header:           8 bytes */
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
 #define LIBNET_HSRP_H           0x14    /**< HSRP header:          8 bytes */
+
+/* we seems to need things from stdint.h on mingw */
+#ifdef __MINGW32__
+#include <stdint.h>
+#endif
 
 /*
  * IEEE 802.1Q (Virtual Local Area Network) VLAN header, static header 
