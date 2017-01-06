@@ -45,7 +45,7 @@
 #include <winsock2.h>
 #include <assert.h>
 #include <Packet32.h>
-#include <Ntddndis.h>
+#include <ntddndis.h>
 #include "iprtrmib.h"
 
 int

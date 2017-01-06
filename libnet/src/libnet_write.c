@@ -35,8 +35,8 @@
 #include "common.h"
 
 #if (_WIN32) || (__CYGWIN__)
-#include "packet32.h"
-#include "Ntddndis.h"
+#include "Packet32.h"
+#include "ntddndis.h"
 #endif
 
 int

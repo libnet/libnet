@@ -127,7 +127,7 @@ elif test "$target_os" = "cygwin" ; then
     AC_LIBOBJ([libnet_link_win32])
     AC_MSG_RESULT(found link layer win32 wpcap)
 else
-    AC_LIBOBJ([libnet_link_none])
+    AC_LIBOBJ([libnet_link_win32])
     AC_MSG_WARN(could not find a link-layer packet interface)
     AC_MSG_WARN(link-layer packet injection will not be available)
 fi
@@ -296,10 +296,14 @@ dnl
     ;;
 
 *)
-    AC_MSG_WARN(apparently your OS is not officially supported yet)
-    AC_MSG_WARN(this may not work)
-    AC_MSG_RESULT(please send diffs to vieuxtech@gmail.com)
-    ;;
+     AC_MSG_WARN(apparently your OS is not officially supported yet)
+     AC_MSG_WARN(this may not work)
+     AC_MSG_RESULT(please send diffs to vieuxtech@gmail.com)
+     AC_CHECK_LIB(Packet, PacketSetMode, ,AC_MSG_ERROR(packet lib not found.))
+     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(pcap lib not found.))
+     LIBS="$LIBS -lws2_32 -liphlpapi"
+     CFLAGS="$CFLAGS -mwin32 -W -Wall -Wextra -fno-common -Wcast-align -Wredundant-decls -Wbad-function-cast -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes"
+     ;;
 
 esac
 

@@ -1,5 +1,6 @@
 *.a
 *.dll
+*.exe
 *.exp
 *.la
 *.lib

@@ -50,11 +50,16 @@ void usage(char *);
 #ifndef _WIN32
 #include <sys/time.h>
 #endif
+/* The whole file is a mess, but everything starting from here is a real 
+   mess and is breaking sample building.
+   These external symbols here make MinGW think that the actual functions will be
+   placed in a dynamic library when they aren't. Maybe they were.
+   Maybe it's a cygwin thing. For now, they're just causing trouble. */
 #if defined(__GNUC__)         /* mingw compiler */
-extern __attribute__((dllimport)) char *optarg;
+//extern __attribute__((dllimport)) char *optarg;
 #else   /* assume msvc */
 #ifndef _WIN32
-extern __dllspec(dllimport) char *optarg;
+//extern __dllspec(dllimport) char *optarg;
 #endif
 #endif
 #endif  /* __WIN32__ */
