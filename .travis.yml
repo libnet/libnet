@@ -1,8 +1,5 @@
 language: c
-env:
-  global:
-    - secure: "Bi5J+Q+an9tX2mG+DnpQ6sSZOS1fgU95g68b6jHzzuELtdCcT+mI4b3muOeIWsw3pGfQ1XE2AbCWzH3YqC9m8zOgLxGG/S4KjnQwXSUJEXfHJv2+GUbNZ3XlqKkAedQRsJ8CCcawZu0lNLDoKaTG3ogczFxHfD5CptKgQsBt2j+OYwBWTFPxcywAKYWtYfN+mA26SXsZ5sj87xvb+74dPCsSzkU7yUs/LkOh7q+/SocV27Itx0zdLDKo6tmVIT2NzkHC0/JzwQG/lK4uhk85xP5QC3vxYnh8P8OL73oYBuxYZ0DUOxwuQFOd1vKx1db7EIy/0HBXICtmIofr4SDb1LjE5bdAyaCdNgrKKWn1vit5/T+a3k/w2Wre4tkargAlAYZ72mviIAraKcAbNL6NUpD00FvNoilV4bRTXZRguvrQ+rW/DJTnIxhzzGyyM4UM+qv3GlO1r/oDjOLygoZpTxCEst3UXdhobIc+v9k0w3/YXySmmeDOroTUB/lLMaLbETVJ6HFyihzVEQhWrNSAsyJv8QUIMkV5Dy7kNM5ai4cJal8fQrHbuJAhz9Z+r2LlF9OYxYYRdVg8+oyDCDI7sxa/mcpNHQgS1WjgJzaKwXuiE3rn1aPMoZFl+kG8ttJehubCxjLz/LZNc0pG4US4qGW5rvRF+IWtk64ABZ0IfJQ="
-script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then sudo make install ; fi
+script: sudo make install
 branches:
   only:
   - master
@@ -21,7 +18,6 @@ before_install:
     - if   [ "${WIN_TOOL}" == i686-w64-mingw32 ]; then sudo apt-get -qq install mingw-w64 mingw-w64-tools binutils-mingw-w64-i686 gcc-mingw-w64-i686 doxygen; fi
     - if   [ "${WIN_TOOL}" == x86_64-w64-mingw32 ]; then sudo apt-get -qq install mingw-w64 mingw-w64-tools binutils-mingw-w64-i686 gcc-mingw-w64-i686 doxygen; fi
 install:
-  - date
   - if [ $TRAVIS_OS_NAME == linux ]; then cd libnet && ../Prepare && ../Build; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then cd libnet && ../Prepare && ../Build; fi
   - if [ "${WIN_TOOL}" == i686-w64-mingw32 ]; then 
@@ -29,26 +25,13 @@ install:
        unzip WpdPack_4_1_2.zip;
        cp WpdPack/Lib/wpcap.lib /usr/i686-w64-mingw32/lib;
        cp WpdPack/Lib/Packet.lib /usr/i686-w64-mingw32/lib;
-       cd libnet && ./autogen.sh && ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32/ && make -C doc doc && make;
-    fi
-  -if [ "${WIN_TOOL}" == x86_64-w64-mingw32 ]; then 
+       cd libnet && ./autogen.sh && ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32/ && make -C doc doc && make; fi
+  - if [ "${WIN_TOOL}" == x86_64-w64-mingw32 ]; then 
        wget http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip;
        unzip WpdPack_4_1_2.zip;
        cp WpdPack/Lib/x64/Packet.lib /usr/x86_64-w64-mingw32/lib
        cp WpdPack/Lib/x64/wpcap.lib /usr/x86_64-w64-mingw32/lib
-       cd libnet && ./autogen.sh && ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32/ && make -C doc doc && make;
-   fi
-   
-addons:
-  coverity_scan:
-    project:
-      name: "sgeto/libnet"
-      version: 1.2-rc3
-      description: "Portable low-level network packet construction API"
-    notification_email: autostart.ini@gmail.com
-    build_command_prepend: cd libnet && ../Prepare
-    build_command: cd libnet && ../Build
-    branch_pattern: master
+       cd libnet && ./autogen.sh && ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32/ && make -C doc doc && make; fi
 #add email if you want to get notified
 #notifications:
 #  email:
