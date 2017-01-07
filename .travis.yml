@@ -3,6 +3,9 @@ script: sudo make install
 branches:
   only:
   - master
+os:
+  - linux
+  - osx
 matrix:
   include:
     - compiler: clang

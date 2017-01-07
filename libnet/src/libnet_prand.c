@@ -28,15 +28,15 @@
  *
  */
 
+
+#ifdef __WIN32__
 /*random() and srandom() are not standard functions.*/
 #define random rand
 #define srandom srand
-
-#include "common.h"
-
-#ifdef __WIN32__
 #include <wincrypt.h>
 #endif
+
+#include "common.h"
 
 #ifndef _MSC_VER
 #include <sys/time.h>  /* gettimeofday() */
