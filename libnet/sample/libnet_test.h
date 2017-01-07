@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet_test.h,v 1.3 2004/01/29 21:17:16 mike Exp $
- *
  *  libnet_test.h
  *
  *  Copyright (c) 1998 - 2001 Mike D. Schiffman <mike@infonexus.com>
@@ -15,8 +13,7 @@
 
 #include "../include/libnet.h"
 
-#if (_WIN32) || (__CYGWIN__)
-#else
+#if !defined(__WIN32__)
 # include <netinet/in.h>
 #endif
 
@@ -44,24 +41,13 @@ u_char org_code[3] = {0x00, 0x00, 0x00};
 void usage(char *);
 
 #if defined(__WIN32__)
-#include <getopt.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#ifndef _WIN32
-#include <sys/time.h>
-#endif
-/* The whole file is a mess, but everything starting from here is a real 
-   mess and is breaking sample building.
-   These external symbols here make MinGW think that the actual functions will be
-   placed in a dynamic library when they aren't. Maybe they were.
-   Maybe it's a cygwin thing. For now, they're just causing trouble. */
-#if defined(__GNUC__)         /* mingw compiler */
-//extern __attribute__((dllimport)) char *optarg;
-#else   /* assume msvc */
-#ifndef _WIN32
-//extern __dllspec(dllimport) char *optarg;
-#endif
-#endif
+  #include <getopt.h>  /* For non-MingW, this is a local libnet/win32/getopt.h */
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+
+  #ifndef _MSC_VER
+  #include <sys/time.h>
+  #endif
 #endif  /* __WIN32__ */
 
 #endif  /* __LIBNET_TEST_H */

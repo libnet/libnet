@@ -1,6 +1,5 @@
 /*
- *  $Id: libnet-functions.h,v 1.43 2004/11/09 07:05:07 mike Exp $
- *
+ *  libnet
  *  libnet-functions.h - function prototypes
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>

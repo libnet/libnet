@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet-structures.h,v 1.19 2004/11/09 07:05:07 mike Exp $
- *
  *  libnet-structures.h - Network routine library structures header file
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>

@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet_prand.c,v 1.7 2004/01/28 19:45:00 mike Exp $
- *
  *  libnet
  *  libnet_prand.c - pseudo-random number generation
  *
@@ -29,24 +27,37 @@
  * SUCH DAMAGE.
  *
  */
- 
+
+/*random() and srandom() are not standard functions.*/
+#define random rand
+#define srandom srand
+
 #include "common.h"
+
+#ifdef __WIN32__
+#include <wincrypt.h>
+#endif
+
+#ifndef _MSC_VER
+#include <sys/time.h>  /* gettimeofday() */
+#endif
+
 
 int
 libnet_seed_prand(libnet_t *l)
 {
-	#if !(__WIN32__)
+#ifndef _MSC_VER
     struct timeval seed;
-	#endif
+#endif
 
     if (l == NULL)
-    { 
+    {
         return (-1);
-    } 
+    }
 
-	#if __WIN32__
+#ifdef _MSC_VER
     srand((unsigned)time(NULL));
-	#else
+#else
     if (gettimeofday(&seed, NULL) == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -58,7 +69,7 @@ libnet_seed_prand(libnet_t *l)
      *  More entropy then just seeding with time(2).
      */
     srandom((unsigned)(seed.tv_sec ^ seed.tv_usec));
-	#endif
+#endif
     return (1);
 }
 
@@ -71,17 +82,16 @@ uint32_t
 libnet_get_prand(int mod)
 {
     uint32_t n;  /* 0 to 4,294,967,295 */
-#ifndef _WIN32
+#ifndef __WIN32__
     n = random();
 #else
-	HCRYPTPROV hProv = 0;
-	CryptAcquireContext(&hProv, 
-		0, 0, PROV_RSA_FULL, 
-		CRYPT_VERIFYCONTEXT);
-	
-	CryptGenRandom(hProv, 
-		sizeof(n), (BYTE*)&n);
-	CryptReleaseContext(hProv, 0); 
+    HCRYPTPROV hProv = 0;
+
+    CryptAcquireContext(&hProv,
+                        0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+
+    CryptGenRandom(hProv, sizeof(n), (BYTE*)&n);
+    CryptReleaseContext(hProv, 0);
 #endif
     switch (mod)
     {

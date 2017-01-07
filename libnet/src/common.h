@@ -45,11 +45,8 @@
 #else
 
 #include <assert.h>
-
 #include <sys/types.h>
-
 #include <netinet/in.h>
-
 
 /* TODO - should ../include/gnuc.h be included here? */
 
