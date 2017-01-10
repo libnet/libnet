@@ -1,0 +1,23 @@
+short term goals:
+
+greatly improve documentation 
+
+documentation is weird esp. libnet/doc/*.db
+it needs to be build first or the make all will fail
+
+fix "broken" samples on win32
+
+make mingw produce a dll's as well
+libtool: warning: undefined symbols not allowed in x86_64-w64-mingw32 shared libraries; building static only
+
+fix MSVC/Mingw collision
+
+fix configure link-layer warning or implement win32 detection
+
+increase warning level on all OS's when using "Build" top level script
+
+make "Build" top level script
+
+long term goals:
+
+improve LUA bindings

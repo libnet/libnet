@@ -33,8 +33,8 @@
 /* random() and srandom() are not standard functions. */
 #define random rand
 #define srandom srand
-//#include <minizip/crypt.h>
-/* Msys2 on Windows hate this (use above instead until I have time to fix) */
+
+#include <windows.h>
 #include <wincrypt.h>
 #endif
 
