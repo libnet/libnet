@@ -1,9 +1,7 @@
-*.a
+*.la
 *.dll
 *.exe
 *.exp
-*.la
-*.lib
 *.lo
 *.loT
 *.o
@@ -50,6 +48,10 @@ libnet/include/getopt.h
 libnet/include/libnet.h
 libnet/include/libnet/stdint.h
 libnet/m4
+libnet/src/*.a
+libnet/src/.libs/*.a
+libnet/src/*.gcno
+libnet/sample/*.gcno
 libnet/sample/arp
 libnet/sample/bgp4_hdr
 libnet/sample/bgp4_notification
