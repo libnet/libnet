@@ -15,7 +15,7 @@ if ENABLE_SAMPLES
 SUBDIRS += sample
 endif
 
-EXTRA_DIST = Makefile.am.common msvcbuild.bat # m4/NOTES
+EXTRA_DIST = Makefile.am.common msvcbuild.bat README.win32 autogen.sh map-pblock-types # m4/NOTES
 
 bin_SCRIPTS = libnet-config
 

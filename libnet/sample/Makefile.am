@@ -71,6 +71,6 @@ test_ipv4_SOURCES       = test_ipv4.c
 test_ipv4_options_SOURCES = test_ipv4_options.c
 test_ipv6_icmpv4_SOURCES = test_ipv6_icmpv4.c
 
-EXTRA_DIST = libnet_test.h
+EXTRA_DIST = libnet_test.h arp-new.c win32/
 
 LDADD 			= $(top_builddir)/src/libnet.la

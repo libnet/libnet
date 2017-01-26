@@ -11,7 +11,7 @@ os:
 before_install:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; sudo apt-get install doxygen libpcap-dev; fi
     - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install doxygen; fi
-install:  cd libnet && ../Prepare && ../Build
+install:  cd libnet && ../CI
 script: sudo make install
 after_success:
   - bash <(curl -s https://codecov.io/bash)
