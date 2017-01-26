@@ -19,11 +19,8 @@ samples = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
                   synflood6_frag tftp ip_link ip_raw sebek hsrp \
                   test_ipv4 test_ipv6_icmpv4 test_ipv4_options
-if INSTALL_SAMPLES
-bin_PROGRAMS = $(samples)
-else
+
 noinst_PROGRAMS = $(samples)
-endif
 
 arp_SOURCES             = arp.c
 cdp_SOURCES             = cdp.c

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -x
+set -e
+
+mkdir -p ../prebuilt.w32
+
+CFLAGS="-Os" ./configure --with-pic --disable-samples --prefix=/c/Users/Ali/projects/libnet/prebuilt.w32/
+
+make clean
+
+make -j4
+
+make install
+
+cp src/libnet-9.def ../prebuilt.w32/lib/

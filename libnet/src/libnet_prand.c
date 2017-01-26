@@ -30,7 +30,7 @@
 
 
 #ifdef __WIN32__
-/* random() and srandom() are not standard functions. */
+/* random() and srandom() are none-standard functions. */
 #define random rand
 #define srandom srand
 

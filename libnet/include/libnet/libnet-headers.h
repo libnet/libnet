@@ -112,7 +112,7 @@
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
 #define LIBNET_HSRP_H           0x14    /**< HSRP header:          8 bytes */
 
-/* we seems to need things from stdint.h on mingw */
+/* we seem to need things from stdint.h on mingw */
 #ifdef __MINGW32__
 #include <stdint.h>
 #endif

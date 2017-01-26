@@ -279,7 +279,7 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
     /*
      *  For link access, we don't need to worry about the inconsistencies of
      *  certain BSD kernels.  However, raw socket nuances abound.  Certain
-     *  BSD implmentations require the ip_len and ip_off fields to be in host
+     *  BSD implementations require the ip_len and ip_off fields to be in host
      *  byte order.
      */
     ip_hdr->ip_len = FIX(ip_hdr->ip_len);

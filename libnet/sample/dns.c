@@ -60,7 +60,7 @@ main(int argc, char *argv[])
     printf("libnet 1.1 packet shaping: DNSv4[raw]\n");
     
     /*
-     *  Initialize the library.  Root priviledges are required.
+     *  Initialize the library.  Root privileges are required.
      */
     l = libnet_init(
             LIBNET_RAW4,                            /* injection type */

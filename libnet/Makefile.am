@@ -1,4 +1,3 @@
-# $Id: Makefile.am,v 1.7 2004/03/01 20:26:11 mike Exp $
 #
 # Libnet automake information file
 # Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -6,10 +5,17 @@
 #
 # Process this file with automake to produce a Makefile.in script.
 
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+
 include $(top_srcdir)/Makefile.am.common
 
-SUBDIRS = include src sample doc win32
+SUBDIRS = include src doc win32
 
-EXTRA_DIST = Makefile.am.common msvcbuild.bat
+if ENABLE_SAMPLES
+SUBDIRS += sample
+endif
+
+EXTRA_DIST = Makefile.am.common msvcbuild.bat # m4/NOTES
 
 bin_SCRIPTS = libnet-config
+

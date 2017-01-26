@@ -2,52 +2,19 @@ language: c
 branches:
   only:
   - master
-os:
-  - linux
-  - osx
 compiler:
   - gcc
   - clang
-addons:
-    apt:
-        packages:
-            - binutils-mingw-w64
-            - gcc-mingw-w64
-before_install: 
+os:
+  - linux
+  - osx
+before_install:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; sudo apt-get install doxygen libpcap-dev; fi
     - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install doxygen; fi
-    - if [ "$CC" == i686-w64-mingw32-gcc ]; then wget http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip; unzip WpdPack_4_1_2.zip; sudo cp WpdPack/Lib/wpcap.lib /usr/i686-w64-mingw32/lib; sudo cp WpdPack/Lib/Packet.lib /usr/i686-w64-mingw32/lib; cd libnet; ./autogen.sh; ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32/; make -C doc doc; fi
-    - if [ "$CC" == x86_64-w64-mingw32-gcc ]; then wget http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip; unzip WpdPack_4_1_2.zip; sudo cp WpdPack/Lib/x64/Packet.lib /usr/x86_64-w64-mingw32/lib; sudo cp WpdPack/Lib/x64/wpcap.lib /usr/x86_64-w64-mingw32/lib; cd libnet; ./autogen.sh; ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32/; make -C doc doc; fi
-matrix:
-    include:
-        - os: linux
-          compiler: gcc
-        - os: linux
-          compiler: clang
-        - os: osx
-          compiler: gcc
-        - os: osx
-          compiler: clang
-        - os: linux
-          compiler: i686-w64-mingw32-gcc
-        - os: linux
-          compiler: x86_64-w64-mingw32-gcc
-    allow_failures:
-        - os: linux
-          compiler: i686-w64-mingw32-gcc
-        - os: linux
-          compiler: x86_64-w64-mingw32-gcc
-install:
-  - if [ $TRAVIS_OS_NAME == linux ]; then cd libnet && ../Prepare && ../Build; fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then cd libnet && ../Prepare && ../Build; fi
-  - if [ "$CC" == i686-w64-mingw32-gcc ]; then make; fi
-  - if [ "$CC" == x86_64-w64-mingw32-gcc ]; then make; fi
+install:  cd libnet && ../Prepare && ../Build
 script: sudo make install
-# coming soon?
-# after_success:
-#   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash <(curl -s https://example.com/example) ; fi 
-#add email if you want to get notified
-#notifications:
-#  email:
-#    on_success: change
-#    on_failure: change
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+notifications:
+  email: autostart.ini@gmail.com
+

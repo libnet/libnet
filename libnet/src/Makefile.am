@@ -1,4 +1,3 @@
-# $Id: Makefile.am,v 1.6 2004/11/09 07:05:07 mike Exp $
 #
 # Libnet automake information file
 # Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -91,9 +90,16 @@ libnet_la_LIBADD = @LTLIBOBJS@
 # 1.1.2.1-fork is 5:0:4
 # 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
 # 1.1.4 was 6:0:5 -> probably an error on my part
-# 1.1.5 is 7:0:6 -> new APIs, backwards compat
-# 1.1.6 is 8:0:7 -> new APIs, backwards compat
+# 1.1.5 is 7:0:6 -> new APIs, backwards compatible
+# 1.1.6 is 8:0:7 -> new APIs, backwards compatible
 # 1.2   is 9:0:0 -> new APIs, removed __libnet_print_vers (internal, should not have been used, but linkable) APIs
 
 libnet_la_LDFLAGS = -version-info 9:0:0
 
+if WIN32
+libnet_la_SOURCES += libnet_dll_info.rc
+libnet_la_LDFLAGS += -no-undefined -Wl,--output-def,libnet-9.def
+
+.rc.lo:
+			$(LIBTOOL) --tag=RC --mode=compile $(WINDRES) $< -o $@
+endif

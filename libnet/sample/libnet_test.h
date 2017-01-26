@@ -48,6 +48,14 @@ void usage(char *);
   #ifndef _MSC_VER
   #include <sys/time.h>
   #endif
+
+// FIXME: weido... see #define LIBNET_API __declspec(dllexport) in win32/libnet.h...
+//#if defined(__GNUC__)         /* mingw compiler */
+//extern __attribute__((dllimport)) char *optarg;
+//#else   /* assume msvc */
+//extern __dllspec(dllimport) char *optarg;
+//#endif
+  
 #endif  /* __WIN32__ */
 
 #endif  /* __LIBNET_TEST_H */
