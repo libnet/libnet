@@ -1,11 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-#Scrip for everything Travis CI
-
-set -o nounset
-set -o xtrace
-
-./autogen.sh
+sh ./autogen.sh
 CFLAGS="-O0 -Wall -Wextra --coverage" ./configure --with-pic
 
 make -C doc doc
