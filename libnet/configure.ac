@@ -18,6 +18,7 @@ dnl
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
+AX_CFLAGS_WARN_ALL
 dnl disable shared libraries (for now)
 dnl AC_DISABLE_SHARED
 AM_PROG_AR
