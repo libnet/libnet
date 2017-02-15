@@ -331,7 +331,7 @@ AC_ARG_ENABLE([samples],
 AM_CONDITIONAL([INSTALL_SAMPLES], [test x"$enable_samples" = xyes])
 
 AC_ARG_ENABLE([pkgconfig],
-    [AS_HELP_STRING([--enable-pkgconfig],[generate pkg-config .pc file])])
+    [AS_HELP_STRING([--enable-pkgconfig],[generate pkg-config .pc file @<:@default=no@:>@])])
 AM_CONDITIONAL([ENABLE_PKGCONFIG], [test x"$enable_pkgconfig" = xyes])
 PKG_INSTALLDIR
 
