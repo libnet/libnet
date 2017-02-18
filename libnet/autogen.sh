@@ -1,9 +1,7 @@
-#!/bin/sh -ex
+#!/bin/sh
 #
 # A bootstrapping script that can be used to generate the autoconf,
 # automake and libtool-related scripts of the build process.
-
-set -e
 
 autoreconf --install
 

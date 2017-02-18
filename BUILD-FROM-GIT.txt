@@ -1,15 +1,21 @@
 I build from git using some top-level scripts. 
-Refer to libnet/README.win32 if you're building for windows.
+Refer to libnet/INSTALL for additional information and
+libnet/README.win32 if you're building for windows.
 
-Minimum dependencies are:
+Minimum requirements are:
 
 	build-essential (obviously)
-	autoconf
-	libtool
+	autoconf 2.69
+	libtool 2.4.2
 	libpcap-dev
 	doxygen
 
-To create Debian package you also need:
+To build LUA bindings (currently broken):
+
+	libdumbnet-dev (consider using my fork https://github.com/sgeto/libdnet)
+	liblua5.1-0-dev
+
+To create Debian packages you also need (currently broken too because LUA):
 
 	debhelper
 	sharutils

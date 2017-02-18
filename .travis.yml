@@ -36,7 +36,7 @@ install:
   - if [ "$CC" == x86_64-w64-mingw32-gcc ]; then make; fi
 script: sudo make install
 after_success:
-   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash <(curl -s https://example.com/example) ; fi 
+  - bash <(curl -s https://codecov.io/bash)
 #add email if you want to get notified
 #notifications:
 #  email:

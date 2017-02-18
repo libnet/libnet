@@ -85,7 +85,16 @@ extern "C" {
 # include <net/if.h>
 #else /* __WIN32__ */
 # if (__CYGWIN__)
-#  include <sys/socket.h>
+# include <sys/socket.h>
+# endif
+# if (__MINGW32__)
+# include <stdint.h>
+# endif
+/* This must be copied from "libnet/win32/stdint.h" to "libnet/include/libnet/stdint.h"
+ * at build time. Yikes!
+ */
+# if (_MSC_VER)
+# include "./libnet/stdint.h"
 # endif
 # include <ws2tcpip.h>
 # include <windows.h>
@@ -114,13 +123,6 @@ extern "C" {
 
 #ifndef LIBNET_API
 #define LIBNET_API
-#endif
-
-/* This must be copied from "libnet/win32/stdint.h" to "libnet/include/libnet/stdint.h"
- * at build time. Yikes!
- */
-#if defined(_MSC_VER)
-# include "./libnet/stdint.h"
 #endif
 
 #include "./libnet/libnet-types.h"

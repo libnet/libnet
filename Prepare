@@ -5,5 +5,6 @@ set -e
 
 sh ./autogen.sh
 
-CFLAGS="-O0 -g -Wall -Wextra -coverage" ./configure --with-pic
+CFLAGS="-O0 -g -Wall" ./configure
+
 

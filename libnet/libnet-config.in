@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-#   $Id: libnet-config.in,v 1.3 2004/01/03 20:31:00 mike Exp $
-#
-#   Libnet 1.1 libnet-config compilation script
+#   Libnet 1.2 libnet-config compilation script
 #   (c) 1998 - 2004  Mike D. Schiffman <mike@infonexus.com>
 #
+#   Script to give the appropriate compiler and linker flags
+#   to use when building code that uses libnet.
 #   @configure_input@
 
 libnet_defines="@LIBNET_CONFIG_DEFINES@"
@@ -16,12 +16,18 @@ usage()
         cat <<EOF
 Usage: libnet-config [OPTIONS]
 Options:
-        [--libs]
-        [--cflags]
-        [--defines]
+        [--libs]                print library linking information
+        [--cflags]              print compiler flags
+        [--defines]             print pre-processor definitions
+        [--version]             print version information
+
 EOF
-        exit
+        exit $1
 }
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
 
 while test $# -gt 0; do
     case "$1" in
@@ -30,6 +36,14 @@ while test $# -gt 0; do
     esac 
 
     case $1 in
+        --version)
+            echo @VERSION@
+            ;;
+
+        --help)
+            usage 0
+            ;;
+
         --libs)
             echo_libs=yes
             ;;
@@ -42,17 +56,17 @@ while test $# -gt 0; do
             echo_defines=yes
             ;;
         *)
-            usage 1
+            usage 1 1>&2
         esac
     shift
 done
 
 if test "$echo_libs" = "yes"; then
-    echo $libnet_libs
+    echo -L@libdir@ $libnet_libs @LIBS@
 fi
 
 if test "$echo_cflags" = "yes"; then
-    echo $libnet_cflags
+    echo -I@includedir@ $libnet_cflags
 fi
 
 if test "$echo_defines" = "yes"; then

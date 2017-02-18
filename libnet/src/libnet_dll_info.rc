@@ -20,7 +20,7 @@
  */
  
  /* 
- * FIXME all this needs to be manually updated. Unless someone  bothers to
+ * FIXME all this needs to be manually updated. Unless someone bothers to
  * update libnet_version.c...
  */
 
@@ -56,3 +56,4 @@
     VALUE "Translation", 0x0, 1200
   END
   END
+  /* EOF */

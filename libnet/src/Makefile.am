@@ -5,8 +5,6 @@
 #
 # Process this file with automake to produce a Makefile.in script.
 
-include $(top_srcdir)/Makefile.am.common
-
 EXTRA_DIST = libnet_dll.c common.h
 
 lib_LTLIBRARIES = libnet.la
@@ -64,7 +62,8 @@ libnet_la_LIBADD = @LTLIBOBJS@
 
 # Note: this version-info should NOT simply be the version of the libnet
 # package. See:
-#   http://www.sourceware.org/autobook/autobook/autobook_91.html
+#   https://www.sourceware.org/autobook/autobook/autobook_61.html#Library-Versioning
+#   http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 # for the rules.
 #
 # Summary:
@@ -96,10 +95,16 @@ libnet_la_LIBADD = @LTLIBOBJS@
 
 libnet_la_LDFLAGS = -version-info 9:0:0
 
+## Windows stuff
+
 if WIN32
+libnet_la_LDFLAGS += -no-undefined
+# don't do any of this if we're not building shared libnet
+if COND_SHARED
 libnet_la_SOURCES += libnet_dll_info.rc
-libnet_la_LDFLAGS += -no-undefined -Wl,--output-def,libnet-9.def
+libnet_la_LDFLAGS += -Wl,--output-def, -Wl,$(top_srcdir)/win32/libnet-9.def
 
 .rc.lo:
-			$(LIBTOOL) --tag=RC --mode=compile $(WINDRES) $< -o $@
+			$(AM_V_GEN)$(LIBTOOL) --mode=compile --silent $(WINDRES) $< -o $@
+endif
 endif

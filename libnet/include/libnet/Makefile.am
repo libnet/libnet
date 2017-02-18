@@ -1,6 +1,3 @@
-# $Id: Makefile.am,v 1.2 2003/10/18 17:20:03 mike Exp $
-
-include $(top_srcdir)/Makefile.am.common
 
 libnetincludedir = $(includedir)/libnet
  

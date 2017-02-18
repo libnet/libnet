@@ -6,38 +6,40 @@ dnl All rights reserved.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([libnet],[1.2-rc3],[autostart.ini@gmail.com],[libnet],[https://github.com/sgeto/libnet])
+AC_INIT(
+    [libnet],
+    [1.2-rc3],
+    [autostart.ini@gmail.com],
+    [libnet],
+    [https://github.com/sgeto/libnet])
+
+AC_CONFIG_AUX_DIR([build-aux])
+
 dnl the autotools and libtool should be at least these versions
-dnl (default on UBUNTU & Co)
+dnl (default on Ubuntu & Co)
 AC_PREREQ([2.69])
 LT_PREREQ([2.4.2])
-AC_COPYRIGHT echo "Copyright @{:@c@:}@ 2017 The libnet Developer Community"
-AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
+AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
+AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([1.14.1 dist-bzip2])
+AM_INIT_AUTOMAKE([1.14 foreign no-dependencies nostdinc tar-ustar dist-zip])
+AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
-dnl people do not like you. And I do not need you...
 AM_MAINTAINER_MODE
 
 dnl the default compiler flags are "-O2 -g" if the user does not set anything.
-dnl IMO O2 optimizations are fine, but debugging should be completely up to the
-dnl user. The following test does just that. (Do not move these lines
-dnl below "AC_PROG_CC"!!)
-if test -z $CFLAGS; then
-    CFLAGS="-O2"
-fi
+dnl IMO O2 optimizations are fine, but debugging should be up to the user.
+: ${CFLAGS="-O2"}
 
 dnl Check for the usual programs
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
-
-LT_INIT([win32-dll])
-dnl LT_PROG_RC
-LT_LANG([Windows Resource])
-
+dnl The default is to use only PIC objects.
+dnl This can still be overwritten with --without-pic
+LT_INIT([pic-only])
 
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
@@ -62,7 +64,7 @@ dnl
 
 AC_LIBNET_ENDIAN_CHECK
 dnl AC_LBL_LIBRARY_NET
-
+dnl FIXME I do not fully
 AC_SUBST(ENDIANESS)
 AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
@@ -73,11 +75,14 @@ AC_SUBST(LTLIBOBJS)
 
 dnl
 dnl Set the root install directory
-dnl
-AC_PREFIX_DEFAULT(/usr/local)
-dnl if test "$prefix" = "NONE"; then
-dnl     prefix="/usr"
-dnl fi
+if test "${prefix}" = "NONE"; then
+    prefix=/usr/local
+fi
+if test "${exec_prefix}" = "NONE"; then
+    exec_prefix=$prefix
+fi
+dnl libdir must be a fully qualified path (not ${exec_prefix}/lib)
+eval libdir="$libdir"
 
 dnl Get link-layer interface type
 AC_ARG_WITH(
@@ -141,7 +146,7 @@ elif test "$target_os" = "cygwin" ; then
     AC_MSG_RESULT(found link layer win32 wpcap)
 elif test "$host" = "i686-w64-mingw32" -o "x86_64-w64-mingw32" -o "x86_64-pc-mingw64"; then
     AC_LIBOBJ([libnet_link_win32])
-    AC_MSG_RESULT(found link layer windows @<:@WinPcap@:>@)
+    AC_MSG_RESULT(found link layer win32 @<:@WinPcap@:>@)
 else
     AC_LIBOBJ([libnet_link_none])
     AC_MSG_WARN(could not find a link-layer packet interface)
@@ -150,6 +155,7 @@ fi
 
 dnl This is necessary so that .o files in LIBOBJS are also built via
 dnl the ANSI2KNR-filtering rules.
+dnl FIXME Isn't this nowadays already taken care of by AC_PROG_CC?
 LIB@&t@OBJS=`echo "$LIB@&t@OBJS" |
        sed 's,\.[[^.]]* ,$U&,g;s,\.[[^.]]*$,$U&,'`
 LTLIBOBJS=`echo "$LIB@&t@OBJS" |
@@ -188,31 +194,34 @@ dnl Check for max speed
 dnl FIXME add more flags
 AC_MSG_CHECKING([whether to enable optimizations])
 AC_ARG_ENABLE([fast],
-	[AS_HELP_STRING([--enable-fast],[compile with optimizations @<:@default=no@:>@])],
-	[use_fast=$enableval],
-	[use_fast=no]
+    [AS_HELP_STRING([--enable-fast],[compile with optimizations @<:@default=no@:>@])],
+    [use_fast=$enableval],
+    [use_fast=no]
 )
 AC_MSG_RESULT([$use_fast])
 
 if test "x${use_fast}" != "xno"
 then
-	if test "x${use_debug}" != "xno"
-	then
-		AC_MSG_ERROR([Cannot specify --enable-fast and --enable-debug at the same time.])
-	fi
+    if test "x${use_debug}" != "xno"
+    then
+        AC_MSG_ERROR([Cannot specify --enable-fast and --enable-debug at the same time.])
+    fi
 fi
 
 if test "x$use_fast" = "xyes"
 then
-	OPT_FLAGS="-O2 -g -fno-strict-aliasing"
+    OPT_FLAGS="-O2 -g -fno-strict-aliasing"
 else
-	OPT_FLAGS="-O0 -ggdb"
-	AM_CFLAGS="${AM_CFLAGS} -fkeep-inline-functions"
-	if test "x$use_debug" = "xyes"
-	then
-    	AM_CPPFLAGS="${AM_CPPFLAGS} -DDEBUG -DTRACE"
-	fi
+    OPT_FLAGS="-O0 -ggdb"
+    AM_CFLAGS="${AM_CFLAGS} -fkeep-inline-functions"
+    if test "x$use_debug" = "xyes"
+    then
+        AM_CPPFLAGS="${AM_CPPFLAGS} -DDEBUG -DTRACE"
+    fi
 fi
+
+dnl what (not) to do if the user disables shared libaries
+AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
 
 dnl Check and set OS specific parameters
 case "$target_os" in
@@ -341,7 +350,6 @@ dnl
     ;;
 
 *cygwin*)
-dnl FIXME I should probably get rid of this...
     AC_DEFINE(LIBNET_BSDISH_OS, 1,
         [Define if our build OS supports the BSD APIs])
     AC_DEFINE(NO_SNPRINTF, 1,
@@ -356,34 +364,29 @@ dnl FIXME I should probably get rid of this...
 *mingw*)
     WIN32="yes"
     AC_SUBST(WIN32)
-    AC_CHECK_TOOL([WINDRES], [windres], AC_MSG_ERROR([windres not found]))
-    AC_SUBST(WINDRES)
-    if test "${cross_compiling}" = "yes" ; then
-       if test "$host" = "i686-w64-mingw32" ; then
-    AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(libpacket.a not found.))
-    AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(libwpcap.a not found.))
-    LIBS="$LIBS -lws2_32 -liphlpapi"
-    CFLAGS="$CFLAGS -static-libgcc -march=i686 -mwin32 -DWIN32_LEAN_AND_MEAN"
-       else
+    if test "$enable_shared" = "yes"; then
+        AC_CHECK_TOOL(WINDRES, windres, :)
+    fi
+
+    AC_DEFINE(WIN32_LEAN_AND_MEAN, 1, 
+        [Define to limit the scope of <windows.h>])
+
     AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(libpacket.a not found. See README.win32 for more information))
     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(libwpcap.a not found. See README.win32 for more information))
     LIBS="$LIBS -lws2_32 -liphlpapi"
-    CFLAGS="$CFLAGS -static-libgcc -mwin32"
-    LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"
-       fi
+
+    if test "$host" = "i686-w64-mingw32" ; then
+    CFLAGS="$CFLAGS -march=i686 -mwin32"
     else
-       if test "$host" = "i686-w64-mingw32" ; then
-    AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(libpacket.a not found.))
-    AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(libwpcap.a not found.))
-    LIBS="$LIBS -lws2_32 -liphlpapi"
-    CFLAGS="$CFLAGS -march=i686 -mwin32 -DWIN32_LEAN_AND_MEAN"
-       else
-    AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(libpacket.a not found. See README.win32 for more information))
-    AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(libwpcap.a not found. See README.win32 for more information))
-    LIBS="$LIBS -lws2_32 -liphlpapi"
-    CFLAGS="$CFLAGS -mwin32 -DWIN32_LEAN_AND_MEAN"
-    LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"
-       fi
+    CFLAGS="$CFLAGS -mwin32"
+dnl the default GCC toolchains on Debian & Co are so old
+     AX_CHECK_LINK_FLAG([-Wl,--high-entropy-va],
+     [LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"],
+     [AC_MSG_NOTICE([Consider updating your toolchain.])])
+    fi
+
+    if test "${cross_compiling}" = "yes" ; then
+    CFLAGS="$CFLAGS -static-libgcc"
     fi
     ;;
 
@@ -399,7 +402,7 @@ dnl FIXME I should probably get rid of this...
 
 esac
 
-dnl this should only matter if we are building for Windows...
+dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
 AC_CONFIG_FILES([Makefile src/Makefile \
@@ -433,7 +436,7 @@ Compilation Environment
     CC: ........................... ${CC}
     CFLAGS:........................ ${CFLAGS}
     LD: ........................... ${LD}
-    LDFLAGS: ......................${LDFLAGS}
+    LDFLAGS: ...................... ${LDFLAGS}
     LIBS: ......................... ${LIBS}
 
 Features and Examples
@@ -441,19 +444,21 @@ Features and Examples
     Link Layer: ...................${LTLIBOBJS}
     Shared Libraries: ............. ${enable_shared}
     Static Libraries: ............. ${enable_static}
-    PIC ........................... ${pic_mode} / ${with-pic}
+    PIC ........................... ${pic_mode}
     Debugging: .................... ${use_debug}
     Additional Optimizations: ..... ${use_fast}
     Build Sample Programs: ........ ${enable_samples}
 
 To override options, see ./configure --help
+
+To disable silent building and print the full command line of every stage, run "make V=1"
 ])
 
 case "$target_os" in
 
 *mingw*)
-    AC_MSG_WARN([To compile shared libaries on mingw, use the WinPcap libaries in $(pwd)/win32/.
-GNU ld is NOT able to produce x64 compatible images using the official WinPcap Developer Pack.
+    AC_MSG_WARN([To compile shared libaries on MinGW, use the WinPcap libaries in $(pwd)/win32/.
+GCC is NOT able to produce x64 compatible images using the official WinPcap Developer Pack.
 See README.win32 for more information.])
     ;;
 

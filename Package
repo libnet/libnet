@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# run this script as root
+
 set -x
 
 V=$(git describe --tags| sed -es/libnet-//)
@@ -10,5 +12,5 @@ cp -r ../debian ./
 sed -es"/VERSION/$V/" -es"/DATE/$D/" < ../debian/changelog > debian/changelog
 cat debian/changelog
 
-dpkg-buildpackage -b -us -uc -rfakeroot -i -I.swp
+dpkg-buildpackage -b -us -uc -i -I.swp
 

@@ -12,7 +12,7 @@ LIBNET or libnet
 
 short term goals:
 
-I'm afraid the build system needs a complete overhaul. 
+I'm afraid the build system needs a complete overhaul.
 Recursive "make" 
 ACLOCAL_AMFLAGS=-I m4 in Makefile.am.common is not considered
 
@@ -26,20 +26,20 @@ it needs to be build first or "make" will fail
 
 fix "broken" samples (on win32?)
 
-make mingw produce a dll's as well
-libtool: warning: undefined symbols not allowed No Shared libraries support not available with x86_64-w64-mingw32; building static only
-
 fix MSVC/Mingw collision
-
-fix configure link-layer warning or implement win32 detection
 
 increase warning level on all OS's when using "Build" top level script
 
-make "Build" top level script
-
-add link_layer_none.c and make sample building more link_layer_none friendly
 
 long term goals:
+
+build with the debug memory allocation or dmalloc library
+http://dmalloc.com/
+https://www.gnu.org/software/automake/manual/html_node/Public-Macros.html (AM_WITH_DMALLOC)
+
+implement netmap compatibilty https://github.com/luigirizzo/netmap
+
+switch to npcap (win32)
 
 come after as many reasonable issues in https://github.com/sam-github/libnet/issues/ and http://stackoverflow.com/questions/tagged/libnet# as possible
 
@@ -49,4 +49,4 @@ improve LUA bindings
 
 test and verify everything IPv6
 
-Dynamic loading
+Dynamic loading...
