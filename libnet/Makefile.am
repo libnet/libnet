@@ -18,9 +18,6 @@ EXTRA_DIST = msvcbuild.bat README.win32 autogen.sh map-pblock-types m4/ax_check_
 
 bin_SCRIPTS = libnet-config
 
-# DISTCLEANFILES=  remove also *~ when execute make clean
-DISTCLEANFILES = *~
-
 # (GNU make only) Unless we say otherwise, spare us the
 # “Entering/Leaving directory ...” messages
 GNUMAKEFLAGS = $(if $(value VERBOSE),,--no-print-directory)
