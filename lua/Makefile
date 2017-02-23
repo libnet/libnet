@@ -19,7 +19,7 @@ SODIR = $(DESTDIR)$(prefix)/lib/lua/5.1/
 .PHONY: install
 install: $(BINDING)
 	mkdir -p $(SODIR)
-	../libnet/install-sh -t $(SODIR) $(BINDING)
+	../libnet/build-aux/install-sh -t $(SODIR) $(BINDING)
 
 CWARNS = -Wall \
   -Wcast-align \

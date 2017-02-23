@@ -10,12 +10,12 @@ Minimum requirements are:
 	libpcap-dev
 	doxygen
 
-To build LUA bindings (currently broken):
+To build LUA bindings:
 
 	libdumbnet-dev (consider using my fork https://github.com/sgeto/libdnet)
 	liblua5.1-0-dev
 
-To create Debian packages you also need (currently broken too because LUA):
+To create Debian packages you also need:
 
 	debhelper
 	sharutils
