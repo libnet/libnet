@@ -19,7 +19,7 @@ Options:
         [--libs]                print library linking information
         [--cflags]              print compiler flags
         [--defines]             print pre-processor definitions
-        [--version]             print version information
+        [--version]             print libnet version
 
 EOF
         exit $1
@@ -36,10 +36,6 @@ while test $# -gt 0; do
     esac 
 
     case $1 in
-        --version)
-            echo @VERSION@
-            ;;
-
         --help)
             usage 0
             ;;
@@ -55,6 +51,11 @@ while test $# -gt 0; do
         --defines)
             echo_defines=yes
             ;;
+
+        --version)
+            echo @VERSION@
+            ;;
+
         *)
             usage 1 1>&2
         esac
