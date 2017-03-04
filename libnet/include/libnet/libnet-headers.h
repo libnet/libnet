@@ -506,7 +506,12 @@ struct libnet_ethernet_hdr
 #ifndef ETHERTYPE_IP
 #define ETHERTYPE_IP            0x0800  /* IP protocol */
 #endif
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmacro-redefined"
 #define ETHERTYPE_IPV6          0x86dd  /* IPv6 protocol */
+#pragma clang diagnostic pop
+
 #ifndef ETHERTYPE_ARP
 #define ETHERTYPE_ARP           0x0806  /* addr. resolution protocol */
 #endif
