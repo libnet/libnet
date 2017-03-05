@@ -42,7 +42,7 @@ libnet/doc/html/*.png
 libnet/doc/man/man3/*.3
 libnet/include/config.h
 libnet/include/getopt.h
-libnet/include/libnet.h
+#libnet/include/libnet.h
 libnet/include/libnet/stdint.h
 libnet/m4/libtool.m4
 libnet/m4/lt~obsolete.m4
