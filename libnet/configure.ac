@@ -15,10 +15,6 @@ AC_INIT(
 
 AC_CONFIG_AUX_DIR([build-aux])
 
-dnl the autotools and libtool should be at least these versions
-dnl (default on Ubuntu & Co)
-AC_PREREQ([2.69])
-LT_PREREQ([2.4.2])
 AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
 AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 
@@ -33,7 +29,7 @@ fi
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([1.14 foreign no-dependencies nostdinc tar-ustar dist-zip])
+AM_INIT_AUTOMAKE([foreign no-dependencies nostdinc tar-ustar dist-zip])
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
 AM_MAINTAINER_MODE
@@ -201,7 +197,7 @@ AC_MSG_RESULT([$use_debug])
 
 dnl Check for max speed
 dnl FIXME add more flags
-AC_MSG_CHECKING([whether to enable optimizations])
+AC_MSG_CHECKING([whether to enable additional optimizations])
 AC_ARG_ENABLE([fast],
     [AS_HELP_STRING([--enable-fast],[compile with optimizations @<:@default=no@:>@])],
     [use_fast=$enableval],
