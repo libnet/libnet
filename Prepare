@@ -5,6 +5,6 @@ set -e
 
 sh ./autogen.sh
 
-CFLAGS="-O0 -g -Wall" ./configure
+CFLAGS="-O0 -g -Wall --coverage" ./configure
 
 

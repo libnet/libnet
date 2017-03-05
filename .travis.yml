@@ -11,9 +11,11 @@ os:
   - linux
   - osx
 before_install:
-    - if [ ${TRAVIS_OS_NAME} = "linux" ]; then sudo apt-get update -qq; sudo apt-get install doxygen libpcap-dev; fi
+    - if [ ${TRAVIS_OS_NAME} = "linux" ]; then sudo apt-get update -qq; sudo apt-get install autoconf libtool doxygen; fi
     - if [ ${TRAVIS_OS_NAME} = "osx" ]; then brew update; brew install doxygen; fi
 install:  cd libnet && ../Prepare && ../Build
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
 #add email if you want to get notified
 #notifications:
 #  email:
