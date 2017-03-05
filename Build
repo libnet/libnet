@@ -4,5 +4,5 @@ set -e
 
 make -C doc doc
 make
+make -C ../lua
 make distcheck && mv libnet-1*.tar.gz libnet-1*.zip ..
-make -C../lua
