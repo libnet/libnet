@@ -31,6 +31,7 @@ libnet-*.tar.gz
 libnet-1.?.tar.gz
 libnet-*.zip
 libnet-config
+libnet.pc
 libnet/*-stamp
 libnet/build-aux
 libnet/debian

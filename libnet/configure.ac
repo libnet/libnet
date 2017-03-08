@@ -15,6 +15,10 @@ AC_INIT(
 
 AC_CONFIG_AUX_DIR([build-aux])
 
+dnl the autotools and libtool should be at least these versions
+AC_PREREQ([2.69])
+LT_PREREQ([2.4.2])
+
 AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
 AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 
@@ -29,7 +33,7 @@ fi
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([foreign no-dependencies nostdinc tar-ustar dist-zip])
+AM_INIT_AUTOMAKE([1.14 foreign no-dependencies nostdinc tar-ustar dist-zip])
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
 AM_MAINTAINER_MODE
@@ -69,12 +73,12 @@ dnl
 
 AC_LIBNET_ENDIAN_CHECK
 dnl AC_LBL_LIBRARY_NET
-dnl FIXME I do not fully
 AC_SUBST(ENDIANESS)
 AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
 AC_SUBST(LIBNET_CONFIG_DEFINES)
 AC_SUBST(LIBNET_CONFIG_LIBS)
+dnl FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
@@ -183,6 +187,14 @@ AC_ARG_ENABLE([samples],
 AC_MSG_RESULT([$enable_samples])
 
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
+
+
+dnl Check for pkgconfig
+AC_ARG_ENABLE([pkgconfig],
+    [AS_HELP_STRING([--disable-pkgconfig],[do not generate pkg-config .pc file @<:@default=no@:>@])])
+    [enable_pkgconfig=$enableval],
+    [enable_pkgconfig=yes]
+AM_CONDITIONAL([ENABLE_PKGCONFIG], [test "$enable_pkgconfig" = "yes"])
 
 
 dnl Check for debug
@@ -415,7 +427,7 @@ AC_CONFIG_FILES([Makefile src/Makefile \
 	include/libnet/Makefile win32/Makefile \
 	sample/Makefile doc/Makefile \
 	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
-	include/libnet.h libnet-config])
+	include/libnet.h libnet-config libnet.pc])
 AC_OUTPUT
 
 AC_MSG_RESULT([
@@ -453,6 +465,7 @@ Features and Examples
     Debugging: .................... ${use_debug}
     Additional Optimizations: ..... ${use_fast}
     Build Sample Programs: ........ ${enable_samples}
+    Generate pkg-config: .......... ${enable_pkgconfig}
 
 To override options, see ./configure --help
 

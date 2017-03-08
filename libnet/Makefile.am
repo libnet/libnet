@@ -18,6 +18,12 @@ EXTRA_DIST = msvcbuild.bat README.win32 autogen.sh map-pblock-types m4/ax_check_
 
 bin_SCRIPTS = libnet-config
 
+if ENABLE_PKGCONFIG
+pkgconfigdir=$(libdir)/pkgconfig
+pkgconfig_DATA=libnet.pc
+DISTCLEANFILES = libnet.pc
+endif
+
 # (GNU make only) Unless we say otherwise, spare us the
 # “Entering/Leaving directory ...” messages
 GNUMAKEFLAGS = $(if $(value VERBOSE),,--no-print-directory)
