@@ -36,7 +36,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.14 foreign no-dependencies nostdinc tar-ustar dist-zip])
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
-AM_MAINTAINER_MODE
 
 dnl the default compiler flags are "-O2 -g" if the user does not set anything.
 dnl IMO O2 optimizations are fine, but debugging should be up to the user.
