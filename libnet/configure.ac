@@ -21,15 +21,8 @@ LT_PREREQ([2.4.2])
 
 AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
 AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
-
-dnl test and adjust for Android (this needs to happen quite early)
-dnl In the future, if we want to support other architectures/compilers as well,
-dnl we should consider using AC_CANONICAL_BUILD instead
-if test "${SHELL}" = "/bin/sh" -a "$build" = "armv7a--linux-android"; then
-    AC_MSG_NOTICE([Setting the correct SHELL variable for Android...])
-    SHELL=/data/data/com.termux/files/usr/bin/sh
-fi
-
+echo
+AC_PROG_SHELL
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])

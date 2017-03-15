@@ -97,19 +97,18 @@ this one, will not be able run because their shebangs are pointing to a
 none-existing location. (/bin/sh instead of /system/bin/sh or in Termux's
 case: /data/data/com.termux/files/usr/bin/sh)
 
-3. $ ./configure --build=armv7a--linux-android --prefix=$PREFIX --disable-doxygen-doc
+3. $ ./configure TMPDIR=$PREFIX/tmp --prefix=$PREFIX --disable-doxygen-doc
 
---build=armv7a--linux-android    configure libnet for building on armv7a--linux-android
-                                 This is the only MANDATORY configure option.
-                                 This is due to the fact that config.guess is
-                                 (without root privileges) not able to properly
-                                 guess the build platform on Android yet
+TMPDIR=$PREFIX/tmp        Tell configure to use $PREFIX/tmp instead of /tmp
+                          This is the only MANDATORY configure option.
+                          This is due to the fact that config.guess is
+                          (without root privileges) unable to write to /tmp
 
---prefix=$PREFIX                 where to (possibly) install libnet
-                                 Use $PREFIX or make sure to add a valid path
+--prefix=$PREFIX          where to (possibly) install libnet
+                          Use $PREFIX or make sure to add a valid path
 
---disable-doxygen-doc            don't generate any documentation
-                                 (this option is currently being implemented)
+--disable-doxygen-doc     don't generate any documentation
+                          (this option is currently being implemented)
 
 
 4. $ make
