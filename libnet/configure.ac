@@ -9,7 +9,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(
     [libnet],
     [1.2-rc3],
-    [autostart.ini@gmail.com],
+    [https://github.com/sgeto/libnet/issues],
     [libnet],
     [https://github.com/sgeto/libnet])
 
@@ -21,7 +21,6 @@ LT_PREREQ([2.4.2])
 
 AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
 AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
-echo
 AC_PROG_SHELL
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
@@ -74,7 +73,6 @@ dnl FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
-dnl
 dnl Set the root install directory
 if test "${prefix}" = "NONE"; then
     prefix=/usr/local
@@ -162,12 +160,36 @@ LIB@&t@OBJS=`echo "$LIB@&t@OBJS" |
 LTLIBOBJS=`echo "$LIB@&t@OBJS" |
        sed 's,\.[[^.]]* ,.lo ,g;s,\.[[^.]]*$,.lo,'`
 
+link_layer=`"echo"${LTLIBOBJS}"" | cut -c 13- | awk -F$ '/U.lo/ {print $1}'`
+
 dnl Inform user about the packet builders we've got
 echo -n "scanning available packet construction modules: "
 for dir in src/*build*c ; do
     echo $dir | sed -e /src\\/libnet_build_/s/// | sed -e /\\.c/s/// | tr \\n \\040
 done
 echo ""
+
+
+# dnl Check for Doxygen and enable its features
+# dnl See m4/ax_prog_doxygen.m4
+DX_DOXYGEN_FEATURE(OFF)
+DX_DOT_FEATURE(ON)
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(ON)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(ON)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf], [doc])
+AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
+
+if test ${DX_FLAG_doc} -eq 1; then
+    rebuild_docs=yes
+else
+    rebuild_docs=no
+fi
 
 dnl Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
@@ -229,7 +251,7 @@ else
     fi
 fi
 
-dnl what (not) to do if the user disables shared libaries
+dnl what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
 
 dnl Check and set OS specific parameters
@@ -414,16 +436,18 @@ esac
 dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
-AC_CONFIG_FILES([Makefile src/Makefile \
-	include/Makefile \
-	include/libnet/Makefile win32/Makefile \
-	sample/Makefile doc/Makefile \
-	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
-	include/libnet.h libnet-config libnet.pc])
+AC_CONFIG_FILES([Makefile \
+                 libnet-config\
+                 libnet.pc \
+                 include/Makefile \
+                 include/libnet.h \
+                 src/Makefile \
+                 sample/Makefile \
+                 doc/libnet.doxygen.conf])
 AC_OUTPUT
 
 AC_MSG_RESULT([
--=-=-=-=-=-=-=-=-=-= $PACKAGE Configuration Complete =-=-=-=-=-=-=-=-=-=-=-
+-=-=-=-=-=-=-=-=-= $PACKAGE Configuration Complete =-=-=-=-=-=-=-=-=-=-
 
 
 Configuration Summary
@@ -450,7 +474,7 @@ Compilation Environment
 
 Features and Examples
 
-    Link Layer: ...................${LTLIBOBJS}
+    Link Layer: ................... ${link_layer}
     Shared Libraries: ............. ${enable_shared}
     Static Libraries: ............. ${enable_static}
     PIC ........................... ${pic_mode}
@@ -458,6 +482,7 @@ Features and Examples
     Additional Optimizations: ..... ${use_fast}
     Build Sample Programs: ........ ${enable_samples}
     Generate pkg-config: .......... ${enable_pkgconfig}
+    Rebuild docs: ................. ${rebuild_docs}
 
 To override options, see ./configure --help
 
@@ -467,7 +492,7 @@ To disable silent building and print the full command line of every stage, run "
 case "$target_os" in
 
 *mingw*)
-    AC_MSG_WARN([To compile shared libaries on MinGW, use the WinPcap libaries in $(pwd)/win32/.
+    AC_MSG_WARN([To compile shared libraries on MinGW, use the WinPcap libraries in $(pwd)/win32/.
 GCC is NOT able to produce x64 compatible images using the official WinPcap Developer Pack.
 See README.win32 for more information.])
     ;;
