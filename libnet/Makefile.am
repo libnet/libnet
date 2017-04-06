@@ -5,6 +5,13 @@
 #
 # Process this file with automake to produce a Makefile.in script.
 
+EXTRA_DIST = msvcbuild.bat README.win32 \
+             autogen.sh map-pblock-types \
+             win32/getopt.h win32/libnet.h \
+             win32/config.h win32/stdint.h \
+             win32/wpdpack $(m4data_DATA)
+
+
 # Include macros implemented in the directory m4
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
