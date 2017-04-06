@@ -1,18 +1,15 @@
 #!/bin/sh
-set -e
 
-# use libtoolize if available, otherwise look for glibtoolize (darwin)
-if (libtoolize --version) < /dev/null > /dev/null 2>&1; then
-  LIBTOOLIZE=libtoolize
-elif (glibtoolize --version) < /dev/null > /dev/null 2>&1; then
-  LIBTOOLIZE=glibtoolize
-else
-  echo "libtoolize or glibtoolize was not found! Please install libtool."
-  exit
-fi
+# A bootstrapping script that can be used to generate the autoconf 
+# and automake-related scripts of the build process.
+# The result of using "autoreconf -fiW all" should be identical to using this
+# script.
 
-$LIBTOOLIZE --copy --force || exit 1
-aclocal || exit 1
-autoheader || exit 1
-autoconf || exit 1
-automake -a -c || exit 1
+set -e -x
+
+aclocal --force --warnings=all -I m4 ${ACLOCAL_FLAGS} || exit 1
+libtoolize --copy --force || glibtoolize --copy --force || exit 1
+autoconf --force --warnings=all || exit 1
+autoheader --force --warnings=all || exit 1
+automake --add-missing --copy --force-missing --foreign --warnings=all || exit 1
+
