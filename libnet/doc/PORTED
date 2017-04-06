@@ -67,8 +67,11 @@ you can do one the following:
 
 - build from a release (https://github.com/sgeto/libnet/releases)
 - compile docs on one of the supported platforms
-- port doxygen to Android (let me know if you do!)
+- port doxygen to Android
     Update: check out my port: https://github.com/sgeto/doxygen
+    Update 2: my port has been merged into doxygen/master.
+    Don't use my port. Get the real deal from their repo:
+    https://github.com/doxygen/doxygen
 
 The minimum packages to install are:
 
@@ -97,7 +100,7 @@ this one, will not be able run because their shebangs are pointing to a
 none-existing location. (/bin/sh instead of /system/bin/sh or in Termux's
 case: /data/data/com.termux/files/usr/bin/sh)
 
-3. $ ./configure TMPDIR=$PREFIX/tmp --prefix=$PREFIX --disable-doxygen-doc
+3. $ ./configure TMPDIR=$PREFIX/tmp --prefix=$PREFIX
 
 TMPDIR=$PREFIX/tmp        Tell configure to use $PREFIX/tmp instead of /tmp
                           This is the only MANDATORY configure option.
@@ -105,11 +108,7 @@ TMPDIR=$PREFIX/tmp        Tell configure to use $PREFIX/tmp instead of /tmp
                           (without root privileges) unable to write to /tmp
 
 --prefix=$PREFIX          where to (possibly) install libnet
-                          Use $PREFIX or make sure to add a valid path
-
---disable-doxygen-doc     don't generate any documentation
-                          (this option is currently being implemented)
-
+                          Use "$PREFIX" or make sure to add a valid path
 
 4. $ make
 
@@ -127,7 +126,7 @@ privileges in order to try the samples and to make use of libnet in general.
 have root privileges.
 
 - Even when you elevate you prompt and become root (by typing 'su'), you will
-most likely still be unable to to use libnet roght away. The reason for that is
+most likely still be unable to to use libnet right away. The reason for that is
 that root prompts in Android come with their own shell (which is separate from
 the one you use to elevate). So you need to either set or migrate the necessary
 environment variables you had in your previous (Termux) shell over to your newly
@@ -135,4 +134,3 @@ spawn root shell. Specifically LD_LIBRARY_PATH
 If you don't know what that means just run this every time you're root and want
 to use libnet (adjust path accordingly): 
 LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib
-
