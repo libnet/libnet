@@ -50,6 +50,7 @@ dist_doc_DATA = doc/CHANGELOG \
                 doc/PORTED \
                 doc/RAWSOCKET_NON_SEQUITUR \
                 doc/TODO \
+                doc/libnet.pdf \
                 doc/html/*.html \
                 doc/html/*.css \
                 doc/html/*.png \
