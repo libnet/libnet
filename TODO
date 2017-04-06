@@ -3,26 +3,18 @@ This file complements the TODO in doc/TODO
 
 Roadmap:
 
-the --enable-samples option in configure never worked. And no one noticed... :(
+change all __WIN32  and __WIN32__ preprocessor directives with the more universal WIN32 and _WIN32 directives (msvc + mingw) (eliminating the need for -mwin32)
 
 add INSTALL and edit README in libnet/README
-
-Is it "libnet" or "Libnet"? Can we please agree on one? All Uppercase or all lowercase!!
-LIBNET or libnet
 
 short term goals:
 
 I'm afraid the build system needs a complete overhaul.
-Recursive "make" 
-ACLOCAL_AMFLAGS=-I m4 in Makefile.am.common is not considered
 
 improve documentation
 - FAQ
 - Examples
 - add RFCs 
-
-documentation is weird esp. libnet/doc/*.db
-it needs to be build first or "make" will fail
 
 fix "broken" samples (on win32?)
 
