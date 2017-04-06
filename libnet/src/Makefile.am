@@ -102,7 +102,7 @@ libnet_la_LDFLAGS += -no-undefined
 # don't do any of this if we're not building shared libnet
 if COND_SHARED
 libnet_la_SOURCES += libnet_dll_info.rc
-libnet_la_LDFLAGS += -Wl,--output-def, -Wl,$(top_srcdir)/win32/libnet-9.def
+libnet_la_LDFLAGS += -Wl,--output-def, -Wl,libnet-9.def
 
 .rc.lo:
 			$(AM_V_GEN)$(LIBTOOL) --mode=compile --silent $(WINDRES) $< -o $@
