@@ -40,7 +40,7 @@ typedef struct libnet_port_list_chain libnet_plist_t;
 struct libnet_port_list_chain
 {
     uint16_t node;                     /* node number */
-    uint16_t bport;                    /* beggining port */
+    uint16_t bport;                    /* beginning port */
     uint16_t eport;                    /* terminating port */
     uint8_t  id;                       /* global array offset */
     libnet_plist_t *next;               /* next node in the list */
