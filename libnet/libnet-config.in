@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@SHELL@
 #
 #   Libnet 1.2 libnet-config compilation script
 #   (c) 1998 - 2004  Mike D. Schiffman <mike@infonexus.com>
@@ -16,17 +16,20 @@ usage()
         cat <<EOF
 Usage: libnet-config [OPTIONS]
 Options:
-        [--libs]                print library linking information
-        [--cflags]              print compiler flags
-        [--defines]             print pre-processor definitions
-        [--version]             print libnet version
+        --libs                print library linking information
+        --cflags              print compiler flags
+        --prefix              print libnet install prefix
+        --defines             print pre-processor definitions
+        --version             print libnet version
+
+See the libnet-config man page for more information.
 
 EOF
-        exit $1
+    exit $1
 }
 
 if test $# -eq 0; then
-	usage 1 1>&2
+    usage 1 1>&2
 fi
 
 while test $# -gt 0; do
@@ -46,6 +49,10 @@ while test $# -gt 0; do
 
         --cflags)
             echo_cflags=yes
+            ;;
+
+        --prefix)
+            echo @prefix@
             ;;
 
         --defines)

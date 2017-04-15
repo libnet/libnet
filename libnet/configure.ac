@@ -80,8 +80,9 @@ fi
 if test "${exec_prefix}" = "NONE"; then
     exec_prefix=$prefix
 fi
-dnl libdir must be a fully qualified path (not ${exec_prefix}/lib)
+dnl libdir and includedir must be fully qualified paths (not ${prefix}/lib)
 eval libdir="$libdir"
+eval libdir="$includedir"
 
 dnl Get link-layer interface type
 AC_ARG_WITH(
@@ -444,6 +445,7 @@ AC_CONFIG_FILES([Makefile \
                  src/Makefile \
                  sample/Makefile \
                  doc/libnet.doxygen.conf])
+AC_CONFIG_COMMANDS([default],[chmod 755 libnet-config],[])
 AC_OUTPUT
 
 AC_MSG_RESULT([
