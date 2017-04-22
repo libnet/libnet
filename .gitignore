@@ -36,8 +36,10 @@ libnet/build-aux
 libnet/debian
 
 libnet/doc/libnet.tag
-libnet/doc/libnet.doxygen.conf
-libnet/doc/html/*.md5
+libnet/doc/fixmanpages
+libnet/doc/api/*.md5
+libnet/doc/api/*.js
+libnet/doc/api/*.map
 libnet/doc/latex
 libnet/doc/man/man3/_*.3
 

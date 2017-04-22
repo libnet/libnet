@@ -1,0 +1,11 @@
+/* Additional CSS for libnet */
+
+body {
+	background-color: #fafafa;
+}
+
+.memdoc, dl.reflist dd {
+	background-color: #f7f5f5;
+}
+
+/* @end */

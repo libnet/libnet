@@ -444,7 +444,6 @@ AC_CONFIG_FILES([Makefile \
                  include/libnet.h \
                  src/Makefile \
                  sample/Makefile \
-                 doc/libnet.doxygen.conf])
 AC_CONFIG_COMMANDS([default],[chmod 755 libnet-config],[])
 AC_OUTPUT
 
