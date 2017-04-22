@@ -1,0 +1,92 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+libnet-config - script to get information about, and for linking against libnet
+
+=head1 SYNOPSIS
+
+B<libnet-config [--help] | [--version] | [--prefix] | [--libs --cflags --defines]>
+
+=head1 DESCRIPTION
+
+libnet-config tells the application programmer what flags to use to compile and
+link programs against an installed L<libnet> library.
+
+An alternative (and perhaps more convenient) method of retrieving the various
+configuration information needed to compile programs that use libnet is to use
+the L<pkg-config(1)> program. Pkg-config support was added in version 1.2.
+
+Both methods write to standard output the flags that should be used to compile
+and link programs that use libnet.
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>
+
+Print a usage message and exit. This is the default behavior when no options are
+specified.
+
+=item B<--version>
+
+Print version information and exit.
+
+=item B<--libs>
+
+Print the linker flags (LDFLAGS) that are necessary to link a programs with
+libnet.
+
+=item B<--cflags>
+
+Print the compiler options (CFLAGS) to use when compiling files that use libnet.
+Currently that is only the include path to the libnet include files.
+
+=item B<--defines>
+
+Print the pre-processor definitions libnet was compiler with.
+
+=item B<--prefix>
+
+Print the prefix used when libnet was installed. The prefix can be set during
+the build process with "configure --prefix".
+
+=back
+
+=head1 EXAMPLES
+
+To print all linker options needed when linking with libnet, use
+
+B<C<libnet-config --libs>>
+
+To build the singe-file C program 'prog' against the libnet library, use
+
+B<C<gcc $(libnet-config --cflags --defines --libs) progr.c -o progr>>
+
+The same in a Makefile:
+
+B<CFLAGS+=$(shell libnet-config --cflags --defines )>
+
+B<LDFLAGS+=$(shell libnet-config --libs)>
+
+B<all: prog>
+
+To build a dynamically loadable libnet module, use
+
+B<C<gcc $(libnet-config --cflags --defines --libs) -shared -fPIC progr.cpp -o progr.so>>
+
+Note that libnet-config can also be called from 'configure' scripts.
+
+=head1 SEE ALSO
+
+L<libnet(3)>, L<pkg-config(1)>
+
+=head1 AUTHORS
+
+This manual page was written by Ali Abdulkadir <autostart.ini@gmail.com>
+
+=cut
+

@@ -449,6 +449,7 @@ AC_CONFIG_FILES([Makefile \
                  src/Makefile \
                  sample/Makefile])
 AC_CONFIG_FILES([libnet-config], [chmod +x libnet-config])
+AC_CONFIG_FILES([doc/fixmanpages], [chmod +x doc/fixmanpages])
 AC_OUTPUT
 
 AC_MSG_RESULT([

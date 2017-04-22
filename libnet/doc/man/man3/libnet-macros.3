@@ -1,0 +1,102 @@
+.TH "LIBNET-MACROS" 3 "Sat Apr 22 2017" "libnet-1.2-rc3" "libnet Programmers Guide" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libnet-macros.h \- libnet macros and symbolic constants  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLIBNET_DONT_RESOLVE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_RESOLVE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_ON\fP   0"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_OFF\fP   1"
+.br
+.ti -1c
+.RI "#define \fBIN6ADDR_ERROR_INIT\fP"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_PR2\fP   0"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_MAX_PACKET\fP   0xffff"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_ERRBUF_SIZE\fP   0x100"
+.br
+.ti -1c
+.RI "#define \fBLIBNET_MAXOPTION_SIZE\fP   0x28"
+.br
+.ti -1c
+.RI "#define \fBfor_each_context_in_cq\fP(l)   for (l = \fBlibnet_cq_head\fP(); \fBlibnet_cq_last\fP(); l = \fBlibnet_cq_next\fP())"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+libnet macros and symbolic constants 
+
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define for_each_context_in_cq(l)   for (l = \fBlibnet_cq_head\fP(); \fBlibnet_cq_last\fP(); l = \fBlibnet_cq_next\fP())"
+Provides an interface to iterate through the context queue of libnet contexts\&. Before calling this macro, be sure to set the queue using \fBlibnet_cq_head()\fP\&. 
+.SS "#define IN6ADDR_ERROR_INIT"
+\fBValue:\fP
+.PP
+.nf
+{ { { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
+                                 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
+                                 0xff, 0xff } } }
+.fi
+IPv6 error code 
+.SS "#define LIBNET_DONT_RESOLVE   0"
+Used for libnet's name resolution functions, specifies that no DNS lookups should be performed and the IP address should be kept in numeric form\&. 
+.SS "#define LIBNET_ERRBUF_SIZE   0x100"
+The libnet error buffer is 256 bytes long\&. 
+.SS "#define LIBNET_MAX_PACKET   0xffff"
+The biggest an IP packet can be -- 65,535 bytes\&. 
+.SS "#define LIBNET_MAXOPTION_SIZE   0x28"
+IP and TCP options can be up to 40 bytes long\&. 
+.SS "#define LIBNET_OFF   1"
+Used several places, to specify 'on' or 'one' 
+.SS "#define LIBNET_ON   0"
+Used several places, to specify 'on' or 'one' 
+.SS "#define LIBNET_PR2   0"
+Used for \fBlibnet_get_prand()\fP to specify function disposition 
+.SS "#define LIBNET_RESOLVE   1"
+Used for libnet's name resolution functions, specifies that a DNS lookup can be performed if needed to resolve the IP address to a canonical form\&. 
+.SH "SEE ALSO"
+\.IX Header "SEE ALSO"
+libnet(3), libnet\-config(1)
+.SH "AUTHORS"
+.IX Header "AUTHORS"
+The original author of libnet is Mike D. Schiffman.
+.PP
+libnet has been maintained and extensively enhanced since 2009 by Sam Roberts.
+.PP
+It is currently maintained by Ali Abdulkadir and available at
+.PP
+.Vb 1
+\& <https://github.com/sgeto/libnet>
+.Ve
+.SH "BUGS"
+.IX Header "BUGS"
+For bugs, questions, patch submissions, desirable enhancements, etc. see:
+.PP
+.Vb 1
+\& <https://github.com/sgeto/libnet/issues>
+.Ve
+.SH "COPYRIGHT"
+.IX Header "COPYRIGHT"
+libnet is licensed under the 3\-Clause \s-1BSD\s0 License. You can basically
+do whatever you want with it.
