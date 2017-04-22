@@ -10,5 +10,5 @@ Version: @VERSION@
 
 Libs: -L${libdir} -lnet
 Libs.private: @LDFLAGS@ @LIBS@ @LIBNET_CONFIG_LIBS@
-Cflags: -I${includedir} @LIBNET_CONFIG_CFLAGS@
+Cflags: -I${includedir} @LIBNET_CONFIG_DEFINES@ @LIBNET_CONFIG_CFLAGS@
 # Compiled with: @LIBNET_CONFIG_DEFINES@
