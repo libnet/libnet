@@ -506,7 +506,9 @@ struct libnet_ethernet_hdr
 #ifndef ETHERTYPE_IP
 #define ETHERTYPE_IP            0x0800  /* IP protocol */
 #endif
-#define ETHERTYPE_IPV6          0x86DD  /* IPv6 protocol */
+#ifndef ETHERTYPE_IPV6
+#define ETHERTYPE_IPV6          0x86dd  /* IPv6 protocol */
+#endif
 #ifndef ETHERTYPE_ARP
 #define ETHERTYPE_ARP           0x0806  /* addr. resolution protocol */
 #endif
