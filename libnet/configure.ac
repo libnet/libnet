@@ -73,16 +73,21 @@ dnl FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
-dnl Set the root install directory
+dnl Guess the root install directory (if none is provided)
 if test "${prefix}" = "NONE"; then
-    prefix=/usr/local
+    if test -w /usr/local; then
+        prefix=/usr/local
+    else
+        AC_PREFIX_PROGRAM($CC)
+    fi
 fi
+
 if test "${exec_prefix}" = "NONE"; then
     exec_prefix=$prefix
 fi
 dnl libdir and includedir must be fully qualified paths (not ${prefix}/lib)
 eval libdir="$libdir"
-eval libdir="$includedir"
+eval includedir="$includedir"
 
 dnl Get link-layer interface type
 AC_ARG_WITH(
@@ -438,13 +443,12 @@ dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
 AC_CONFIG_FILES([Makefile \
-                 libnet-config\
                  libnet.pc \
                  include/Makefile \
                  include/libnet.h \
                  src/Makefile \
-                 sample/Makefile \
-AC_CONFIG_COMMANDS([default],[chmod 755 libnet-config],[])
+                 sample/Makefile])
+AC_CONFIG_FILES([libnet-config], [chmod +x libnet-config])
 AC_OUTPUT
 
 AC_MSG_RESULT([
@@ -499,7 +503,7 @@ See README.win32 for more information.])
     ;;
 
 *)
-    AC_MSG_RESULT([Report bugs to https://github.com/sgeto/libnet/issues])
+    AC_MSG_RESULT([Report bugs to ${PACKAGE_BUGREPORT}])
     ;;
 
 esac
