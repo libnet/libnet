@@ -135,7 +135,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): fopen(proc_dev_file) failed: %s",  __func__,
                 strerror(errno));
-	return (-1);
+	goto bad;
     }
 #endif
 
@@ -148,10 +148,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): ioctl(SIOCGIFCONF) error: %s", 
                 __func__, strerror(errno));
-#ifdef HAVE_LINUX_PROCFS
-	fclose(fp);
-#endif
-	return(-1);
+	goto bad;
     }
 
     pifr = NULL;
@@ -220,11 +217,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
                 snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                         "%s(): SIOCGIFADDR: dev=%s: %s", __func__, device,
                         strerror(errno));
-                close(fd);
-#ifdef HAVE_LINUX_PROCFS
-                fclose(fp);
-#endif
-                return (-1);
+                goto bad;
 	    }
             else /* device has no IP address => set to 0 */
             {
@@ -243,10 +236,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
                     "%s(): strdup not enough memory", __func__);
-#ifdef HAVE_LINUX_PROCFS
-            fclose(fp);
-#endif
-            return(-1);
+            goto bad;
         }
 
         ++al;
@@ -263,14 +253,24 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): ferror: %s", __func__, strerror(errno));
-	fclose(fp);
-	return (-1);
+	goto bad;
     }
     fclose(fp);
 #endif
 
-    *ipaddrp = ifaddrlist;
+	close(fd);
+
+	*ipaddrp = ifaddrlist;
     return (nipaddr);
+
+    bad:
+#ifdef HAVE_LINUX_PROCFS
+	if (fp) {
+		fclose(fp);
+	}
+#endif
+	close(fd);
+	return (-1);
 }
 #else
 /* WIN32 support *
