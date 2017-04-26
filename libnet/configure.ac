@@ -392,6 +392,10 @@ dnl
 *mingw*)
     WIN32="yes"
     AC_SUBST(WIN32)
+dnl additionally prepare a winconfig.h from config.h.in for MSVC
+dnl see m4/ax_prefix_config_h.m4
+dnl AX_PREFIX_CONFIG_H(winconfig.h)
+
     if test "$enable_shared" = "yes"; then
         AC_CHECK_TOOL(WINDRES, windres, :)
     fi
@@ -484,19 +488,18 @@ To override options, see ./configure --help
 
 To disable silent building and print the full command line of every stage, run "make V=1"
 ])
-
-case "$target_os" in
-
-*mingw*)
-    AC_MSG_WARN([To compile shared libraries on MinGW, use the WinPcap libraries in $(pwd)/win32/.
+if test "$WIN32" = "yes" ; then
+AC_MSG_WARN([To compile shared libraries on MinGW, use the WinPcap libraries in $(pwd)/win32/.
 GCC is NOT able to produce x64 compatible images using the official WinPcap Developer Pack.
-See README.win32 for more information.])
-    ;;
+See README.win32 for more information.
 
-*)
-    AC_MSG_RESULT([Report bugs to ${PACKAGE_BUGREPORT}])
-    ;;
+Report bugs to ${PACKAGE_BUGREPORT}])
+elif test "$rebuild_docs" = "yes" ; then
+AC_MSG_RESULT([To build just the Documentation run "make doc"
 
-esac
+Report bugs to ${PACKAGE_BUGREPORT}])
+else
+AC_MSG_RESULT([Report bugs to ${PACKAGE_BUGREPORT}])
+fi
 
 dnl EOF
