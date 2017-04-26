@@ -1,6 +1,7 @@
 /*
  *  libnet
  *  libnet.h - Network routine library header file
+ *  @configure_input@
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
  *  All rights reserved.
@@ -30,92 +31,89 @@
 
 #ifndef __LIBNET_H
 #define __LIBNET_H
-/**
- * @file libnet.h
- * @brief toplevel libnet header file
- */
 
 /**
- * @mainpage Libnet Packet Assembly Library
+ * @file libnet.h
+ * @brief Top-level libnet header file
+ * 
+ * @details This section doesn't contain any details about libnet.h.
  *
- * @section intro Overview
+ * If you're wondering why, then that's mostly because libnet.h isn't
+ * where the action takes place. In fact, no action at all. Okay, maybe a
+ * little. But definitely not enough worth a separate man page or a detailed
+ * description. The real action goes down in some of the other files this file
+ * includes.
  *
- * Libnet is a high-level API (toolkit) allowing the application programmer to
- * construct and inject network packets. It provides a portable and simplified
- * interface for low-level network packet shaping, handling and injection.
- * Libnet hides much of the tedium of packet creation from the application
- * programmer such as multiplexing, buffer management, arcane packet header
- * information, byte-ordering, OS-dependent issues, and much more. Libnet
- * features portable packet creation interfaces at the IP layer and link layer,
- * as well as a host of supplementary and complementary functionality. Using
- * libnet, quick and simple packet assembly applications can be whipped up with
- * little effort. With a bit more time, more complex programs can be written
- * (Traceroute and ping were easily rewritten using libnet and
- * <a href="www.tcpdump.org">libpcap</a>).
+ * Which probably makes you wonder why, of all libnet*.h headers this file
+ * includes, only libnet-functions.h and libnet-macros.h are documented.
+ * My friend, you're not alone in your marveling.
+ *
+ * You see, the guy who wrote them (Mike D. Schiffman) is gone, and the guy
+ * after him (Sam Roberts) didn't had much time left at the end of the day
+ * after bug fixing the living hell out of the source.
+ *
+ * And if you're wondering why the rest of libnet's documentation is either
+ * full of holes or nonexistent, then (a) good question; and (b) see the 
+ * previous paragraph.
+ *
+ * Is this a sinking ship? Well, I can't answer that right now. What I can say
+ * is that it's just us now. So, "Lets (try to) make libnet great again"!
+ *
+ * Sincerely,
+ *
+ * Ali Abdulkadir
  */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+ /*
+ * TODO move the stuff we ALWAYS need out of the DOXYGEN ifndef block
+ * and minimize their redundancies (see doc/TODO)
+ */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS // mess
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
 
-#if !defined(_MSC_VER)
-# include <unistd.h>
-#endif
-
-#if !defined(__WIN32__)
-# include <sys/ioctl.h>
-#endif /* __WIN32__ */
-
-#if defined(HAVE_SYS_SOCKIO_H) && !defined(SIOCGIFADDR)
-# include <sys/sockio.h>
-#endif
-
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <ctype.h>
 
-#if !defined(__WIN32__)
-# include <sys/socket.h>
-# include <net/if.h>
-#else /* __WIN32__ */
-# if (__CYGWIN__)
-# include <sys/socket.h>
-# endif
-# if (__MINGW32__)
-# include <stdint.h>
-# endif
-/* This must be copied from "libnet/win32/stdint.h" to "libnet/include/libnet/stdint.h"
- * at build time. Yikes!
- */
-# if (_MSC_VER)
-# include "./libnet/stdint.h"
-# endif
-# include <ws2tcpip.h>
-# include <windows.h>
-# include <winsock2.h>
-#endif /* __WIN32__ */
-
-#if !(__linux__) && !(__WIN32__) && !(__APPLE__) && !(__CYGWIN__) && !(__GNU__)
-#else   /* __linux__ */
-# if (HAVE_NET_ETHERNET_H)
-#  include <net/ethernet.h>
-# endif  /* HAVE_NET_ETHERNET_H */
-#endif  /* __linux__ */
-
-#if !defined(__WIN32__)
-# include <arpa/inet.h>
-# include <sys/time.h>
-# include <netdb.h>
-#endif /* __WIN32__ */
-
 #include <errno.h>
 #include <stdarg.h>
+
+#if !defined(_MSC_VER)
+#include <unistd.h>
+#endif
+
+#if defined(HAVE_SYS_SOCKIO_H) && !defined(SIOCGIFADDR)
+#include <sys/sockio.h>
+#endif
+
+#if !defined(__WIN32__)
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+#include <netdb.h>
+#else /* __WIN32__ */
+#if (__CYGWIN__)
+#include <sys/socket.h>
+#endif
+#include <stdint.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock2.h>
+#endif /* __WIN32__ */
+
+#if (HAVE_NET_ETHERNET_H)
+#include <net/ethernet.h>
+#endif  /* HAVE_NET_ETHERNET_H */
 
 #define LIBNET_VERSION  "@PACKAGE_VERSION@"
 
@@ -124,6 +122,7 @@ extern "C" {
 #ifndef LIBNET_API
 #define LIBNET_API
 #endif
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 #include "./libnet/libnet-types.h"
 #include "./libnet/libnet-macros.h"
