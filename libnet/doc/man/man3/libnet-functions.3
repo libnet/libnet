@@ -1,4 +1,4 @@
-.TH "LIBNET-FUNCTIONS" 3 "Sat Apr 22 2017" "libnet-1.2-rc3" "libnet Programmers Guide" \" -*- nroff -*-
+.TH "LIBNET-FUNCTIONS" 3 "Wed Apr 26 2017" "libnet-1.2-rc3" "libnet Programmers Guide" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1136,7 +1136,7 @@ Builds a Cisco Discovery Protocol (CDP) header\&. Cisco Systems designed CDP to 
 .br
 \fIttl\fP time to live (time information should be cached by recipient) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fItype\fP type of data contained in value 
 .br
@@ -1291,7 +1291,7 @@ header'\&. It is then followed by the GRE header and finally the encapsulated pa
 .br
 \fItype\fP which protocol is encapsulated (PPP, IP, \&.\&.\&.) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill)\&. 
+\fIsum\fP checksum (0 for libnet to auto-fill)\&. 
 .br
 \fIoffset\fP byte offset from the start of the routing field to the first byte of the SRE 
 .br
@@ -1403,7 +1403,7 @@ header'\&. It is then followed by the GRE header and finally the encapsulated pa
 .br
 \fItype\fP which protocol is encapsulated (PPP, IP, \&.\&.\&.) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill)\&. 
+\fIsum\fP checksum (0 for libnet to auto-fill)\&. 
 .br
 \fIoffset\fP byte offset from the start of the routing field to the first byte of the SRE 
 .br
@@ -1488,7 +1488,7 @@ protocol tag value on success
 .PP
 
 .SS "LIBNET_API libnet_ptag_t libnet_build_hsrp (uint8_t version, uint8_t opcode, uint8_t state, uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group, uint8_t reserved, uint8_t authdata[HSRP_AUTHDATA_LENGTH], uint32_t virtual_ip, const uint8_t * payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)"
-Builds a HSRP header\&. HSRP is a Cisco propietary protocol defined in RFC 2281 
+Builds a HSRP header\&. HSRP is a Cisco proprietary protocol defined in RFC 2281 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1502,7 +1502,7 @@ Builds a HSRP header\&. HSRP is a Cisco propietary protocol defined in RFC 2281
 .br
 \fIhold_time\fP seconds that the current hello message is valid 
 .br
-\fIpriority\fP priority for the election proccess 
+\fIpriority\fP priority for the election process 
 .br
 \fIgroup\fP standby group 
 .br
@@ -1541,7 +1541,7 @@ Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) echo req
 .br
 \fIcode\fP code of ICMP packet (should be 0) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIid\fP identification number 
 .br
@@ -1576,7 +1576,7 @@ Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) IP netma
 .br
 \fIcode\fP code of ICMP packet (should be 0) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIid\fP identification number 
 .br
@@ -1613,7 +1613,7 @@ Builds an IP version 4 RFC 792 Internet Message Control Protocol (ICMP) redirect
 .br
 \fIcode\fP code of ICMP packet (should be one of the four redirect codes) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIgateway\fP 
 .br
@@ -1646,7 +1646,7 @@ Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) time exc
 .br
 \fIcode\fP code of ICMP packet (ICMP_TIMXCEED_INTRANS / ICMP_TIMXCEED_REASS) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIpayload\fP optional payload or NULL 
 .br
@@ -1679,7 +1679,7 @@ Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) timestam
 .br
 \fIcode\fP code of ICMP packet (should be 0) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIid\fP identification number 
 .br
@@ -1720,7 +1720,7 @@ Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) unreacha
 .br
 \fIcode\fP code of ICMP packet (should be one of the 16 unreachable codes) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIpayload\fP optional payload or NULL 
 .br
@@ -1751,7 +1751,7 @@ Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP) echo or
 .br
 \fIcode\fP code of ICMP packet (should be zero) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIid\fP echo id number 
 .br
@@ -1786,7 +1786,7 @@ Builds an IP version 6 RFC 2461 Internet Control Message Protocol (ICMP) NDP nei
 .br
 \fIcode\fP code of ICMP packet (should be zero) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIflags\fP should be a bitwise or of any applicable ND_NA_FLAG_* flags 
 .br
@@ -1821,7 +1821,7 @@ Builds an IP version 6 RFC 2461 Internet Control Message Protocol (ICMP) NDP nei
 .br
 \fIcode\fP code of ICMP packet (should be zero) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fItarget\fP target ipv6 address 
 .br
@@ -1881,7 +1881,7 @@ Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP) unreach
 .br
 \fIcode\fP code of ICMP packet (should be one of the 5 ICMP6_DST_UNREACH_* codes) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIpayload\fP optional payload or NULL 
 .br
@@ -1904,7 +1904,7 @@ protocol tag value on success
 .PP
 
 .SS "LIBNET_API libnet_ptag_t libnet_build_igmp (uint8_t type, uint8_t reserved, uint16_t sum, uint32_t ip, const uint8_t * payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)"
-Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header\&. 
+Builds an RFC 1112 Internet Group Membership Protocol (IGMP) header\&. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1912,7 +1912,7 @@ Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header\&.
 .br
 \fIreserved\fP (should be 0 for IGMPv1) 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIip\fP IPv4 address (in standard/network byte order) 
 .br
@@ -2057,7 +2057,7 @@ Builds a version 4 RFC 791 Internet Protocol (IP) header\&.
 .br
 \fIprot\fP upper layer protocol 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIsrc\fP source IPv4 address (little endian) 
 .br
@@ -2288,7 +2288,7 @@ Builds a Cisco Inter-Switch Link (ISL) header\&.
 .br
 \fIshost\fP source mac address 
 .br
-\fIlen\fP total length of the encapuslated packet less 18 bytes 
+\fIlen\fP total length of the encapsulated packet less 18 bytes 
 .br
 \fIsnap\fP SNAP information (0xaaaa03 + vendor code) 
 .br
@@ -2421,7 +2421,7 @@ Builds an RFC 958 Network Time Protocol (NTP) header\&.
 .br
 \fIrec_ts_int\fP receiver timestamp integer 
 .br
-\fIrec_ts_frac\fP reciever timestamp fraction 
+\fIrec_ts_frac\fP receiver timestamp fraction 
 .br
 \fIxmt_ts_int\fP transmit timestamp integer 
 .br
@@ -3021,7 +3021,7 @@ Builds an RFC 793 Transmission Control Protocol (TCP) header\&.
 .br
 \fIwin\fP window size 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIurg\fP urgent pointer 
 .br
@@ -3126,7 +3126,7 @@ Builds an RFC 768 User Datagram Protocol (UDP) header\&.
 .br
 \fIlen\fP total length of the UDP packet 
 .br
-\fIsum\fP checksum (0 for libnet to autofill) 
+\fIsum\fP checksum (0 for libnet to auto-fill) 
 .br
 \fIpayload\fP optional payload or NULL 
 .br
@@ -3149,7 +3149,7 @@ protocol tag value on success
 .PP
 
 .SS "LIBNET_API libnet_ptag_t libnet_build_vrrp (uint8_t version, uint8_t type, uint8_t vrouter_id, uint8_t priority, uint8_t ip_count, uint8_t auth_type, uint8_t advert_int, uint16_t sum, const uint8_t * payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)"
-Builds an RFC 2338 Virtual Router Redundacy Protool (VRRP) header\&. Use the payload interface to specify address and autthentication information\&. To build a 'legal' packet, the destination IPv4 address should be the multicast * address 224\&.0\&.0\&.18, the IP TTL should be set to 255, and the IP protocol should be set to 112\&. 
+Builds an RFC 2338 Virtual Router Redundacy Protool (VRRP) header\&. Use the payload interface to specify address and authentication information\&. To build a 'legal' packet, the destination IPv4 address should be the multicast * address 224\&.0\&.0\&.18, the IP TTL should be set to 255, and the IP protocol should be set to 112\&. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -3442,7 +3442,7 @@ Returns the IPv6 address for the device libnet was initialized with\&. If libnet
 .PP
 
 .SS "LIBNET_API uint32_t libnet_get_prand (int mod)"
-Generates an unsigned psuedo-random value within the range specified by mod\&. LIBNET_PR2 0 - 1 LIBNET_PR8 0 - 255 LIBNET_PR16 0 - 32767 LIBNET_PRu16 0 - 65535 LIBNET_PR32 0 - 2147483647 LIBNET_PRu32 0 - 4294967295
+Generates an unsigned pseudo-random value within the range specified by mod\&. LIBNET_PR2 0 - 1 LIBNET_PR8 0 - 255 LIBNET_PR16 0 - 32767 LIBNET_PRu16 0 - 65535 LIBNET_PR32 0 - 2147483647 LIBNET_PRu32 0 - 4294967295
 .PP
 \fBParameters:\fP
 .RS 4
@@ -3481,7 +3481,7 @@ Returns the last error set inside of the referenced libnet context\&. This funct
 .PP
 \fBReturns:\fP
 .RS 4
-an error string or NULL if no error has occured 
+an error string or NULL if no error has occurred 
 .RE
 .PP
 
@@ -3519,7 +3519,7 @@ size
 .PP
 
 .SS "LIBNET_API uint32_t libnet_getpacket_size (libnet_t * l)"
-Returns the sum of the size of all of the pblocks inside of l (this should be the resuling packet size)\&. 
+Returns the sum of the size of all of the pblocks inside of l (this should be the resulting packet size)\&. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -3748,7 +3748,7 @@ Returns the next port list chain pair from the port list chain plist\&. bport an
 .PP
 
 .SS "LIBNET_API int libnet_seed_prand (libnet_t * l)"
-Seeds the psuedo-random number generator\&. 
+Seeds the pseudo-random number generator\&. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -3775,7 +3775,7 @@ Fills in a libnet_stats structure with packet injection statistics (packets writ
 .PP
 
 .SS "LIBNET_API int libnet_toggle_checksum (libnet_t * l, libnet_ptag_t ptag, int mode)"
-If a given protocol header is built with the checksum field set to '0', by default libnet will calculate the header checksum prior to injection\&. If the header is set to any other value, by default libnet will not calculate the header checksum\&. To over-ride this behavior, use \fBlibnet_toggle_checksum()\fP\&. Switches auto-checksumming on or off for the specified ptag\&. If mode is set to LIBNET_ON, libnet will mark the specificed ptag to calculate a checksum for the ptag prior to injection\&. This assumes that the ptag refers to a protocol that has a checksum field\&. If mode is set to LIBNET_OFF, libnet will clear the checksum flag and no checksum will be computed prior to injection\&. This assumes that the programmer will assign a value (zero or otherwise) to the checksum field\&. Often times this is useful if a precomputed checksum or some other predefined value is going to be used\&. Note that when libnet is initialized with LIBNET_RAW4, the IPv4 header checksum will always be computed by the kernel prior to injection, regardless of what the programmer sets\&. 
+If a given protocol header is built with the checksum field set to '0', by default libnet will calculate the header checksum prior to injection\&. If the header is set to any other value, by default libnet will not calculate the header checksum\&. To over-ride this behavior, use \fBlibnet_toggle_checksum()\fP\&. Switches auto-checksumming on or off for the specified ptag\&. If mode is set to LIBNET_ON, libnet will mark the specified ptag to calculate a checksum for the ptag prior to injection\&. This assumes that the ptag refers to a protocol that has a checksum field\&. If mode is set to LIBNET_OFF, libnet will clear the checksum flag and no checksum will be computed prior to injection\&. This assumes that the programmer will assign a value (zero or otherwise) to the checksum field\&. Often times this is useful if a precomputed checksum or some other predefined value is going to be used\&. Note that when libnet is initialized with LIBNET_RAW4, the IPv4 header checksum will always be computed by the kernel prior to injection, regardless of what the programmer sets\&. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -3822,6 +3822,31 @@ the number of bytes written
 .RE
 .PP
 
+.SH "SEE ALSO"
+\.IX Header "SEE ALSO"
+libnet(3), libnet\-config(1)
+.SH "AUTHORS"
+.IX Header "AUTHORS"
+The original author of libnet is Mike D. Schiffman.
+.PP
+libnet has been maintained and extensively enhanced since 2009 by Sam Roberts.
+.PP
+It is currently maintained by Ali Abdulkadir and available at
+.PP
+.Vb 1
+\& <https://github.com/sgeto/libnet>
+.Ve
+.SH "BUGS"
+.IX Header "BUGS"
+For bugs, questions, patch submissions, desirable enhancements, etc. see:
+.PP
+.Vb 1
+\& <https://github.com/sgeto/libnet/issues>
+.Ve
+.SH "COPYRIGHT"
+.IX Header "COPYRIGHT"
+libnet is licensed under the 3\-Clause \s-1BSD\s0 License. You can basically
+do whatever you want with it.
 .SH "SEE ALSO"
 \.IX Header "SEE ALSO"
 libnet(3), libnet\-config(1)

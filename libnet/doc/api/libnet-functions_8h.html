@@ -2208,7 +2208,7 @@ Protocol Tags and Packet Builder Return Values</h2>
   <table class="params">
     <tr><td class="paramname">version</td><td>CDP version </td></tr>
     <tr><td class="paramname">ttl</td><td>time to live (time information should be cached by recipient) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">type</td><td>type of data contained in value </td></tr>
     <tr><td class="paramname">value_s</td><td>length of value argument </td></tr>
     <tr><td class="paramname">value</td><td>the CDP information string </td></tr>
@@ -2628,7 +2628,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">fv</td><td>the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version. </td></tr>
     <tr><td class="paramname">type</td><td>which protocol is encapsulated (PPP, IP, ...) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill). </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill). </td></tr>
     <tr><td class="paramname">offset</td><td>byte offset from the start of the routing field to the first byte of the SRE </td></tr>
     <tr><td class="paramname">key</td><td>inserted by the encapsulator to authenticate the source </td></tr>
     <tr><td class="paramname">seq</td><td>sequence number used by the receiver to sort the packets </td></tr>
@@ -2923,7 +2923,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">fv</td><td>the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version. </td></tr>
     <tr><td class="paramname">type</td><td>which protocol is encapsulated (PPP, IP, ...) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill). </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill). </td></tr>
     <tr><td class="paramname">offset</td><td>byte offset from the start of the routing field to the first byte of the SRE </td></tr>
     <tr><td class="paramname">key</td><td>inserted by the encapsulator to authenticate the source </td></tr>
     <tr><td class="paramname">seq</td><td>sequence number used by the receiver to sort the packets </td></tr>
@@ -3168,14 +3168,14 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Builds a HSRP header. HSRP is a Cisco propietary protocol defined in RFC 2281 </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Builds a HSRP header. HSRP is a Cisco proprietary protocol defined in RFC 2281 </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">version</td><td>version of the HSRP messages </td></tr>
     <tr><td class="paramname">opcode</td><td>type of message </td></tr>
     <tr><td class="paramname">state</td><td>current state of the router </td></tr>
     <tr><td class="paramname">hello_time</td><td>period in seconds between hello messages </td></tr>
     <tr><td class="paramname">hold_time</td><td>seconds that the current hello message is valid </td></tr>
-    <tr><td class="paramname">priority</td><td>priority for the election proccess </td></tr>
+    <tr><td class="paramname">priority</td><td>priority for the election process </td></tr>
     <tr><td class="paramname">group</td><td>standby group </td></tr>
     <tr><td class="paramname">reserved</td><td>reserved field </td></tr>
     <tr><td class="paramname">authdata</td><td>password </td></tr>
@@ -3268,7 +3268,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_ECHOREPLY or ICMP_ECHO) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be 0) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">id</td><td>identification number </td></tr>
     <tr><td class="paramname">seq</td><td>packet sequence number </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
@@ -3365,7 +3365,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_MASKREQ or ICMP_MASKREPLY) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be 0) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">id</td><td>identification number </td></tr>
     <tr><td class="paramname">seq</td><td>packet sequence number </td></tr>
     <tr><td class="paramname">mask</td><td>subnet mask </td></tr>
@@ -3451,7 +3451,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_REDIRECT) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be one of the four redirect codes) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">gateway</td><td></td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
@@ -3529,7 +3529,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_TIMXCEED) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (ICMP_TIMXCEED_INTRANS / ICMP_TIMXCEED_REASS) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
@@ -3637,7 +3637,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_TSTAMP or ICMP_TSTAMPREPLY) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be 0) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">id</td><td>identification number </td></tr>
     <tr><td class="paramname">seq</td><td>sequence number </td></tr>
     <tr><td class="paramname">otime</td><td>originate timestamp </td></tr>
@@ -3719,7 +3719,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP_UNREACH) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be one of the 16 unreachable codes) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
@@ -3808,7 +3808,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP6_ECHO_REQUEST or ICMP6_ECHO_REPLY) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be zero) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">id</td><td>echo id number </td></tr>
     <tr><td class="paramname">seq</td><td>echo sequence number </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
@@ -3899,7 +3899,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ND_NEIGHBOR_ADVERT) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be zero) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">flags</td><td>should be a bitwise or of any applicable ND_NA_FLAG_* flags </td></tr>
     <tr><td class="paramname">target</td><td>target ipv6 address </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
@@ -3984,7 +3984,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ND_NEIGHBOR_SOLICIT) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be zero) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">target</td><td>target ipv6 address </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
@@ -4125,7 +4125,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   <table class="params">
     <tr><td class="paramname">type</td><td>type of ICMP packet (should be ICMP6_DST_UNREACH) </td></tr>
     <tr><td class="paramname">code</td><td>code of ICMP packet (should be one of the 5 ICMP6_DST_UNREACH_* codes) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
@@ -4204,11 +4204,11 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Builds an RFC 1112 Internet Group Membership Protocol (IGMP) header. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>packet type </td></tr>
     <tr><td class="paramname">reserved</td><td>(should be 0 for IGMPv1) </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">ip</td><td>IPv4 address (in standard/network byte order) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
@@ -4580,7 +4580,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
     <tr><td class="paramname">frag</td><td>fragmentation bits and offset </td></tr>
     <tr><td class="paramname">ttl</td><td>time to live in the network </td></tr>
     <tr><td class="paramname">prot</td><td>upper layer protocol </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">src</td><td>source IPv4 address (little endian) </td></tr>
     <tr><td class="paramname">dst</td><td>destination IPv4 address (little endian) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
@@ -5169,7 +5169,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
     <tr><td class="paramname">type</td><td>type of frame </td></tr>
     <tr><td class="paramname">user</td><td>user defined data </td></tr>
     <tr><td class="paramname">shost</td><td>source mac address </td></tr>
-    <tr><td class="paramname">len</td><td>total length of the encapuslated packet less 18 bytes </td></tr>
+    <tr><td class="paramname">len</td><td>total length of the encapsulated packet less 18 bytes </td></tr>
     <tr><td class="paramname">snap</td><td>SNAP information (0xaaaa03 + vendor code) </td></tr>
     <tr><td class="paramname">vid</td><td>15 bit VLAN ID, 1 bit BPDU or CDP indicator </td></tr>
     <tr><td class="paramname">portindex</td><td>port index </td></tr>
@@ -5528,7 +5528,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
     <tr><td class="paramname">orig_ts_int</td><td>original timestamp integer </td></tr>
     <tr><td class="paramname">orig_ts_frac</td><td>original timestamp fraction </td></tr>
     <tr><td class="paramname">rec_ts_int</td><td>receiver timestamp integer </td></tr>
-    <tr><td class="paramname">rec_ts_frac</td><td>reciever timestamp fraction </td></tr>
+    <tr><td class="paramname">rec_ts_frac</td><td>receiver timestamp fraction </td></tr>
     <tr><td class="paramname">xmt_ts_int</td><td>transmit timestamp integer </td></tr>
     <tr><td class="paramname">xmt_ts_frac</td><td>transmit timestamp integer </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
@@ -7124,7 +7124,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
     <tr><td class="paramname">ack</td><td>acknowledgement number </td></tr>
     <tr><td class="paramname">control</td><td>control flags </td></tr>
     <tr><td class="paramname">win</td><td>window size </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">urg</td><td>urgent pointer </td></tr>
     <tr><td class="paramname">len</td><td>total length of the TCP packet (for checksum calculation) </td></tr>
     <tr><td class="paramname">payload</td><td></td></tr>
@@ -7385,7 +7385,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
     <tr><td class="paramname">sp</td><td>source port </td></tr>
     <tr><td class="paramname">dp</td><td>destination port </td></tr>
     <tr><td class="paramname">len</td><td>total length of the UDP packet </td></tr>
-    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to autofill) </td></tr>
+    <tr><td class="paramname">sum</td><td>checksum (0 for libnet to auto-fill) </td></tr>
     <tr><td class="paramname">payload</td><td>optional payload or NULL </td></tr>
     <tr><td class="paramname">payload_s</td><td>payload length or 0 </td></tr>
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
@@ -7488,7 +7488,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Builds an RFC 2338 Virtual Router Redundacy Protool (VRRP) header. Use the payload interface to specify address and autthentication information. To build a "legal" packet, the destination IPv4 address should be the multicast * address 224.0.0.18, the IP TTL should be set to 255, and the IP protocol should be set to 112. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Builds an RFC 2338 Virtual Router Redundacy Protool (VRRP) header. Use the payload interface to specify address and authentication information. To build a "legal" packet, the destination IPv4 address should be the multicast * address 224.0.0.18, the IP TTL should be set to 255, and the IP protocol should be set to 112. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">version</td><td>VRRP version (should be 2) </td></tr>
     <tr><td class="paramname">type</td><td>VRRP packet type (should be 1 &ndash; ADVERTISEMENT) </td></tr>
@@ -8074,7 +8074,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Generates an unsigned psuedo-random value within the range specified by mod. LIBNET_PR2 0 - 1 LIBNET_PR8 0 - 255 LIBNET_PR16 0 - 32767 LIBNET_PRu16 0 - 65535 LIBNET_PR32 0 - 2147483647 LIBNET_PRu32 0 - 4294967295</p>
+<p>Generates an unsigned pseudo-random value within the range specified by mod. LIBNET_PR2 0 - 1 LIBNET_PR8 0 - 255 LIBNET_PR16 0 - 32767 LIBNET_PRu16 0 - 65535 LIBNET_PR32 0 - 2147483647 LIBNET_PRu32 0 - 4294967295</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mod</td><td>one the of LIBNET_PR* constants </td></tr>
@@ -8137,7 +8137,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>an error string or NULL if no error has occured </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an error string or NULL if no error has occurred </dd></dl>
 
 </div>
 </div>
@@ -8207,7 +8207,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Returns the sum of the size of all of the pblocks inside of l (this should be the resuling packet size). </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Returns the sum of the size of all of the pblocks inside of l (this should be the resulting packet size). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
   </table>
@@ -8695,7 +8695,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Seeds the psuedo-random number generator. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Seeds the pseudo-random number generator. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
   </table>
@@ -8777,7 +8777,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
         </tr>
       </table>
 </div><div class="memdoc">
-<p>If a given protocol header is built with the checksum field set to "0", by default libnet will calculate the header checksum prior to injection. If the header is set to any other value, by default libnet will not calculate the header checksum. To over-ride this behavior, use <a class="el" href="libnet-functions_8h.html#af17b19befbe13e23a240739b19846503">libnet_toggle_checksum()</a>. Switches auto-checksumming on or off for the specified ptag. If mode is set to LIBNET_ON, libnet will mark the specificed ptag to calculate a checksum for the ptag prior to injection. This assumes that the ptag refers to a protocol that has a checksum field. If mode is set to LIBNET_OFF, libnet will clear the checksum flag and no checksum will be computed prior to injection. This assumes that the programmer will assign a value (zero or otherwise) to the checksum field. Often times this is useful if a precomputed checksum or some other predefined value is going to be used. Note that when libnet is initialized with LIBNET_RAW4, the IPv4 header checksum will always be computed by the kernel prior to injection, regardless of what the programmer sets. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>If a given protocol header is built with the checksum field set to "0", by default libnet will calculate the header checksum prior to injection. If the header is set to any other value, by default libnet will not calculate the header checksum. To over-ride this behavior, use <a class="el" href="libnet-functions_8h.html#af17b19befbe13e23a240739b19846503">libnet_toggle_checksum()</a>. Switches auto-checksumming on or off for the specified ptag. If mode is set to LIBNET_ON, libnet will mark the specified ptag to calculate a checksum for the ptag prior to injection. This assumes that the ptag refers to a protocol that has a checksum field. If mode is set to LIBNET_OFF, libnet will clear the checksum flag and no checksum will be computed prior to injection. This assumes that the programmer will assign a value (zero or otherwise) to the checksum field. Often times this is useful if a precomputed checksum or some other predefined value is going to be used. Note that when libnet is initialized with LIBNET_RAW4, the IPv4 header checksum will always be computed by the kernel prior to injection, regardless of what the programmer sets. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">l</td><td>pointer to a libnet context </td></tr>
     <tr><td class="paramname">ptag</td><td>the ptag reference number </td></tr>
@@ -8849,7 +8849,7 @@ header". It is then followed by the GRE header and finally the encapsulated pack
 <hr>
 <address><small>
 Documentation for <a href="https://github.com/sgeto/libnet">libnet</a> (version 1.2-rc3).<br>
-Generated on Sat Apr 22 2017 by
+Generated on Wed Apr 26 2017 by
 <a href="http://www.doxygen.org/">Doxygen 1.8.14</a>.
 </small></address>
 </body>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>libnet: API Documentation: Main Page</title>
+<title>libnet: API Documentation: libnet API Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="libnet_api_stylesheet.css_tmpl" rel="stylesheet" type="text/css"/>
@@ -14,20 +14,64 @@
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">libnet Documentation</div>  </div>
+<div class="title">libnet API Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<ul><li><a href="index.html"><span>Main&#160;Page</span></a>
-</li><li><a href="files.html"><span>Files</span></a>
-<ul><li><a href="files.html"><span>File&#160;List</span></a>
-</li><li><a href="globals.html"><span>Globals</span></a>
-</li></ul>
-</li></ul>
-</div><!-- contents -->
+<div class="textblock"><p>1998 - 2017 The libnet Developer Community</p>
+<h2>Content(s) </h2>
+<ul>
+<li><a href="index.html">Main Page</a></li>
+<li>Files<ul>
+<li><a href="files.html">File List</a></li>
+<li><a href="globals.html">Globals</a></li>
+</ul>
+</li>
+<li>Stuff<ul>
+<li><a href="rawsocket_non_sequitur.html">Rawsocket Non Sequitur</a><ul>
+<li>Some Sub-sub-page</li>
+</ul>
+</li>
+<li>Design Notes</li>
+<li>Hacking</li>
+<li>TODO</li>
+</ul>
+</li>
+<li>Bindings<ul>
+<li>Lua</li>
+<li><a href="https://github.com/allfro/pylibnet" title="pylibnet">Python</a></li>
+</ul>
+</li>
+<li>Page</li>
+<li>More Page!<ul>
+<li>Me Another Sub-page, yay!</li>
+</ul>
+</li>
+<li><a href="index.html#Topics-TODO">TODO</a></li>
+</ul>
+<h2>Introduction </h2>
+<p><b>Attention:</b> Most on the stuff on this page is either placeholder text and/or work in progress. At best, you should take the content on this page half-serious. I invite you to help expand/improve it.</p>
+<p>This manual documents the low-level libnet API. <b>If you're planning to this API directly, you're signing up for some pain.</b> Just kidding. (I'm not kidding)</p>
+<p>Although there aren't many up-to-date places to look for libnet information these days (yet), you still might not want to get started learning about libnet by reading this document. These pages provide an overview of (some) the internals of libnet with links to the relevant parts of the code. If you "just want it to work" or if this is all very new to you, then you should first refer to <a href="http://www.yomama.com">these</a> (more or less) separate set of pages. Be sure to check out the man pages as well.</p>
+<p>The libnet API deliberately lacks most convenient functions. As further explained in <a href="Design_Notes.html" title="Design Notes">Design Notes</a>, those happen behind the scenes, are left to complementary libraries, higher-level libraries or to "bindings" such as pcap, Python, Lua, etc. and have features such as ~~object systems and main loops~~ that allow a much more convenient API.</p>
+<p>The low-level API also contains plenty of clutter to support integration with arbitrary ~~object systems, languages, main loops~~, and so forth. These features add a lot of noise to the API that you probably don't care about unless you're coding a binding.</p>
+<p>For now, and probably never will there be similar docs for libnet's internals. So if you want to get oriented with the libnet source code (because you're interested in patching the code for example), you should dive straight into each source file, read the source and the comments surrounding it, and... just... figure the rest out! Or ask about it <a href="https://github.com/sgeto/libnet/issues" title="Report bugs">here</a>. If that's something you think you're you can see yourself doing then <b>Welcome Aboard!</b> By the way, it's also a good idea to go through some of the commits to understand the purpose or aim of whoever had their hands on the source before you. There will be a "[Hacking](Hacking.html)" section soon that is intended to guide and assist developers through this adventures journey.</p>
+<p>That is, if I don't lose interest, any hope or my sanity before that. Just kidding. (I'm not kidding)</p>
+<p>Stay tuned.</p>
+<p><b>Last Modified:</b> <em>Wed, 26 Apr 2017 02:58:54 +0300</em></p>
+<h2>TODO </h2>
+<ul>
+<li>try to make it sound smart</li>
+<li>replace stuff inside ~~ with stuff that is actually true</li>
+<li>call mom and dad</li>
+<li>try to get Inbal back :-(</li>
+<li>re-install Windows</li>
+<li>create a separate "doc" branch and never ever (ever) commit anything relate to it directly to master (lesson learnt) </li>
+</ul>
+</div></div><!-- contents -->
 <hr>
 <address><small>
 Documentation for <a href="https://github.com/sgeto/libnet">libnet</a> (version 1.2-rc3).<br>
-Generated on Sat Apr 22 2017 by
+Generated on Wed Apr 26 2017 by
 <a href="http://www.doxygen.org/">Doxygen 1.8.14</a>.
 </small></address>
 </body>
