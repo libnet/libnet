@@ -29,11 +29,8 @@ endif
 
 bin_SCRIPTS = libnet-config
 
-if ENABLE_PKGCONFIG
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
-DISTCLEANFILES = libnet.pc
-endif
 
 if ENABLE_DOXYGEN
 # Include DOxygen support

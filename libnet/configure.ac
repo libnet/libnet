@@ -208,15 +208,6 @@ AC_MSG_RESULT([$enable_samples])
 
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 
-
-dnl Check for pkgconfig
-AC_ARG_ENABLE([pkgconfig],
-    [AS_HELP_STRING([--disable-pkgconfig],[do not generate pkg-config .pc file @<:@default=no@:>@])])
-    [enable_pkgconfig=$enableval],
-    [enable_pkgconfig=yes]
-AM_CONDITIONAL([ENABLE_PKGCONFIG], [test "$enable_pkgconfig" = "yes"])
-
-
 dnl Check for debug
 dnl FIXME make it do any actual debuging
 AC_MSG_CHECKING([whether to compile in debug mode])
@@ -487,7 +478,6 @@ Features and Examples
     Debugging: .................... ${use_debug}
     Additional Optimizations: ..... ${use_fast}
     Build Sample Programs: ........ ${enable_samples}
-    Generate pkg-config: .......... ${enable_pkgconfig}
     Rebuild docs: ................. ${rebuild_docs}
 
 To override options, see ./configure --help
