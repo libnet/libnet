@@ -83,7 +83,7 @@ libnet_write(libnet_t *l)
             break;
         default:
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): unsuported injection type", __func__);
+                        "%s(): unsupported injection type", __func__);
             goto done;
     }
 
