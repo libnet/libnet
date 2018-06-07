@@ -7,8 +7,8 @@
 
 
 DISTCHECK_CONFIGURE_FLAGS = \
-            --enable-doxygen-doc \
-            --disable-samples
+           --enable-doxygen-doc \
+           --disable-samples
 
 # Include macros implemented in the directory m4
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
@@ -49,6 +49,7 @@ EXTRA_DIST    = msvcbuild.bat \
                 $(WIN32) \
                 $(m4data_DATA) \
                 $(man_MANS) \
+                $(APIDOCS) \
                 $(APIDOC_DEPS)
 
 WIN32         = win32/getopt.h \
@@ -57,9 +58,9 @@ WIN32         = win32/getopt.h \
                 win32/stdint.h \
                 win32/wpdpack
 
-APIDOCS       = doc/api/*.html \
-                doc/api/*.css \
-                doc/api/*.png
+APIDOCS       = $(top_srcdir)/doc/api/*.html \
+                $(top_srcdir)/doc/api/*.css \
+                $(top_srcdir)/doc/api/*.png
 
 APIDOC_DEPS   = doc/libnet.doxygen.conf \
                 doc/libnet.Pod \
