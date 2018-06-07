@@ -24,6 +24,7 @@ libnet*.changes
 libnet*.deb
 libnet-1.?
 libnet-1.?.?
+libnet-1.?-*
 libnet-*.tar.gz
 libnet-*.zip
 libnet-config
