@@ -188,7 +188,7 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf], [doc])
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${ac_top_srcdir}/doc/libnet.doxygen.conf], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
 
 if test ${DX_FLAG_doc} -eq 1; then

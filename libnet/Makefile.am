@@ -6,9 +6,9 @@
 # Process this file with automake to produce a Makefile.in script.
 
 
-DISTCHECK_CONFIGURE_FLAGS = \
-           --enable-doxygen-doc \
-           --disable-samples
+#DISTCHECK_CONFIGURE_FLAGS = \
+#           --enable-doxygen-doc \
+#           --disable-samples
 
 # Include macros implemented in the directory m4
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
@@ -62,12 +62,12 @@ APIDOCS       = $(top_srcdir)/doc/api/*.html \
                 $(top_srcdir)/doc/api/*.css \
                 $(top_srcdir)/doc/api/*.png
 
-APIDOC_DEPS   = doc/libnet.doxygen.conf \
-                doc/libnet.Pod \
-                doc/libnet-config.Pod \
-                doc/libnet_api_header.html_tmpl \
-                doc/libnet_api_footer.html_tmpl \
-                doc/libnet_api_stylesheet.css_tmpl
+APIDOC_DEPS   = $(top_srcdir)/doc/libnet.doxygen.conf \
+                $(top_srcdir)/doc/libnet.Pod \
+                $(top_srcdir)/doc/libnet-config.Pod \
+                $(top_srcdir)/doc/libnet_api_header.html_tmpl \
+                $(top_srcdir)/doc/libnet_api_footer.html_tmpl \
+                $(top_srcdir)/doc/libnet_api_stylesheet.css_tmpl
 
 dist_doc_DATA = doc/CHANGELOG \
                 doc/CONTRIB \
