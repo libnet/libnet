@@ -22,13 +22,36 @@ endif
 bin_SCRIPTS = libnet-config
 
 # deleting doc/libnet.tag forces make to rebuild all docs (if enabled)
-CLEANFILES     = doc/libnet.tag
-DISTCLEANFILES = libnet-config \
-                 libnet.pc \
-                 fixmanpages
+CLEANFILES     = doc/libnet.tag libnet-config libnet.pc
+DISTCLEANFILES = fixmanpages
 
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
+
+# For list of the strings to substitute via sed in libnet.pc.in, try ...
+# $ cat libnet.pc.in libnet-config.in | tr '" ' '\n\n' | egrep '@.*@' | sed 's:^[^@]*@:@:' | sort | uniq
+
+INCOMMAND = $(SED) \
+	 -e 's|[@]configure_input[@]|$(configure_input)|g' \
+	 -e 's|[@]exec_prefix[@]|$(exec_prefix)|g' \
+	 -e 's|[@]includedir[@]|$(includedir)|g' \
+	 -e 's|[@]LDFLAGS[@]|$(LDFLAGS)|g' \
+	 -e 's|[@]libdir[@]|$(libdir)|g' \
+	 -e 's|[@]LIBNET_CONFIG_CFLAGS[@]|$(LIBNET_CONFIG_CFLAGS)|g' \
+	 -e 's|[@]LIBNET_CONFIG_DEFINES[@]|$(LIBNET_CONFIG_DEFINES)|g' \
+	 -e 's|[@]LIBNET_CONFIG_LIBS[@]|$(LIBNET_CONFIG_LIBS)|g' \
+	 -e 's|[@]LIBS[@]|$(LIBS)|g' \
+	 -e 's|[@]PACKAGE_URL[@]|$(PACKAGE_URL)|g' \
+	 -e 's|[@]prefix[@]|$(prefix)|g' \
+	 -e 's|[@]SHELL[@]|$(SHELL)|g' \
+	 -e 's|[@]VERSION[@]|$(VERSION)|g'
+
+libnet.pc: libnet.pc.in
+	$(INCOMMAND) <$< > $@
+
+libnet-config: libnet-config.in
+	$(INCOMMAND) <$< > $@
+	$(CHMOD) a+x $@
 
 if ENABLE_DOXYGEN
 # Include DOxygen support
@@ -46,6 +69,8 @@ EXTRA_DIST    = msvcbuild.bat \
                 README.win32 \
                 autogen.sh \
                 map-pblock-types \
+		libnet.pc.in \
+		libnet-config.in \
                 $(WIN32) \
                 $(m4data_DATA) \
                 $(man_MANS) \

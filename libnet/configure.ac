@@ -22,6 +22,8 @@ LT_PREREQ([2.4.2])
 AC_COPYRIGHT([Copyright 1998 - 2017 The libnet Developer Community])
 AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_PROG_SHELL
+AC_PROG_SED
+AC_CHECK_PROGS([CHMOD],[chmod],[true])
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
 AC_CONFIG_MACRO_DIR([m4])
@@ -72,22 +74,6 @@ AC_SUBST(LIBNET_CONFIG_LIBS)
 dnl FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
-
-dnl Guess the root install directory (if none is provided)
-if test "${prefix}" = "NONE"; then
-    if test -w /usr/local; then
-        prefix=/usr/local
-    else
-        AC_PREFIX_PROGRAM($CC)
-    fi
-fi
-
-if test "${exec_prefix}" = "NONE"; then
-    exec_prefix=$prefix
-fi
-dnl libdir and includedir must be fully qualified paths (not ${prefix}/lib)
-eval libdir="$libdir"
-eval includedir="$includedir"
 
 dnl Get link-layer interface type
 AC_ARG_WITH(
@@ -438,13 +424,11 @@ dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
 AC_CONFIG_FILES([Makefile \
-                 libnet.pc \
                  include/Makefile \
                  include/libnet.h \
                  src/Makefile \
                  sample/Makefile])
-AC_CONFIG_FILES([libnet-config], [chmod +x libnet-config])
-AC_CONFIG_FILES([doc/fixmanpages], [chmod +x doc/fixmanpages])
+AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 AC_OUTPUT
 
 AC_MSG_RESULT([
