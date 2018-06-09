@@ -242,7 +242,7 @@ libnet_addr2name4(uint32_t in, uint8_t use_name);
  */
 LIBNET_API
 uint32_t
-libnet_name2addr4(libnet_t *l, char *host_name, uint8_t use_name);
+libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name);
 
 extern const struct libnet_in6_addr in6addr_error;
 
@@ -1543,7 +1543,28 @@ libnet_ptag_t
 libnet_build_ospfv2_hello(uint32_t netmask, uint16_t interval, uint8_t opts,
 uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
- 
+
+/**
+ * @param netmask
+ * @param interval
+ * @param opts
+ * @param priority
+ * @param dead_int
+ * @param des_rtr
+ * @param bkup_rtr
+ * @param neighbor
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+libnet_ptag_t
+libnet_build_ospfv2_hello_neighbor(uint32_t netmask, uint16_t interval, uint8_t opts,
+uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr, uint32_t neighbor,
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
 /**
  * @param dgram_len
  * @param opts

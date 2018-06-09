@@ -101,14 +101,24 @@ libnet_build_ospfv2_hello(uint32_t netmask, uint16_t interval, uint8_t opts,
 uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
+	return libnet_build_ospfv2_hello_neighbor(netmask, interval, opts,
+		  priority, dead_int, des_rtr, bkup_rtr, 0,
+		  payload, payload_s, l, ptag);
+}
+
+libnet_ptag_t
+libnet_build_ospfv2_hello_neighbor(uint32_t netmask, uint16_t interval, uint8_t opts,
+uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr, uint32_t neighbor,
+const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+{
     uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_ospf_hello_hdr hello_hdr;
 
     if (l == NULL)
-    { 
+    {
         return (-1);
-    } 
+    }
 
     n = LIBNET_OSPF_HELLO_H + payload_s;
     h = 0;
@@ -122,7 +132,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     {
         return (-1);
     }
-    
+
     memset(&hello_hdr, 0, sizeof(hello_hdr));
     hello_hdr.hello_nmask.s_addr    = netmask;  /* Netmask */
     hello_hdr.hello_intrvl          = htons(interval);	/* # seconds since last packet sent */
@@ -131,7 +141,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     hello_hdr.hello_dead_intvl      = htonl(dead_int); /* Time til router is deemed down */
     hello_hdr.hello_des_rtr.s_addr  = des_rtr;	/* Networks designated router */
     hello_hdr.hello_bkup_rtr.s_addr = bkup_rtr; /* Networks backup router */
-    /*hello_hdr.hello_nbr.s_addr      = htonl(neighbor); */
+    hello_hdr.hello_nbr.s_addr      = htonl(neighbor);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&hello_hdr, LIBNET_OSPF_HELLO_H);
     if (n == -1)
@@ -141,14 +151,13 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     /* boilerplate payload sanity check / append macro */
     LIBNET_DO_PAYLOAD(l, p);
- 
-    return (ptag ? ptag : libnet_pblock_update(l, p, h, 
+
+    return (ptag ? ptag : libnet_pblock_update(l, p, h,
             LIBNET_PBLOCK_OSPF_HELLO_H));
 bad:
     libnet_pblock_delete(l, p);
     return (-1);
 }
-
 
 libnet_ptag_t
 libnet_build_ospfv2_dbd(uint16_t dgram_len, uint8_t opts, uint8_t type,
