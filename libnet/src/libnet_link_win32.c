@@ -40,6 +40,69 @@
 
 #include "common.h"
 
+/*
+ * These are the types that are the same on all platforms, and that
+ * have been defined by <net/bpf.h> for ages.
+ */
+
+#ifndef DLT_NULL
+#define DLT_NULL	0	/* BSD loopback encapsulation */
+#endif
+
+#ifndef DLT_EN10MB
+#define DLT_EN10MB	1	/* Ethernet (10Mb) */
+#endif
+
+#ifndef DLT_EN3MB
+#define DLT_EN3MB	2	/* Experimental Ethernet (3Mb) */
+#endif
+
+#ifndef DLT_AX25
+#define DLT_AX25	3	/* Amateur Radio AX.25 */
+#endif
+
+#ifndef DLT_PRONET
+#define DLT_PRONET	4	/* Proteon ProNET Token Ring */
+#endif
+
+#ifndef DLT_CHAOS
+#define DLT_CHAOS	5	/* Chaos */
+#endif
+
+#ifndef DLT_IEEE802
+#define DLT_IEEE802	6	/* 802.5 Token Ring */
+#endif
+
+#ifndef DLT_ARCNET
+#define DLT_ARCNET	7	/* ARCNET, with BSD-style header */
+#endif
+
+#ifndef DLT_SLIP
+#define DLT_SLIP	8	/* Serial Line IP */
+#endif
+
+#ifndef DLT_PPP
+#define DLT_PPP		9	/* Point-to-point Protocol */
+#endif
+
+#ifndef DLT_FDDI
+#define DLT_FDDI	10	/* FDDI */
+#endif
+
+/*
+ * These are types that are different on some platforms, and that
+ * have been defined by <net/bpf.h> for ages.  We use #ifdefs to
+ * detect the BSDs that define them differently from the traditional
+ * libpcap <net/bpf.h>
+ *
+ * XXX - DLT_ATM_RFC1483 is 13 in BSD/OS, and DLT_RAW is 14 in BSD/OS,
+ * but I don't know what the right #define is for BSD/OS.
+ */
+
+#ifndef DLT_ATM_RFC1483
+#define DLT_ATM_RFC1483	11	/* LLC-encapsulated ATM */
+#endif
+
 int
 libnet_open_link(libnet_t *l)
 {
