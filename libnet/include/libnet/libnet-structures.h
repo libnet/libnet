@@ -30,8 +30,7 @@
 #ifndef __LIBNET_STRUCTURES_H
 #define __LIBNET_STRUCTURES_H
 
-#if ((__WIN32__) && !(__CYGWIN__))
-#include <pcap.h>
+#if ((_WIN32) && !(__CYGWIN__))
 #include "Packet32.h"
 #endif
 
@@ -50,15 +49,9 @@ struct libnet_port_list_chain
 /* libnet statistics structure */
 struct libnet_stats
 {
-#if (!defined(__WIN32__) || (__CYGWIN__))
-    uint64_t packets_sent;             /* packets sent */
-    uint64_t packet_errors;            /* packets errors */
-    uint64_t bytes_written;            /* bytes written */
-#else
     __int64 packets_sent;               /* packets sent */
     __int64 packet_errors;              /* packets errors */
     __int64 bytes_written;              /* bytes written */
-#endif
 };
 
 
@@ -184,7 +177,7 @@ typedef struct libnet_protocol_block libnet_pblock_t;
  */
 struct libnet_context
 {
-#if ((__WIN32__) && !(__CYGWIN__)) 
+#if ((_WIN32) && !(__CYGWIN__)) 
     SOCKET fd;
     LPADAPTER  lpAdapter;
 #else
