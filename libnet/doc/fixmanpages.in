@@ -38,11 +38,11 @@ find $MANDIR/man3/ -name "libnet.h.3" -exec sh -c 'rm -f "$1"' _ {} \;
 # BTW: We're using this hideous date format because Doxygen generated man
 # pages have them set like this and our date format shouldn't look different.
 
-pod2man -d "$(date +%a\ %b\ %d\ %C%y)" -n LIBNET -c "libnet Programmers Guide" -s 3 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" libnet.Pod man/man3/libnet.3 || die "Could not create libnet.3 in $MANDIR/man/man3."
+pod2man -d "$(date +%a\ %b\ %d\ %C%y)" -n LIBNET -c "libnet Programmers Guide" -s 3 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" @top_srcdir@/doc/libnet.Pod man/man3/libnet.3 || die "Could not create libnet.3 in $MANDIR/man/man3."
 
 # pod2html --title="libnet Programmers Guide" --noindex --infile=libnet.Pod --outfile=libnet.html
 
-pod2man -d "$(date +%a\ %b\ %d\ %C%y)" -n LIBNET-CONFIG -c "General Commands Manual" -s 1 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" libnet-config.Pod man/man1/libnet-config.1 || die "Could not create libnet-config.1 in $MANDIR/man/man1."
+pod2man -d "$(date +%a\ %b\ %d\ %C%y)" -n LIBNET-CONFIG -c "General Commands Manual" -s 1 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" @top_srcdir@/doc/libnet-config.Pod man/man1/libnet-config.1 || die "Could not create libnet-config.1 in $MANDIR/man/man1."
 
 cd "$MANDIR/man3" || die "Could not cd into $MANDIR/man3"
 
