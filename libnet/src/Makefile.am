@@ -6,7 +6,7 @@
 # Process this file with automake to produce a Makefile.in script.
 
 EXTRA_DIST = libnet_dll.c common.h
-AM_CPPFLAGS = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(builddir)/../include
 
 lib_LTLIBRARIES = libnet.la
 
