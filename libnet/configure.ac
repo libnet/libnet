@@ -167,14 +167,14 @@ echo ""
 DX_DOXYGEN_FEATURE(OFF)
 DX_DOT_FEATURE(ON)
 DX_HTML_FEATURE(ON)
-DX_CHM_FEATURE(OFF)
+DX_CHM_FEATURE(ON)
 DX_CHI_FEATURE(OFF)
 DX_MAN_FEATURE(ON)
 DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${ac_top_srcdir}/doc/libnet.doxygen.conf], [doc])
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [$(top_srcdir)/doc/libnet.doxygen.conf], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
 
 if test ${DX_FLAG_doc} -eq 1; then
@@ -363,13 +363,13 @@ dnl
     AC_CHECK_HEADERS(sys/dlpi_ext.h)
     ;;
 
-*cygwin*)
+*cygwin* | *msys*)
+    WIN32="yes"
+    AC_SUBST(WIN32)
     AC_DEFINE(LIBNET_BSDISH_OS, 1,
         [Define if our build OS supports the BSD APIs])
-    AC_DEFINE(NO_SNPRINTF, 1,
-        [Define if snprintf() is unavailable on our system.])
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DNO_SNPRINTF"
-    CFLAGS="$CFLAGS -mno-cygwin -O0 -fnative-struct -DNO_SNPRINTF -I/usr/include/pcap"
+    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS"
+    CFLAGS="$CFLAGS -mwin32"
     AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(packet lib not found.))
     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(pcap lib not found.))
     LIBS="$LIBS -lws2_32"
@@ -378,9 +378,6 @@ dnl
 *mingw*)
     WIN32="yes"
     AC_SUBST(WIN32)
-dnl additionally prepare a winconfig.h from config.h.in for MSVC
-dnl see m4/ax_prefix_config_h.m4
-dnl AX_PREFIX_CONFIG_H(winconfig.h)
 
     if test "$enable_shared" = "yes"; then
         AC_CHECK_TOOL(WINDRES, windres, :)
