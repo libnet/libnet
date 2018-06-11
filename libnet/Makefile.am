@@ -6,9 +6,9 @@
 # Process this file with automake to produce a Makefile.in script.
 
 
-#DISTCHECK_CONFIGURE_FLAGS = \
-#           --enable-doxygen-doc \
-#           --disable-samples
+DISTCHECK_CONFIGURE_FLAGS = \
+          --enable-doxygen-doc \
+          --disable-samples
 
 # Include macros implemented in the directory m4
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
