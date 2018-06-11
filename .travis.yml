@@ -1,6 +1,4 @@
 language: c
-script:
-  sudo make install
 branches:
   only:
   - master
@@ -14,7 +12,8 @@ os:
 before_install:
     - if [ ${TRAVIS_OS_NAME} = "linux" ]; then sudo apt-get update -qq; sudo apt-get install -qq autoconf automake m4 libtool doxygen doxygen-latex liblua5.1-0-dev libdumbnet-dev; fi
     - if [ ${TRAVIS_OS_NAME} = "osx" ]; then brew update; brew install doxygen lua@5.1 libdnet; fi
-install:  cd libnet && ../Prepare && ../Build
+script:
+    cd libnet && ../Prepare && ../Build
 after_success:
     - bash <(curl -s https://codecov.io/bash)
 #add email if you want to get notified
