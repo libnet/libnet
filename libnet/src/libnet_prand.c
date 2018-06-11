@@ -30,8 +30,10 @@
 
 #include "common.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <wincrypt.h>
+#include <time.h>
+
 #else
 #include <sys/time.h> /* gettimeofday() */
 #endif
