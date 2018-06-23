@@ -161,10 +161,12 @@ case "$target_os" in
         [Define as necessary to "unhide" header symbols.])
     AC_DEFINE(__BSD_SOURCE, 1,
         [Define as necessary to "unhide" header symbols.])
+    AC_DEFINE(_DEFAULT_SOURCE, 1,
+        [Define as necessary to "unhide" header symbols.])
     AC_DEFINE(__FAVOR_BSD, 1,
         [Define if we should favor the BSD APIs when possible in Linux.])
 
-    LIBNET_CONFIG_DEFINES="-D_BSD_SOURCE -D__BSD_SOURCE -D__FAVOR_BSD"
+    LIBNET_CONFIG_DEFINES="-D_BSD_SOURCE -D__BSD_SOURCE -D_DEFAULT_SOURCE -D__FAVOR_BSD"
     AC_CHECK_HEADERS(net/ethernet.h, \
         LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DHAVE_NET_ETHERNET_H")
     ;;
