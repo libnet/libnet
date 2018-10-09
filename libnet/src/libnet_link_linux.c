@@ -114,7 +114,7 @@ libnet_open_link(libnet_t *l)
         case ARPHRD_SLIP6:
         case ARPHRD_CSLIP6:
         case ARPHRD_PPP:
-	case ARPHRD_NONE:
+        case ARPHRD_NONE:
             l->link_type = DLT_RAW;
             break;
         case ARPHRD_FDDI:
