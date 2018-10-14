@@ -86,15 +86,15 @@ libnet_get_prand(int mod)
     switch (mod)
     {
         case LIBNET_PR2:
-            return (n % 0x2);           /* 0 - 1 */
+            return (n & 0x1);           /* 0 - 1 */
         case LIBNET_PR8:
-            return (n % 0xff);          /* 0 - 255 */
+            return (n & 0xff);          /* 0 - 255 */
         case LIBNET_PR16:
-            return (n % 0x7fff);        /* 0 - 32767 */
+            return (n & 0x7fff);        /* 0 - 32767 */
         case LIBNET_PRu16:
-            return (n % 0xffff);        /* 0 - 65535 */
+            return (n & 0xffff);        /* 0 - 65535 */
         case LIBNET_PR32:
-            return (n % 0x7fffffff);    /* 0 - 2147483647 */
+            return (n & 0x7fffffff);    /* 0 - 2147483647 */
         case LIBNET_PRu32:
             return (n);                 /* 0 - 4294967295 */
     }
