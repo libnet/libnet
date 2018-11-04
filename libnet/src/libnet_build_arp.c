@@ -109,7 +109,7 @@ bad:
 
 libnet_ptag_t
 libnet_autobuild_arp(uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha,
-uint8_t *tpa, libnet_t *l)
+const uint8_t *tpa, libnet_t *l)
 {
     u_short hrd;
     

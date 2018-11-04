@@ -600,7 +600,7 @@ libnet_autobuild_fddi(uint8_t fc, const uint8_t *dst, uint8_t dsap, uint8_t ssap
 uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
 
 /**
- * Builds an Address Resolution Protocol (ARP) header.  Depending on the op 
+ * Builds an Address Resolution Protocol (ARP) header.  Depending on the op
  * value, the function builds one of several different types of RFC 826 or
  * RFC 903 RARP packets.
  * @param hrd hardware address format
@@ -611,7 +611,7 @@ uint8_t cf, const uint8_t *oui, uint16_t type, libnet_t *l);
  * @param sha sender's hardware address
  * @param spa sender's protocol address
  * @param tha target hardware address
- * @param tpa targer protocol address
+ * @param tpa target protocol address
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -626,14 +626,14 @@ uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha, const u
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * Autouilds an Address Resolution Protocol (ARP) header.  Depending on the op 
+ * Autouilds an Address Resolution Protocol (ARP) header.  Depending on the op
  * value, the function builds one of several different types of RFC 826 or
  * RFC 903 RARP packets.
  * @param op ARP operation type
  * @param sha sender's hardware address
  * @param spa sender's protocol address
  * @param tha target hardware address
- * @param tpa targer protocol address
+ * @param tpa target protocol address
  * @param l pointer to a libnet context
  * @return protocol tag value on success
  * @retval -1 on error
@@ -641,7 +641,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 LIBNET_API
 libnet_ptag_t
 libnet_autobuild_arp(uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha,
-uint8_t *tpa, libnet_t *l);
+const uint8_t *tpa, libnet_t *l);
 
 /**
  * Builds an RFC 793 Transmission Control Protocol (TCP) header.
