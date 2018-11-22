@@ -103,7 +103,7 @@ dist_doc_DATA = doc/CHANGELOG \
                 doc/PORTED \
                 doc/RAWSOCKET_NON_SEQUITUR \
                 doc/TODO \
-                doc/libnet.pdf
+                doc/libnet.pdf \
                 doc/libnet.chm
 
 man_MANS      = doc/man/man3/libnet.3 \
