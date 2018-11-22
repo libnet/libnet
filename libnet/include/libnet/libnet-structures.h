@@ -49,9 +49,9 @@ struct libnet_port_list_chain
 /* libnet statistics structure */
 struct libnet_stats
 {
-    __int64 packets_sent;               /* packets sent */
-    __int64 packet_errors;              /* packets errors */
-    __int64 bytes_written;              /* bytes written */
+    __int64_t packets_sent;               /* packets sent */
+    __int64_t packet_errors;              /* packets errors */
+    __int64_t bytes_written;              /* bytes written */
 };
 
 
