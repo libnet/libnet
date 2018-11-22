@@ -167,6 +167,7 @@ AC_DEFUN([AC_LIBNET_CHECK_IP_CSUM],
     AC_TRY_COMPILE([
         #define __BSD_SOURCE
         #define _BSD_SOURCE
+        #define _DEFAULT_SOURCE
         #include <sys/types.h>
         #include <netinet/in.h>
         #include <netinet/in_systm.h>
