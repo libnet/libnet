@@ -30,7 +30,9 @@
 #include "common.h"
 
 #include <sys/param.h>  /* optionally get BSD define */
+#ifndef __OpenBSD__
 #include <sys/timeb.h>
+#endif
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
