@@ -58,7 +58,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     l->fd  = open(dev, O_RDWR);
     if (l->fd < 0)
     {
-        sprintf(ebuf, "%s: %s", dev, strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "%s: %s", dev, strerror(errno));
         goto bad;
     }
 
@@ -67,12 +68,14 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
      */
     if (ioctl(l->fd, I_SRDOPT, (int8_t *)RMSGD) < 0)
     {
-        sprintf(ebuf, "I_SRDOPT: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "I_SRDOPT: %s", strerror(errno));
         goto bad;
     }
     if (ioctl(l->fd, I_PUSH, "nbuf") < 0)
     {
-        sprintf(ebuf, "push nbuf: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "push nbuf: %s", strerror(errno));
         goto bad;
     }
     /*
@@ -85,7 +88,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     si.ic_dp = (int8_t *)&ifr;
     if (ioctl(l->fd, I_STR, (int8_t *)&si) < 0)
     {
-        sprintf(ebuf, "NIOCBIND: %s: %s", ifr.ifr_name, strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "NIOCBIND: %s: %s", ifr.ifr_name, strerror(errno));
         goto bad;
     }
 

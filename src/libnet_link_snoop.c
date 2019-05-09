@@ -69,7 +69,8 @@ libnet_open_link(libnet_t *l)
     l->fd = socket(PF_RAW, SOCK_RAW, RAWPROTO_DRAIN);
 
     if (l->fd < 0) {
-        sprintf(l->err_buf, "drain socket: %s", strerror(errno));
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "drain socket: %s", strerror(errno));
         goto bad;
     }
 
@@ -79,7 +80,8 @@ libnet_open_link(libnet_t *l)
     sr.sr_ifname[sizeof(sr.sr_ifname) - 1] = '\0';
 
     if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr))) {
-        sprintf(l->err_buf, "drain bind: %s", strerror(errno));
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "drain bind: %s", strerror(errno));
         goto bad;
     }
 
@@ -107,7 +109,8 @@ libnet_open_link(libnet_t *l)
     } else if (strncmp("lo", l->device, 2) == 0) {
         l->link_type = DLT_NULL;
     } else {
-        sprintf(l->err_buf, "drain: unknown physical layer type");
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "drain: unknown physical layer type");
         goto bad;
     }
 

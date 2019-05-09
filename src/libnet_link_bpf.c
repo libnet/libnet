@@ -61,9 +61,9 @@ libnet_bpf_open(char *err_buf)
     /*
      *  Go through all the minors and find one that isn't in use.
      */
-    for (i = 0;;i++)
+    for (i = 0; i < 1000; i++)
     {
-        sprintf(device, "/dev/bpf%d", i);
+        snprintf(device, sizeof(device), "/dev/bpf%d", i);
 
         fd = open(device, O_RDWR);
         if (fd == -1 && errno == EBUSY)

@@ -52,7 +52,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     l->fd = socket(AF_NIT, SOCK_RAW, NITPROTO_RAW);
     if (l->fd < 0)
     {
-        sprintf(ebuf, "socket: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "socket: %s", strerror(errno));
         goto bad;
     }
     snit.snit_family = AF_NIT;
@@ -61,7 +62,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
 
     if (bind(l->fd, (struct sockaddr *)&snit, sizeof(snit)))
     {
-        sprintf(ebuf, "bind: %s: %s", snit.snit_ifname, strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "bind: %s: %s", snit.snit_ifname, strerror(errno));
         goto bad;
     }
 
