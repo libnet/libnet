@@ -58,7 +58,7 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     if (l->fd < 0)
     {
         snprintf(ebuf, LIBNET_ERRBUF_SIZE,
-                 "pf open: %s: %s\n\your system may not be properly configured; see \"man packetfilter(4)\"",
+                 "pf open: %s: %s\nyour system may not be properly configured; see \"man packetfilter(4)\"",
             device, strerror(errno));
         goto bad;
     }
