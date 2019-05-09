@@ -83,6 +83,55 @@ libnet_check_iface(libnet_t *l)
     return (res);
 }
 
+#endif
+
+#if defined(__OpenBSD__) ||  defined(__linux__)
+#include <sys/types.h>
+    #ifdef __OpenBSD__
+    #include <sys/socket.h>
+    #endif
+#include <ifaddrs.h>
+
+int
+libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
+{
+    static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
+    struct ifaddrs *ifap, *ifa;
+    int i = 0, nipaddr;
+    memset (ifaddrlist, 0 , sizeof(ifaddrlist));
+
+    if (getifaddrs(&ifap) != 0)
+    {
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): getifaddrs: %s",
+                    __func__, strerror(errno));
+        return 0;
+    }
+    for (ifa = ifap; ifa; ifa = ifa->ifa_next)
+    {
+        if (ifa->ifa_flags & IFF_LOOPBACK)
+            continue;
+
+        if (ifa->ifa_addr->sa_family == AF_INET )
+        {
+            ifaddrlist[i].device = strdup(ifa->ifa_name);
+            if (ifaddrlist[i].device == NULL) {
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM", __func__);
+                continue;
+            }
+            ifaddrlist[i].addr = ((struct sockaddr_in *)ifa->ifa_addr)->sin_addr.s_addr;
+            ++i;
+        }
+    }
+
+    freeifaddrs(ifap);
+    *ipaddrp = ifaddrlist;
+    return (i);
+}
+
+
+#else
+#if !(__WIN32__)
+
 
 /*
  *  Return the interface list
@@ -346,6 +395,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
     return nipaddr;
 }
 #endif /* __WIN32__ */
+
+#endif /* __OpenBSD__ */
 
 int
 libnet_select_device(libnet_t *l)
