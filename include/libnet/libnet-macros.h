@@ -36,11 +36,6 @@
  * @brief libnet macros and symbolic constants
  */
 
-/* for systems without snprintf */
-#if defined(NO_SNPRINTF)
-#define snprintf(buf, len, args...) sprintf(buf, ##args)
-#endif
-
 
 /**
  * Used for libnet's name resolution functions, specifies that no DNS lookups

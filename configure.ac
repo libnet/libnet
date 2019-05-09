@@ -284,10 +284,8 @@ dnl
 *cygwin*)
      AC_DEFINE(LIBNET_BSDISH_OS, 1,
          [Define if our build OS supports the BSD APIs])
-     AC_DEFINE(NO_SNPRINTF, 1,
-         [Define if snprintf() is unavailable on our system.])
-     LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DNO_SNPRINTF"
-     CFLAGS="$CFLAGS -mno-cygwin -O0 -fnative-struct -DNO_SNPRINTF -I/usr/include/pcap"
+     LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS"
+     CFLAGS="$CFLAGS -mno-cygwin -O0 -fnative-struct -I/usr/include/pcap"
      AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(packet lib not found.))
      AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(pcap lib not found.))
      LIBS="$LIBS -lws2_32"

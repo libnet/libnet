@@ -21,7 +21,6 @@
 #undef __FAVOR_BSD
 #undef LIBNET_BIG_ENDIAN
 #define LIBNET_LIL_ENDIAN 1
-#undef NO_SNPRINTF
 
 
 /*
