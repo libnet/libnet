@@ -49,14 +49,16 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     l = (struct libnet_link_int *)malloc(sizeof(*l));
     if (l == NULL)
     {
-        sprintf(ebuf, "libnet_open_link_int: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "libnet_open_link_int: %s", strerror(errno));
         return (0);
     }
     memset(l, 0, sizeof(*l));
     l->fd = pfopen(device, O_RDWR);
     if (l->fd < 0)
     {
-        sprintf(ebuf, "pf open: %s: %s\n\your system may not be properly configured; see \"man packetfilter(4)\"",
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "pf open: %s: %s\n\your system may not be properly configured; see \"man packetfilter(4)\"",
             device, strerror(errno));
         goto bad;
     }
@@ -64,7 +66,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     enmode = ENTSTAMP|ENBATCH|ENNONEXCL;
     if (ioctl(l->fd, EIOCMBIS, (caddr_t)&enmode) < 0)
     {
-        sprintf(ebuf, "EIOCMBIS: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "EIOCMBIS: %s", strerror(errno));
         goto bad;
     }
 #ifdef	ENCOPYALL
@@ -75,7 +78,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
 	/* set the backlog */
     if (ioctl(l->fd, EIOCSETW, (caddr_t)&backlog) < 0)
     {
-        sprintf(ebuf, "EIOCSETW: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "EIOCSETW: %s", strerror(errno));
         goto bad;
     }
     /*
@@ -83,7 +87,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
      */
     if (ioctl(l->fd, EIOCDEVP, (caddr_t)&devparams) < 0)
     {
-        sprintf(ebuf, "EIOCDEVP: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "EIOCDEVP: %s", strerror(errno));
         goto bad;
     }
 
@@ -117,7 +122,8 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     Filter.enf_FilterLen = 0;	/* means "always true" */
     if (ioctl(l->fd, EIOCSETF, (caddr_t)&Filter) < 0)
     {
-        sprintf(ebuf, "EIOCSETF: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "EIOCSETF: %s", strerror(errno));
         goto bad;
     }
 

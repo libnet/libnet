@@ -228,7 +228,7 @@ libnet_open_link(libnet_t *l)
     }
     else
     {
-        sprintf(dname, "%s/%s", DLPI_DEV_PREFIX, l->device);
+        snprintf(dname, sizeof(dname), %s/%s", DLPI_DEV_PREFIX, l->device);
     }
 
     /*
@@ -312,7 +312,8 @@ libnet_open_link(libnet_t *l)
             l->link_offset  = 0x16;
             break;
         default:
-            sprintf(l->err_buf, "%s(): unknown mac type 0x%lu", __func__,
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "%s(): unknown mac type 0x%lu", __func__,
                     (uint32_t) infop->dl_mac_type);
             goto bad;
     }
@@ -323,7 +324,8 @@ libnet_open_link(libnet_t *l)
      */
     if (strioctl(l->fd, DLIOCRAW, 0, NULL) < 0)
     {
-        sprintf(l->err_buf, "%s(): DLIOCRAW: %s", __func__, strerror(errno));
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "%s(): DLIOCRAW: %s", __func__, strerror(errno));
         goto bad;
     }
 #endif
@@ -350,7 +352,8 @@ int flags)
 
     if (putmsg(fd, &ctl, (struct strbuf *) NULL, flags) < 0)
     {
-        sprintf(ebuf, "%s(): putmsg \"%s\": %s", __func__, what,
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "%s(): putmsg \"%s\": %s", __func__, what,
                 strerror(errno));
         return (-1);
     }
@@ -371,7 +374,8 @@ recv_ack(int fd, int size, const int8_t *what, int8_t *bufp, int8_t *ebuf)
     flags = 0;
     if (getmsg(fd, &ctl, (struct strbuf*)NULL, &flags) < 0)
     {
-        sprintf(ebuf, "%s(): %s getmsg: %s", __func__, what, strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "%s(): %s getmsg: %s", __func__, what, strerror(errno));
         return (-1);
     }
 
@@ -394,32 +398,37 @@ recv_ack(int fd, int size, const int8_t *what, int8_t *bufp, int8_t *ebuf)
             switch (dlp->error_ack.dl_errno)
             {
                 case DL_BADPPA:
-                    sprintf(ebuf, "recv_ack: %s bad ppa (device unit)", what);
+                    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                             "recv_ack: %s bad ppa (device unit)", what);
                     break;
                 case DL_SYSERR:
-                    sprintf(ebuf, "recv_ack: %s: %s",
+                    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                             "recv_ack: %s: %s",
                         what, strerror(dlp->error_ack.dl_unix_errno));
                     break;
                 case DL_UNSUPPORTED:
-                    sprintf(ebuf,
+                    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
                         "recv_ack: %s: Service not supplied by provider", what);
                     break;
                 default:
-                    sprintf(ebuf, "recv_ack: %s error 0x%x", what,
+                    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                             "recv_ack: %s error 0x%x", what,
                         (bpf_u_int32)dlp->error_ack.dl_errno);
                     break;
             }
             return (-1);
 
         default:
-            sprintf(ebuf, "recv_ack: %s unexpected primitive ack 0x%x ",
+            snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                     "recv_ack: %s unexpected primitive ack 0x%x ",
                 what, (bpf_u_int32)dlp->dl_primitive);
             return (-1);
     }
 
     if (ctl.len < size)
     {
-        sprintf(ebuf, "recv_ack: %s ack too small (%d < %d)",
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "recv_ack: %s ack too small (%d < %d)",
             what, ctl.len, size);
         return (-1);
     }
@@ -534,7 +543,8 @@ register int8_t *ebuf)
 
     if (stat(device, &statbuf) < 0)
     {
-        sprintf(ebuf, "stat: %s: %s", device, strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "stat: %s: %s", device, strerror(errno));
         return (-1);
     }
     majdev = major(statbuf.st_rdev);
@@ -562,13 +572,15 @@ register int8_t *ebuf)
 
     if (i == ap->dl_count)
     {
-        sprintf(ebuf, "can't find PPA for %s", device);
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "can't find PPA for %s", device);
         return (-1);
     }
 
     if (ip->dl_hdw_state == HDW_DEAD)
     {
-        sprintf(ebuf, "%s: hardware state: DOWN", device);
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "%s: hardware state: DOWN", device);
         return (-1);
     }
     return ((int)ip->dl_ppa);
@@ -609,20 +621,23 @@ get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
     }
     if (nlist(path_vmunix, &nl) < 0)
     {
-        sprintf(ebuf, "nlist %s failed", path_vmunix);
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "nlist %s failed", path_vmunix);
         return (-1);
     }
 
     if (nl[NL_IFNET].n_value == 0)
     {
-        sprintf(ebuf, "could't find %s kernel symbol", nl[NL_IFNET].n_name);
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "could't find %s kernel symbol", nl[NL_IFNET].n_name);
         return (-1);
     }
 
     kd = open("/dev/kmem", O_RDONLY);
     if (kd < 0)
     {
-        sprintf(ebuf, "kmem open: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "kmem open: %s", strerror(errno));
         return (-1);
     }
 
@@ -640,7 +655,7 @@ get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
                 close(kd);
                 return (-1);
             }
-            sprintf(tifname, "%.*s%d",
+            snprintf(tifname, sizeof(tifname), "%.*s%d",
                 (int)sizeof(if_name), if_name, ifnet.if_unit);
             if (strcmp(tifname, ifname) == 0)
             {
@@ -648,7 +663,8 @@ get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
             }
     }
 
-    sprintf(ebuf, "Can't find %s", ifname);
+    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+             "Can't find %s", ifname);
     return (-1);
 }
 
@@ -660,18 +676,21 @@ register uint len, register int8_t *ebuf)
 
     if (lseek(fd, addr, SEEK_SET) < 0)
     {
-        sprintf(ebuf, "lseek: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "lseek: %s", strerror(errno));
         return (-1);
     }
     cc = read(fd, buf, len);
     if (cc < 0)
     {
-        sprintf(ebuf, "read: %s", strerror(errno));
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "read: %s", strerror(errno));
         return (-1);
     }
     else if (cc != len)
     {
-        sprintf(ebuf, "int16_t read (%d != %d)", cc, len);
+        snprintf(ebuf, LIBNET_ERRBUF_SIZE,
+                 "int16_t read (%d != %d)", cc, len);
         return (-1);
     }
     return (cc);
