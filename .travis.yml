@@ -12,6 +12,7 @@ script:
   - ./autogen.sh
   - ./configure --prefix=/ --disable-silent-rules
   - make clean
+  - make -C doc doc
   - make
   - make install-strip DESTDIR=/tmp/libnet
   - ls -lR /tmp/libnet
