@@ -25,6 +25,7 @@ configure
 dynsections.js
 install-sh
 jquery.js
+libnet.pc
 libnet*.changes
 libnet*.deb
 libnet-1.?

@@ -8,6 +8,8 @@
 
 include $(top_srcdir)/Makefile.am.common
 
+pkgconfigdir   = $(libdir)/pkgconfig
+pkgconfig_DATA = libnet.pc
 SUBDIRS = include src sample doc win32
 
 EXTRA_DIST = Makefile.am.common msvcbuild.bat

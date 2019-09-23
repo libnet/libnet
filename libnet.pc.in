@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE@
+Version: @VERSION@
+Description: portable framework for low-level network packet construction
+Requires: 
+Libs: -L${libdir} -lnet @LTLIBINTL@
+Cflags: -I${includedir}
+
