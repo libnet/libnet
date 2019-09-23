@@ -10,8 +10,8 @@ compiler:
 script:
   - cd libnet/
   - ./autogen.sh
-  - ./configure --prefix=/tmp --disable-silent-rules
+  - ./configure --prefix=/ --disable-silent-rules
   - make clean
-  - make -j5
-  - make install-strip
-  - ls -lR /tmp
+  - make
+  - make install-strip DESTDIR=/tmp/libnet
+  - ls -lR /tmp/libnet
