@@ -1,11 +1,3 @@
---- libnet-1.1.2.1.orig/Makefile.am
-+++ libnet-1.1.2.1/Makefile.am
-@@ -12,4 +12,4 @@
- 
- EXTRA_DIST = Makefile.am.common
- 
--bin_scripts = libnet-config
-+bin_SCRIPTS = libnet-config
 --- libnet-1.1.2.1.orig/configure.in
 +++ libnet-1.1.2.1/configure.in
 @@ -21,10 +21,24 @@
