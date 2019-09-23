@@ -1,0 +1,17 @@
+# Defaults to GNU GCC and autotools: ./configure && make && make test
+language: c
+
+# Use docker for quicker builds, it now allows https://docs.travis-ci.com/user/apt/
+sudo: false
+
+compiler:
+  - gcc
+
+script:
+  - cd libnet/
+  - ./autogen.sh
+  - ./configure --prefix=/tmp --disable-silent-rules
+  - make clean
+  - make -j5
+  - make install-strip
+  - ls -lR /tmp
