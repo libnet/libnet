@@ -1,4 +1,3 @@
-usr/bin/libnet-config
 usr/lib/libnet.a
 usr/lib/libnet.la
 usr/lib/libnet.so
