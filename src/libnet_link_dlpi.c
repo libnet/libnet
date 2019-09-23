@@ -771,13 +771,20 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    /* This implementation is not-reentrant. */
-    static int8_t buf[2048];
     union DL_primitives *dlp;
-    struct libnet_ether_addr *eap;
+    int8_t *buf;
+    int8_t *mac;
 
     if (l == NULL)
     { 
+        return (NULL);
+    }
+
+    buf = (int8_t *)malloc(2048);
+    if (buf == NULL)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s",
+                __func__, strerror(errno));
         return (NULL);
     }
 
@@ -789,17 +796,21 @@ libnet_get_hwaddr(libnet_t *l)
     if (send_request(l->fd, (int8_t *)dlp, DL_PHYS_ADDR_REQ_SIZE, "physaddr",
             l->err_buf, 0) < 0)
     {
+        free(buf);
         return (NULL);
     }
     if (recv_ack(l->fd, DL_PHYS_ADDR_ACK_SIZE, "physaddr", (int8_t *)dlp,
             l->err_buf) < 0)
     {
+        free(buf);
         return (NULL);
     }
 
-    eap = (struct libnet_ether_addr *)
-            ((int8_t *) dlp + dlp->physaddr_ack.dl_addr_offset);
-    return (eap);
+    mac = (int8_t *)dlp + dlp->physaddr_ack.dl_addr_offset;
+    memcpy(l->link_addr.ether_addr_octet, mac, ETHER_ADDR_LEN);
+    free(buf);
+
+    return (&l->link_addr);
 }   
 
 /* EOF */

@@ -231,6 +231,8 @@ struct libnet_context
 
     char err_buf[LIBNET_ERRBUF_SIZE];   /* error buffer */
     uint32_t total_size;               /* total size */
+
+    struct libnet_ether_addr link_addr; /* Link HW addr */
 };
 typedef struct libnet_context libnet_t;
 

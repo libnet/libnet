@@ -165,7 +165,6 @@ libnet_get_hwaddr(libnet_t *l)
 {
     struct ifreq ifdat;
     int s = -1;
-    struct libnet_ether_addr *ea = NULL;
 
     if (-1 == (s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP))) {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -174,20 +173,15 @@ libnet_get_hwaddr(libnet_t *l)
     }
     memset(&ifdat, 0, sizeof(struct ifreq));
     strncpy(ifdat.ifr_name, l->device, IFNAMSIZ);
-    if (ioctl(s, SIOCGIFADDR, &ifdat)) {
+    if (ioctl(s, SIOCGIFADDR, &ifdat) < 0) {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "SIOCGIFADDR: %s", strerror(errno));
         goto errout;
     }
-    if (!(ea = malloc(sizeof(struct libnet_ether_addr)))) {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "malloc(): %s", strerror(errno));
-        goto errout;
-    }
-    memcpy(ea, &ifdat.ifr_addr.sa_data, ETHER_ADDR_LEN);
     close(s);
-    s = -1;
-    return ea;
+
+    return memcpy(l->link_addr.ether_addr_octet, &ifdat.ifr_addr.sa_data,
+                  ETHER_ADDR_LEN);
 
  errout:
     if (s > 0) {
@@ -197,7 +191,7 @@ libnet_get_hwaddr(libnet_t *l)
         free(ea);
         ea = 0;
     }
-    return 0;
+    return NULL;
 }
 /* ---- Emacs Variables ----
  * Local Variables:

@@ -173,8 +173,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    /* This implementation is not-reentrant. */
-    static struct libnet_ether_addr *mac;
+    struct libnet_ether_addr *mac = &l->link_addr;
     
     ULONG IoCtlBufferLength = (sizeof(PACKET_OID_DATA) + sizeof(ULONG) - 1);
 	PPACKET_OID_DATA OidData;
@@ -195,14 +194,6 @@ libnet_get_hwaddr(libnet_t *l)
             return (NULL);
         }
     }
-
-    mac = (struct libnet_ether_addr *)calloc(1,sizeof(struct libnet_ether_addr));
-	if (mac == NULL)
-	{
-		snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): calloc error", __func__);
-		return (NULL);
-	}
 
     OidData = (struct _PACKET_OID_DATA *) malloc(IoCtlBufferLength);
 	
