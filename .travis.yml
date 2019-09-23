@@ -7,6 +7,12 @@ sudo: false
 compiler:
   - gcc
 
+addons:
+  apt:
+    packages:
+      - tree
+      - doxygen
+
 script:
   - cd libnet/
   - ./autogen.sh
@@ -15,4 +21,4 @@ script:
   - make -C doc doc
   - make
   - make install-strip DESTDIR=/tmp/libnet
-  - ls -lR /tmp/libnet
+  - tree /tmp/libnet
