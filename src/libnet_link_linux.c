@@ -244,11 +244,6 @@ libnet_get_hwaddr(libnet_t *l)
 {
     int fd;
     struct ifreq ifr;
-    struct libnet_ether_addr *eap;
-    /*
-     *  XXX - non-re-entrant!
-     */
-    static struct libnet_ether_addr ea;
 
     if (l == NULL)
     { 
@@ -277,20 +272,20 @@ libnet_get_hwaddr(libnet_t *l)
     }
 
     memset(&ifr, 0, sizeof(ifr));
-    eap = &ea;
-   	strncpy(ifr.ifr_name, l->device, sizeof(ifr.ifr_name) - 1);
+    strncpy(ifr.ifr_name, l->device, sizeof(ifr.ifr_name) - 1);
     ifr.ifr_name[sizeof(ifr.ifr_name) - 1] = '\0';
 
-    if (ioctl(fd, SIOCGIFHWADDR, (int8_t *)&ifr) < 0)
+    if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0)
     {
         close(fd);
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "ioctl: %s", strerror(errno));
         goto bad;
     }
-    memcpy(eap, &ifr.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
     close(fd);
-    return (eap);
+
+    return memcpy(l->link_addr.ether_addr_octet, &ifr.ifr_hwaddr.sa_data,
+                  ETHER_ADDR_LEN);
 
 bad:
     return (NULL);
