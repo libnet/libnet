@@ -316,6 +316,6 @@ AC_CONFIG_FILES([Makefile src/Makefile \
 	include/libnet/Makefile win32/Makefile \
 	sample/Makefile doc/Makefile \
 	doc/man/Makefile doc/man/man3/Makefile doc/html/Makefile \
-	include/libnet.h libnet-config])
+	include/libnet.h libnet-config libnet.pc])
 AC_OUTPUT
 dnl EOF
