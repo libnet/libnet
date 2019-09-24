@@ -69,7 +69,7 @@ main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    if (argc != 2 || ((target = libnet_name2addr4(l, argv[1], LIBNET_RESOLVE) == -1)))
+    if (argc != 2 || ((target = libnet_name2addr4(l, argv[1], LIBNET_RESOLVE)) == -1))
     {
         fprintf(stderr, "Usage: %s <target>\n", argv[0]);
         exit(EXIT_FAILURE);
