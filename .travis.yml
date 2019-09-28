@@ -23,6 +23,7 @@ addons:
     packages:
       - tree
       - doxygen
+    update: true
 
 script:
   - ./autogen.sh
