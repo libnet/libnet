@@ -39,7 +39,7 @@ Some old docs are available at:
   http://packetfactory.openwall.net/projects/libnet/index.html
 
 
-[Appveyor]:        https://ci.appveyor.com/project/sgeto/libnet
-[Appveyor Status]: https://ci.appveyor.com/api/projects/status/9ic7kmwektgornlg?svg=true
+[Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
+[Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
 [Travis]:          https://travis-ci.org/libnet/libnet
 [Travis Status]:   https://travis-ci.org/libnet/libnet.png?branch=master
