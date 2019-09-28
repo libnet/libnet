@@ -74,7 +74,7 @@ extern "C" {
 #define __FUNCTION__ __FILE__
 #endif
 
-/* the following is only supported by MSVC and not by MinGW/MSys environements */
+/* the following is only supported by MSVC and not by MinGW/MSys environments */
 #ifdef _MSC_VER
 #pragma comment (lib,"ws2_32")    /* Winsock 2 */
 #pragma comment (lib,"iphlpapi")  /* IP Helper */

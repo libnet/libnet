@@ -2,7 +2,7 @@
 
 set -x
 
-git clean -x -d
+git clean -x -d -f
 
 (cd /usr/local/stow && sudo stow -D libnet)
 

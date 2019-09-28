@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet_link_win32.c,v 1.16 2004/02/18 18:19:00 mike Exp $
- *
  *  libnet
  *  libnet_link_win32.c - low-level win32 libwpcap routines
  *
@@ -32,21 +30,78 @@
  *
  */
 
-/* MSVC warns about snprintf. This needs to be defined before the declaration of _snprintf is seen. */
-#define _CRT_SECURE_NO_WARNINGS
-
 /* Libnet's unnamespaced ICMP6_ macros stomp on the enumerated versions of
    these names in the MS headers, so pre-include this header. */
+
 #include <winsock2.h>
 #include <iphlpapi.h> /* From the Microsoft Platform SDK */
+#include <iprtrmib.h>
+#include <assert.h>
 
 #include "common.h"
 
-#include <winsock2.h>
-#include <assert.h>
-#include <Packet32.h>
-#include <Ntddndis.h>
-#include "iprtrmib.h"
+/*
+ * These are the types that are the same on all platforms, and that
+ * have been defined by <net/bpf.h> for ages.
+ */
+
+#ifndef DLT_NULL
+#define DLT_NULL	0	/* BSD loopback encapsulation */
+#endif
+
+#ifndef DLT_EN10MB
+#define DLT_EN10MB	1	/* Ethernet (10Mb) */
+#endif
+
+#ifndef DLT_EN3MB
+#define DLT_EN3MB	2	/* Experimental Ethernet (3Mb) */
+#endif
+
+#ifndef DLT_AX25
+#define DLT_AX25	3	/* Amateur Radio AX.25 */
+#endif
+
+#ifndef DLT_PRONET
+#define DLT_PRONET	4	/* Proteon ProNET Token Ring */
+#endif
+
+#ifndef DLT_CHAOS
+#define DLT_CHAOS	5	/* Chaos */
+#endif
+
+#ifndef DLT_IEEE802
+#define DLT_IEEE802	6	/* 802.5 Token Ring */
+#endif
+
+#ifndef DLT_ARCNET
+#define DLT_ARCNET	7	/* ARCNET, with BSD-style header */
+#endif
+
+#ifndef DLT_SLIP
+#define DLT_SLIP	8	/* Serial Line IP */
+#endif
+
+#ifndef DLT_PPP
+#define DLT_PPP		9	/* Point-to-point Protocol */
+#endif
+
+#ifndef DLT_FDDI
+#define DLT_FDDI	10	/* FDDI */
+#endif
+
+/*
+ * These are types that are different on some platforms, and that
+ * have been defined by <net/bpf.h> for ages.  We use #ifdefs to
+ * detect the BSDs that define them differently from the traditional
+ * libpcap <net/bpf.h>
+ *
+ * XXX - DLT_ATM_RFC1483 is 13 in BSD/OS, and DLT_RAW is 14 in BSD/OS,
+ * but I don't know what the right #define is for BSD/OS.
+ */
+
+#ifndef DLT_ATM_RFC1483
+#define DLT_ATM_RFC1483	11	/* LLC-encapsulated ATM */
+#endif
 
 int
 libnet_open_link(libnet_t *l)
@@ -55,9 +110,9 @@ libnet_open_link(libnet_t *l)
     NetType IFType;
 
     if (l == NULL)
-    { 
+    {
         return (-1);
-    } 
+    }
 
     if (l->device == NULL)
     {
@@ -75,10 +130,10 @@ libnet_open_link(libnet_t *l)
         dwErrorCode=GetLastError();
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): unable to open the driver, error Code : %lx",
-                __func__, dwErrorCode); 
+                __func__, dwErrorCode);
         return (-1);
     }
-	
+
     /* increase the send buffer */
     PacketSetBuff(l->lpAdapter, 512000);
 
@@ -144,29 +199,18 @@ libnet_close_link_interface(libnet_t *l)
 }
 
 int
-libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
+libnet_write_link(libnet_t *l, const uint8_t *data, uint32_t size)
 {
-    LPPACKET   lpPacket;
-    DWORD      BytesTransfered;	
+    PACKET pkt;
+    DWORD  BytesTransfered = -1;
 
-    BytesTransfered = -1;
+    /* Packet* arguments aren't const, but aren't actually modified.
+     */
+    PacketInitPacket(&pkt, (PVOID)data, size);
 
-    if ((lpPacket = PacketAllocatePacket()) == NULL)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): failed to allocate the LPPACKET structure", __func__);
-        return (-1);
-    }
-    /* FIXME Packet* arguments aren't const, are they actually modified? That would be a problem, we can't modify our input */
-    PacketInitPacket(lpPacket, packet, size);
+    if (PacketSendPacket(l->lpAdapter, &pkt, TRUE))
+       BytesTransfered = size;
 
-    /* PacketSendPacket returns a BOOLEAN */
-    if(PacketSendPacket(l->lpAdapter, lpPacket, TRUE))
-    {
-	    BytesTransfered = size;
-    }
-	
-    PacketFreePacket(lpPacket);
     return (BytesTransfered);
  }
 
@@ -177,18 +221,18 @@ libnet_get_hwaddr(libnet_t *l)
     
     ULONG IoCtlBufferLength = (sizeof(PACKET_OID_DATA) + sizeof(ULONG) - 1);
 	PPACKET_OID_DATA OidData;
-	
+
 	int i = 0;
 
 	if (l == NULL)
-    { 
+    {
         return (NULL);
-    } 
+    }
 
 	if (l->device == NULL)
-    {           
+    {
         if (libnet_select_device(l) == -1)
-        {   
+        {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                     "%s(): can't figure out a device to use", __func__);
             return (NULL);
@@ -196,7 +240,7 @@ libnet_get_hwaddr(libnet_t *l)
     }
 
     OidData = (struct _PACKET_OID_DATA *) malloc(IoCtlBufferLength);
-	
+
 	if (OidData == NULL)
 	{
 	     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -206,13 +250,13 @@ libnet_get_hwaddr(libnet_t *l)
 
 	if (l->link_type == DLT_IEEE802)
 	{
-		OidData->Oid = OID_802_5_CURRENT_ADDRESS;	
+		OidData->Oid = OID_802_5_CURRENT_ADDRESS;
 	}
 	else
 	{
-		OidData->Oid = OID_802_3_CURRENT_ADDRESS;	
+		OidData->Oid = OID_802_3_CURRENT_ADDRESS;
 	}
-	
+
 	OidData->Length = 6;
 	if((PacketRequest(l->lpAdapter, FALSE, OidData)) == FALSE)
 	{
@@ -243,12 +287,12 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 	static BYTE bcastmac[]= {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
 	BYTE *MAC = libnet_win32_read_arp_table(DestIP);
-	
+
 	if (MAC==NULL)
 	{
 		memset(pulMac, 0xff, sizeof (pulMac));
 		memset(&sin, 0, sizeof(sin));
-	    
+
 		if((hr = SendARP (DestIP, 0, pulMac, &ulLen)) != NO_ERROR)
 		{
 			*(int32_t *)&sin.sin_addr = DestIP;
@@ -272,7 +316,7 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 				return(bcastmac); /* ff:ff:ff:ff:ff:ff */
 			}
 		}
-	  	
+
 		pbHexMac = (PBYTE) pulMac;
 
 		return (pbHexMac);
@@ -286,26 +330,23 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 BYTE * libnet_win32_read_arp_table(DWORD DestIP)
 {
 	static BYTE buffMAC[6];
-    BOOL fOrder=TRUE;
-	BYTE *MAC=NULL;
-	DWORD status, i, ci;
-    
-    PMIB_IPNETTABLE pIpNetTable = NULL;
-	DWORD Size = 0;
-	
-	memset(buffMAC, 0, sizeof(buffMAC));
+    BOOL fOrder = TRUE;
+	DWORD status;
 
-    if((status = GetIpNetTable(pIpNetTable, &Size, fOrder)) == ERROR_INSUFFICIENT_BUFFER)
+    MIB_IPNETTABLE *pIpNetTable = NULL;
+	DWORD Size = 0;
+
+	memset(buffMAC, 0, sizeof(buffMAC));
+    status = GetIpNetTable(NULL, &Size, fOrder);
+    if (status == ERROR_INSUFFICIENT_BUFFER)
     {
-        pIpNetTable = (PMIB_IPNETTABLE) malloc(Size);
-        assert(pIpNetTable);        
+        pIpNetTable = alloca(Size);
         status = GetIpNetTable(pIpNetTable, &Size, fOrder);
     }
 
-	if(status == NO_ERROR)
+	if (status == NO_ERROR)
 	{
-		/* set current interface */
-		ci = pIpNetTable->table[0].dwIndex;
+		DWORD i, ci = pIpNetTable->table[0].dwIndex;  /* set current interface */
 
 		for (i = 0; i < pIpNetTable->dwNumEntries; ++i)
 		{
@@ -315,23 +356,10 @@ BYTE * libnet_win32_read_arp_table(DWORD DestIP)
 			if(pIpNetTable->table[i].dwAddr == DestIP) /* found IP in arp cache */
 			{
 				memcpy(buffMAC, pIpNetTable->table[i].bPhysAddr, sizeof(buffMAC));
-				free(pIpNetTable);
 				return buffMAC;
-			}        
+			}
 		}
-		  
-		if (pIpNetTable)
-            free (pIpNetTable);
-		return(NULL);
 	}
-    else
-    {
-        if (pIpNetTable)
-        {
-            free (pIpNetTable);
-        }
-        MAC=NULL;
-    }
     return(NULL);
 }
 

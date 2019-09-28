@@ -29,15 +29,28 @@
 
 #if (_WIN32) || (__CYGWIN__)
 
-/* MSVC warns about snprintf */
-#define _CRT_SECURE_NO_WARNINGS
+  /* MSVC warns about snprintf */
+  #define _CRT_SECURE_NO_WARNINGS
+
+  /* don't pull in pcap/bpf.h */
+  #define PCAP_DONT_INCLUDE_PCAP_BPF_H
+  #include <pcap/pcap.h>
+
+  /* don't pull in Packet32's locol bpf definitions */
+  // #define BPF_MAJOR_VERSION
+  #include <Packet32.h>
+  #include <malloc.h>    /* alloca() */
+
+#ifdef __MINGW32__
+  #include <ntddndis.h>
+#else
+  #include <Ntddndis.h>
+#endif
 
 #else
 
 #include <assert.h>
-
 #include <sys/types.h>
-
 #include <netinet/in.h>
 
 /* TODO - should ../include/gnuc.h be included here? */
@@ -46,7 +59,7 @@
 
 #endif
 
-#include "../include/config.h"
+#include <config.h>
 #include "../include/libnet.h"
 
 /* IPPROTO_ and sockaddr_ definitions are here. They are often

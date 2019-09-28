@@ -1,47 +1,136 @@
-===============================================================================
-    $Id: PORTED,v 1.2 2004/01/03 20:31:00 mike Exp $
-    LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
-                               http://www.packetfactory.net/libnet
-===============================================================================
+==============================================================================
+                        P O R T I N G   S T A T U S
+==============================================================================
 
-NOTE - this list is no longer maintained, and there are more supported
-operating systems than listed here.
+libnet is reasonably portable.
 
-    1.1.0 PORTED OPERATING SYSTEMS
- 
-    If you verify libnet building and running successfully (sample code works)
-    on a platform not listed here please send email to mike@infonexus.com.
+If you verify libnet building and running successfully (sample code works)
+on platforms currently labeled UNKNOWN or not listed here at all, please
+send email to autostart.ini@gmail.com.
 
-    - BSD/OS
-      4.x
+libnet has been run successfully on at least the following operating systems:
 
-    - Cygwin
-      - requires winpcap (http://netgroup-serv.polito.it/winpcap) and pcap
-        header files copied to /usr/include/pcap/ and the library files to 
-        be copied to /usr/lib/
+SYSTEM                       STATUS                NOTES
+==============================================================================
 
-    - FreeBSD
-      version?
+LINUX
+------------------------------------------------------------------------------
+   Linux 3.x                 FULL           (primary development platform)
 
-    - HPUX
-      11.0
+SOLARIS
+------------------------------------------------------------------------------
+   Solaris                   UNKNOWN        not confirmed working in ages
 
-    - Linux
-      2.0.x
-      2.2.x
-      2.4.x
+*BSD
+------------------------------------------------------------------------------
+   FreeBSD                   UNKNOWN        not confirmed working in ages
 
-    - OpenBSD
-      2.x
-      3.x
+   OpenBSD                   UNKNOWN        not confirmed working in ages
 
-    - OS/X
-      version?
+   NetBSD                    UNKNOWN        not confirmed working in ages
 
-    - Solaris
-      2.x
-      7
-      8
-      9
+HP-UX
+------------------------------------------------------------------------------
+   HP-UX                     UNKNOWN        not confirmed working in ages
 
-EOF
+Apple (Darwin)
+------------------------------------------------------------------------------
+   macOS                     FULL           not tested by me
+
+WINDOWS (Native/MinGW/Cygwin/Cross)
+------------------------------------------------------------------------------
+   MSVC 14.0                 FULL           Working. See README.win32 for instructions
+
+   MinGW (GCC 6.2)           FULL           Working. See README.win32 for instructions
+
+   Cygwin                    UNKNOWN        not confirmed working in ages
+
+ANDROID (Native/Cross)
+------------------------------------------------------------------------------
+   Termux (clang 3.9.1)      FULL           Working. See detailed instructions below
+
+   ARM Toolchain (gnueabi)   FULL           not tested by me
+
+
+Platform Specific Details/Instructions
+======================================
+
+ANDROID
+-------
+libnet can be build natively on Android devices running 5.0 Lollipop (SDK 21)
+or higher using Termux (https://termux.com/).
+See the help pages of Termux for install and setup instructions.
+
+At the time of this writing, doxygen has not been ported to Android yet.
+So for this guide, we will build libnet without any docs. If you want docs
+you can do one the following:
+
+- build from a release (https://github.com/sgeto/libnet/releases)
+- compile docs on one of the supported platforms
+- port doxygen to Android
+    Update: check out my port: https://github.com/sgeto/doxygen
+    Update 2: my port has been merged into doxygen/master.
+    Don't use my port. Get the real deal from their repo:
+    https://github.com/doxygen/doxygen
+
+The minimum packages to install are:
+
+coreutils (important! Busybox alone is not enough!)
+autoconf
+automake
+m4
+make
+libtool
+clang
+git (optional)
+
+After that:
+
+1. $ git clone https://github.com/sgeto/libnet.git
+
+This is optional. As explained earlier, you can also build from a release.
+
+2. $ cd libnet && autoreconf -i
+
+Attention! You can not use the autogen.sh bootstrapping script for this step.
+The Android file system only loosely resembles what many of us are used to
+from their *nix boxes. This means that in Android, many files and folders aren't
+located where you would expect them. As a result, many shell scripts, including
+this one, will not be able run because their shebangs are pointing to a
+none-existing location. (/bin/sh instead of /system/bin/sh or in Termux's
+case: /data/data/com.termux/files/usr/bin/sh)
+
+3. $ ./configure TMPDIR=$PREFIX/tmp --prefix=$PREFIX
+
+TMPDIR=$PREFIX/tmp        Tell configure to use $PREFIX/tmp instead of /tmp
+                          This is the only MANDATORY configure option.
+                          This is due to the fact that config.guess is
+                          (without root privileges) unable to write to /tmp
+
+--prefix=$PREFIX          where to (possibly) install libnet
+                          Use "$PREFIX" or make sure to add a valid path
+
+4. $ make
+
+5. $ make install
+
+This step is optional and really only works if the proper prefix has been set
+in step 3
+
+Final Thoughts:
+
+- You don't need a rooted device to build libnet, but you need need root
+privileges in order to try the samples and to make use of libnet in general.
+
+- You can not execute anything libnet from the Termux shell, because it does not
+have root privileges.
+
+- Even when you elevate you prompt and become root (by typing 'su'), you will
+most likely still be unable to to use libnet right away. The reason for that is
+that root prompts in Android come with their own shell (which is separate from
+the one you use to elevate). So you need to either set or migrate the necessary
+environment variables you had in your previous (Termux) shell over to your newly
+spawn root shell. Specifically LD_LIBRARY_PATH
+If you don't know what that means just run this every time you're root and want
+to use libnet (adjust path accordingly): 
+LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib

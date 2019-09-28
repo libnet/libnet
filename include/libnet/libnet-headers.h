@@ -1,5 +1,4 @@
 /*
- *  $Id: libnet-headers.h,v 1.15 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-headers.h - Network routine library headers header file
  *
@@ -212,7 +211,7 @@ struct libnet_arp_hdr
 #define ARPHRD_IPSEC    31  /* IPsec tunnel */
     uint16_t ar_pro;         /* format of protocol address */
     uint8_t  ar_hln;         /* length of hardware address */
-    uint8_t  ar_pln;         /* length of protocol addres */
+    uint8_t  ar_pln;         /* length of protocol address */
     uint16_t ar_op;          /* operation type */
 #define ARPOP_REQUEST    1  /* req to resolve address */
 #define ARPOP_REPLY      2  /* resp to previous request */
@@ -314,7 +313,7 @@ struct libnet_bgp4_notification_hdr
 struct libnet_cdp_hdr
 {
     uint8_t cdp_version;     /* version (should always be 0x01) */
-    uint8_t cdp_ttl;         /* time reciever should hold info in this packet */
+    uint8_t cdp_ttl;         /* time receiver should hold info in this packet */
     uint16_t cdp_sum;        /* checksum */
     uint16_t cdp_type;       /* type */
 #define LIBNET_CDP_DEVID    0x1 /* device id */
@@ -507,7 +506,9 @@ struct libnet_ethernet_hdr
 #ifndef ETHERTYPE_IP
 #define ETHERTYPE_IP            0x0800  /* IP protocol */
 #endif
+#ifndef ETHERTYPE_IPV6
 #define ETHERTYPE_IPV6          0x86dd  /* IPv6 protocol */
+#endif
 #ifndef ETHERTYPE_ARP
 #define ETHERTYPE_ARP           0x0806  /* addr. resolution protocol */
 #endif

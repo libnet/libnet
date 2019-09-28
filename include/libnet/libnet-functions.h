@@ -1,6 +1,5 @@
 /*
- *  $Id: libnet-functions.h,v 1.43 2004/11/09 07:05:07 mike Exp $
- *
+ *  libnet
  *  libnet-functions.h - function prototypes
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -141,7 +140,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag);
  * function should be called anytime a function fails or an error condition
  * is detected inside of libnet.
  * @param l pointer to a libnet context
- * @return an error string or NULL if no error has occured
+ * @return an error string or NULL if no error has occurred
  */ 
 LIBNET_API
 char *
@@ -149,7 +148,7 @@ libnet_geterror(libnet_t *l);
 
 /**
  * Returns the sum of the size of all of the pblocks inside of l (this should
- * be the resuling packet size).
+ * be the resulting packet size).
  * @param l pointer to a libnet context
  * @return the size of the packet in l
  */ 
@@ -158,7 +157,7 @@ uint32_t
 libnet_getpacket_size(libnet_t *l);
 
 /**
- * Seeds the psuedo-random number generator.
+ * Seeds the pseudo-random number generator.
  * @param l pointer to a libnet context
  * @retval 1 on success
  * @retval -1 on failure
@@ -168,7 +167,7 @@ int
 libnet_seed_prand(libnet_t *l);
 
 /**
- * Generates an unsigned psuedo-random value within the range specified by
+ * Generates an unsigned pseudo-random value within the range specified by
  * mod.
  * LIBNET_PR2    0 - 1
  * LIBNET_PR8    0 - 255
@@ -191,7 +190,7 @@ libnet_get_prand(int mod);
  * header is set to any other value, by default libnet will not calculate the
  * header checksum. To over-ride this behavior, use libnet_toggle_checksum().
  * Switches auto-checksumming on or off for the specified ptag. If mode is set
- * to LIBNET_ON, libnet will mark the specificed ptag to calculate a checksum 
+ * to LIBNET_ON, libnet will mark the specified ptag to calculate a checksum 
  * for the ptag prior to injection. This assumes that the ptag refers to a 
  * protocol that has a checksum field. If mode is set to LIBNET_OFF, libnet
  * will clear the checksum flag and no checksum will be computed prior to 
@@ -651,7 +650,7 @@ const uint8_t *tpa, libnet_t *l);
  * @param ack acknowledgement number
  * @param control control flags
  * @param win window size
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param urg urgent pointer
  * @param len total length of the TCP packet (for checksum calculation)
  * @param payload
@@ -693,7 +692,7 @@ libnet_ptag_t ptag);
  * @param sp source port
  * @param dp destination port
  * @param len total length of the UDP packet
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -715,7 +714,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * interface or libnet_build_data() to construct them.
  * @param version CDP version
  * @param ttl time to live (time information should be cached by recipient)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param type type of data contained in value
  * @param value_s length of value argument
  * @param value the CDP information string
@@ -737,7 +736,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * echo request/reply header
  * @param type type of ICMP packet (should be ICMP_ECHOREPLY or ICMP_ECHO)
  * @param code code of ICMP packet (should be 0)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param id identification number
  * @param seq packet sequence number
  * @param payload optional payload or NULL
@@ -758,7 +757,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * IP netmask request/reply header.
  * @param type type of ICMP packet (should be ICMP_MASKREQ or ICMP_MASKREPLY)
  * @param code code of ICMP packet (should be 0)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param id identification number
  * @param seq packet sequence number
  * @param mask subnet mask
@@ -781,7 +780,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * built by a previous call to libnet_build_ipv4().
  * @param type type of ICMP packet (should be ICMP_UNREACH)
  * @param code code of ICMP packet (should be one of the 16 unreachable codes)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -800,7 +799,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * built by a previous call to libnet_build_ipv4().
  * @param type type of ICMP packet (should be ICMP_REDIRECT)
  * @param code code of ICMP packet (should be one of the four redirect codes)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param gateway
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -821,7 +820,7 @@ libnet_ptag_t ptag);
  * built by a previous call to libnet_build_ipv4().
  * @param type type of ICMP packet (should be ICMP_TIMXCEED)
  * @param code code of ICMP packet (ICMP_TIMXCEED_INTRANS / ICMP_TIMXCEED_REASS)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param payload optional payload or NULL
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -840,7 +839,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * timestamp request/reply header.
  * @param type type of ICMP packet (should be ICMP_TSTAMP or ICMP_TSTAMPREPLY)
  * @param code code of ICMP packet (should be 0)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param id identification number
  * @param seq sequence number
  * @param otime originate timestamp
@@ -864,7 +863,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * echo or echo reply header.
  * @param type type of ICMP packet (should be ICMP6_ECHO_REQUEST or ICMP6_ECHO_REPLY)
  * @param code code of ICMP packet (should be zero)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param id echo id number
  * @param seq echo sequence number
  * @param payload optional payload or NULL
@@ -885,7 +884,7 @@ libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
  * built by a previous call to libnet_build_ipv6().
  * @param type type of ICMP packet (should be ICMP6_DST_UNREACH)
  * @param code code of ICMP packet (should be one of the 5 ICMP6_DST_UNREACH_* codes)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -904,7 +903,7 @@ uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * libnet_build_icmpv6_ndp_opt() and ICMPV6_NDP_OPT_SLLA.
  * @param type type of ICMP packet (should be ND_NEIGHBOR_SOLICIT)
  * @param code code of ICMP packet (should be zero)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param target target ipv6 address
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -924,7 +923,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nsol(uint8_t type, uint8_t code,
  * libnet_build_icmpv6_ndp_opt() and ND_OPT_TARGET_LINKADDR.
  * @param type type of ICMP packet (should be ND_NEIGHBOR_ADVERT)
  * @param code code of ICMP packet (should be zero)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param flags should be a bitwise or of any applicable ND_NA_FLAG_* flags
  * @param target target ipv6 address
  * @param payload optional payload or NULL
@@ -954,10 +953,10 @@ libnet_ptag_t libnet_build_icmpv6_ndp_opt(uint8_t type, uint8_t* option,
         uint32_t option_s, libnet_t* l, libnet_ptag_t ptag);
 
 /**
- * Builds an RFC 1112 Internet Group Memebership Protocol (IGMP) header.
+ * Builds an RFC 1112 Internet Group Membership Protocol (IGMP) header.
  * @param type packet type
  * @param reserved (should be 0 for IGMPv1)
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param ip IPv4 address (in standard/network byte order)
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -983,7 +982,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param frag fragmentation bits and offset
  * @param ttl time to live in the network
  * @param prot upper layer protocol
- * @param sum checksum (0 for libnet to autofill)
+ * @param sum checksum (0 for libnet to auto-fill)
  * @param src source IPv4 address (little endian)
  * @param dst destination IPv4 address (little endian)
  * @param payload optional payload or NULL
@@ -1173,7 +1172,7 @@ libnet_t *l, libnet_ptag_t ptag);
  * @param type type of frame
  * @param user user defined data
  * @param shost source mac address
- * @param len total length of the encapuslated packet less 18 bytes
+ * @param len total length of the encapsulated packet less 18 bytes
  * @param snap SNAP information (0xaaaa03 + vendor code)
  * @param vid 15 bit VLAN ID, 1 bit BPDU or CDP indicator
  * @param portindex port index
@@ -1422,7 +1421,7 @@ libnet_t *l);
 
 /**
  * Builds an RFC 2338 Virtual Router Redundacy Protool (VRRP) header. Use the
- * payload interface to specify address and autthentication information. To
+ * payload interface to specify address and authentication information. To
  * build a "legal" packet, the destination IPv4 address should be the multicast  * address 224.0.0.18, the IP TTL should be set to 255, and the IP protocol
  * should be set to 112.
  * @param version VRRP version (should be 2)
@@ -1484,7 +1483,7 @@ libnet_ptag_t ptag);
  * @param orig_ts_int original timestamp integer
  * @param orig_ts_frac original timestamp fraction
  * @param rec_ts_int receiver timestamp integer
- * @param rec_ts_frac reciever timestamp fraction
+ * @param rec_ts_frac receiver timestamp fraction
  * @param xmt_ts_int transmit timestamp integer
  * @param xmt_ts_frac transmit timestamp integer
  * @param payload optional payload or NULL
@@ -1803,7 +1802,7 @@ libnet_getgre_length(uint16_t fv);
  * @param fv the 16 0 to 7: which fields are included in the header (checksum,
  *   seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
  * @param type which protocol is encapsulated (PPP, IP, ...)
- * @param sum checksum (0 for libnet to autofill).
+ * @param sum checksum (0 for libnet to auto-fill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
@@ -1831,7 +1830,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * header.
  * @param fv the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
  * @param type which protocol is encapsulated (PPP, IP, ...)
- * @param sum checksum (0 for libnet to autofill).
+ * @param sum checksum (0 for libnet to auto-fill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
@@ -1999,14 +1998,14 @@ uint32_t uid, uint32_t fd, uint8_t cmd[SEBEK_CMD_LENGTH], uint32_t length,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * Builds a HSRP header. HSRP is a Cisco propietary protocol defined in
+ * Builds a HSRP header. HSRP is a Cisco proprietary protocol defined in
  * RFC 2281
  * @param version version of the HSRP messages
  * @param opcode type of message
  * @param state current state of the router
  * @param hello_time period in seconds between hello messages
  * @param hold_time seconds that the current hello message is valid
- * @param priority priority for the election proccess
+ * @param priority priority for the election process
  * @param group standby group
  * @param reserved reserved field
  * @param authdata password
@@ -2484,7 +2483,7 @@ libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len);
  * IP (TCP, UDP, IGMP, ICMP, etc...) checksums usually need information from
  * the IP header to construct the "pseudo header", this function takes a
  * pointer to that header, the buffer boundaries, the "h_len" (see pblock_t for
- * a description, it is increasinly unused, though, and I'm trying to remove it
+ * a description, it is increasingly unused, though, and I'm trying to remove it
  * altogether), and the protocol number for the protocol that is to be
  * checksummed.
  *
@@ -2569,9 +2568,9 @@ libnet_pblock_delete(libnet_t *l, libnet_pblock_t *p);
 
 /*
  * [Internal] 
- * Function updates the pblock meta-inforation.  Internally it updates the
+ * Function updates the pblock meta-information.  Internally it updates the
  * ptag with a monotonically increasing variable kept in l.  This way each
- * pblock has a succesively increasing ptag identifier.
+ * pblock has a successively increasing ptag identifier.
  */
 LIBNET_API
 libnet_ptag_t
@@ -2623,7 +2622,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size);
 #if !(__WIN32__)
 /*
  * [Internal] 
- * By testing if we can retrieve the FLAGS of an iface
+ * By testing if we can retrieve the FLAGS of an interface
  * we can know if it exists or not and if it is up.
  */
 int

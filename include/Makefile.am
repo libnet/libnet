@@ -1,9 +1,9 @@
-# $Id: Makefile.am,v 1.1.1.1 2003/06/26 21:55:10 route Exp $
+nobase_include_HEADERS = libnet.h \
+                         libnet/libnet-asn1.h \
+                         libnet/libnet-functions.h \
+                         libnet/libnet-headers.h \
+                         libnet/libnet-macros.h \
+                         libnet/libnet-structures.h \
+                         libnet/libnet-types.h
 
-include $(top_srcdir)/Makefile.am.common
-
-nodist_include_HEADERS = libnet.h
-
-EXTRA_DIST = bpf.h gnuc.h ifaddrlist.h
-
-SUBDIRS = libnet
+EXTRA_DIST = bpf.h gnuc.h ifaddrlist.h config.h
