@@ -448,7 +448,8 @@ AC_CONFIG_FILES([Makefile \
                  include/libnet.h \
 		 libnet.pc \
                  src/Makefile \
-                 sample/Makefile])
+                 sample/Makefile \
+		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 AC_OUTPUT
 
