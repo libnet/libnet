@@ -19,7 +19,7 @@ addons:
     packages:
       - tree
       - doxygen
-  brew:
+  homebrew:
     packages:
       - tree
       - doxygen
