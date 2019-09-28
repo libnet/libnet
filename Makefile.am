@@ -36,7 +36,9 @@ endif
 doc: doxygen-doc
 	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -
 
-EXTRA_DIST    = msvcbuild.bat \
+doc_DATA      = README.md LICENSE
+EXTRA_DIST    = README.md LICENSE \
+                msvcbuild.bat \
                 README.win32 \
                 autogen.sh \
                 map-pblock-types
