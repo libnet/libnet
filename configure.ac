@@ -53,7 +53,7 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf])
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
 
 dnl
