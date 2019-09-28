@@ -5,7 +5,9 @@ includedir=@includedir@
 
 Name: @PACKAGE@
 Version: @VERSION@
-Description: portable framework for low-level network packet construction
+Description: Portable Packet Construction and Injection API
+URL: @PACKAGE_URL@
+
 Requires: 
 Libs: -L${libdir} -lnet @LTLIBINTL@
 Cflags: -I${includedir}

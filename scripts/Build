@@ -2,7 +2,6 @@
 
 set -e
 
-make -C doc doc
-make
-make dist && mv libnet-1*.tar.gz ..
-
+make V=1
+make -C ../lua
+make distcheck V=1 && mv libnet-1*.tar.gz libnet-1*.zip ..

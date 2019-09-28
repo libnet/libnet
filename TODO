@@ -1,0 +1,44 @@
+This file complements the TODO in doc/TODO
+
+
+Roadmap:
+
+change all __WIN32  and __WIN32__ preprocessor directives with the more universal WIN32 and _WIN32 directives (msvc + mingw) (eliminating the need for -mwin32)
+
+add INSTALL and edit README in libnet/README
+
+short term goals:
+
+I'm afraid the build system needs a complete overhaul.
+
+improve documentation
+- FAQ
+- Examples
+- add RFCs 
+
+fix "broken" samples (on win32?)
+
+fix MSVC/Mingw collision
+
+increase warning level on all OS's when using "Build" top level script
+
+
+long term goals:
+
+build with the debug memory allocation or dmalloc library
+http://dmalloc.com/
+https://www.gnu.org/software/automake/manual/html_node/Public-Macros.html (AM_WITH_DMALLOC)
+
+implement netmap compatibilty https://github.com/luigirizzo/netmap
+
+switch to npcap (win32)
+
+come after as many reasonable issues in https://github.com/sam-github/libnet/issues/ and http://stackoverflow.com/questions/tagged/libnet# as possible
+
+Somethings not right with checksums...
+
+improve LUA bindings
+
+test and verify everything IPv6
+
+Dynamic loading...

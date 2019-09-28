@@ -1,0 +1,59 @@
+/*
+ *
+ *  libnet
+ *  libnet_dll_info.rc - DLL version-information resource
+ *
+ *  Copyright (c) 2017 Ali Abdulkadir <autostart.ini@gmail.com>
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ */
+ 
+ /* 
+ * FIXME all this needs to be manually updated. Unless someone bothers to
+ * update libnet_version.c...
+ */
+
+#include <winver.h>
+
+  VS_VERSION_INFO VERSIONINFO
+    FILEVERSION    1,2,0,0
+    PRODUCTVERSION 1,2,0,0
+    FILEFLAGSMASK  0x3fL
+    FILEOS         VOS__WINDOWS32
+    FILETYPE       VFT_DLL
+    FILESUBTYPE    VFT2_DRV_NETWORK
+    FILEFLAGS      0
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "040904b0"
+      BEGIN
+        VALUE "Comments",         "Provided under a BSD-Style License\0"
+        VALUE "CompanyName",      "https://github.com/sgeto/libnet\0"
+        VALUE "FileDescription",  "Portable Packet Construction and Injection API\0"
+        VALUE "FileVersion",      "1,2,0,0"
+        VALUE "InternalName",     "Libnet\0"
+        VALUE "LegalCopyright",   "Copyright (c) The libnet Developer Community.\0"
+        VALUE "LegalTrademarks",  "\0"
+        VALUE "OriginalFilename", "libnet-9.dll\0"
+        VALUE "ProductName",      "libnet\0"
+        VALUE "ProductVersion",   "1.2-rc3"
+      END
+    END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0, 1200
+  END
+  END
+  /* EOF */

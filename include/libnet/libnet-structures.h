@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet-structures.h,v 1.19 2004/11/09 07:05:07 mike Exp $
- *
  *  libnet-structures.h - Network routine library structures header file
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -32,7 +30,7 @@
 #ifndef __LIBNET_STRUCTURES_H
 #define __LIBNET_STRUCTURES_H
 
-#if ((__WIN32__) && !(__CYGWIN__))
+#if ((_WIN32) && !(__CYGWIN__))
 #include "Packet32.h"
 #endif
 
@@ -41,7 +39,7 @@ typedef struct libnet_port_list_chain libnet_plist_t;
 struct libnet_port_list_chain
 {
     uint16_t node;                     /* node number */
-    uint16_t bport;                    /* beggining port */
+    uint16_t bport;                    /* beginning port */
     uint16_t eport;                    /* terminating port */
     uint8_t  id;                       /* global array offset */
     libnet_plist_t *next;               /* next node in the list */
@@ -51,15 +49,9 @@ struct libnet_port_list_chain
 /* libnet statistics structure */
 struct libnet_stats
 {
-#if (!defined(__WIN32__) || (__CYGWIN__))
-    uint64_t packets_sent;             /* packets sent */
-    uint64_t packet_errors;            /* packets errors */
-    uint64_t bytes_written;            /* bytes written */
-#else
-    __int64 packets_sent;               /* packets sent */
-    __int64 packet_errors;              /* packets errors */
-    __int64 bytes_written;              /* bytes written */
-#endif
+    __int64_t packets_sent;               /* packets sent */
+    __int64_t packet_errors;              /* packets errors */
+    __int64_t bytes_written;              /* bytes written */
 };
 
 
@@ -185,7 +177,7 @@ typedef struct libnet_protocol_block libnet_pblock_t;
  */
 struct libnet_context
 {
-#if ((__WIN32__) && !(__CYGWIN__)) 
+#if ((_WIN32) && !(__CYGWIN__)) 
     SOCKET fd;
     LPADAPTER  lpAdapter;
 #else

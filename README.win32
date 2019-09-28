@@ -1,17 +1,246 @@
-Run msvcbuild.bat to build for Win32 with MSVC.
+Information, Recommendations and Build Instructions for Windows
+**************************************************************************
 
-The batch file depends on the MSVC build environment being set (PATH, etc.),
-this can be done with Visual Studio's vsvars32.bat, or by starting a Visual
-Studio shell.
+_____________________________ IMPORTANT _____________________________
+The execution of the currently shipped msvcbuild.bat batch script will
+causes ANY subsequent none-MSVC build to fail. It has been wrongly set
+up to copy several MSVC-specific header files from <libnet-root>/win32/
+to <libnet-root>/include/ and <libnet-root>/include/libnet/ during the
+build process. This is a high priority issue and will be taken care of
+ASAP. If you ever have to make use of this file, consider compiling all
+other builds from a separate tarball.
+_____________________________________________________________________
+
+This file list additional steps and suggestions for Windows users.
+Please see INSTALL for a more general overview and doc/PORTED for
+other platforms.
+
+Unless you know what you are doing, you should follow the recommendations
+below. Notice that there are plenty of other (sometimes better) ways
+to build libnet, but these steps and suggestions are known to work.
+If the build breaks, please re-read this guide carefully.
+
+Contents
+========
+
+1. Introduction
+    1.1 Microsoft Visual C++ and GCC/MinGW
+    1.2 WinPcap/Npcap
+    1.3 Supported Operating Systems
+
+2. MinGW Compiler
+    2.1 Native
+    2.2 Cross-Compiling
+
+3. Microsoft Visual C++
+
+
+
+1. Introduction
+===============
+
+
+1.1 Microsoft Visual C++ and GCC/MinGW
+--------------------------------------------------------------
+
+The Microsoft Visual C++ compiler (aka MSVC) and the GCC Windows port
+(aka MinGW) are unfortunately not fully compatible. Although MSVC is a
+great compiler, libnet has been developed with the GNU toolchain in mind.
+So building libnet with the Visual C++ Build Tools will always have its
+flaws, even while it might work in some points.
+
+Most of libnet’s development is therefore done with GCC and its MinGW
+Windows port.
+In other words, if this this all new to you, I recommended you to use
+MinGW for building libnet on Windows.
+
+
+On the other hand, the two can work well together:
+
+If you for instance build libnet with MinGW, and you want to use it
+with MSVC too (or vice versa), you can use the DLL and the supplied
+"libnet*.def" file located in <libnet-root>/win32/ (this file is always
+rebuild at the end of every successful build on windows) to create an
+MSVC compatible import library that you can use to link your projects
+with without the need of rebuilding libnet again.
+
+To produce a MinGW compatible import library from any libnet DLL:
+
+$ dlltool -D path/to/libnet*.dll -d path/to/libnet*.def -l libnet.dll.a
+
+To produce a MSVC compatible import library from any libnet DLL:
+
+$ lib /machine:X64 /def:example.def (for x64)
+or
+$ lib /machine:X86 /def:example.def (for x86)
+
+Note 1: If you have removed any or all symbol information from the DLL
+(aka "stripped" it), during build, by for example running configure
+with "--enable-fast", then this obviously won't work.
+
+
+1.2 WinPcap/Npcap
+-----------------
+
+Currently, the supported method of sending packets under Windows is with
+WinPcap (http://www.winpcap.org). However, libnet's support for
+Npcap (http://www.npcap.org), an update of WinPcap sponsored by the
+Nmap Project, is being seriously considered.
+Windows users should know that with the switch to Npcap, WinPcap compatibility
+is expected to be deprecated.
+
+Please be sure to install the WinPcap/Npcap driver/DLL and make sure
+that the content of the Wpdpack's/Npcap SDK's Include and Lib directories
+are somewhat reachable by your compiler.
+
+Note 2: Remember that you cannot use MSVC-generated .lib files to create
+shared libraries with MinGW, you have to use the lib*.a files.
+WinPcap development came to a standstill before the Developer's Pack ever
+provided x64 compatible lib*.a files for use with MinGW/Cygwin. And since
+libnet depends on WinPcap, you would have to compile 64-bit lib*.a libraries
+yourself if you want to be able to produce 64-bit compatible libnet builds
+with MinGW/Cygwin.
+
+Luckily for you, this has been taken care of by me. 64-bit compatible
+WinPcap libraries as well as DIY instructions can be found in
+<libnet-root>/win32/wpdpack/.
+
+1.3 Supported Operating Systems
+-------------------------------
+
+At the latest with the switch to Npcap, libnet support for Windows XP,
+Windows Server 2003 and earlier will be dropped.
+I can think of too many better things to do than to continuously deal with
+error handling and backwards compatibility (msvcrt vs crtdll) for EOL systems.
+
+Remnants in the source suggests that building libnet with Cygwin must have
+been possible at some point. This may or may not be the case these days.
+If it still works, let me know. If you get it to work (again), let me know.
+And if you need to get it to work, let me know.
+
+
+2. MinGW Compiler
+=================
+
+Both native and cross compilation are possible, and there are quite a
+few possibilities and options to choose from. If you just want to get
+over with it, follow these steps:
+
+Known traps are:
+- Setting the wrong (or no) prefix. (important when running 'make install')
+- Using incompatible WinPcap libraries for x64 (see Note 2)
+- Not having said WinPcap libraries and header files in your compiler's path
+
+Note 3: If you're building with MinGW, and want to install libnet to your
+compiler's lib and include directories, you almost always want to set your
+prefix manually. If you don't know what that means, run "gcc -v", look for
+"--prefix=/some/path" and use that.
+
+Note 4: If you're using a multilib MinGW-w64 GCC compiler, make sure to add
+the -m32 or -m64 CFLAGS to instruct the compiler to build for your desired
+architecture.
+
+
+2.1 Native
+----------
+
+The recommended MinGW distribution for building libnet is Msys2.
+First, follow the installation instructions for Msys2 available at
+msys2.github.io. Then, depending on your desired target architecture,
+open a mingw32 or mingw64 shell, navigate to the source directory,
+and execute the following commands:
+
+1. If you want to produce 32 bit binaries:
+
+$ CFLAGS="-O2 -Wall -I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/" ./configure --prefix=/mingw64
+
+If you want to produce 64 bit binaries:
+
+$ CFLAGS="-O2 -Wall -I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/x64" ./configure --prefix=/mingw64
+
+2. $ make
+
+3. $ make install (optional)
+
+
+2.2 Cross-Compiling
+-------------------
+
+Note 5: During sample building, you may see a warning similar this:
+
+            Could not determine the host path corresponding to
+                        `... a path ...'
+            Continuing, but uninstalled executables may not work.
+
+This, among other things, means that the samples will depend on
+a shared version of libgcc (aka libgcc_s_sjlj-1.dll). If no shared
+version of libgcc was built when the compiler was configured, you
+most likely won't be able to execute them.
+In that case, your best bet is to link with the static version
+of libgcc by disabling shared libraries altogether
+(./configure --disable-shared).
+
+
+In general, you should know what you're doing and what your host, target
+and compiler are all about beforehand.
+These steps have been successfully tested on Ubuntu and the default
+mingw32-w32 toolchain (GCC 4.8).
+The recommended steps to build libnet therefore are:
+
+1. If you're targeting x86:
+$ CFLAGS="-O2 -Wall -I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib" ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32
+
+If you're targeting x64:
+$ CFLAGS="-O2 -Wall -I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/x64" ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32
+
+2. make
+
+3. (optionally) sudo make install
+
+Notice that the --host option is usually all you need for cross-compiling.
+
+Note 6: Although the steps should be very similar, if you're using any
+other distribution of MinGW (cross or native), you're pretty much on your own.
+You can send suggestions and complains to https://github.com/sgeto/libnet/issues
+
+
+3. Microsoft Visual C++
+=======================
+Known traps are:
+- Not using the correct (x86 or x64) version of the Visual Studio command prompt
+- Using incompatible WinPcap libraries for x64 (see Note 2)
+- Not having said WinPcap libraries and header files in your compiler's path
+
+Until the issue described at the top of this document is completely
+resolved, MSVC support should be considered a work in progress and unsafe.
+And that’s why I won't even go into it, and instead leave you with these
+old but still perfectly fine instructions:
+
+
+
+Run msvcbuild.bat to build for Win32 with MSVC
+----------------------------------------------
+
+The batch file takes arguments and sets the appropriate path and environment
+variables for the desired built by running either vsvars32.bat (for x86),
+vcvars64.bat (for x64) or vcvarsall.bat (for Cross development).
+Type "msvcbuild.bat help" for a description of all available options.
+If no argument is specified, x86 is assumed.
 
 The batch file copies pre-prepared headers out of win32/, avoiding the
-requirement for a gnu (cygwin or mingw) build environment.
+requirement for a gnu (Cygwin or MinGW) build environment.
 
-The batch file hard-codes the location of the WinPcap developer's tools,
-you may have to modify it for your environment, or install the developer's
+The batch file hard-codes the location of the WinPcap developer's tools.
+You may have to modify it for your environment, or install the developer's
 pack in the expected location.
 
-For Visual Studio 2010, the shell can be found at:
+Although not required, it is advisable to execute the batch file from a
+VS2015 Developer Command Prompt.
 
-    Program Files >> Microsoft Visual Studio 2010 >> Visual Studio Tools >> Visual Studio Command Prompt
+For Visual Studio 2015, the shell can be found at:
 
+    Program Files (x86) >> Microsoft Visual Studio 14.0 >> Common7 >> Tools >> VsDevCmd.bat
+
+After building, libnet libraries and .obj files are found in newly created
+"<libnet-root>\libnet\src\[Win32|Win64]\" "<libnet-root>\libnet\lib\[x86|x64]\"
+respectively.

@@ -1,6 +1,4 @@
 /*
- *  $Id: libnet_resolve.c,v 1.21 2004/11/09 07:05:07 mike Exp $
- *
  *  libnet
  *  libnet_resolve.c - various name resolution type routines
  *

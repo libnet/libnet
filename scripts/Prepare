@@ -5,5 +5,13 @@ set -e
 
 sh ./autogen.sh
 
-CFLAGS="-O0 -g -Wall" ./configure --with-pic --enable-dependency-tracking --enable-shared=yes
+CFLAGS="-O0 -g -Wall --coverage" ./configure
 
+# NOTES:
+
+# Coverage data matches the source files more closely if you do not optimize.
+
+# --coverage
+# This option is used to compile and link code instrumented for coverage
+# analysis. The option is a synonym for -fprofile-arcs -ftest-coverage
+# (when compiling) and -lgcov (when linking).

@@ -5,4 +5,4 @@
 
 set -e
 
-autoreconf --install $*
+autoreconf --force --install $*
