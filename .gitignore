@@ -46,8 +46,6 @@ include/getopt.h
 include/libnet.h
 include/libnet/stdint.h
 
-m4
-
 sample/arp
 sample/bgp4_hdr
 sample/bgp4_notification
