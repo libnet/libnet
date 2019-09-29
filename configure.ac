@@ -28,7 +28,6 @@ AC_CONFIG_FILES([Makefile \
 		 Doxyfile \
 		 bin/Makefile \
                  doc/Makefile \
-	         doc/html/Makefile \
 	         doc/man/Makefile \
 	         doc/man/man3/Makefile \
                  include/Makefile \
