@@ -29,7 +29,7 @@ script:
   - ./autogen.sh
   - ./configure --prefix=/ --disable-silent-rules
   - make clean
-  - make -C doc doc
+  - make doc
   - make
   - make install-strip DESTDIR=/tmp/libnet
   - tree /tmp/libnet
