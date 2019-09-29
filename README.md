@@ -12,14 +12,45 @@ complementary functionality.  Libnet is very handy with which to write
 network tools and network test code.  See the manpage and sample test
 code for more detailed information.
 
+Online documentation is available at https://codedocs.xyz/libnet/libnet/
+
 > **NOTE:** Legacy code written for *libnet-1.0.x* WILL NOT WORK with
-> *libnet-1.1.x*.  Read *doc/MIGRATION* for porting legacy code.
+> *libnet-1.1.x* or later.  See [MIGRATION](doc/MIGRATION) for porting
+> legacy code.
 
-**LIBNET 1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>**
-http://www.packetfactory.net/libnet
 
-**LIBNET 1.1.3 and later (c) 2009 - 2013 Sam Roberts <vieuxtech@gmail.com>**
-http://github.com/sam-github/libnet
+Building
+--------
+
+Libnet employs the GNU configure and build system.  The release tarballs
+ship with a pre-built `configure` script.  To list available options,
+type <kbd>./configure --help</kbd>
+
+When checking out the code from GitHub, use <kbd>./autogen.sh</kbd> to
+generate a `configure` script.  For this you need the full suite of the
+GNU autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
+On Debian/Ubuntu systems:
+
+    sudo apt install autoconf automake libtool
+
+To build the documentation (optional) you need doxygen and pod2man:
+
+    sudo apt install doxygen pod2man
+
+For neat graphics in the HTML documentation, also install graphviz.
+There is also a PDF version of the docs, to build that you need quite a
+few more packages:
+
+    sudo apt install texlive-extra-utils texlive-latex-extra \
+                     texlive-fonts-recommended latex-xcolor  \
+                     texlive-font-utils
+
+Fior Microsoft CHM docs you need the HTML Help Workshop, which is part
+of Visual Studio: http://go.microsoft.com/fwlink/p/?linkid=154968, on
+UNIX and GNU/Linux systems, see `chmcmd`, which is available in the
+[FreePascal](http://www.freepascal.org/) suite:
+
+    sudo apt install fp-utils-3.0.4
 
 
 Origin & References
@@ -38,6 +69,12 @@ Some old docs are available at:
 
   http://packetfactory.openwall.net/projects/libnet/index.html
 
+-------------------------------------------------------------------------
+- v1.1 (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>  
+  http://www.packetfactory.net/libnet
+- v1.1.3 and later (c) 2009 - 2013 Sam Roberts <vieuxtech@gmail.com>  
+  http://github.com/libnet/libnet
+-------------------------------------------------------------------------
 
 [Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
 [Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
