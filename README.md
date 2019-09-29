@@ -1,4 +1,4 @@
-[![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis]
+[![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs]
 
 A C library for portable packet creation and injection
 ======================================================
@@ -43,3 +43,5 @@ Some old docs are available at:
 [Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
 [Travis]:          https://travis-ci.org/libnet/libnet
 [Travis Status]:   https://travis-ci.org/libnet/libnet.png?branch=master
+[CodeDocs]:        https://codedocs.xyz/libnet/libnet/
+[CodeDocs Status]: https://codedocs.xyz/libnet/libnet.svg
