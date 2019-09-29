@@ -27,16 +27,13 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+#include "common.h"
+
 #include <sys/param.h>
 #include <sys/file.h>
 #include <netinet/in.h>
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
-
-#include "common.h"
-#include "../include/config.h"
-#endif
-#include "../include/libnet.h"
 
 #include <net/raw.h>
 #include <net/if.h>
