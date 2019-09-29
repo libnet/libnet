@@ -26,9 +26,9 @@ libnet are:
 See the manpage and sample test code for more detailed information.
 Online documentation is available at https://codedocs.xyz/libnet/libnet/
 
-> **NOTE:** Legacy code written for *libnet-1.0.x* WILL NOT WORK with
->           *libnet-1.1.x* or later.  See [MIGRATION](doc/MIGRATION)
->           for porting legacy code.
+> **NOTE:** Legacy code written for *libnet-1.0.x* is unfortunately
+>           **incompatible** with *libnet-1.1.x* and later.  
+>           See the [MIGRATION](doc/MIGRATION) guide for porting help.
 
 
 Building
