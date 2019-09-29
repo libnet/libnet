@@ -1,14 +1,12 @@
-# Doxyfile 1.8.14
-
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = $(PROJECT)
-PROJECT_NUMBER         = $(VERSION)
+PROJECT_NAME           = @PACKAGE_NAME@
+PROJECT_NUMBER         = @PACKAGE_VERSION@
 PROJECT_BRIEF          = "A Portable Framework for Low-Level Network Packet Construction"
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = $(DOCDIR)
+OUTPUT_DIRECTORY       = @top_builddir@/doc
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
@@ -102,16 +100,16 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = $(SRCDIR)/doc/libnet_api_main_page.md \
-                         $(SRCDIR)/include/libnet \
+INPUT                  = @top_srcdir@/doc/libnet_api_main_page.md \
+                         @top_srcdir@/include/libnet \
                          include/libnet.h
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = include/libnet/libnet-headers.h \
-                         include/libnet/libnet-types.h \
-                         include/libnet/libnet-asn1.h \
-                         include/libnet/libnet-structures.h
+EXCLUDE                = @top_srcdir@/include/libnet/libnet-headers.h \
+                         @top_srcdir@/include/libnet/libnet-types.h \
+                         @top_srcdir@/include/libnet/libnet-asn1.h \
+                         @top_srcdir@/include/libnet/libnet-structures.h
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */sample/*
 EXCLUDE_SYMBOLS        =
@@ -123,7 +121,7 @@ INPUT_FILTER           =
 FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
 FILTER_SOURCE_PATTERNS =
-USE_MDFILE_AS_MAINPAGE = libnet_api_main_page.md
+USE_MDFILE_AS_MAINPAGE = @top_srcdir@/doc/libnet_api_main_page.md
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
 #---------------------------------------------------------------------------
@@ -145,13 +143,13 @@ IGNORE_PREFIX          =
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
 #---------------------------------------------------------------------------
-GENERATE_HTML          = $(GENERATE_HTML)
-HTML_OUTPUT            = api
+GENERATE_HTML          = @GENERATE_HTML@
+HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = $(SRCDIR)/doc/libnet_api_header.html_tmpl
-HTML_FOOTER            = $(SRCDIR)/doc/libnet_api_footer.html_tmpl
+HTML_HEADER            = @top_srcdir@/doc/libnet_api_header.html_tmpl
+HTML_FOOTER            = @top_srcdir@/doc/libnet_api_footer.html_tmpl
 HTML_STYLESHEET        =
-HTML_EXTRA_STYLESHEET  = $(SRCDIR)/doc/libnet_api_stylesheet.css_tmpl
+HTML_EXTRA_STYLESHEET  = @top_srcdir@/doc/libnet_api_stylesheet.css_tmpl
 HTML_EXTRA_FILES       =
 HTML_COLORSTYLE_HUE    = 120
 HTML_COLORSTYLE_SAT    = 50
@@ -164,10 +162,10 @@ DOCSET_FEEDNAME        = "Doxygen generated docs"
 DOCSET_BUNDLE_ID       = org.doxygen.Project
 DOCSET_PUBLISHER_ID    = org.doxygen.Publisher
 DOCSET_PUBLISHER_NAME  = Publisher
-GENERATE_HTMLHELP      = $(GENERATE_HTMLHELP)
-CHM_FILE               = ../$(PROJECT).chm
-HHC_LOCATION           = $(HHC_PATH)
-GENERATE_CHI           = $(GENERATE_CHI)
+GENERATE_HTMLHELP      = @GENERATE_HTMLHELP@
+CHM_FILE               = @PACAKGE_NAME@.chm
+HHC_LOCATION           = @HHC_PATH@
+GENERATE_CHI           = @GENERATE_CHI@
 CHM_INDEX_ENCODING     =
 BINARY_TOC             = NO
 TOC_EXPAND             = NO
@@ -203,12 +201,12 @@ EXTRA_SEARCH_MAPPINGS  =
 #---------------------------------------------------------------------------
 # Configuration options related to the LaTeX output
 #---------------------------------------------------------------------------
-GENERATE_LATEX         = $(GENERATE_LATEX)
+GENERATE_LATEX         = @GENERATE_LATEX@
 LATEX_OUTPUT           = latex
 LATEX_CMD_NAME         = latex
 MAKEINDEX_CMD_NAME     = makeindex
 COMPACT_LATEX          = NO
-PAPER_TYPE             = $(PAPER_SIZE)
+PAPER_TYPE             = @PAPER_SIZE@
 EXTRA_PACKAGES         =
 LATEX_HEADER           =
 LATEX_FOOTER           =
@@ -224,7 +222,7 @@ LATEX_TIMESTAMP        = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the RTF output
 #---------------------------------------------------------------------------
-GENERATE_RTF           = $(GENERATE_RTF)
+GENERATE_RTF           = @GENERATE_RTF@
 RTF_OUTPUT             = rtf
 COMPACT_RTF            = NO
 RTF_HYPERLINKS         = NO
@@ -234,7 +232,7 @@ RTF_SOURCE_CODE        = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the man page output
 #---------------------------------------------------------------------------
-GENERATE_MAN           = $(GENERATE_MAN)
+GENERATE_MAN           = @GENERATE_MAN@
 MAN_OUTPUT             = man
 MAN_EXTENSION          = .3
 MAN_SUBDIR             =
@@ -242,7 +240,7 @@ MAN_LINKS              = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the XML output
 #---------------------------------------------------------------------------
-GENERATE_XML           = $(GENERATE_XML)
+GENERATE_XML           = @GENERATE_XML@
 XML_OUTPUT             = xml
 XML_PROGRAMLISTING     = YES
 #---------------------------------------------------------------------------
@@ -278,11 +276,11 @@ SKIP_FUNCTION_MACROS   = YES
 # Configuration options related to external references
 #---------------------------------------------------------------------------
 TAGFILES               =
-GENERATE_TAGFILE       = $(DOCDIR)/$(PROJECT).tag
+GENERATE_TAGFILE       = @top_builddir@/doc/@PACKAGE_NAME@.tag
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
 EXTERNAL_PAGES         = YES
-PERL_PATH              = $(PERL_PATH)
+PERL_PATH              = @PERL_PATH@
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool
 #---------------------------------------------------------------------------
@@ -290,7 +288,7 @@ CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            =
 DIA_PATH               =
 HIDE_UNDOC_RELATIONS   = YES
-HAVE_DOT               = $(HAVE_DOT)
+HAVE_DOT               = @HAVE_DOT@
 DOT_NUM_THREADS        = 0
 DOT_FONTNAME           = Helvetica
 DOT_FONTSIZE           = 10
@@ -309,7 +307,7 @@ GRAPHICAL_HIERARCHY    = YES
 DIRECTORY_GRAPH        = YES
 DOT_IMAGE_FORMAT       = png
 INTERACTIVE_SVG        = NO
-DOT_PATH               = $(DOT_PATH)
+DOT_PATH               = @DOT_PATH@
 DOTFILE_DIRS           =
 MSCFILE_DIRS           =
 DIAFILE_DIRS           =

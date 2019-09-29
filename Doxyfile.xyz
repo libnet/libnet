@@ -1,7 +1,6 @@
 # Doxyfile 1.8.14
 # ALRIGHT LISTEN UP: This is a standalone Doxyfile for codedocs.xyz.
-# The real deal is libnet.doxygen.conf found in doc/ (but only works
-# in conjunction with automake)
+# The real deal is Doxygen.in (but only works in with automake)
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------

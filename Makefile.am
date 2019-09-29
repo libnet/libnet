@@ -25,13 +25,7 @@ DISTCLEANFILES = fixmanpages
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
 
-if ENABLE_DOXYGEN
-all: doxygen-doc
 @DX_RULES@
-
-all:
-	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -
-endif
 
 doc: doxygen-doc
 	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -

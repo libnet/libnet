@@ -37,26 +37,6 @@ dnl This can still be overwritten with --without-pic
 LT_INIT([pic-only])
 
 dnl
-dnl Check for DOxygen and enable its features
-dnl
-
-# See /usr/share/aclocal/ax_prog_doxygen.m4 and
-# http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
-
-DX_DOXYGEN_FEATURE(ON)
-DX_DOT_FEATURE(ON)
-DX_HTML_FEATURE(ON)
-DX_CHM_FEATURE(OFF)
-DX_CHI_FEATURE(OFF)
-DX_MAN_FEATURE(ON)
-DX_RTF_FEATURE(OFF)
-DX_XML_FEATURE(OFF)
-DX_PDF_FEATURE(ON)
-DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [doc/libnet.doxygen.conf], [doc])
-AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
-
-dnl
 dnl Check for headers
 dnl
 
@@ -178,20 +158,20 @@ for dir in src/*build*c ; do
 done
 echo ""
 
-
-# dnl Check for Doxygen and enable its features
-# dnl See m4/ax_prog_doxygen.m4
-DX_DOXYGEN_FEATURE(OFF)
+dnl Check for Doxygen and enable its features.
+dnl For details, see m4/ax_prog_doxygen.m4 and
+dnl http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
+DX_DOXYGEN_FEATURE(ON)
 DX_DOT_FEATURE(ON)
-DX_HTML_FEATURE(ON)
-DX_CHM_FEATURE(ON)
 DX_CHI_FEATURE(OFF)
-DX_MAN_FEATURE(ON)
 DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
-DX_PDF_FEATURE(ON)
+DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [$(top_srcdir)/doc/libnet.doxygen.conf], [doc])
+DX_CHM_FEATURE(OFF)
+DX_HTML_FEATURE(ON)
+DX_MAN_FEATURE(ON)
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/Doxyfile], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
 
 if test ${DX_FLAG_doc} -eq 1; then
@@ -440,6 +420,7 @@ dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
 AC_CONFIG_FILES([Makefile \
+		 Doxyfile \
                  doc/Makefile \
 	         doc/html/Makefile \
 	         doc/man/Makefile \
