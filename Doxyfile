@@ -1,6 +1,6 @@
 # Doxyfile 1.8.14
 # ALRIGHT LISTEN UP: This is a standalone Doxyfile for codedocs.xyz.
-# The real deal is libnet.doxygen.conf found in libnet/doc/ (but only works
+# The real deal is libnet.doxygen.conf found in doc/ (but only works
 # in conjunction with automake)
 #---------------------------------------------------------------------------
 # Project related configuration options
@@ -9,7 +9,7 @@ PROJECT_NAME           = "libnet"
 PROJECT_NUMBER         = "1.2-rc3"
 PROJECT_BRIEF          = "A Portable Framework for Low-Level Network Packet Construction"
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = libnet/doc
+OUTPUT_DIRECTORY       = doc
 ABBREVIATE_BRIEF       = 
 STRIP_FROM_PATH        = include
 OPTIMIZE_OUTPUT_FOR_C  = YES
@@ -24,15 +24,15 @@ WARN_NO_PARAMDOC       = YES
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = libnet/doc/libnet_api_main_page.md \
-                         libnet/include/libnet \
-                         libnet/include/libnet.h
+INPUT                  = doc/libnet_api_main_page.md \
+                         include/libnet \
+                         include/libnet.h
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = libnet/include/libnet/libnet-headers.h \
-                         libnet/include/libnet/libnet-types.h \
-                         libnet/include/libnet/libnet-asn1.h \
-                         libnet/include/libnet/libnet-structures.h
+EXCLUDE                = include/libnet/libnet-headers.h \
+                         include/libnet/libnet-types.h \
+                         include/libnet/libnet-asn1.h \
+                         include/libnet/libnet-structures.h
 EXAMPLE_PATTERNS       =
 USE_MDFILE_AS_MAINPAGE = libnet_api_main_page.md
 #---------------------------------------------------------------------------
@@ -49,13 +49,13 @@ COLS_IN_ALPHA_INDEX    = 3
 #---------------------------------------------------------------------------
 GENERATE_HTML          = YES
 HTML_OUTPUT            = api
-HTML_HEADER            = libnet/doc/libnet_api_header.html_tmpl
-HTML_FOOTER            = libnet/doc/libnet_api_footer.html_tmpl
-HTML_EXTRA_STYLESHEET  = libnet/doc/libnet_api_stylesheet.css_tmpl
+HTML_HEADER            = doc/libnet_api_header.html_tmpl
+HTML_FOOTER            = doc/libnet_api_footer.html_tmpl
+HTML_EXTRA_STYLESHEET  = doc/libnet_api_stylesheet.css_tmpl
 HTML_COLORSTYLE_HUE    = 120
 HTML_COLORSTYLE_SAT    = 50
 HTML_COLORSTYLE_GAMMA  = 40
-CHM_FILE               = ../libnet.chm
+CHM_FILE               = libnet.chm
 HHC_LOCATION           = "C:\Program Files (x86)\HTML Help Workshop\hhc.exe"
 DISABLE_INDEX          = YES
 SEARCHENGINE           = NO
