@@ -7,5 +7,5 @@ before_build:
 - cd C:\projects\libnet
 
 build_script:
-- %~dp0\win32\msvcbuild.bat
-- %~dp0\win32\msvcbuild.bat x64
+- "%~dp0\win32\msvcbuild.bat"
+- "%~dp0\win32\msvcbuild.bat x64"
