@@ -8,10 +8,22 @@ packets.  It provides a portable framework for low-level network packet
 writing and handling (use libnet in conjunction with libpcap and you can
 write some really cool stuff).  Libnet includes packet creation at the
 IP layer and at the link layer as well as a host of supplementary and
-complementary functionality.  Libnet is very handy with which to write
-network tools and network test code.  See the manpage and sample test
-code for more detailed information.
+complementary functionality.
 
+Libnet is very handy with which to write network tools and network test
+code.  Some projects, available in Debian/Ubuntu and OpenBSD, using
+libnet are:
+
+- [arping](https://github.com/ThomasHabets/arping)
+- [ettercap](https://www.ettercap-project.org/)
+- [ipguard](http://ipguard.deep.perm.ru/)
+- [isic](http://isic.sourceforge.net/)
+- [nemesis](https://troglobit.com/projects/nemesis/)
+- [packit](http://packetfactory.openwall.net/projects/packit/)
+- [tcptraceroute](https://web.archive.org/web/20130424094134/http://michael.toren.net/code/tcptraceroute/)
+- [yersinia](https://web.archive.org/web/20180522141004/http://www.yersinia.net/)
+
+See the manpage and sample test code for more detailed information.
 Online documentation is available at https://codedocs.xyz/libnet/libnet/
 
 > **NOTE:** Legacy code written for *libnet-1.0.x* WILL NOT WORK with
@@ -22,9 +34,9 @@ Online documentation is available at https://codedocs.xyz/libnet/libnet/
 Building
 --------
 
-Libnet employs the GNU configure and build system.  The release tarballs
-ship with a pre-built `configure` script.  To list available options,
-type <kbd>./configure --help</kbd>
+Libnet employs the [GNU configure and build system][autotools].  The
+release tarballs ship with a pre-built `configure` script.  To list
+available options, type <kbd>./configure --help</kbd>
 
 When checking out the code from GitHub, use <kbd>./autogen.sh</kbd> to
 generate a `configure` script.  For this you need the full suite of the
@@ -56,10 +68,10 @@ UNIX and GNU/Linux systems, see `chmcmd`, which is available in the
 Origin & References
 -------------------
 
-Libnet is widely used, but had become unmaintained at packetfactory.net,
-and its author is unreachable.  This version was forked from the 1.1.3
-release candidate from packetfactory.net, then bug fixed, actively
-maintained, and rereleased.
+Libnet is widely used, but had been unmaintained for a long time and its
+author unreachable.  This version was forked from the 1.1.3 release
+candidate from [packetfactory.net][origin], bug fixed, developed, and
+re-released.
 
 Use GitHub issues and pull request feature for questions and patches:
 
@@ -76,6 +88,8 @@ Some old docs are available at:
   http://github.com/libnet/libnet
 -------------------------------------------------------------------------
 
+[autotools]:       https://autotools.io/
+[origin]:          http://packetfactory.openwall.net/projects/libnet/
 [Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
 [Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
 [Travis]:          https://travis-ci.org/libnet/libnet
