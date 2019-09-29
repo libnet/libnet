@@ -15,8 +15,8 @@ code for more detailed information.
 Online documentation is available at https://codedocs.xyz/libnet/libnet/
 
 > **NOTE:** Legacy code written for *libnet-1.0.x* WILL NOT WORK with
-> *libnet-1.1.x* or later.  See [MIGRATION](doc/MIGRATION) for porting
-> legacy code.
+>           *libnet-1.1.x* or later.  See [MIGRATION](doc/MIGRATION)
+>           for porting legacy code.
 
 
 Building
