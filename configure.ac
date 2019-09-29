@@ -24,6 +24,21 @@ AM_INIT_AUTOMAKE([1.14 foreign subdir-objects no-dependencies dist-zip])
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
 
+AC_CONFIG_FILES([Makefile \
+		 Doxyfile \
+		 bin/Makefile \
+                 doc/Makefile \
+	         doc/html/Makefile \
+	         doc/man/Makefile \
+	         doc/man/man3/Makefile \
+                 include/Makefile \
+                 include/libnet.h \
+		 libnet.pc \
+                 src/Makefile \
+                 sample/Makefile \
+		 win32/Makefile])
+AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
+
 dnl the default compiler flags are "-O2 -g" if the user does not set anything.
 dnl IMO O2 optimizations are fine, but debugging should be up to the user.
 : ${CFLAGS="-O2"}
@@ -419,19 +434,7 @@ esac
 dnl this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
-AC_CONFIG_FILES([Makefile \
-		 Doxyfile \
-                 doc/Makefile \
-	         doc/html/Makefile \
-	         doc/man/Makefile \
-	         doc/man/man3/Makefile \
-                 include/Makefile \
-                 include/libnet.h \
-		 libnet.pc \
-                 src/Makefile \
-                 sample/Makefile \
-		 win32/Makefile])
-AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
+dnl Create all files from AC_CONFIG_FILES()
 AC_OUTPUT
 
 AC_MSG_RESULT([

@@ -1,2 +1,2 @@
-EXTRA_DIST = getopt.h libnet.h config.h stdint.h wpdpack
+EXTRA_DIST = getopt.h libnet.h config.h stdint.h msvcbuild.bat wpdpack
 

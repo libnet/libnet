@@ -9,12 +9,8 @@ ACLOCAL_AMFLAGS           = -I m4 ${ACLOCAL_FLAGS}
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
 doc_DATA       = README.md LICENSE
-EXTRA_DIST     = README.md LICENSE \
-                 msvcbuild.bat \
-                 README.win32 \
-                 autogen.sh \
-                 map-pblock-types
-SUBDIRS        = include src win32
+EXTRA_DIST     = README.md README.win32 LICENSE autogen.sh
+SUBDIRS        = bin include src win32
 
 if ENABLE_DOXYGEN
 SUBDIRS       += doc
