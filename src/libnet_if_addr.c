@@ -97,7 +97,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 {
     static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
     struct ifaddrs *ifap, *ifa;
-    int i = 0, nipaddr;
+    int i = 0;
     memset (ifaddrlist, 0 , sizeof(ifaddrlist));
 
     if (getifaddrs(&ifap) != 0)

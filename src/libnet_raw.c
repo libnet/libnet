@@ -152,8 +152,6 @@ bad:
 int
 libnet_open_raw4(libnet_t *l)
 {
-    socklen_t len;
-
 #if !(__WIN32__)
      int n = 1;
 #if (__svr4__)
@@ -235,22 +233,6 @@ int libnet_open_raw6(libnet_t *l)
 int
 libnet_open_raw6(libnet_t *l)
 {
-#if !(__WIN32__)
-#if (__svr4__)
-     int one = 1;
-     void *oneptr = &one;
-#else
-#if (__linux__)
-    int one = 1;
-    int *oneptr = &one;
-#endif
-#endif  /* __svr4__ */
-#else
-    BOOL one;
-#endif
-
-/* Solaris IPv6 stuff */
-    
     if (l == NULL)
     { 
         return (-1);
