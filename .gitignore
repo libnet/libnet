@@ -2,6 +2,7 @@
 *.dll
 *.exe
 *.exp
+*.gcno
 *.lo
 *.loT
 *.o
