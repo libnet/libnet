@@ -77,7 +77,7 @@ static int libnet_finish_setup_socket(libnet_t *l)
 #else
 	BOOL n;
 #endif
-    int len;
+    unsigned len;
 
 #ifdef SO_SNDBUF
 
