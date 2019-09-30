@@ -1,10 +1,6 @@
 fixmanpages
 libnet.tag
-html/*.png
-html/*.html
-html/*.map
-html/*.md5
-html/*.css
-html/*.css_tmpl
-html/*.js
+html/*
 latex/*
+man/*
+
