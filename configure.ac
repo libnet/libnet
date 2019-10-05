@@ -265,48 +265,37 @@ case "$target_os" in
     ;;
 
 *freebsd*)
-    AC_DEFINE(LIBNET_BSDISH_OS, 1,
-        [Define if our build OS supports the BSD APIs])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
 
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
+    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
     ;;
 
 *netbsd*)
-    AC_DEFINE(LIBNET_BSDISH_OS, 1,
-        [Define if our build OS supports the BSD APIs])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
 
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP"
+    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *openbsd*)
-    AC_DEFINE(LIBNET_BSDISH_OS, 1,
-        [Define if our build OS supports the BSD APIs])
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS"
     ;;
 
 *bsdi*)
-    AC_DEFINE(LIBNET_BSDISH_OS, 1,
-        [Define if our build OS supports the BSD APIs])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP"
+    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *darwin*)
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, [Define if libnet should byteswap data.])
-    AC_DEFINE(LIBNET_BSDISH_OS)
-    AC_DEFINE(LIBNET_BSD_BYTE_SWAP)
-    LIBNET_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP"
+    LIBNET_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *solaris*)
@@ -377,9 +366,6 @@ dnl
 *cygwin* | *msys*)
     WIN32="yes"
     AC_SUBST(WIN32)
-    AC_DEFINE(LIBNET_BSDISH_OS, 1,
-        [Define if our build OS supports the BSD APIs])
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS"
     CFLAGS="$CFLAGS -mwin32"
     AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(packet lib not found.))
     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(pcap lib not found.))

@@ -2,7 +2,6 @@
 /* Static win32 config.h, copied into include/ by msvcbuild.bat when
    building without autotools. */
 
-#undef LIBNET_BSDISH_OS
 #undef LIBNET_BSD_BYTE_SWAP
 #undef DLPI_DEV_PREFIX
 #undef HAVE_DEV_DLPI
