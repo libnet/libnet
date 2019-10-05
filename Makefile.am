@@ -8,8 +8,8 @@ ACLOCAL_AMFLAGS           = -I m4 ${ACLOCAL_FLAGS}
 
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
-doc_DATA       = README.md LICENSE
-EXTRA_DIST     = README.md README.win32 LICENSE autogen.sh
+doc_DATA       = README.md ChangeLog.md LICENSE
+EXTRA_DIST     = README.md ChangeLog.md LICENSE README.win32 autogen.sh
 SUBDIRS        = bin include src win32
 
 if ENABLE_DOXYGEN
