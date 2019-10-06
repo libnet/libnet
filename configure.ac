@@ -195,9 +195,9 @@ fi
 dnl Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
 AC_ARG_ENABLE([samples],
-    [AS_HELP_STRING([--disable-samples],[do not build sample programs @<:@default=no@:>@])],
+    [AS_HELP_STRING([--enable-samples],[do not build sample programs @<:@default=no@:>@])],
     [enable_samples=$enableval],
-    [enable_samples=yes]
+    [enable_samples=no]
 )
 AC_MSG_RESULT([$enable_samples])
 
