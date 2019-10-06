@@ -1,9 +1,9 @@
 [![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs]
 
-A C library for portable packet creation and injection
-======================================================
+Portable Packet Construction and Injection
+==========================================
 
-Libnet is an API to help with the construction and handling of network
+Libnet is an API to help with the construction and injection of network
 packets.  It provides a portable framework for low-level network packet
 writing and handling (use libnet in conjunction with libpcap and you can
 write some really cool stuff).  Libnet includes packet creation at the
@@ -38,12 +38,16 @@ Libnet employs the [GNU configure and build system][autotools].  The
 release tarballs ship with a pre-built `configure` script.  To list
 available options, type <kbd>./configure --help</kbd>
 
-When checking out the code from GitHub, use <kbd>./autogen.sh</kbd> to
-generate a `configure` script.  For this you need the full suite of the
-GNU autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
+### Building from GIT/GitHub
+
+When building from GIT, use <kbd>./autogen.sh</kbd> to generate the
+`configure` script.  For this you need the full suite of the GNU
+autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
 On Debian/Ubuntu systems:
 
     sudo apt install autoconf automake libtool
+
+### Building the Documentation
 
 To build the documentation (optional) you need doxygen and pod2man:
 
