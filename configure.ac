@@ -145,16 +145,6 @@ AS_IF([test -n "${with_link_layer}"], [
     AC_MSG_WARN(could not find a link-layer packet interface)
     AC_MSG_WARN(link-layer packet injection will not be available)])
 
-# This is necessary so that .o files in LIBOBJS are also built via
-# the ANSI2KNR-filtering rules.
-# FIXME Isn't this nowadays already taken care of by AC_PROG_CC?
-LIB@&t@OBJS=`echo "$LIB@&t@OBJS" |
-       sed 's,\.[[^.]]* ,$U&,g;s,\.[[^.]]*$,$U&,'`
-LTLIBOBJS=`echo "$LIB@&t@OBJS" |
-       sed 's,\.[[^.]]* ,.lo ,g;s,\.[[^.]]*$,.lo,'`
-
-link_layer=`"echo"${LTLIBOBJS}"" | cut -c 13- | awk -F$ '/U.lo/ {print $1}'`
-
 # Check for Doxygen and enable its features.
 # For details, see m4/ax_prog_doxygen.m4 and
 # http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
@@ -170,7 +160,6 @@ DX_HTML_FEATURE(ON)
 DX_MAN_FEATURE(ON)
 DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/Doxyfile], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
-AS_IF([test ${DX_FLAG_doc} -eq 1], [rebuild_docs=yes], [rebuild_docs=no])
 
 # Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
@@ -340,13 +329,14 @@ AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 # Create all files from AC_CONFIG_FILES()
 AC_OUTPUT
 
+# Helper variables for summary, below
+AS_IF([test ${DX_FLAG_doc} -eq 1], [rebuild_docs=yes], [rebuild_docs=no])
+link_layer=`"echo"${LTLIBOBJS}"" | sed 's/.*libnet_link_\(.*\)\$.*/\1/'`
+
 AC_MSG_RESULT([
 -=-=-=-=-=-=-=-=-=-= $PACKAGE Configuration Complete =-=-=-=-=-=-=-=-=-=-
 
-Configuration Summary
-
     Version ....................... ${VERSION}
-    Protocols ..................... 32
 
     Host .......................... ${host}
     Operating System .............. ${host_os}
@@ -355,8 +345,6 @@ Configuration Summary
     Host OS ....................... ${host_os}
     Prefix ........................ ${prefix}
 
-Compilation Environment
-
     Cross-compiling ............... ${cross_compiling}
     Compiler is GCC ............... ${ac_cv_c_compiler_gnu}
     CC ............................ ${CC}
@@ -364,8 +352,6 @@ Compilation Environment
     LD ............................ ${LD}
     LDFLAGS ....................... ${LDFLAGS}
     LIBS .......................... ${LIBS}
-
-Features and Examples
 
     Link Layer .................... ${link_layer}
     Shared Libraries .............. ${enable_shared}
