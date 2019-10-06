@@ -8,12 +8,14 @@
 
 AC_INIT([libnet],[1.2-rc3],[https://github.com/libnet/libnet/issues],,[https://github.com/libnet/libnet])
 
+# Visible in resulting configure script, e.g. with ./configure --version
+AC_COPYRIGHT([Copyright (C) 1998 - 2019 The libnet Developer Community.])
+AC_REVISION(${VERSION})
+
 # the autotools and libtool should be at least these versions
 AC_PREREQ([2.69])
 LT_PREREQ([2.4.2])
 
-AC_COPYRIGHT([Copyright 1998 - 2019 The libnet Developer Community])
-AC_MSG_RESULT(Beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_PROG_SHELL
 AC_PROG_SED
 AC_CHECK_PROGS([CHMOD],[chmod],[true])
