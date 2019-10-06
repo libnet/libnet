@@ -88,64 +88,62 @@ AC_CHECK_HEADERS([net/pfilt.h sys/net/nit.h net/raw.h sys/dlpi.h linux/socket.h]
 
 AC_MSG_CHECKING(link-layer packet interface type)
 
-if test -n "${with_link_layer}"; then
-    case "${with_link_layer}" in
-        bpf)   AC_LIBOBJ([libnet_link_bpf]) ;;
-        pf)    AC_LIBOBJ([libnet_link_pf]) ;;
-        snit)  AC_LIBOBJ([libnet_link_snit]) ;;
-        nit)   AC_LIBOBJ([libnet_link_nit]) ;;
-        snoop) AC_LIBOBJ([libnet_link_snoop]) ;;
-        dlpi)  AC_LIBOBJ([libnet_link_dlpi]) ;;
-        win32) AC_LIBOBJ([libnet_link_win32]) ;;
-        none)  AC_LIBOBJ([libnet_link_none]) ;;
-        linux) AC_LIBOBJ([libnet_link_linux])
-           AC_LIBNET_CHECK_PF_PACKET
-           AC_LIBNET_LINUX_PROCFS ;;
-        none) AC_LIBOBJ([libnet_link_none]) ;;
-        *) AC_MSG_ERROR([Invalid link type "${with_link_layer}"]) ;;
-    esac
-    AC_MSG_RESULT(user selected link layer ${with_link_layer})
-elif test "${cross_compiling}" != "yes" -a -r /dev/bpf0 ; then
+AS_IF([test -n "${with_link_layer}"], [
+    AS_CASE([${with_link_layer}],
+        [bpf],   [AC_LIBOBJ([libnet_link_bpf])],
+        [pf],    [AC_LIBOBJ([libnet_link_pf])],
+        [snit],  [AC_LIBOBJ([libnet_link_snit])],
+        [nit],   [AC_LIBOBJ([libnet_link_nit])],
+        [snoop], [AC_LIBOBJ([libnet_link_snoop])],
+        [dlpi],  [AC_LIBOBJ([libnet_link_dlpi])],
+        [win32], [AC_LIBOBJ([libnet_link_win32])],
+        [none],  [AC_LIBOBJ([libnet_link_none])],
+        [linux], [AC_LIBOBJ([libnet_link_linux])
+                  AC_LIBNET_CHECK_PF_PACKET
+                  AC_LIBNET_LINUX_PROCFS],
+        [AC_MSG_ERROR([Invalid link type "${with_link_layer}"])])
+     AC_MSG_RESULT(user selected link layer ${with_link_layer})],
+[test "${cross_compiling}" != "yes" -a -r /dev/bpf0], [
     AC_LIBOBJ([libnet_link_bpf])
-    AC_MSG_RESULT(found link layer bpf)
-elif test "${ac_cv_header_net_pfilt_h}" = "yes" ; then
+    AC_MSG_RESULT(found link layer bpf)],
+[test "${ac_cv_header_net_pfilt_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_pf])
-    AC_MSG_RESULT(found link layer pf)
-elif test "${cross_compiling}" != "yes" -a -r /dev/nit ; then
+    AC_MSG_RESULT(found link layer pf)],
+[test "${cross_compiling}" != "yes" -a -r /dev/nit], [
     AC_LIBOBJ([libnet_link_snit])
-    AC_MSG_RESULT(found link layer snit)
-elif test "${ac_cv_header_sys_net_nit_h}" = "yes" ; then
+    AC_MSG_RESULT(found link layer snit)],
+[test "${ac_cv_header_sys_net_nit_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_nit])
-    AC_MSG_RESULT(found link layer nit)
-elif test "${ac_cv_header_net_raw_h}" = "yes" ; then
+    AC_MSG_RESULT(found link layer nit)],
+[test "${ac_cv_header_net_raw_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_snoop])
-    AC_MSG_RESULT(found link layer snoop)
-elif test "${ac_cv_header_sys_dlpi_h}" = "yes" ; then
+    AC_MSG_RESULT(found link layer snoop)],
+[test "${ac_cv_header_sys_dlpi_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_dlpi])
     AC_MSG_RESULT(found link layer dlpi)
-    AC_DEFINE(HAVE_DLPI, 1, [Define if the <sys/dlpi.h> header exists.])
-elif test "${ac_cv_header_linux_socket_h}" = "yes" ; then
+    AC_DEFINE(HAVE_DLPI, 1, [Define if the <sys/dlpi.h> header exists.])],
+[test "${ac_cv_header_linux_socket_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_linux])
     AC_MSG_RESULT(found link layer linux)
     AC_LIBNET_CHECK_PF_PACKET
-    AC_LIBNET_LINUX_PROCFS
-elif test "${cross_compiling}" != "yes" -a -c /dev/bpf0 ; then           # check again in case not readable
+    AC_LIBNET_LINUX_PROCFS],
+[test "${cross_compiling}" != "yes" -a -c /dev/bpf0], [
+    # check again in case not readable
     AC_LIBOBJ([libnet_link_bpf])
-    AC_MSG_RESULT(found link layer bpf)
-elif test "${cross_compiling}" != "yes" -a -c /dev/nit ; then            # check again in case not readable
+    AC_MSG_RESULT(found link layer bpf)],
+[test "${cross_compiling}" != "yes" -a -c /dev/nit], [
+    # check again in case not readable
     AC_LIBOBJ([libnet_link_snit])
-    AC_MSG_RESULT(found link layer snit)
-elif test "$target_os" = "cygwin" ; then
+    AC_MSG_RESULT(found link layer snit)],
+[test "$target_os" = "cygwin"], [
     AC_LIBOBJ([libnet_link_win32])
-    AC_MSG_RESULT(found link layer win32 wpcap)
-elif test "$host" = "i686-w64-mingw32" -o "x86_64-w64-mingw32" -o "x86_64-pc-mingw64"; then
+    AC_MSG_RESULT(found link layer win32 wpcap)],
+[test "$host" = "i686-w64-mingw32" -o "x86_64-w64-mingw32" -o "x86_64-pc-mingw64"], [
     AC_LIBOBJ([libnet_link_win32])
-    AC_MSG_RESULT(found link layer win32 @<:@WinPcap@:>@)
-else
+    AC_MSG_RESULT(found link layer win32 @<:@WinPcap@:>@)],[
     AC_LIBOBJ([libnet_link_none])
     AC_MSG_WARN(could not find a link-layer packet interface)
-    AC_MSG_WARN(link-layer packet injection will not be available)
-fi
+    AC_MSG_WARN(link-layer packet injection will not be available)])
 
 # This is necessary so that .o files in LIBOBJS are also built via
 # the ANSI2KNR-filtering rules.
@@ -188,8 +186,8 @@ AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
 
 # Check and set OS specific parameters
-case "$target_os" in
-*linux*)
+AS_CASE([$target_os],
+[*linux*], [
     AC_DEFINE(_BSD_SOURCE, 1,
         [Define as necessary to "unhide" header symbols.])
     AC_DEFINE(_DEFAULT_SOURCE, 1,
@@ -198,157 +196,143 @@ case "$target_os" in
     PKG_CONFIG_DEFINES="-D_BSD_SOURCE -D_DEFAULT_SOURCE"
     AC_CHECK_HEADERS(net/ethernet.h, \
         PKG_CONFIG_DEFINES="$PKG_CONFIG_DEFINES -DHAVE_NET_ETHERNET_H")
-    ;;
+    ],
 
-*freebsd*)
+[*freebsd*], [
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
 
     PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
-    ;;
+    ],
 
-*netbsd*)
+[*netbsd*], [
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
 
     PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
-    ;;
+    ],
 
-*openbsd*)
+[*openbsd*], [
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
-    ;;
+    ],
 
-*bsdi*)
+[*bsdi*], [
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
     PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
-    ;;
+    ],
 
-*darwin*)
+[*darwin*], [
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, [Define if libnet should byteswap data.])
     PKG_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSD_BYTE_SWAP"
-    ;;
+    ],
 
-*solaris*)
+[*solaris*], [
     AC_DEFINE(HAVE_SOLARIS, 1, [Define if we are running on Solaris.])
     AC_CHECK_HEADERS(sys/bufmod.h sys/dlpi_ext.h)
     AC_MSG_CHECKING(for /dev/dlpi device)
-    if test -c /dev/dlpi; then
+    AS_IF([test -c /dev/dlpi], [
         AC_MSG_RESULT(yes)
         AC_DEFINE(HAVE_DEV_DLPI, 1, [Define if /dev/dlpi is available.])
-    else
+    ], [
         AC_MSG_RESULT(no)
         dir="/dev/dlpi"
         AC_MSG_CHECKING(for $dir directory)
-        if test -d $dir ; then
+        AS_IF([test -d $dir], [
             AC_MSG_RESULT(yes)
             AC_DEFINE_UNQUOTED(DLPI_DEV_PREFIX, "$dir",
                 [Define if /dev/dlpi is a directory.])
-        else
+        ], [
             AC_MSG_RESULT(no)
-        fi
-    fi
+        ])
+    ])
     AC_CHECK_LIB(socket, socket, ,AC_MSG_ERROR(libsocket not found.))
     AC_CHECK_LIB(nsl, gethostbyname, ,AC_MSG_ERROR(libnsl not found.))
     AC_CHECK_LIB(resolv, hstrerror, ,AC_MSG_ERROR(libresolv not found.))
 
-# 
-# Broken checksums?
-#
-    case "`uname -r`" in
-    5.4)
+    #
+    # Broken checksums?
+    #
+    AS_CASE([`uname -r`],
+    [5.4], [
         AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG, 1,
             [Define if our version of Solaris has broken checksums.])
-        ;;
-    5.5*)
+        ],
+    [5.5*], [
         AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG, 1,
             [Define if our version of Solaris has broken checksums.])
-        ;;
-    5.8)
+        ],
+    [5.8], [
         AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG, 1,
             [Define if our version of Solaris has broken checksums.])
         AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
             [Define if our version of Solaris supports IPv6.])
 
-        ;;
-    5.9)
+        ],
+    [5.9], [
         AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG, 1,
             [Define if our version of Solaris has broken checksums.])
         AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
             [Define if our version of Solaris supports IPv6.])
-        ;;
-    5.10|5.11|5.12)
+        ],
+    [5.10 | 5.11 | 5.12], [
         AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
             [Define if our version of Solaris supports IPv6.])
-        ;;
-
-    esac
+        ])
 
     ADDITIONAL_LIBS="-lresolv -lsocket -lnsl"
     PKG_CONFIG_LIBS="$PKG_CONFIG_LIBS -lresolv -lsocket -lnsl"
+    ],
 
-    ;;
-
-*hpux11*)
+[*hpux11*], [
     AC_DEFINE(HAVE_HPUX11, 1, [Define if we are building on HP/UX.])
     AC_CHECK_HEADERS(sys/dlpi_ext.h)
-    ;;
+    ],
 
-*cygwin* | *msys*)
+[*cygwin* | *msys*], [
     WIN32="yes"
     AC_SUBST(WIN32)
     CFLAGS="$CFLAGS -mwin32"
     AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(packet lib not found.))
     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(pcap lib not found.))
     LIBS="$LIBS -lws2_32"
-    ;;
+    ],
 
-*mingw*)
+[*mingw*], [
     WIN32="yes"
     AC_SUBST(WIN32)
 
-    if test "$enable_shared" = "yes"; then
-        AC_CHECK_TOOL(WINDRES, windres, :)
-    fi
+    AS_IF([test "$enable_shared" = "yes"], [AC_CHECK_TOOL(WINDRES, windres, :)])
 
-    AC_DEFINE(WIN32_LEAN_AND_MEAN, 1, 
-        [Define to limit the scope of <windows.h>])
+    AC_DEFINE(WIN32_LEAN_AND_MEAN, 1, [Define to limit the scope of <windows.h>])
 
     AC_CHECK_LIB(packet, PacketSetMode, ,AC_MSG_ERROR(libpacket.a not found. See README.win32 for more information))
     AC_CHECK_LIB(wpcap, pcap_setmode, ,AC_MSG_ERROR(libwpcap.a not found. See README.win32 for more information))
     LIBS="$LIBS -lws2_32 -liphlpapi"
 
-    if test "$host" = "i686-w64-mingw32" ; then
-    CFLAGS="$CFLAGS -march=i686 -mwin32"
-    else
-    CFLAGS="$CFLAGS -mwin32"
-# the default GCC toolchains on Debian & Co are so old
-     AX_CHECK_LINK_FLAG([-Wl,--high-entropy-va],
-     [LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"],
-     [AC_MSG_NOTICE([Consider updating your toolchain.])])
-    fi
+    AS_IF([test "$host" = "i686-w64-mingw32"], [
+        CFLAGS="$CFLAGS -march=i686 -mwin32"], [
+	CFLAGS="$CFLAGS -mwin32"
 
-    if test "${cross_compiling}" = "yes" ; then
-    CFLAGS="$CFLAGS -static-libgcc"
-    fi
-    ;;
+	AX_CHECK_LINK_FLAG([-Wl,--high-entropy-va],
+            [LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"],
+            [AC_MSG_NOTICE([Consider updating your toolchain.])])
+    ])
 
-*irix*)
+    AS_IF([test "${cross_compiling}" = "yes"], [
+        CFLAGS="$CFLAGS -static-libgcc"])
+    ],
+
+[*irix*], [
     CFLAGS="$CFLAGS -DINET6=1"
-    ;;
-
-*)
-    AC_MSG_WARN(apparently your OS is not officially supported yet)
-    AC_MSG_WARN(this may not work)
-    AC_MSG_RESULT(please send diffs to autostart.ini@gmail.com)
-    ;;
-
-esac
+    ], [
+    AC_MSG_WARN(${target_os} is not officially supported yet.)
+    AC_MSG_RESULT(Please report this to ${PACKAGE_BUGREPORT})])
 
 # this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
