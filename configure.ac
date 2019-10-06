@@ -1,14 +1,14 @@
-dnl
-dnl Libnet autoconfiguration information file
-dnl Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
-dnl Modified by Ali Abdulkadir <autostart.ini@gmail.com>
-dnl All rights reserved.
-dnl
-dnl Process this file with autoconf to produce a configure script.
+#
+# Libnet autoconfiguration information file
+# Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
+# Modified by Ali Abdulkadir <autostart.ini@gmail.com>
+# All rights reserved.
+#
+# Process this file with autoconf to produce a configure script.
 
 AC_INIT([libnet],[1.2-rc3],[https://github.com/libnet/libnet/issues],,[https://github.com/libnet/libnet])
 
-dnl the autotools and libtool should be at least these versions
+# the autotools and libtool should be at least these versions
 AC_PREREQ([2.69])
 LT_PREREQ([2.4.2])
 
@@ -36,21 +36,21 @@ AC_CONFIG_FILES([Makefile \
 		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 
-dnl the default compiler flags are "-O2 -g" if the user does not set anything.
-dnl IMO O2 optimizations are fine, but debugging should be up to the user.
+# the default compiler flags are "-O2 -g" if the user does not set anything.
+# IMO O2 optimizations are fine, but debugging should be up to the user.
 : ${CFLAGS="-O2"}
 
-dnl Check for the usual programs
+# Check for the usual programs
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
-dnl The default is to use only PIC objects.
-dnl This can still be overwritten with --without-pic
+# The default is to use only PIC objects.
+# This can still be overwritten with --without-pic
 LT_INIT([pic-only])
 
-dnl
-dnl Check for headers
-dnl
+#
+# Check for headers
+#
 
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
@@ -69,22 +69,22 @@ if test "x$have_socklen_t" = "xyes"; then
 fi
 AC_MSG_RESULT($have_socklen_t)
 
-dnl
-dnl And some custom things
-dnl
+#
+# And some custom things
+#
 
 AC_LIBNET_ENDIAN_CHECK
-dnl AC_LBL_LIBRARY_NET
+# AC_LBL_LIBRARY_NET
 AC_SUBST(ENDIANESS)
 AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
 AC_SUBST(PKG_CONFIG_DEFINES)
 AC_SUBST(PKG_CONFIG_LIBS)
-dnl FIXME this variable is unused
+# FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
-dnl Get link-layer interface type
+# Get link-layer interface type
 AC_ARG_WITH(
 	[link-layer],
 	[AS_HELP_STRING([--with-link-layer],[when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])]
@@ -153,9 +153,9 @@ else
     AC_MSG_WARN(link-layer packet injection will not be available)
 fi
 
-dnl This is necessary so that .o files in LIBOBJS are also built via
-dnl the ANSI2KNR-filtering rules.
-dnl FIXME Isn't this nowadays already taken care of by AC_PROG_CC?
+# This is necessary so that .o files in LIBOBJS are also built via
+# the ANSI2KNR-filtering rules.
+# FIXME Isn't this nowadays already taken care of by AC_PROG_CC?
 LIB@&t@OBJS=`echo "$LIB@&t@OBJS" |
        sed 's,\.[[^.]]* ,$U&,g;s,\.[[^.]]*$,$U&,'`
 LTLIBOBJS=`echo "$LIB@&t@OBJS" |
@@ -163,16 +163,16 @@ LTLIBOBJS=`echo "$LIB@&t@OBJS" |
 
 link_layer=`"echo"${LTLIBOBJS}"" | cut -c 13- | awk -F$ '/U.lo/ {print $1}'`
 
-dnl Inform user about the packet builders we've got
+# Inform user about the packet builders we've got
 echo -n "scanning available packet construction modules: "
 for dir in src/*build*c ; do
     echo $dir | sed -e /src\\/libnet_build_/s/// | sed -e /\\.c/s/// | tr \\n \\040
 done
 echo ""
 
-dnl Check for Doxygen and enable its features.
-dnl For details, see m4/ax_prog_doxygen.m4 and
-dnl http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
+# Check for Doxygen and enable its features.
+# For details, see m4/ax_prog_doxygen.m4 and
+# http://www.bioinf.uni-freiburg.de/~mmann/HowTo/automake.html#doxygenSupport
 DX_DOXYGEN_FEATURE(ON)
 DX_DOT_FEATURE(ON)
 DX_CHI_FEATURE(OFF)
@@ -192,7 +192,7 @@ else
     rebuild_docs=no
 fi
 
-dnl Check for sample building
+# Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
 AC_ARG_ENABLE([samples],
     [AS_HELP_STRING([--enable-samples],[do not build sample programs @<:@default=no@:>@])],
@@ -203,10 +203,10 @@ AC_MSG_RESULT([$enable_samples])
 
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 
-dnl what (not) to do if the user disables shared libraries
+# what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
 
-dnl Check and set OS specific parameters
+# Check and set OS specific parameters
 case "$target_os" in
 *linux*)
     AC_DEFINE(_BSD_SOURCE, 1,
@@ -276,9 +276,9 @@ case "$target_os" in
     AC_CHECK_LIB(nsl, gethostbyname, ,AC_MSG_ERROR(libnsl not found.))
     AC_CHECK_LIB(resolv, hstrerror, ,AC_MSG_ERROR(libresolv not found.))
 
-dnl 
-dnl Broken checksums?
-dnl
+# 
+# Broken checksums?
+#
     case "`uname -r`" in
     5.4)
         AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG, 1,
@@ -346,7 +346,7 @@ dnl
     CFLAGS="$CFLAGS -march=i686 -mwin32"
     else
     CFLAGS="$CFLAGS -mwin32"
-dnl the default GCC toolchains on Debian & Co are so old
+# the default GCC toolchains on Debian & Co are so old
      AX_CHECK_LINK_FLAG([-Wl,--high-entropy-va],
      [LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"],
      [AC_MSG_NOTICE([Consider updating your toolchain.])])
@@ -369,10 +369,10 @@ dnl the default GCC toolchains on Debian & Co are so old
 
 esac
 
-dnl this only matters if we are building for Windows...
+# this only matters if we are building for Windows...
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 
-dnl Create all files from AC_CONFIG_FILES()
+# Create all files from AC_CONFIG_FILES()
 AC_OUTPUT
 
 AC_MSG_RESULT([
