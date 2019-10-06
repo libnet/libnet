@@ -372,8 +372,7 @@ AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
 AC_OUTPUT
 
 AC_MSG_RESULT([
--=-=-=-=-=-=-=-=-= $PACKAGE Configuration Complete =-=-=-=-=-=-=-=-=-=-
-
+-=-=-=-=-=-=-=-=-=-= $PACKAGE Configuration Complete =-=-=-=-=-=-=-=-=-=-
 
 Configuration Summary
 
@@ -406,20 +405,24 @@ Features and Examples
     Build Sample Programs: ........ ${enable_samples}
     Rebuild docs: ................. ${rebuild_docs}
 
-To override options, see ./configure --help
+To override options:
 
-To disable silent building and print the full command line of every stage, run "make V=1"
+	$0 --help
+
+Report bugs to ${PACKAGE_BUGREPORT}
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+To disable silent build and print the full command line of every stage:
+
+	make V=1
 ])
-if test "$WIN32" = "yes" ; then
-AC_MSG_WARN([To compile shared libraries on MinGW, use the WinPcap libraries in $(pwd)/win32/.
-GCC is NOT able to produce x64 compatible images using the official WinPcap Developer Pack.
-See README.win32 for more information.
+AS_IF([test "$WIN32" = "yes"], [AC_MSG_RESULT(
+[To compile shared libraries on MinGW use the bundled WinPcap libraries
+in ./win32/.  GCC can NOT produce x64 compatible images with official
+WinPcap Developer Pack.  See README.win32 for more info.
+])])
+AS_IF([test "$rebuild_docs" = "yes"], [AC_MSG_RESULT(
+[To build/update the documentation:
 
-Report bugs to ${PACKAGE_BUGREPORT}])
-elif test "$rebuild_docs" = "yes" ; then
-AC_MSG_RESULT([To build just the Documentation run "make doc"
-
-Report bugs to ${PACKAGE_BUGREPORT}])
-else
-AC_MSG_RESULT([Report bugs to ${PACKAGE_BUGREPORT}])
-fi
+	make doc
+])])
