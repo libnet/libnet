@@ -202,12 +202,12 @@ AC_DEFUN([AC_LIBNET_ENDIAN_CHECK],
             AC_DEFINE(LIBNET_BIG_ENDIAN, 1,
                 [We are running on a big-endian machine.])
             ENDIANESS="LIBNET_BIG_ENDIAN"
-            LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DLIBNET_BIG_ENDIAN"
+            PKG_CONFIG_DEFINES="$PKG_CONFIG_DEFINES -DLIBNET_BIG_ENDIAN"
         else
             AC_DEFINE(LIBNET_LIL_ENDIAN, 1, 
                 [We are running on a little-endian machine.])
             ENDIANESS="LIBNET_LIL_ENDIAN"
-            LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DLIBNET_LIL_ENDIAN"
+            PKG_CONFIG_DEFINES="$PKG_CONFIG_DEFINES -DLIBNET_LIL_ENDIAN"
         fi
     ])
 

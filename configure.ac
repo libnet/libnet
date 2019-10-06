@@ -78,8 +78,8 @@ dnl AC_LBL_LIBRARY_NET
 AC_SUBST(ENDIANESS)
 AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
-AC_SUBST(LIBNET_CONFIG_DEFINES)
-AC_SUBST(LIBNET_CONFIG_LIBS)
+AC_SUBST(PKG_CONFIG_DEFINES)
+AC_SUBST(PKG_CONFIG_LIBS)
 dnl FIXME this variable is unused
 AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
@@ -255,9 +255,9 @@ case "$target_os" in
     AC_DEFINE(_DEFAULT_SOURCE, 1,
         [Define as necessary to "unhide" header symbols.])
 
-    LIBNET_CONFIG_DEFINES="-D_BSD_SOURCE -D_DEFAULT_SOURCE"
+    PKG_CONFIG_DEFINES="-D_BSD_SOURCE -D_DEFAULT_SOURCE"
     AC_CHECK_HEADERS(net/ethernet.h, \
-        LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DHAVE_NET_ETHERNET_H")
+        PKG_CONFIG_DEFINES="$PKG_CONFIG_DEFINES -DHAVE_NET_ETHERNET_H")
     ;;
 
 *freebsd*)
@@ -266,14 +266,14 @@ case "$target_os" in
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
 
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
+    PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
     ;;
 
 *netbsd*)
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
 
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
+    PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *openbsd*)
@@ -284,14 +284,14 @@ case "$target_os" in
 *bsdi*)
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
         [Define if libnet should byteswap data.])
-    LIBNET_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
+    PKG_CONFIG_DEFINES="-DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *darwin*)
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, [Define if libnet should byteswap data.])
-    LIBNET_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSD_BYTE_SWAP"
+    PKG_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN -DLIBNET_BSD_BYTE_SWAP"
     ;;
 
 *solaris*)
@@ -350,7 +350,7 @@ dnl
     esac
 
     ADDITIONAL_LIBS="-lresolv -lsocket -lnsl"
-    LIBNET_CONFIG_LIBS="$LIBNET_CONFIG_LIBS -lresolv -lsocket -lnsl"
+    PKG_CONFIG_LIBS="$PKG_CONFIG_LIBS -lresolv -lsocket -lnsl"
 
     ;;
 

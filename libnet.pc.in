@@ -9,6 +9,6 @@ Description: Portable Packet Construction and Injection API
 URL: @PACKAGE_URL@
 
 Requires: 
-Libs: -L${libdir} -lnet @LTLIBINTL@
-Cflags: -I${includedir}
+Libs: -L${libdir} -lnet @PKG_CONFIG_LIBS@
+Cflags: -I${includedir} @PKG_CONFIG_DEFINES@
 
