@@ -1,12 +1,14 @@
 #
 # Libnet autoconfiguration information file
 # Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
-# Modified by Ali Abdulkadir <autostart.ini@gmail.com>
+# Modified by: Ali Abdulkadir <autostart.ini@gmail.com>,
+#              Joachim Nilsson <troglobit@gmail.com>
 # All rights reserved.
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([libnet],[1.2-rc3],[https://github.com/libnet/libnet/issues],,[https://github.com/libnet/libnet])
+AC_INIT([libnet], [1.2-rc3], [https://github.com/libnet/libnet/issues],,
+	[https://github.com/libnet/libnet])
 
 # Visible in resulting configure script, e.g. with ./configure --version
 AC_COPYRIGHT([Copyright (C) 1998 - 2019 The libnet Developer Community.])
@@ -49,8 +51,7 @@ LT_INIT([pic-only])
 #
 # Check for headers
 #
-
-AC_CHECK_HEADERS(sys/sockio.h)
+AC_CHECK_HEADERS([sys/sockio.h])
 AC_CHECK_FUNCS([gethostbyname2])
 AC_CHECK_FUNCS([getifaddrs])
 AC_TYPE_UINT16_T
@@ -69,23 +70,19 @@ AC_MSG_RESULT($have_socklen_t)
 #
 # And some custom things
 #
-
 AC_LIBNET_ENDIAN_CHECK
-# AC_LBL_LIBRARY_NET
 AC_SUBST(ENDIANESS)
 AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
 AC_SUBST(PKG_CONFIG_DEFINES)
 AC_SUBST(PKG_CONFIG_LIBS)
-# FIXME this variable is unused
-AC_SUBST(LIBNET_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
 # Get link-layer interface type
 AC_ARG_WITH(
 	[link-layer],
-	[AS_HELP_STRING([--with-link-layer],[when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])]
-)
+	[AS_HELP_STRING([--with-link-layer],
+	[when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])])
 
 AC_CHECK_HEADERS([net/pfilt.h sys/net/nit.h net/raw.h sys/dlpi.h linux/socket.h])
 
@@ -159,13 +156,6 @@ LTLIBOBJS=`echo "$LIB@&t@OBJS" |
        sed 's,\.[[^.]]* ,.lo ,g;s,\.[[^.]]*$,.lo,'`
 
 link_layer=`"echo"${LTLIBOBJS}"" | cut -c 13- | awk -F$ '/U.lo/ {print $1}'`
-
-# Inform user about the packet builders we've got
-echo -n "scanning available packet construction modules: "
-for dir in src/*build*c ; do
-    echo $dir | sed -e /src\\/libnet_build_/s/// | sed -e /\\.c/s/// | tr \\n \\040
-done
-echo ""
 
 # Check for Doxygen and enable its features.
 # For details, see m4/ax_prog_doxygen.m4 and
@@ -371,43 +361,43 @@ AC_MSG_RESULT([
 
 Configuration Summary
 
-    Version : ..................... ${VERSION}
-    Protocols: .................... 32
+    Version ....................... ${VERSION}
+    Protocols ..................... 32
 
-    Host : ........................ ${host}
-    Operating System: ............. ${host_os}
-    Host CPU : .................... ${host_cpu}
-    Host Vendor : ................. ${host_vendor}
-    Host OS : ..................... ${host_os}
-    Prefix: ....................... ${prefix}
+    Host .......................... ${host}
+    Operating System .............. ${host_os}
+    Host CPU ...................... ${host_cpu}
+    Host Vendor ................... ${host_vendor}
+    Host OS ....................... ${host_os}
+    Prefix ........................ ${prefix}
 
 Compilation Environment
 
-    Cross-compiling: .............. ${cross_compiling}
-    Compiler is GCC: .............. ${ac_cv_c_compiler_gnu}
-    CC: ........................... ${CC}
-    CFLAGS:........................ ${CFLAGS}
-    LD: ........................... ${LD}
-    LDFLAGS: ...................... ${LDFLAGS}
-    LIBS: ......................... ${LIBS}
+    Cross-compiling ............... ${cross_compiling}
+    Compiler is GCC ............... ${ac_cv_c_compiler_gnu}
+    CC ............................ ${CC}
+    CFLAGS ........................ ${CFLAGS}
+    LD ............................ ${LD}
+    LDFLAGS ....................... ${LDFLAGS}
+    LIBS .......................... ${LIBS}
 
 Features and Examples
 
-    Link Layer: ................... ${link_layer}
-    Shared Libraries: ............. ${enable_shared}
-    Static Libraries: ............. ${enable_static}
+    Link Layer .................... ${link_layer}
+    Shared Libraries .............. ${enable_shared}
+    Static Libraries .............. ${enable_static}
     PIC ........................... ${pic_mode}
-    Build Sample Programs: ........ ${enable_samples}
-    Rebuild docs: ................. ${rebuild_docs}
+    Build Sample Programs ......... ${enable_samples}
+    Rebuild docs .................. ${rebuild_docs}
 
-To override options:
+To override options
 
 	$0 --help
 
 Report bugs to ${PACKAGE_BUGREPORT}
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-To disable silent build and print the full command line of every stage:
+To disable silent build and print the full command line of every stage
 
 	make V=1
 ])
@@ -417,7 +407,7 @@ in ./win32/.  GCC can NOT produce x64 compatible images with official
 WinPcap Developer Pack.  See README.win32 for more info.
 ])])
 AS_IF([test "$rebuild_docs" = "yes"], [AC_MSG_RESULT(
-[To build/update the documentation:
+[To build/update the documentation
 
 	make doc
 ])])
