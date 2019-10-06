@@ -36,10 +36,6 @@ AC_CONFIG_FILES([Makefile \
 		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 
-# the default compiler flags are "-O2 -g" if the user does not set anything.
-# IMO O2 optimizations are fine, but debugging should be up to the user.
-: ${CFLAGS="-O2"}
-
 # Check for the usual programs
 AC_PROG_CC
 AC_PROG_INSTALL
