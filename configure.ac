@@ -60,9 +60,8 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
         #include <sys/types.h>
         #include <sys/socket.h>
         ]], [[ socklen_t x; ]])],[have_socklen_t=yes],[have_socklen_t=no])
-if test "x$have_socklen_t" = "xyes"; then
-        AC_DEFINE(HAVE_SOCKLEN_T, 1, [define if socklen_t is defined])
-fi
+AS_IF([test "x$have_socklen_t" = "xyes"], [
+        AC_DEFINE(HAVE_SOCKLEN_T, 1, [define if socklen_t is defined])])
 AC_MSG_RESULT($have_socklen_t)
 
 #
@@ -181,12 +180,7 @@ DX_HTML_FEATURE(ON)
 DX_MAN_FEATURE(ON)
 DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/Doxyfile], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
-
-if test ${DX_FLAG_doc} -eq 1; then
-    rebuild_docs=yes
-else
-    rebuild_docs=no
-fi
+AS_IF([test ${DX_FLAG_doc} -eq 1], [rebuild_docs=yes], [rebuild_docs=no])
 
 # Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
@@ -196,7 +190,6 @@ AC_ARG_ENABLE([samples],
     [enable_samples=no]
 )
 AC_MSG_RESULT([$enable_samples])
-
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 
 # what (not) to do if the user disables shared libraries
