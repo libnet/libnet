@@ -34,9 +34,16 @@ Online documentation is available at https://codedocs.xyz/libnet/libnet/
 Building
 --------
 
-Libnet employs the [GNU configure and build system][autotools].  The
-release tarballs ship with a pre-built `configure` script.  To list
-available options, type <kbd>./configure --help</kbd>
+First download the [latest release][] from GitHub.  Libnet employs the
+[GNU configure and build system][autotools].  The release tarballs and
+zip files ship with a pre-built `configure` script:
+
+    tar xf libnet-x.y.z.tar.gz
+    cd libnet-x.y.z/
+    ./configure && make
+    sudo make install
+
+To list available options, type <kbd>./configure --help</kbd>
 
 ### Building from GIT/GitHub
 
@@ -120,6 +127,7 @@ Some old docs are available at:
   http://github.com/libnet/libnet
 -------------------------------------------------------------------------
 
+[latest release]:  https://github.com/libnet/libnet/releases
 [autotools]:       https://autotools.io/
 [origin]:          http://packetfactory.openwall.net/projects/libnet/
 [Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
