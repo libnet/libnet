@@ -38,30 +38,7 @@
  * 
  * @details This section doesn't contain any details about libnet.h.
  *
- * If you're wondering why, then that's mostly because libnet.h isn't
- * where the action takes place. In fact, no action at all. Okay, maybe a
- * little. But definitely not enough worth a separate man page or a detailed
- * description. The real action goes down in some of the other files this file
- * includes.
- *
- * Which probably makes you wonder why, of all libnet*.h headers this file
- * includes, only libnet-functions.h and libnet-macros.h are documented.
- * My friend, you're not alone in your marveling.
- *
- * You see, the guy who wrote them (Mike D. Schiffman) is gone, and the guy
- * after him (Sam Roberts) didn't had much time left at the end of the day
- * after bug fixing the living hell out of the source.
- *
- * And if you're wondering why the rest of libnet's documentation is either
- * full of holes or nonexistent, then (a) good question; and (b) see the 
- * previous paragraph.
- *
- * Is this a sinking ship? Well, I can't answer that right now. What I can say
- * is that it's just us now. So, "Lets (try to) make libnet great again"!
- *
- * Sincerely,
- *
- * Ali Abdulkadir
+ * For details, see libnet-functions.h and libnet-macros.h
  */
 
 #ifdef __cplusplus

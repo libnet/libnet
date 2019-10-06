@@ -1,6 +1,6 @@
 <hr>
 <address><small>
-Documentation for <a href="https://github.com/sgeto/libnet">libnet</a> (version $projectnumber).<br>
+Documentation for <a href="https://github.com/libnet/libnet">libnet</a> (version $projectnumber).<br>
 Generated on $date by
 <a href="http://www.doxygen.org/">Doxygen $doxygenversion</a>.
 </small></address>
