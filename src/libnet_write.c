@@ -342,4 +342,3 @@ libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
     return (c);
 }
 #endif /* __WIN32__ */
-/* EOF */

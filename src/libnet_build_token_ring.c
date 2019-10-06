@@ -170,4 +170,3 @@ bad:
     libnet_pblock_delete(l, p);
     return (-1); 
 }
-/* EOF */

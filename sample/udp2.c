@@ -231,4 +231,3 @@ usage(char *name)
     fprintf(stderr, "usage: %s -s s_ip -d d_ip -P port list [-p payload]\n", name);
 }
 
-/* EOF */

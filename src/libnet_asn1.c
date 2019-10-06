@@ -426,4 +426,3 @@ libnet_build_asn1_bitstring(uint8_t *data, int *datalen, uint8_t type,
     return (data + str_s);
 }
 
-/* EOF */

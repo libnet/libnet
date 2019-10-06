@@ -470,5 +470,3 @@ Report bugs to ${PACKAGE_BUGREPORT}])
 else
 AC_MSG_RESULT([Report bugs to ${PACKAGE_BUGREPORT}])
 fi
-
-dnl EOF

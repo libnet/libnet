@@ -196,4 +196,3 @@ if (payload_s)                                                               \
 
 #endif  /* __LIBNET_MACROS_H */
 
-/* EOF */

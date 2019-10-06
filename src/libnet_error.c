@@ -44,4 +44,3 @@ libnet_geterror(libnet_t *l)
 }
 
 
-/* EOF */

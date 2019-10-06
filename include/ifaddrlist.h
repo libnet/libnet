@@ -49,4 +49,3 @@ set_up_interface(
     uint8_t **
     );
 
-/* EOF */

@@ -60,4 +60,3 @@ void usage(char *);
 
 #endif  /* __LIBNET_TEST_H */
 
-/* EOF */

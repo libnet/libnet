@@ -191,4 +191,3 @@ usage(char *name)
   fprintf(stderr, "usage: %s -t targe_ip [-i iface] [-c count=10] amplifiers\n ", name);
 }
 
-/* EOF */

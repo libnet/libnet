@@ -168,4 +168,3 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
     return (1);
 }
 
-/* EOF */

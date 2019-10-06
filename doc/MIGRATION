@@ -168,5 +168,3 @@
         c = libnet_write(l);
 
     Boom.  You're done.  Now go read the sample code.
-
-EOF

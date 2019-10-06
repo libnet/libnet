@@ -205,4 +205,3 @@ usage(char *nomenclature)
 }
 
 
-/* EOF */

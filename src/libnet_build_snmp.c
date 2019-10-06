@@ -42,4 +42,3 @@ libnet_build_snmp(void)
 }
 
 
-/* EOF */

@@ -251,4 +251,3 @@ typedef struct _libnet_context_queue_descriptor libnet_cqd_t;
 
 #endif  /* __LIBNET_STRUCTURES_H */
 
-/* EOF */

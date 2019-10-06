@@ -107,4 +107,3 @@ libnet_get_prand(int mod)
     return (0);                         /* NOTTREACHED */
 }
 
-/* EOF */

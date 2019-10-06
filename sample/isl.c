@@ -164,4 +164,3 @@ bad:
     return (EXIT_FAILURE);
 }
 
-/* EOF */

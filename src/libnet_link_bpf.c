@@ -346,4 +346,3 @@ libnet_get_hwaddr(libnet_t *l)
 }
 
 
-/* EOF */

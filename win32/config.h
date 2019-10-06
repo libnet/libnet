@@ -21,11 +21,6 @@
 #undef LIBNET_BIG_ENDIAN
 #define LIBNET_LIL_ENDIAN 1
 
-
-/*
-dnl EOF
-*/
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

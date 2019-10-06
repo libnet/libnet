@@ -250,4 +250,3 @@ libnet_getpacket_size(libnet_t *l)
     return (n);
 }
 
-/* EOF */

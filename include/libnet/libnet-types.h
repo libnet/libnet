@@ -37,4 +37,3 @@
 
 #endif  /* __LIBNET_TYPES_H */
 
-/* EOF */

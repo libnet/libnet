@@ -116,5 +116,3 @@
       - SNMP
 
     - Update __libnet_handle_dump to dump everything in l verbosely.
-
-EOF

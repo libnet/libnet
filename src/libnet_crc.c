@@ -102,4 +102,3 @@ libnet_compute_crc(uint8_t *buf, uint32_t len)
 }
 
 
-/* EOF */

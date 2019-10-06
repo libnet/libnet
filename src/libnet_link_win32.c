@@ -363,4 +363,3 @@ BYTE * libnet_win32_read_arp_table(DWORD DestIP)
     return(NULL);
 }
 
-/* EOF */

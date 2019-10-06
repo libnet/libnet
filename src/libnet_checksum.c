@@ -569,4 +569,3 @@ libnet_ip_check(uint16_t *addr, int len)
     return (LIBNET_CKSUM_CARRY(sum));
 }
 
-/* EOF */

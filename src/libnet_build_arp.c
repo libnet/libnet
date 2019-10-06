@@ -145,4 +145,3 @@ const uint8_t *tpa, libnet_t *l)
         0));                                    /* libnet id */
 }
 
-/* EOF */

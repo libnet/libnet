@@ -44,4 +44,3 @@ BOOL WINAPI DllMain(HINSTANCE hinst, ULONG fdwReason, LPVOID lpReserved)
     return (TRUE);
 }
 
-/* EOF */

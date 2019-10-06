@@ -30,6 +30,4 @@ Update LDFLAGS' version-info.
 
 - Announce release-candidate on libnet-dev-announce and to people in doc/CONTRIB
 
-
 - Announce release on libnet-dev-announce
-

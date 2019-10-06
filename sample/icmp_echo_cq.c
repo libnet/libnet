@@ -192,4 +192,3 @@ usage(char *name)
                     " [-i iface] [-c count = 10]\n ", name);
 }
 
-/* EOF */

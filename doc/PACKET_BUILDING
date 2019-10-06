@@ -195,6 +195,3 @@ bad:
     4) Add it to src/Makefile.am and then automake from the TLD.
     5) Test the shit out of it.
     6) Send it over to mike@infonexus.com.
-
-
-EOF

@@ -197,4 +197,3 @@ usage(char *nomenclature)
 }
 
 
-/* EOF */

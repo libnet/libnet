@@ -88,4 +88,3 @@ bad:
     return (-1);
 }
 
-/* EOF */

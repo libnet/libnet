@@ -285,4 +285,3 @@ libnet_plist_chain_free(libnet_plist_t *plist)
     return (1);
 }
 
-/* EOF */

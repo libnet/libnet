@@ -160,4 +160,3 @@ libnet_adv_free_packet(libnet_t *l, uint8_t *packet)
     free(packet);
 }
 
-/* EOF */

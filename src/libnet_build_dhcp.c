@@ -132,4 +132,3 @@ libnet_t *l, libnet_ptag_t ptag)
         l, ptag));
 }
 
-/* EOF */

@@ -470,4 +470,3 @@ libnet_hex_aton(const char *s, int *len)
     return (buf);
 }
 
-/* EOF */

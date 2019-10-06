@@ -117,4 +117,3 @@ extern "C" {
 #endif  /* __LIBNET_H */
 
 #endif
-/* EOF */

@@ -268,4 +268,3 @@ libnet_close_raw6(libnet_t *l)
     return (close(l->fd));
 }
 #endif
-/* EOF */

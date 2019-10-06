@@ -219,4 +219,3 @@ usage(char *name)
         name);
 }
 
-/* EOF */

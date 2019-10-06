@@ -197,4 +197,3 @@ usage(char *name)
     fprintf(stderr, "usage: %s -s source_ip -d destination_ip -g gateway_ip\n ", name);
 }
 
-/* EOF */
