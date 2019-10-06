@@ -203,52 +203,11 @@ AC_MSG_RESULT([$enable_samples])
 
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 
-dnl Check for debug
-dnl FIXME make it do any actual debuging
-AC_MSG_CHECKING([whether to compile in debug mode])
-AC_ARG_ENABLE([debug],
-    [AS_HELP_STRING([--enable-debug],[compile with extra debugging output @<:@default=no@:>@])],
-    [use_debug=$enableval],
-    [use_debug=no]
-)
-AC_MSG_RESULT([$use_debug])
-
-dnl Check for max speed
-dnl FIXME add more flags
-AC_MSG_CHECKING([whether to enable additional optimizations])
-AC_ARG_ENABLE([fast],
-    [AS_HELP_STRING([--enable-fast],[compile with optimizations @<:@default=no@:>@])],
-    [use_fast=$enableval],
-    [use_fast=no]
-)
-AC_MSG_RESULT([$use_fast])
-
-if test "x${use_fast}" != "xno"
-then
-    if test "x${use_debug}" != "xno"
-    then
-        AC_MSG_ERROR([Cannot specify --enable-fast and --enable-debug at the same time.])
-    fi
-fi
-
-if test "x$use_fast" = "xyes"
-then
-    OPT_FLAGS="-O2 -g -fno-strict-aliasing"
-else
-    OPT_FLAGS="-O0 -ggdb"
-    AM_CFLAGS="${AM_CFLAGS} -fkeep-inline-functions"
-    if test "x$use_debug" = "xyes"
-    then
-        AM_CPPFLAGS="${AM_CPPFLAGS} -DDEBUG -DTRACE"
-    fi
-fi
-
 dnl what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
 
 dnl Check and set OS specific parameters
 case "$target_os" in
-
 *linux*)
     AC_DEFINE(_BSD_SOURCE, 1,
         [Define as necessary to "unhide" header symbols.])
@@ -448,8 +407,6 @@ Features and Examples
     Shared Libraries: ............. ${enable_shared}
     Static Libraries: ............. ${enable_static}
     PIC ........................... ${pic_mode}
-    Debugging: .................... ${use_debug}
-    Additional Optimizations: ..... ${use_fast}
     Build Sample Programs: ........ ${enable_samples}
     Rebuild docs: ................. ${rebuild_docs}
 
