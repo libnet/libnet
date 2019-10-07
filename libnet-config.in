@@ -16,7 +16,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 libnet_defines="@PKG_CONFIG_DEFINES@"
-libnet_cflags="-I${includedir}"
+libnet_cflags="-I${includedir} @PKG_CONFIG_CFLAGS@"
 libnet_libs="-L${libdir} @PKG_CONFIG_LIBS@ -lnet"
 
 usage()
