@@ -9,9 +9,8 @@ ACLOCAL_AMFLAGS           = -I m4 ${ACLOCAL_FLAGS}
 bin_SCRIPTS    = libnet-config
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
-doc_DATA       = README.md ChangeLog.md LICENSE
-EXTRA_DIST     = README.md ChangeLog.md LICENSE README.win32 autogen.sh \
-		 libnet-config.in
+dist_doc_DATA  = README.md ChangeLog.md LICENSE
+EXTRA_DIST     = README.win32 autogen.sh libnet-config.in
 SUBDIRS        = bin include src win32
 
 if ENABLE_DOXYGEN
