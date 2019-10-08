@@ -121,7 +121,8 @@ libnet_destroy(libnet_t *l)
 {
     if (l)
     {
-        close(l->fd);
+        if (l->fd != -1)
+            close(l->fd);
         free(l->device);
         libnet_clear_packet(l);
         free(l);
