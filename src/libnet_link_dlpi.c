@@ -228,7 +228,7 @@ libnet_open_link(libnet_t *l)
     }
     else
     {
-        snprintf(dname, sizeof(dname), %s/%s", DLPI_DEV_PREFIX, l->device);
+        snprintf(dname, sizeof(dname), "%s/%s", DLPI_DEV_PREFIX, l->device);
     }
 
     /*
