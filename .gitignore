@@ -13,6 +13,9 @@
 .*.swp
 .libs/
 Doxyfile
+GPATH
+GRTAGS
+GTAGS
 Makefile
 Makefile.in
 aclocal.m4
