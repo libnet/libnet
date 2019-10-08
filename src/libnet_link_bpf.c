@@ -30,7 +30,7 @@
 #include "common.h"
 
 #include <sys/param.h>  /* optionally get BSD define */
-#ifndef __OpenBSD__
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__)
 #include <sys/timeb.h>
 #endif
 #include <sys/file.h>
