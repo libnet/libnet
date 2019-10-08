@@ -64,7 +64,6 @@ libnet_check_iface(libnet_t *l)
     ifr.ifr_name[sizeof(ifr.ifr_name) - 1] = '\0';
     
     res = ioctl(fd, SIOCGIFFLAGS, (int8_t *)&ifr);
-
     if (res < 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() ioctl: %s", __func__,
@@ -80,6 +79,7 @@ libnet_check_iface(libnet_t *l)
         }
     }
     close(fd);
+
     return (res);
 }
 
@@ -179,7 +179,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     }
 
 #ifdef HAVE_LINUX_PROCFS
-    if ((fp = fopen(PROC_DEV_FILE, "r")) == NULL)
+    fp = fopen(PROC_DEV_FILE, "r");
+    if (!fp)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): fopen(proc_dev_file) failed: %s",  __func__,
@@ -192,7 +193,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     ifc.ifc_len = sizeof(ibuf);
     ifc.ifc_buf = (caddr_t)ibuf;
 
-    if(ioctl(fd, SIOCGIFCONF, &ifc) < 0)
+    if (ioctl(fd, SIOCGIFCONF, &ifc) < 0)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
                 "%s(): ioctl(SIOCGIFCONF) error: %s", 
@@ -209,12 +210,13 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 #ifdef HAVE_LINUX_PROCFS
     while (fgets(buf, sizeof(buf), fp))
     {
-	if ((p = strchr(buf, ':')) == NULL)
-        {
+        p = strchr(buf, ':');
+	if (!p)
             continue;
-        }
+
         *p = '\0';
-        for(p = buf; *p == ' '; p++) ;
+        for (p = buf; *p == ' '; p++)
+	    ;
 	
         strncpy(nifr.ifr_name, p, sizeof(nifr.ifr_name) - 1);
         nifr.ifr_name[sizeof(nifr.ifr_name) - 1] = '\0';
@@ -224,14 +226,13 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     for (ifr = ifc.ifc_req; ifr < lifr; ifr = NEXTIFR(ifr))
     {
 	/* XXX LINUX SOLARIS ifalias */
-	if((p = strchr(ifr->ifr_name, ':')))
-        {
-            *p='\0';
-        }
+	p = strchr(ifr->ifr_name, ':');
+	if (p)
+            *p = '\0';
+
 	if (pifr && strcmp(ifr->ifr_name, pifr->ifr_name) == 0)
-        {
             continue;
-        }
+
 	strncpy(nifr.ifr_name, ifr->ifr_name, sizeof(nifr.ifr_name) - 1);
 	nifr.ifr_name[sizeof(nifr.ifr_name) - 1] = '\0';
 #endif
@@ -279,9 +280,9 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         }
         
         free(al->device);
-        al->device = NULL;
 
-        if ((al->device = strdup(device)) == NULL)
+	al->device = strdup(device)
+        if (al->device == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
                     "%s(): strdup not enough memory", __func__);
@@ -307,19 +308,18 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     fclose(fp);
 #endif
 
-	close(fd);
+    close(fd);
+    *ipaddrp = ifaddrlist;
 
-	*ipaddrp = ifaddrlist;
     return (nipaddr);
 
     bad:
 #ifdef HAVE_LINUX_PROCFS
-	if (fp) {
-		fclose(fp);
-	}
+    if (fp)
+	fclose(fp);
 #endif
-	close(fd);
-	return (-1);
+    close(fd);
+    return (-1);
 }
 #else
 /* WIN32 support *
@@ -374,12 +374,12 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
             }
 #endif
 
-            if(dev->flags & PCAP_IF_LOOPBACK)
+            if (dev->flags & PCAP_IF_LOOPBACK)
                 continue;
 
             /* this code ignores IPv6 addresses, a limitation of the libnet_ifaddr_list struct */
 
-            if(addr->sa_family == AF_INET) {
+            if (addr->sa_family == AF_INET) {
                 ifaddrlist[i].device = strdup(dev->name);
                 ifaddrlist[i].addr = ((struct sockaddr_in *)addr)->sin_addr.s_addr;
                 ++i;

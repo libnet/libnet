@@ -309,8 +309,10 @@ libnet_get_hwaddr(libnet_t *l)
     for (next = buf ; next < end ; next += ifm->ifm_msglen)
     {
         ifm = (struct if_msghdr *)next;
+
         if (ifm->ifm_version != RTM_VERSION)
             continue;
+
         if (ifm->ifm_type == RTM_IFINFO)
         {
             sdl = (struct sockaddr_dl *)(ifm + 1);
@@ -336,12 +338,14 @@ libnet_get_hwaddr(libnet_t *l)
         }
     }
     free(buf);
-    if (next == end) {
+    if (next == end)
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "%s(): interface %s of known type not found.",
                  __func__, l->device);
         return NULL;
     }
+
     return (&l->link_addr);
 }
 

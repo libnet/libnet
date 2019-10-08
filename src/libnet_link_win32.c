@@ -117,20 +117,20 @@ libnet_open_link(libnet_t *l)
     if (l->device == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): NULL device", __func__);
+                 "%s(): NULL device", __func__);
         return (-1);
     }
 
     l->lpAdapter = 0;
 
     /* open adapter */
-	l->lpAdapter = PacketOpenAdapter(l->device);
+    l->lpAdapter = PacketOpenAdapter(l->device);
     if (!l->lpAdapter || (l->lpAdapter->hFile == INVALID_HANDLE_VALUE))
     {
         dwErrorCode=GetLastError();
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): unable to open the driver, error Code : %lx",
-                __func__, dwErrorCode);
+                 "%s(): unable to open the driver, error Code : %lx",
+                 __func__, dwErrorCode);
         return (-1);
     }
 
@@ -144,44 +144,44 @@ libnet_open_link(libnet_t *l)
     {
         switch(IFType.LinkType)
         {
-            case NdisMedium802_3:
-				l->link_type = DLT_EN10MB;
-				l->link_offset = LIBNET_ETH_H;
-                break;
-			case NdisMedium802_5:
-				l->link_type = DLT_IEEE802;
-				l->link_offset = LIBNET_TOKEN_RING_H;
-				break;
-			case NdisMediumFddi:
-				l->link_type = DLT_FDDI;
-				l->link_offset = 0x15;
-				break;
-			case NdisMediumWan:
-				snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s():, WinPcap has disabled support for Network type (%d)",
-                 __func__, IFType.LinkType);
-				return (-1);
-				break;
-			case NdisMediumAtm:
-				l->link_type = DLT_ATM_RFC1483;
-				break;
-			case NdisMediumArcnet878_2:
-				l->link_type = DLT_ARCNET;
-				break;
-			default:
-                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                         "%s(): network type (%d) is not supported",
-                         __func__, IFType.LinkType);
-                return (-1);
-                break;
+        case NdisMedium802_3:
+            l->link_type = DLT_EN10MB;
+            l->link_offset = LIBNET_ETH_H;
+            break;
+        case NdisMedium802_5:
+            l->link_type = DLT_IEEE802;
+            l->link_offset = LIBNET_TOKEN_RING_H;
+            break;
+        case NdisMediumFddi:
+            l->link_type = DLT_FDDI;
+            l->link_offset = 0x15;
+            break;
+        case NdisMediumWan:
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "%s():, WinPcap has disabled support for Network type (%d)",
+                     __func__, IFType.LinkType);
+            return (-1);
+            break;
+        case NdisMediumAtm:
+            l->link_type = DLT_ATM_RFC1483;
+            break;
+        case NdisMediumArcnet878_2:
+            l->link_type = DLT_ARCNET;
+            break;
+        default:
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                     "%s(): network type (%d) is not supported",
+                     __func__, IFType.LinkType);
+            return (-1);
+            break;
         }
     }
     else
     {
         dwErrorCode=GetLastError();
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): unable to determine the network type, error Code : %lx",
-                __func__, dwErrorCode);
+                 "%s(): unable to determine the network type, error Code : %lx",
+                 __func__, dwErrorCode);
         return (-1);
     }
     return (1);
@@ -218,57 +218,55 @@ struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
     struct libnet_ether_addr *mac = &l->link_addr;
-    
     ULONG IoCtlBufferLength = (sizeof(PACKET_OID_DATA) + sizeof(ULONG) - 1);
-	PPACKET_OID_DATA OidData;
+    PPACKET_OID_DATA OidData;
 
-	int i = 0;
+    int i = 0;
 
-	if (l == NULL)
+    if (l == NULL)
     {
         return (NULL);
     }
 
-	if (l->device == NULL)
+    if (l->device == NULL)
     {
         if (libnet_select_device(l) == -1)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't figure out a device to use", __func__);
+                     "%s(): can't figure out a device to use", __func__);
             return (NULL);
         }
     }
 
-    OidData = (struct _PACKET_OID_DATA *) malloc(IoCtlBufferLength);
+    OidData = (struct _PACKET_OID_DATA *)malloc(IoCtlBufferLength);
+    if (OidData == NULL)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                 "%s(): OidData is NULL", __func__);
+        return(NULL);
+    }
 
-	if (OidData == NULL)
-	{
-	     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-				 "%s(): OidData is NULL", __func__);
-	    return(NULL);
-	}
+    if (l->link_type == DLT_IEEE802)
+    {
+        OidData->Oid = OID_802_5_CURRENT_ADDRESS;
+    }
+    else
+    {
+        OidData->Oid = OID_802_3_CURRENT_ADDRESS;
+    }
 
-	if (l->link_type == DLT_IEEE802)
-	{
-		OidData->Oid = OID_802_5_CURRENT_ADDRESS;
-	}
-	else
-	{
-		OidData->Oid = OID_802_3_CURRENT_ADDRESS;
-	}
-
-	OidData->Length = 6;
-	if((PacketRequest(l->lpAdapter, FALSE, OidData)) == FALSE)
-	{
-		memset(mac, 0, 6);
-	}
-	else
-	{
-		for (i = 0; i < 6; i++)
-		{
-			mac->ether_addr_octet[i] = OidData->Data[i];
-		}
-	}
+    OidData->Length = 6;
+    if ((PacketRequest(l->lpAdapter, FALSE, OidData)) == FALSE)
+    {
+        memset(mac, 0, 6);
+    }
+    else
+    {
+        for (i = 0; i < 6; i++)
+        {
+            mac->ether_addr_octet[i] = OidData->Data[i];
+        }
+    }
     free(OidData);
     return(mac);
 }
@@ -327,16 +325,16 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 	}
 }
 
-BYTE * libnet_win32_read_arp_table(DWORD DestIP)
+BYTE *libnet_win32_read_arp_table(DWORD DestIP)
 {
-	static BYTE buffMAC[6];
+    static BYTE buffMAC[6];
     BOOL fOrder = TRUE;
-	DWORD status;
+    DWORD status;
 
     MIB_IPNETTABLE *pIpNetTable = NULL;
-	DWORD Size = 0;
+    DWORD Size = 0;
 
-	memset(buffMAC, 0, sizeof(buffMAC));
+    memset(buffMAC, 0, sizeof(buffMAC));
     status = GetIpNetTable(NULL, &Size, fOrder);
     if (status == ERROR_INSUFFICIENT_BUFFER)
     {
@@ -344,22 +342,23 @@ BYTE * libnet_win32_read_arp_table(DWORD DestIP)
         status = GetIpNetTable(pIpNetTable, &Size, fOrder);
     }
 
-	if (status == NO_ERROR)
-	{
-		DWORD i, ci = pIpNetTable->table[0].dwIndex;  /* set current interface */
+    if (status == NO_ERROR)
+    {
+        DWORD i, ci = pIpNetTable->table[0].dwIndex;  /* set current interface */
 
-		for (i = 0; i < pIpNetTable->dwNumEntries; ++i)
-		{
-			if (pIpNetTable->table[i].dwIndex != ci)
-			    ci = pIpNetTable->table[i].dwIndex;
+        for (i = 0; i < pIpNetTable->dwNumEntries; ++i)
+        {
+            if (pIpNetTable->table[i].dwIndex != ci)
+                ci = pIpNetTable->table[i].dwIndex;
 
-			if(pIpNetTable->table[i].dwAddr == DestIP) /* found IP in arp cache */
-			{
-				memcpy(buffMAC, pIpNetTable->table[i].bPhysAddr, sizeof(buffMAC));
-				return buffMAC;
-			}
-		}
-	}
+            if(pIpNetTable->table[i].dwAddr == DestIP) /* found IP in arp cache */
+            {
+                memcpy(buffMAC, pIpNetTable->table[i].bPhysAddr, sizeof(buffMAC));
+                return buffMAC;
+            }
+        }
+    }
+
     return(NULL);
 }
 

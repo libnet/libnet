@@ -59,13 +59,15 @@ libnet_open_link(libnet_t *l)
     struct sockaddr_raw sr;
     uint v;
 
-    if (l == NULL) { 
+    if (l == NULL)
+    {
         return -1;
     }
 
     l->fd = socket(PF_RAW, SOCK_RAW, RAWPROTO_DRAIN);
 
-    if (l->fd < 0) {
+    if (l->fd < 0)
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "drain socket: %s", strerror(errno));
         goto bad;
@@ -76,7 +78,8 @@ libnet_open_link(libnet_t *l)
     strncpy(sr.sr_ifname, l->device, sizeof(sr.sr_ifname) - 1);
     sr.sr_ifname[sizeof(sr.sr_ifname) - 1] = '\0';
 
-    if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr))) {
+    if (bind(l->fd, (struct sockaddr *)&sr, sizeof(sr)))
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "drain bind: %s", strerror(errno));
         goto bad;
@@ -93,19 +96,26 @@ libnet_open_link(libnet_t *l)
             strncmp("ep", l->device, 2) == 0  ||   /* Challenge 8x10 Mbit EPLEX */
             strncmp("vfe", l->device, 3) == 0 ||   /* Challenge VME 100Mbit */
             strncmp("fa", l->device, 2) == 0  ||
-            strncmp("qaa", l->device, 3) == 0) {
+            strncmp("qaa", l->device, 3) == 0)
+    {
         l->link_type = DLT_EN10MB;
     }
     else if (strncmp("ipg", l->device, 3) == 0 ||
             strncmp("rns", l->device, 3) == 0 ||        /* O2/200/2000 FDDI */
-            strncmp("xpi", l->device, 3) == 0) {
+            strncmp("xpi", l->device, 3) == 0)
+    {
         l->link_type = DLT_FDDI;
     }
-    else if (strncmp("ppp", l->device, 3) == 0) {
+    else if (strncmp("ppp", l->device, 3) == 0)
+    {
         l->link_type = DLT_RAW;
-    } else if (strncmp("lo", l->device, 2) == 0) {
+    }
+    else if (strncmp("lo", l->device, 2) == 0)
+    {
         l->link_type = DLT_NULL;
-    } else {
+    }
+    else
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                  "drain: unknown physical layer type");
         goto bad;
@@ -166,14 +176,17 @@ libnet_get_hwaddr(libnet_t *l)
     struct ifreq ifdat;
     int s = -1;
 
-    if (-1 == (s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP))) {
+    if (-1 == (s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP)))
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "socket(): %s", strerror(errno));
         goto errout;
     }
+
     memset(&ifdat, 0, sizeof(struct ifreq));
     strncpy(ifdat.ifr_name, l->device, IFNAMSIZ);
-    if (ioctl(s, SIOCGIFADDR, &ifdat) < 0) {
+    if (ioctl(s, SIOCGIFADDR, &ifdat) < 0)
+    {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "SIOCGIFADDR: %s", strerror(errno));
         goto errout;
@@ -184,13 +197,16 @@ libnet_get_hwaddr(libnet_t *l)
                   ETHER_ADDR_LEN);
 
  errout:
-    if (s > 0) {
+    if (s > 0)
+    {
         close(s);
     }
-    if (ea) {
+    if (ea)
+    {
         free(ea);
         ea = 0;
     }
+
     return NULL;
 }
 /* ---- Emacs Variables ----
