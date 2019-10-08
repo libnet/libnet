@@ -426,3 +426,9 @@ libnet_build_asn1_bitstring(uint8_t *data, int *datalen, uint8_t type,
     return (data + str_s);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

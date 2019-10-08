@@ -2650,3 +2650,9 @@ libnet_win32_read_arp_table(DWORD IP);
 #endif
 #endif  /* __LIBNET_FUNCTIONS_H */
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

@@ -268,3 +268,10 @@ libnet_close_raw6(libnet_t *l)
     return (close(l->fd));
 }
 #endif
+
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

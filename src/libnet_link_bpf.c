@@ -349,4 +349,9 @@ libnet_get_hwaddr(libnet_t *l)
     return (&l->link_addr);
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

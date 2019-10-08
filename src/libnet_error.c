@@ -43,4 +43,9 @@ libnet_geterror(libnet_t *l)
     return (l->err_buf);
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

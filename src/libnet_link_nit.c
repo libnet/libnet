@@ -118,3 +118,9 @@ write_link_layer(struct libnet_link_int *l, const int8_t *device,
     return (c);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

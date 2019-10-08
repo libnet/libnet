@@ -132,3 +132,9 @@ libnet_t *l, libnet_ptag_t ptag)
         l, ptag));
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

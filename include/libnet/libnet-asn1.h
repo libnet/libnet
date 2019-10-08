@@ -252,3 +252,9 @@ libnet_build_asn1_bitstring(
 
 #endif  /* __LIBNET_ASN1_H */
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

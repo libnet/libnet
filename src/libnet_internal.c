@@ -310,3 +310,9 @@ libnet_diag_dump_pblock_type(uint8_t type)
     return ("unrecognized pblock");
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

@@ -615,4 +615,9 @@ libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
        */
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

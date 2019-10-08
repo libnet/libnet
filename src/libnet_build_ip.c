@@ -753,3 +753,9 @@ libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
     return libnet_build_ipv6(0, 0, len, nh, 64, src, dst, NULL, 0, l, ptag);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

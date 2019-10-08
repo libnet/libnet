@@ -291,10 +291,9 @@ bad:
     return (NULL);
 }
 
-/* ---- Emacs Variables ----
+/**
  * Local Variables:
- * c-basic-offset: 4
- * indent-tabs-mode: nil
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
  * End:
  */
-

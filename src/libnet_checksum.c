@@ -569,3 +569,9 @@ libnet_ip_check(uint16_t *addr, int len)
     return (LIBNET_CKSUM_CARRY(sum));
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

@@ -66,3 +66,9 @@ libnet_get_hwaddr(libnet_t *l)
     return NULL;
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

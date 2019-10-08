@@ -44,3 +44,9 @@ BOOL WINAPI DllMain(HINSTANCE hinst, ULONG fdwReason, LPVOID lpReserved)
     return (TRUE);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

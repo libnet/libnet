@@ -75,3 +75,9 @@ libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, lib
     return (-1);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

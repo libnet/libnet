@@ -160,3 +160,9 @@ libnet_adv_free_packet(libnet_t *l, uint8_t *packet)
     free(packet);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

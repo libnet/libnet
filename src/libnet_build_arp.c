@@ -145,3 +145,9 @@ const uint8_t *tpa, libnet_t *l)
         0));                                    /* libnet id */
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

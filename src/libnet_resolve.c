@@ -470,3 +470,9 @@ libnet_hex_aton(const char *s, int *len)
     return (buf);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

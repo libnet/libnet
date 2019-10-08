@@ -41,4 +41,9 @@ libnet_build_snmp(void)
     return (-1);
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

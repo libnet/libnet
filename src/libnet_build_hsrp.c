@@ -95,3 +95,10 @@ bad:
     libnet_pblock_delete(l, p);
     return (-1);
 }
+
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

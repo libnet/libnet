@@ -69,3 +69,10 @@
 #ifndef IPPROTO_MH
 #define IPPROTO_MH		135	/* IPv6 mobility header		*/
 #endif
+
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

@@ -1824,3 +1824,9 @@ struct libnet_hsrp_hdr
 
 #endif  /* __LIBNET_HEADERS_H */
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

@@ -362,3 +362,9 @@ BYTE *libnet_win32_read_arp_table(DWORD DestIP)
     return(NULL);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

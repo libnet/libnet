@@ -251,3 +251,9 @@ typedef struct _libnet_context_queue_descriptor libnet_cqd_t;
 
 #endif  /* __LIBNET_STRUCTURES_H */
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

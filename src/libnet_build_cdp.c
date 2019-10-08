@@ -168,3 +168,9 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
     return (1);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

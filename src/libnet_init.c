@@ -251,3 +251,9 @@ libnet_getpacket_size(libnet_t *l)
     return (n);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

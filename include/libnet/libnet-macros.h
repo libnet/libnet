@@ -196,3 +196,9 @@ if (payload_s)                                                               \
 
 #endif  /* __LIBNET_MACROS_H */
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */

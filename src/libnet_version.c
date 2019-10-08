@@ -40,3 +40,9 @@ libnet_version(void)
     return (banner);
 }
 
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ * End:
+ */
