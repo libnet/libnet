@@ -31,7 +31,6 @@ AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_FILES([Makefile \
 		 Doxyfile \
 		 libnet-config \
-		 bin/Makefile \
                  doc/Makefile \
                  include/Makefile \
                  include/libnet.h \

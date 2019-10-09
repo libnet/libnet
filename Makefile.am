@@ -11,7 +11,7 @@ pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libnet.pc
 dist_doc_DATA  = README.md ChangeLog.md LICENSE
 EXTRA_DIST     = README.win32 autogen.sh libnet-config.in
-SUBDIRS        = bin include src win32
+SUBDIRS        = include src win32
 
 if ENABLE_DOXYGEN
 SUBDIRS       += doc

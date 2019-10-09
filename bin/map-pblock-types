@@ -1,4 +1,6 @@
 #!/usr/bin/ruby -w
+# This utility is used to maintain the pblock mapping to strings in
+# src/libnet_internal.c, see the in-source comment in that file.
 
 open("include/libnet/libnet-structures.h").each do |line|
   #p line
