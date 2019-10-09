@@ -226,7 +226,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     for (ifr = ifc.ifc_req; ifr < lifr; ifr = NEXTIFR(ifr))
     {
 	/* XXX LINUX SOLARIS ifalias */
-	p = strchr(ifr->ifr_name, ':');
+        p = strchr(ifr->ifr_name, ':');
 	if (p)
             *p = '\0';
 
@@ -281,7 +281,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         
         free(al->device);
 
-	al->device = strdup(device)
+        al->device = strdup(device);
         if (al->device == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
