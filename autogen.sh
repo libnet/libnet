@@ -6,4 +6,4 @@
 # Regular users building from released tarballs can use the shipped
 # configure script, that generates Makefile's from Makefile.in's
 
-autoreconf -W portability -vifm $*
+autoreconf -W portability -vif $*
