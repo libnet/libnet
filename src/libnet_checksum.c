@@ -32,53 +32,30 @@
 
 #include "common.h"
 
-/* FIXME - unit test these - 0 is debian's version, else is -RC1's */
-/* Note about aliasing warning:
- *
- *   http://mail.opensolaris.org/pipermail/tools-gcc/2005-August/000047.html
- *
- * See RFC 1071, and:
- *
- *   http://mathforum.org/library/drmath/view/54379.html
- */
-#undef DEBIAN
 /* Note: len is in bytes, not 16-bit words! */
 int
 libnet_in_cksum(uint16_t *addr, int len)
 {
-    int sum;
-#ifdef DEBIAN
-    uint16_t last_byte;
-
-    sum = 0;
-    last_byte = 0;
-#else
+    int sum = 0;
     union
     {
         uint16_t s;
         uint8_t b[2];
-    }pad;
+    } pad;
 
     sum = 0;
-#endif
 
     while (len > 1)
     {
         sum += *addr++;
         len -= 2;
     }
-#ifdef DEBIAN
-    if (len == 1)
-    {
-        *(uint8_t *)&last_byte = *(uint8_t *)addr;
-        sum += last_byte;
-#else
+
     if (len == 1)
     {
         pad.b[0] = *(uint8_t *)addr;
         pad.b[1] = 0;
         sum += pad.s;
-#endif
     }
 
     return (sum);
