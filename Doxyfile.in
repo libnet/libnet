@@ -121,7 +121,7 @@ INPUT_FILTER           =
 FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
 FILTER_SOURCE_PATTERNS =
-USE_MDFILE_AS_MAINPAGE = @top_srcdir@/doc/libnet_api_main_page.md
+USE_MDFILE_AS_MAINPAGE = @top_srcdir@/doc/api-main.md
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
 #---------------------------------------------------------------------------
@@ -146,10 +146,10 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = @GENERATE_HTML@
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = @top_srcdir@/doc/libnet_api_header.html_tmpl
-HTML_FOOTER            = @top_srcdir@/doc/libnet_api_footer.html_tmpl
+HTML_HEADER            = @top_srcdir@/doc/api-head.html
+HTML_FOOTER            = @top_srcdir@/doc/api-foot.html
 HTML_STYLESHEET        =
-HTML_EXTRA_STYLESHEET  = @top_srcdir@/doc/libnet_api_stylesheet.css_tmpl
+HTML_EXTRA_STYLESHEET  = @top_srcdir@/doc/api-style.css
 HTML_EXTRA_FILES       =
 HTML_COLORSTYLE_HUE    = 120
 HTML_COLORSTYLE_SAT    = 50
