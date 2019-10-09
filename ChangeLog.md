@@ -1,94 +1,70 @@
 Change Log
 ==========
 
-All relevant changes are documented in this file.
+All relevant changes are documented in this file.  For a complete list
+of contributors, see the GIT commit log.
 
 
 [v1.2][UNRELEASED] - 2019-10-XX
 -------------------------------
 
+Release curated by Sam Roberts and Joachim Nilsson.
+
 ### Changes
 
-- Remove obsolete `SYMBOL_CACHE_SIZE` from `doxygen.conf` (Sam Roberts)
-- For samples, `netinet/in.h` is not on windows (Sam Roberts)
-- Insource comments and whitespace cleanups (Sam Roberts)
-- Make `libnet_get_hwaddr()` work with 802.1q interfaces in bpf (BSD).
-  (Thomas Habets)
-- Update `libnet_dll.c` (dlwdlw)
-- Update `libnet_raw.c` (dlwdlw)
-- Better description of `.so` revioning. (Sam Roberts)
-- Use `@retval` for correct man page formatting. (Sam Roberts)
-- Hide undocumented in auto-generated documentation. (Sam Roberts)
-- Cleaned up references to win32 pre-generated headers (Sam Roberts)
-- `VERSION` is ancient and unused (Barak A. Pearlmutter)
-- autoupdate `configure.ac` (Barak A. Pearlmutter)
-- Simplify `autogen.sh` (suggested by Barak A. Pearlmutter) (Sam Roberts)
-- Ignore doxygen javascript output (Sam Roberts)
-- remove autoreconf-installed file (Barak A. Pearlmutter)
-- Use `AC_CONFIG_HEADERS` instead of `AM_CONFIG_HEADER` (Sam Roberts)
-- Added guards around definitions of `_GNU_SOURCE` to avoid redefinitions
-  (ThomasVolkert)
-- Remove unused `STDOUT_FILENO,` and dead code that used to use it. (Sam Roberts)
-- Removed references to removed `win32/in_systm.h` (Sam Roberts)
-- Remove automake reference to win32 header that has been removed. (Sam Roberts)
-- Reformatted and commented win32 specific code. (Sam Roberts)
-- Note about `libnet_get_prand()` being secure only on windows. (Sam Roberts)
-- Convert uses of non-standard `uint` to `uint32_t.` (Sam Roberts)
-- Documentation typo, valid should be invalid. (Sam Roberts)
-- Replace usage of non-standard uint type with `uint32_t.` (Sam Roberts)
-- Use a common header to trim cut and paste include blocks. (Sam Roberts)
+- Removed Lua bindings from repo and dist files, now available separately
+- Removed generated HTML and Nroff (man pages) documentation files, must
+  be regenerated with Doxygen using `make doc`
+- Add `pkg-config` support with `libnet.pc`, replaces `libnet-config`
+  tool, although it is kept for compatibility for now
+- Factorize socket setup code for socket opening to provide output
+  device selection for IPv4
+- Make `libnet_get_hwaddr()` work with 802.1q interfaces in bpf (BSD)
+- New API for OSPF HELLO messages, with neighbor
 
 ### Fixes
 
-- Fix errors with missing `IPPROTO_MH` on windows (Sam Roberts)
-- Factorize socket setup code for socket opening (Eric Leblond)
-- Fix build error in Mac OS X (allfro)
-- Fix #34 correct checksum caculation when IPv6 extension headers being used
-  (Alexander Koeppe)
-- libnet: Remove unneeded trailing `-Wl` from `-version-info` line
-  (Gilles Espinasse)
-- libnet: `libnet_build_snmp()` fix warning (Gilles Espinasse)
-- libnet: use `LIBNET_*RESOLVE` const in `libnet_name2addr*`
-  (Gilles Espinasse)
-- libnet: fix i486 sample synflood6 warning (Gilles Espinasse)
+- Use `getifaddrs()` on OpnBSD and Linux
+- For samples, `netinet/in.h` is not on windows
+- Fix errors with missing `IPPROTO_MH` on windows
+- Fix build error on Mac OS X
+- Fix #34 checksum caculation when IPv6 extension headers being used
+- Remove unneeded trailing `-Wl` from `-version-info` line
+- `libnet_build_snmp()` fix warning
+- Use `LIBNET_*RESOLVE` const in `libnet_name2addr*`
+- Fix i486 sample synflood6 warning
 - Some samples need `#include<netinet/in.h>` for `IPPROTO_*` on OpenBSD 5.2
-  (Thomas Habets)
-- Fix gcc warnings. (Stefanos Harhalakis)
-- Check for `socklen_t`.  Suggested by g.esp and Stefanos Harhalakis.
-  (Sam Roberts)
-- Update to doxygen 1.8 (Sam Roberts)
-- libnet: update for obsolete INCLUDE directive (Gilles Espinasse)
-- Fix warning inside comment (Gilles Espinasse)
+- Fix gcc warnings
+- Check for `socklen_t`.  Suggested by g.esp and Stefanos Harhalakis
+- libnet: update for obsolete INCLUDE directive
+- Fix warning inside comment
 - Automatic link options `#pragma comment(lib, ...)` are only for MSVC
-  (ThomasVolkert)
-- Avoids several warnings for MS C/C++ compiler (ThomasVolkert)
-- `libnet_open_raw4()` doesn't return a SOCKET on win32 (Sam Roberts)
-- Fixes error messages sometimes include newline, sometimes not. (Sam Roberts)
-- Properly set `l->err_buf` if `libnet_ifaddrlist()` fails. (Thomas Habets)
-- dlpi: Try harder to find the device for the interface. (Thomas Habets)
-- dlpi: Correctly extract the unit number from devices with numbers in their
-  name. (Thomas Habets)
-- Make interface selection work for interfaces with multiple addresses on
-  them. (Sam Roberts)
-- memory leak fixed, device list needs to freed after use (Sam Roberts)
-- `uint32` address properly initialized with an address (Sam Roberts)
-- Interface selection was ignoring interfaces with ipv6. (Sam Roberts)
-- Use simple batch file to build for win32. (Sam Roberts)
-- Use `LIBNET_API` on public functions, instead of an export file. (Sam
-  Roberts)
-- visual studio 2010 project files (Sam Roberts)
-- Add build instructions for Visual Studio 2010 (Sam Roberts)
-- define INET6 on IRIX, making libnet compile cleanly. (Thomas Habets)
-- Use `LIBNET_BSDISH_OS` and `LIBNET_BSD_BYTE_SWAP` on all darwin
-  architectures. (Kimmo Suominen)
-- Added BSD byteswap for Darwin. Otherwise sendto() returns `EINVAL`
-  (Emilio Escobar)
-- `netinet/in.h` is needed for `IPPROTO_` and `sockaddr_in` (reported by
-  Dirk Meyer) (Sam Roberts)
+- Fix several warnings for MS C/C++ compiler
+- `libnet_open_raw4()` doesn't return a SOCKET on win32
+- Fixes error messages sometimes include newline, sometimes not
+- Properly set `l->err_buf` if `libnet_ifaddrlist()` fails
+- dlpi: Try harder to find the device for the interface
+- dlpi: Correctly extract unit number from devices with numbers in their name
+- Make interface selection work for interfaces with multiple addresses
+- Fix memory leak, device list needs to freed after use
+- Fix file descriptor leak in `libnet_ifaddrlist()`
+- Fix `libnet_get_hwaddr()` for large(!) number of interfaces
+- Fix to support musl libc, removes support for GLIBC <2.1
+- Fix win32 buffer overrun in `libnet_get_ipaddr4()`
+- Interface selection was ignoring interfaces with IPv6
+- Use `LIBNET_API` on public functions, instead of an export file
+- Add Visual Studio 2010 project files, with build instructions
+- Define INET6 on IRIX, making libnet compile cleanly
+- Check for FreeBSD pre-11 before enabling `LIBNET_BSD_BYTE_SWAP`
+- Use `LIBNET_BSDISH_OS` and `LIBNET_BSD_BYTE_SWAP` on Darwin
+- Add BSD byteswap for Darwin. Otherwise `sendto(` returns `EINVAL`
+- `netinet/in.h` is needed for `IPPROTO_` and `sockaddr_in`
 
 
 [v1.1.6][] - 2012-03-06
 -----------------------
+
+Release curated by Sam Roberts.
 
 ### Changes
 - Note about why including libnet.h breaks dnet.h/dumbnet.h (Sam Roberts)
@@ -180,6 +156,8 @@ All relevant changes are documented in this file.
 
 [v1.1.5][] - 2010-11-03
 -----------------------
+
+Release curated by Sam Roberts.
 
 ### Changes
 - IRIX: Get MAC address from `ioctl()`, not by spawning shell. (Thomas Habets)
@@ -337,6 +315,8 @@ All relevant changes are documented in this file.
 [v1.1.4][] - 2009-06-09
 -----------------------
 
+Release curated by Sam Roberts.
+
 ### Changes
 - Strip CRLF from files not in win32/ (Robert Scheck)
 
@@ -350,7 +330,9 @@ All relevant changes are documented in this file.
 -----------------------
 
 Merged 1.1.3 release candidate from packet factory, 1.1.2, debian
-patches, and my own fixes, including bugs causing memory corruption:
+patches, and my own fixes, including bugs causing memory corruption.
+
+Release curated by Sam Roberts.
 
 ### Changes
 - Convert from latin-1 to utf-8, from Robert Scheck. (Sam Roberts)
