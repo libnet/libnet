@@ -50,7 +50,9 @@ To list available options, type <kbd>./configure --help</kbd>
 When building from GIT, use <kbd>./autogen.sh</kbd> to generate the
 `configure` script.  For this you need the full suite of the GNU
 autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
-On Debian/Ubuntu systems:
+
+How to install the dependencies varies by system, but on many debian derived
+systems, `apt` can be used:
 
     sudo apt install autoconf automake libtool
 
@@ -58,7 +60,8 @@ On Debian/Ubuntu systems:
 
 To build the documentation (optional) you need doxygen and pod2man:
 
-    sudo apt install doxygen pod2man
+    sudo apt install doxygen
+    sudo apt install pod2man || sudo apt install perl
 
 For neat graphics in the HTML documentation, also install graphviz.
 There is also a PDF version of the docs, to build that you need quite a
