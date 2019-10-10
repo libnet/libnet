@@ -33,6 +33,7 @@ AC_CONFIG_FILES([Makefile \
 		 libnet-config \
                  doc/Makefile \
                  doc/man/Makefile \
+                 doc/man/man1/Makefile \
                  doc/man/man3/Makefile \
                  include/Makefile \
                  include/libnet.h \
