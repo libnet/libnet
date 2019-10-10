@@ -100,8 +100,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @top_srcdir@/doc/libnet_api_main_page.md \
-                         @top_srcdir@/include/libnet \
+INPUT                  = @top_srcdir@/doc/api-main.md \
+                         @top_srcdir@/include/libnet  \
                          include/libnet.h
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
@@ -163,7 +163,7 @@ DOCSET_BUNDLE_ID       = org.doxygen.Project
 DOCSET_PUBLISHER_ID    = org.doxygen.Publisher
 DOCSET_PUBLISHER_NAME  = Publisher
 GENERATE_HTMLHELP      = @GENERATE_HTMLHELP@
-CHM_FILE               = @PACAKGE_NAME@.chm
+CHM_FILE               = @PACKAGE_NAME@.chm
 HHC_LOCATION           = @HHC_PATH@
 GENERATE_CHI           = @GENERATE_CHI@
 CHM_INDEX_ENCODING     =
