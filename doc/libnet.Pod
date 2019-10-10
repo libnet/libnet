@@ -22,13 +22,19 @@ network packet shaping, handling and injection.
 libnet hides much of the tedium of packet creation from the application
 programmer such as multiplexing, buffer management, arcane packet header
 information, byte-ordering, OS-dependent issues, and much more. libnet features
-portable packet creation interfaces at the IP and link layer, as well
-as a host of supplementary and complementary functionality. Using libnet, quick
-and simple packet assembly applications can be whipped up with little effort.
-With a bit more time, more complex programs can be written (L<traceroute(8)> and L<ping(8)> were easily rewritten using libnet and L<pcap(3)>.
+portable packet creation interfaces at the IP and link layer, as well as a host
+of supplementary and complementary functionality. Using libnet, quick and
+simple packet assembly applications can be whipped up with little effort.  With
+a bit more time, more complex programs can be written (L<traceroute(8)> and
+L<ping(8)> were easily rewritten using libnet and L<pcap(3)>.
 
-When building applications with libnet, the L<libnet-config(1)> script or the L<pkg-config(1)> program can be used to return the compiler and linker flags
-of the installed libnet library as well as give other useful information.
+When building applications with libnet we recommend using L<pkg-config(1)> to
+detect the precense and required version of libnet.  The L<libnet-config(1)>
+script is still bundled in the libnet distribution, but is considered to be
+deprecated in favor of L<pkg-config(1)>.  Both can be used to get compiler and
+linker flags of the installed libnet library, as well as provide other useful
+information.  For applications using GNU autotools, we recommend using the
+PKG_PROG_PKG_CONFIG and PKG_CHECK_MODULES m4 macros.
 
 B<NOTE>: If you are writing your application with libnet, include F<libnet.h>,
 which will include any additional header for you, rather than including
@@ -41,7 +47,7 @@ See B<doc/MIGRATION> for easy steps on porting your old code.
 
 =head1 SEE ALSO
 
-L<libnet-config(1)>, L<libnet-functions(3)>, L<libnet-macros(3)>
+L<pkg-config(1)>, L<libnet-config(1)>, L<libnet-functions(3)>, L<libnet-macros(3)>
 
 =head1 AUTHORS
 
@@ -60,8 +66,9 @@ For bugs, questions, patch submissions, desirable enhancements, etc. see:
 
 =head1 COPYRIGHT
 
-libnet is licensed under the 3-Clause BSD License. You can basically
-do whatever you want with it.
+libnet is licensed under the 3-Clause BSD License, meaning fully Open Source
+and compatible with all GNU licenses.  Basically, you can do whatever you want
+with it.
 
 =cut
 
