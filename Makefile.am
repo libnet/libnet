@@ -28,6 +28,10 @@ endif
 doc: doxygen-doc
 	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -
 
+
+## The distribution should include man pages, which are generated
+dist-hook: doc
+
 ## Generate MD5 checksum file
 MD5 = md5sum
 md5-dist:

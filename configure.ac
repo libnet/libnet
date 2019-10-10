@@ -32,6 +32,8 @@ AC_CONFIG_FILES([Makefile \
 		 Doxyfile \
 		 libnet-config \
                  doc/Makefile \
+                 doc/man/Makefile \
+                 doc/man/man3/Makefile \
                  include/Makefile \
                  include/libnet.h \
 		 libnet.pc \
