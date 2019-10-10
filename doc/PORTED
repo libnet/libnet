@@ -58,35 +58,25 @@ Platform Specific Details/Instructions
 ANDROID
 -------
 libnet can be build natively on Android devices running 5.0 Lollipop (SDK 21)
-or higher using Termux (https://termux.com/).
-See the help pages of Termux for install and setup instructions.
+or higher using Termux (https://termux.com/).  See the help pages of Termux for
+install and setup instructions.
 
-At the time of this writing, doxygen has not been ported to Android yet.
-So for this guide, we will build libnet without any docs. If you want docs
-you can do one the following:
-
-- build from a release (https://github.com/sgeto/libnet/releases)
-- compile docs on one of the supported platforms
-- port doxygen to Android
-    Update: check out my port: https://github.com/sgeto/doxygen
-    Update 2: my port has been merged into doxygen/master.
-    Don't use my port. Get the real deal from their repo:
-    https://github.com/doxygen/doxygen
+Bbuild from a release (https://github.com/libnet/libnet/releases)
 
 The minimum packages to install are:
 
-coreutils (important! Busybox alone is not enough!)
-autoconf
-automake
-m4
-make
-libtool
-clang
-git (optional)
+  coreutils (important! Busybox alone is not enough!)
+  autoconf
+  automake
+  m4
+  make
+  libtool
+  clang
+  git (optional)
 
 After that:
 
-1. $ git clone https://github.com/sgeto/libnet.git
+1. $ git clone https://github.com/libnet/libnet.git
 
 This is optional. As explained earlier, you can also build from a release.
 
