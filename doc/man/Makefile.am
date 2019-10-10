@@ -1,1 +1,1 @@
-SUBDIRS        = man3
+SUBDIRS        = man1 man3
