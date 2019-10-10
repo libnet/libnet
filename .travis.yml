@@ -23,6 +23,7 @@ addons:
     packages:
       - tree
       - doxygen
+      - coreutils
     update: true
 
 script:
