@@ -200,8 +200,9 @@ $ CFLAGS="-O2 -Wall -I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdp
 Notice that the --host option is usually all you need for cross-compiling.
 
 Note 6: Although the steps should be very similar, if you're using any
-other distribution of MinGW (cross or native), you're pretty much on your own.
-You can send suggestions and complains to https://github.com/sgeto/libnet/issues
+other distribution of MinGW (cross or native), you're pretty much on
+your own.  Suggestions, bug reports, and pull requests to fix any type
+of problem, go to https://github.com/libnet/libnet/issues
 
 
 3. Microsoft Visual C++

@@ -48,16 +48,15 @@ L<libnet-config(1)>, L<libnet-functions(3)>, L<libnet-macros(3)>
 The original author of libnet is Mike D. Schiffman.
 
 libnet has been maintained and extensively enhanced since 2009 by Sam Roberts.
+It is currently maintained by the Libnet Maintainers at GitHub:
 
-It is currently maintained by Ali Abdulkadir and available at
-
-        <https://github.com/sgeto/libnet>
+        <https://github.com/libnet/libnet>
 
 =head1 BUGS
 
 For bugs, questions, patch submissions, desirable enhancements, etc. see:
 
-        <https://github.com/sgeto/libnet/issues>
+        <https://github.com/libnet/libnet/issues>
 
 =head1 COPYRIGHT
 
