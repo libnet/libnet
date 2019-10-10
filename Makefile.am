@@ -13,12 +13,12 @@ dist_doc_DATA  = README.md ChangeLog.md LICENSE
 EXTRA_DIST     = README.win32 autogen.sh libnet-config.in
 SUBDIRS        = include src win32
 
-if ENABLE_DOXYGEN
-SUBDIRS       += doc
-endif
 if ENABLE_SAMPLES
 SUBDIRS       += sample
 endif
+
+if ENABLE_DOXYGEN
+SUBDIRS       += doc
 
 #
 # Doxygen rules from m4/ax_prog_doxygen.m4
@@ -28,9 +28,9 @@ endif
 doc: doxygen-doc
 	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -
 
-
 ## The distribution should include man pages, which are generated
 dist-hook: doc
+endif
 
 ## Generate MD5 checksum file
 MD5 = md5sum
