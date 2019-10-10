@@ -164,6 +164,7 @@ DX_HTML_FEATURE(ON)
 DX_MAN_FEATURE(ON)
 DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/Doxyfile], [doc])
 AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
+AM_CONDITIONAL(ENABLE_HTML,[test "x${DX_FLAG_html}" = x1])
 
 # Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])

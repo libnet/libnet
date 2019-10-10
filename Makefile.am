@@ -3,7 +3,7 @@
 # Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
 # All rights reserved.
 #
-DISTCHECK_CONFIGURE_FLAGS = --enable-doxygen-doc --disable-samples
+DISTCHECK_CONFIGURE_FLAGS = --enable-doxygen-doc --disable-doxygen-html --disable-samples
 ACLOCAL_AMFLAGS           = -I m4 ${ACLOCAL_FLAGS}
 
 bin_SCRIPTS    = libnet-config
