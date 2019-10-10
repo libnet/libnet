@@ -60,15 +60,13 @@ It is currently maintained by the Libnet Maintainers at GitHub:
 
 =head1 BUGS
 
-For bugs, questions, patch submissions, desirable enhancements, etc. see:
+Suggestions, bug reports/fixes, and pull requests, see:
 
         <https://github.com/libnet/libnet/issues>
 
 =head1 COPYRIGHT
 
-libnet is licensed under the 3-Clause BSD License, meaning fully Open Source
-and compatible with all GNU licenses.  Basically, you can do whatever you want
-with it.
+libnet is licensed under the 3-Clause BSD License.
 
 =cut
 

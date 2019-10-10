@@ -11,9 +11,7 @@
 # Apart from a few widely available GNU utilities, you'll also need pod2man
 # (aka libpod-latex-perl) to get it to work.
 
-echo "Finalizing man pages..."
-
-MANPAGENOTE='.SH "SEE ALSO"\n\.IX Header "SEE ALSO"\nlibnet(3)\n.SH "AUTHORS"\n.IX Header "AUTHORS"\nThe original author of libnet is Mike D. Schiffman.\n.PP\nlibnet has been maintained and extensively enhanced since 2009 by Sam Roberts.\n.PP\nIt is currently maintained by Ali Abdulkadir and available at\n.PP\n.Vb 1\n\&        <https://github.com/libnet/libnet>\n.Ve\n.SH "BUGS"\n.IX Header "BUGS"\nFor bugs, questions, patch submissions, desirable enhancements, etc. see:\n.PP\n.Vb 1\n\&        <https://github.com/libnet/libnet/issues>\n.Ve\n.SH "COPYRIGHT"\n.IX Header "COPYRIGHT"\nlibnet is licensed under the 3\-Clause \s-1BSD\s0 License. You can basically\ndo whatever you want with it.'
+MANPAGENOTE='.SH "SEE ALSO"\n\.IX Header "SEE ALSO"\nlibnet(3)\n.SH "AUTHORS"\n.IX Header "AUTHORS"\nThe original author of libnet is Mike D. Schiffman.\n.PP\nlibnet has been maintained and extensively enhanced since 2009 by Sam Roberts.\n.PP\nIt is maintained by the Libnet Developer Community at GitHub.\n.PP\n.Vb 1\n\&        <https://github.com/libnet/libnet>\n.Ve\n.SH "BUGS"\n.IX Header "BUGS"\nSuggestions, bug reports/fixes, and pull requests, see:\n.PP\n.Vb 1\n\&        <https://github.com/libnet/libnet/issues>\n.Ve\n.SH "COPYRIGHT"\n.IX Header "COPYRIGHT"\nlibnet is licensed under the 3\-Clause \s-1BSD\s0 License.'
 
 die() {
     echo "$*" 1>&2
@@ -65,5 +63,3 @@ for MAN in $(find . -name "libnet-*.3"); do
            -e '/.SH "Author"/,/from the source code\&./c \nBe' $MAN
     echo -e $MANPAGENOTE >> $MAN
 done
-
-echo "Done."
