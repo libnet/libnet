@@ -31,5 +31,6 @@ script:
   - make clean
   - make doc
   - make
+  - make release
   - make install-strip DESTDIR=/tmp/libnet
   - tree /tmp/libnet
