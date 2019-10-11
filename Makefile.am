@@ -30,6 +30,9 @@ doc: doxygen-doc
 
 ## The distribution should include man pages, which are generated
 dist-hook: doc
+else
+doc:
+	@echo "Doxygen documentation (html + man) disabled, skipping ..."
 endif
 
 ## Generate MD5 checksum file
@@ -58,7 +61,7 @@ release-hook:
 	fi
 
 ## Target to run when building a release
-release: distcheck release-hook md5-dist
+release: doc distcheck release-hook md5-dist
 	@echo
 	@echo "Resulting release files:"
 	@echo "================================================================="
