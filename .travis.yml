@@ -19,12 +19,15 @@ addons:
     packages:
       - tree
       - doxygen
-  homebrew:
-    packages:
-      - tree
-      - doxygen
-      - coreutils
-    update: true
+# homebrew:
+#   packages:
+#     - tree
+#     - doxygen
+#     - coreutils
+#   update: true
+
+before_install:
+    - if [ ${TRAVIS_OS_NAME} = "osx" ]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install doxygen tree coreutils; fi
 
 script:
   - ./autogen.sh
