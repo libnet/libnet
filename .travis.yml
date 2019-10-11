@@ -27,7 +27,7 @@ addons:
 #   update: true
 
 before_install:
-    - if [ ${TRAVIS_OS_NAME} = "osx" ]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install doxygen tree coreutils; fi
+    - if [ ${TRAVIS_OS_NAME} = "osx" ]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install doxygen tree md5sha1sum; fi
 
 script:
   - ./autogen.sh
