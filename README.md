@@ -23,7 +23,7 @@ libnet are:
 - [tcptraceroute](https://web.archive.org/web/20130424094134/http://michael.toren.net/code/tcptraceroute/)
 - [yersinia](https://web.archive.org/web/20180522141004/http://www.yersinia.net/)
 
-See the manpage and sample test code for more detailed information.
+See the man page and sample test code for more detailed information.
 Online documentation is available at https://codedocs.xyz/libnet/libnet/
 
 > **NOTE:** Legacy code written for *libnet-1.0.x* is unfortunately
@@ -51,7 +51,7 @@ When building from GIT, use <kbd>./autogen.sh</kbd> to generate the
 `configure` script.  For this you need the full suite of the GNU
 autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
 
-How to install the dependencies varies by system, but on many debian derived
+How to install the dependencies varies by system, but on many Debian derived
 systems, `apt` can be used:
 
     sudo apt install autoconf automake libtool
@@ -71,7 +71,7 @@ few more packages:
                      texlive-fonts-recommended latex-xcolor  \
                      texlive-font-utils
 
-Fior Microsoft CHM docs you need the HTML Help Workshop, which is part
+For Microsoft CHM docs you need the HTML Help Workshop, which is part
 of Visual Studio: http://go.microsoft.com/fwlink/p/?linkid=154968, on
 UNIX and GNU/Linux systems, see `chmcmd`, which is available in the
 [FreePascal](http://www.freepascal.org/) suite:
