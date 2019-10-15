@@ -28,7 +28,7 @@ Online documentation is available at https://codedocs.xyz/libnet/libnet/
 
 > **NOTE:** Legacy code written for *libnet-1.0.x* is unfortunately
 >           **incompatible** with *libnet-1.1.x* and later.  
->           See the [MIGRATION](doc/MIGRATION) guide for porting help.
+>           See the [Migration Guide](doc/MIGRATION.md) for porting help.
 
 
 Building

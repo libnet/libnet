@@ -43,7 +43,7 @@ F<libnet/libnet-functions.h>, F<libnet/libnet-macros.h> or any of the others.
 =head1 BACKWARDS COMPATIBILITY
 
 Your old code (circa libnet B<1.0.x>) WILL NOT WORK with libnet> B<E<gt>=1.1.x>.
-See B<doc/MIGRATION> for easy steps on porting your old code.
+See B<doc/MIGRATION.md> for easy steps on porting your old code.
 
 =head1 SEE ALSO
 
