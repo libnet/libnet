@@ -5,7 +5,8 @@ EXTRA_DIST    += api-main.md api-head.html api-foot.html api-style.css
 DISTCLEANFILES = libnet.tag
 
 if ENABLE_HTML
-pkgdata_DATA   = html/*
+pkghtmldir     = $(docdir)/html
+pkghtml_DATA   = html/*
 
 all-local: doc
 
