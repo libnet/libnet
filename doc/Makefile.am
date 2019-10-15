@@ -7,6 +7,11 @@ DISTCLEANFILES = libnet.tag
 if ENABLE_HTML
 pkgdata_DATA   = html/*
 
+all-local: doc
+
 clean-local:
 	-rm -rf html
+
+doc:
+	$(MAKE) -C @top_builddir@ $@
 endif
