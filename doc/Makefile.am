@@ -1,5 +1,5 @@
 SUBDIRS        = man
-dist_doc_DATA  = MIGRATION.md RAWSOCKET_NON_SEQUITUR
+dist_doc_DATA  = MIGRATION.md RAWSOCKET.md
 EXTRA_DIST     = fixmanpages.in libnet.Pod
 EXTRA_DIST    += api-main.md api-head.html api-foot.html api-style.css
 DISTCLEANFILES = libnet.tag
