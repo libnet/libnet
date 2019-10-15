@@ -31,10 +31,10 @@ before_install:
 
 script:
   - ./autogen.sh
-  - ./configure --prefix=/ --disable-silent-rules
-  - make doc
+  - ./configure
   - make release
   - make clean
+  - ./configure --prefix=/ --disable-silent-rules
   - make
   - make install-strip DESTDIR=/tmp/libnet
   - tree /tmp/libnet
