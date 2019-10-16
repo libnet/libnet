@@ -5,8 +5,8 @@ All relevant changes are documented in this file.  For a complete list
 of contributors, see the GIT commit log.
 
 
-[v1.2][UNRELEASED] - 2019-10-XX
--------------------------------
+[v1.2][] - 2019-10-16
+---------------------
 
 Release curated by Sam Roberts and Joachim Nilsson.
 
@@ -421,7 +421,7 @@ Release curated by Sam Roberts.
   `LIBNET_DO_PAYLOAD()` macro
 
 
-[UNRELEASED]: https://github.com/libnet/libnet/compare/v1.1.6...HEAD
+[UNRELEASED]: https://github.com/libnet/libnet/compare/v1.2...HEAD
 [v1.2]:       https://github.com/libnet/libnet/compare/v1.1.6...v1.2
 [v1.1.6]:     https://github.com/libnet/libnet/compare/v1.1.5...v1.1.6
 [v1.1.5]:     https://github.com/libnet/libnet/compare/v1.1.4...v1.1.5
