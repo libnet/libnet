@@ -1,7 +1,7 @@
 [![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
 
-Portable Packet Construction and Injection
-==========================================
+Packet Construction and Injection
+=================================
 
 Libnet is an API to help with the construction and injection of network
 packets.  It provides a portable framework for low-level network packet
