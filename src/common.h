@@ -32,13 +32,14 @@
   /* MSVC warns about snprintf */
   #define _CRT_SECURE_NO_WARNINGS
 
-  /* don't pull in pcap/bpf.h */
-  #define PCAP_DONT_INCLUDE_PCAP_BPF_H
-  #include <pcap/pcap.h>
-
   /* don't pull in Packet32's locol bpf definitions */
   // #define BPF_MAJOR_VERSION
   #include <Packet32.h>
+
+/* don't pull in pcap/bpf.h */
+  #define PCAP_DONT_INCLUDE_PCAP_BPF_H
+  #include <pcap/pcap.h>
+
   #include <malloc.h>    /* alloca() */
 
 #ifdef __MINGW32__
