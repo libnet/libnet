@@ -7,7 +7,7 @@
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([libnet], [1.2], [https://github.com/libnet/libnet/issues],,
+AC_INIT([libnet], [1.3-dev], [https://github.com/libnet/libnet/issues],,
 	[https://github.com/libnet/libnet])
 
 # Visible in resulting configure script, e.g. with ./configure --version
