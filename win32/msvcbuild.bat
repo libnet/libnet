@@ -41,7 +41,7 @@ goto msvcbuild64
 @set VERSION=1.2
 
 @rem relative to C code in src/
-@set WINPCAP=..\..\..\WpdPack
+@set WINPCAP=..\..\WpdPack
 
 if not exist "src\win32\" mkdir "src\win32\"
 
@@ -70,7 +70,7 @@ exit /b %errorlevel%
 @set VERSION=1.2
 
 @rem relative to C code in src/
-@set WINPCAP=..\..\..\WpdPack
+@set WINPCAP=..\..\WpdPack
 
 if not exist "src\win64\" mkdir "src\win64\"
 
