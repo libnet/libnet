@@ -32,7 +32,7 @@ before_install:
 script:
   - ./autogen.sh
   - ./configure --disable-silent-rules
-  - make release
+  - make doc distcheck
   - make clean
   - ./configure --prefix=/ --disable-silent-rules
   - make
