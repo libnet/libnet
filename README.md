@@ -1,4 +1,4 @@
-[![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs]
+[![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
 
 Portable Packet Construction and Injection
 ==========================================
