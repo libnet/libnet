@@ -106,6 +106,6 @@ libnet_la_SOURCES += libnet_dll_info.rc
 libnet_la_LDFLAGS += -Wl,--output-def, -Wl,libnet-9.def
 
 .rc.lo:
-			$(AM_V_GEN)$(LIBTOOL) --mode=compile --silent $(WINDRES) $< -o $@
+	$(AM_V_GEN)$(LIBTOOL) --mode=compile --silent $(WINDRES) $< -o $@
 endif
 endif
