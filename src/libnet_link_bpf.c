@@ -54,8 +54,6 @@
 #include <net/if_types.h>
 #include "../include/gnuc.h"
 
-#include "../include/bpf.h"
-
 #ifdef HAVE_OS_PROTO_H
 #include "../include/os-proto.h"
 #endif
