@@ -6,4 +6,4 @@ nobase_include_HEADERS = libnet.h \
                          libnet/libnet-structures.h \
                          libnet/libnet-types.h
 
-EXTRA_DIST = bpf.h gnuc.h ifaddrlist.h config.h
+EXTRA_DIST = gnuc.h ifaddrlist.h config.h
