@@ -1,7 +1,7 @@
 Information, Recommendations and Build Instructions for Windows
 ***************************************************************
 
-_____________________________ IMPORTANT _____________________________
+_____________________________ IMPORTANT _______________________________
 The execution of the currently shipped msvcbuild.bat batch script will
 causes ANY subsequent none-MSVC build to fail. It has been wrongly set
 up to copy several MSVC-specific header files from <libnet-root>/win32/
@@ -9,7 +9,7 @@ to <libnet-root>/include/ and <libnet-root>/include/libnet/ during the
 build process. This is a high priority issue and will be taken care of
 ASAP. If you ever have to make use of this file, consider compiling all
 other builds from a separate tarball.
-_____________________________________________________________________
+_______________________________________________________________________
 
 This file list additional steps and suggestions for Windows users.
 Please see INSTALL for a more general overview and doc/PORTED for
@@ -149,17 +149,19 @@ The recommended MinGW distribution for building libnet is Msys2.
 First, follow the installation instructions for Msys2 available at
 <https://msys2.github.io>.
 
+Second, install Wpdpack/Npcap SDK, as mentioned above.
+
 Then, depending on your desired target architecture, open a mingw32 or
 mingw64 shell, navigate to the source directory, and execute the
 following commands:
 
 If you want to produce 32 bit binaries:
 
-    CFLAGS="-I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/" ./configure --prefix=/mingw64
+    CFLAGS="-Ipath/to/wpdpack/Include" LDFLAGS="-Lpath/to/wpdpack/Lib/" ./configure --prefix=/mingw64
 
 If you want to produce 64 bit binaries:
 
-    CFLAGS="-I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/x64" ./configure --prefix=/mingw64
+    CFLAGS="-Ipath/to/wpdpack/Include" LDFLAGS="-Lpath/to/wpdpack/Lib/x64" ./configure --prefix=/mingw64
 
 Followed by:
 
@@ -189,17 +191,20 @@ of libgcc by disabling shared libraries altogether
 In general, you should know what you're doing and what your host, target
 and compiler are all about beforehand.
 
+Remember, you still need the Wpdpack/Npcap `Lib` and `Include` files, as
+mentioned above.
+
 These steps have been successfully tested on Ubuntu and the default
 mingw32-w32 toolchain (GCC 4.8).  The recommended steps to build libnet
 therefore are:
 
 If you're targeting x86:
 
-    CFLAGS="-I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib" ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32
+    CFLAGS="-Ipath/to/wpdpack/Include" LDFLAGS="-Lpath/to/wpdpack/Lib" ./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32
 
 If you're targeting x64:
 
-    CFLAGS="-I$(pwd)/win32/wpdpack/Include" LDFLAGS="-L$(pwd)/win32/wpdpack/Lib/x64" ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32
+    CFLAGS="-Ipath/to/wpdpack/Include" LDFLAGS="-Lpath/to/wpdpack/Lib/x64" ./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32
 
 Followed by:
 

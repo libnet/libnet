@@ -1,7 +1,0 @@
-WinPcap is unmaintained. The WinPcap Developer's Pack (http://www.winpcap.org/devel.htm) is not only behind WinPcap (last version of WinPcap was 4.1.3, the Developer's Pack is still at 4.1.2) it also only offers 32 bit GCC-compatible libraries.
-Namely `libpacket.a` and `libwpcap.a`.
-
-Libraries (and include files) in this directory have been patched and compiled by me for use with libnet, or whatever else you might want to use them for. If you rather compile the libraries yourself, source code and build instructions are available at
-https://github.com/sgeto/winpcap
-
-Drivers and DLLs can be found at http://www.winpcap.org
