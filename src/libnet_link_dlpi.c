@@ -79,9 +79,9 @@
 #include <string.h>
 #include <stropts.h>
 #include <unistd.h>
+#include <net/bpf.h>
 
 #include "../include/libnet.h"
-#include "../include/bpf.h"
 
 #include "../include/gnuc.h"
 #ifdef HAVE_OS_PROTO_H
