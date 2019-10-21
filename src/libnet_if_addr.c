@@ -36,6 +36,14 @@
 #include <sys/sockio.h>
 #endif
 
+#ifdef HAVE_SYS_IOCTL_H
+#include <sys/ioctl.h>
+#endif
+
+#ifdef HAVE_NET_IF_H
+#include <net/if.h>
+#endif
+
 #include "../include/ifaddrlist.h"
 
 #define MAX_IPADDR 512
