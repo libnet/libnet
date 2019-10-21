@@ -92,7 +92,7 @@ libnet_t *l, libnet_ptag_t ptag)
     dhcp_hdr.dhcp_magic = htonl(DHCP_MAGIC);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&dhcp_hdr, LIBNET_DHCPV4_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -107,7 +107,7 @@ libnet_t *l, libnet_ptag_t ptag)
     if (payload_s)
     {
         n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
+        if (n == UINT32_MAX)
         {
             goto bad;
         }

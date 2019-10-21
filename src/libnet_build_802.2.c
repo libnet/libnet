@@ -114,7 +114,7 @@ libnet_t *l, libnet_ptag_t ptag)
     _802_2_hdr.snap_type = htons(type);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2SNAP_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

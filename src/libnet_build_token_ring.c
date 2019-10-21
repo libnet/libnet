@@ -82,7 +82,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
             LIBNET_TOKEN_RING_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -160,7 +160,7 @@ libnet_t *l)
 
     n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
             LIBNET_TOKEN_RING_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

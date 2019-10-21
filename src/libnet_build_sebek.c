@@ -72,7 +72,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     sebek_hdr.length = htonl(length);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&sebek_hdr, LIBNET_SEBEK_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

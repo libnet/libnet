@@ -39,7 +39,7 @@
 do                                                                           \
 {                                                                            \
     n = libnet_pblock_append(l, p, (uint8_t *)&icmp_hdr, len);              \
-    if (n == -1)                                                             \
+    if (n == UINT32_MAX)                                                             \
     {                                                                        \
         goto bad;                                                            \
     }                                                                        \
@@ -54,7 +54,7 @@ do                                                                           \
     if (payload_s)                                                           \
     {                                                                        \
         n = libnet_pblock_append(l, p, payload, payload_s);                  \
-        if (n == -1)                                                         \
+        if (n == UINT32_MAX)                                                         \
         {                                                                    \
             goto bad;                                                        \
         }                                                                    \
@@ -101,7 +101,7 @@ libnet_t *l, libnet_ptag_t ptag)
     icmp_hdr.icmp_seq  = htons(seq);           /* packet seq */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&icmp_hdr, LIBNET_ICMPV4_ECHO_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -161,7 +161,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     icmp_hdr.icmp_mask = htonl(mask);   /* address mask */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&icmp_hdr, LIBNET_ICMPV4_MASK_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -223,7 +223,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     icmp_hdr.icmp_ttime = htonl(ttime);     /* transmit timestamp */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&icmp_hdr, LIBNET_ICMPV4_TS_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

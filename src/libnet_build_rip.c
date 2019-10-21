@@ -72,7 +72,7 @@ libnet_ptag_t ptag)
     rip_hdr.rip_metric   = htonl(metric);
 
     n = libnet_pblock_append(l, p, (uint8_t *)&rip_hdr, LIBNET_RIP_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

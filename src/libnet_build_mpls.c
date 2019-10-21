@@ -66,7 +66,7 @@ libnet_ptag_t ptag)
                               ((ttl & 0xff))));
 
     n = libnet_pblock_append(l, p, (uint8_t *)&mpls_hdr, LIBNET_MPLS_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

@@ -67,13 +67,13 @@ libnet_t *l, libnet_ptag_t ptag)
     cdp_hdr.cdp_len     = htons(len + 4);   /* 4 bytes for len and type */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&cdp_hdr, LIBNET_CDP_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
 
     n = libnet_pblock_append(l, p, value, len);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad;
@@ -153,13 +153,13 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
     }
 
     n = libnet_pblock_append(l, p, (uint8_t *)&cdp_value_hdr, LIBNET_CDP_VALUE_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         return (-1);
     }
 
     n = libnet_pblock_append(l, p, value, len);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         /* err msg set in libnet_pblock_append() */
         return (-1);

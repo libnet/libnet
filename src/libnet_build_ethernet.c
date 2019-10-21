@@ -75,7 +75,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     eth_hdr.ether_type = htons(type);                  /* packet type */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&eth_hdr, LIBNET_ETH_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -140,7 +140,7 @@ libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l)
     eth_hdr.ether_type = htons(type);                  /* packet type */
 
     n = libnet_pblock_append(l, p, (uint8_t *)&eth_hdr, LIBNET_ETH_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

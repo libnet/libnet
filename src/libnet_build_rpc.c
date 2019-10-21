@@ -100,7 +100,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
                 LIBNET_RPC_CALL_H);
     }
 
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

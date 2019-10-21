@@ -120,7 +120,7 @@ libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name)
 
     if (use_name == LIBNET_RESOLVE)
     {
-		if ((addr.s_addr = inet_addr(host_name)) == -1)
+        if ((addr.s_addr = inet_addr(host_name)) == INADDR_NONE)
         {
             if (!(host_ent = gethostbyname(host_name)))
             {

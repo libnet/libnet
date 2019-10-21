@@ -92,7 +92,7 @@ libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
      * they are skipped if the packet is UDP...
      */
     n = libnet_pblock_append(l, p, ((uint8_t *)&dns_hdr) + offset, h_len);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }

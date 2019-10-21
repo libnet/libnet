@@ -69,7 +69,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     hsrp_hdr.virtual_ip = virtual_ip;
 
     n = libnet_pblock_append(l, p, (uint8_t *)&hsrp_hdr, LIBNET_HSRP_H);
-    if (n == -1)
+    if (n == UINT32_MAX)
     {
         goto bad;
     }
@@ -84,7 +84,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     if (payload_s)
     {
         n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
+        if (n == UINT32_MAX)
         {
             goto bad;
         }

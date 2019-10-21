@@ -503,7 +503,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                         c = libnet_inet_checksum(l, iph,
                                 libnet_pblock_p2p(q->type), q->h_len,
                                 beg, end);
-                        if (c == -1)
+                        if (c == UINT32_MAX)
                         {
                             /* err msg set in libnet_do_checksum() */
                             goto err;
