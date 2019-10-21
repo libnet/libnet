@@ -63,12 +63,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     dot1x_hdr.dot1x_type = eap_type;
     dot1x_hdr.dot1x_length = htons(length);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&dot1x_hdr, LIBNET_802_1X_H);
-    if (n == (uint32_t)-1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&dot1x_hdr, LIBNET_802_1X_H) == -1)
     {
         goto bad;
     }
-    
+
     LIBNET_DO_PAYLOAD(l, p);
 
     return (ptag ? ptag : libnet_pblock_update(l, p, h,

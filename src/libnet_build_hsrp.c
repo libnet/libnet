@@ -37,7 +37,6 @@ uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group,
 uint8_t reserved, uint8_t authdata[HSRP_AUTHDATA_LENGTH], uint32_t virtual_ip,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_hsrp_hdr hsrp_hdr;
 
@@ -68,8 +67,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(hsrp_hdr.authdata, authdata, HSRP_AUTHDATA_LENGTH*sizeof(uint8_t));
     hsrp_hdr.virtual_ip = virtual_ip;
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&hsrp_hdr, LIBNET_HSRP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&hsrp_hdr, LIBNET_HSRP_H) == -1)
     {
         goto bad;
     }
@@ -83,8 +81,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
  
     if (payload_s)
     {
-        n = libnet_pblock_append(l, p, payload, payload_s);
-        if (n == -1)
+        if (libnet_pblock_append(l, p, payload, payload_s) == -1)
         {
             goto bad;
         }

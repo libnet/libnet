@@ -63,8 +63,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(_802_3_hdr._802_3_shost, src, ETHER_ADDR_LEN);  /* src address */
     _802_3_hdr._802_3_len = htons(len);                   /* packet length */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&_802_3_hdr, LIBNET_802_3_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&_802_3_hdr, LIBNET_802_3_H) == -1)
     {
         goto bad;
     }

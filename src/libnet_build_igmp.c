@@ -64,8 +64,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     igmp_hdr.igmp_sum          = (sum ? htons(sum) : 0);
     igmp_hdr.igmp_group.s_addr = ip;
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&igmp_hdr, LIBNET_IGMP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&igmp_hdr, LIBNET_IGMP_H) == -1)
     {
         goto bad;
     }

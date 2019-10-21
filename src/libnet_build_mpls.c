@@ -65,8 +65,7 @@ libnet_ptag_t ptag)
                               ((bos & 0x01)          <<  8) |
                               ((ttl & 0xff))));
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&mpls_hdr, LIBNET_MPLS_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&mpls_hdr, LIBNET_MPLS_H) == -1)
     {
         goto bad;
     }

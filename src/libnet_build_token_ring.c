@@ -80,9 +80,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(&token_ring_hdr.token_ring_llc_org_code, org, LIBNET_ORG_CODE_SIZE); 
     token_ring_hdr.token_ring_type              = htons(type);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
-            LIBNET_TOKEN_RING_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr,
+                             LIBNET_TOKEN_RING_H) == -1)
     {
         goto bad;
     }
@@ -158,9 +157,8 @@ libnet_t *l)
     token_ring_hdr.token_ring_type              = htons(type);
 
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr, 
-            LIBNET_TOKEN_RING_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&token_ring_hdr,
+                             LIBNET_TOKEN_RING_H) == -1)
     {
         goto bad;
     }

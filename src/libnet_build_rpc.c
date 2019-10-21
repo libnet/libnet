@@ -41,6 +41,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_rpc_call_tcp_hdr rpc_hdr;
+    int rc;
 
     if (l == NULL)
     { 
@@ -91,16 +92,16 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 
     if (rm)
     {
-        n = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr, 
-                LIBNET_RPC_CALL_TCP_H);
+        rc = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr,
+                                  LIBNET_RPC_CALL_TCP_H);
     }
     else
     {
-        n = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr.rpc_common, 
+        rc = libnet_pblock_append(l, p, (uint8_t *)&rpc_hdr.rpc_common,
                 LIBNET_RPC_CALL_H);
     }
 
-    if (n == -1)
+    if (rc == -1)
     {
         goto bad;
     }

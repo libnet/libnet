@@ -70,8 +70,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     isl_hdr.isl_index   = htons(portindex);
     isl_hdr.isl_reserved= htons(reserved);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&isl_hdr, LIBNET_ISL_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&isl_hdr, LIBNET_ISL_H) == -1)
     {
         goto bad;
     }

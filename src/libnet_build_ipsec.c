@@ -64,8 +64,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         return (-1);
     }
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&esp_hdr, LIBNET_IPSEC_ESP_HDR_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&esp_hdr, LIBNET_IPSEC_ESP_HDR_H) == -1)
     {
         goto bad;
     }
@@ -114,8 +113,8 @@ libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
         return (-1);
     }
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&esp_ftr, LIBNET_IPSEC_ESP_FTR_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&esp_ftr,
+                             LIBNET_IPSEC_ESP_FTR_H) == -1)
     {
         goto bad;
     }
@@ -166,8 +165,7 @@ uint32_t payload_s,  libnet_t *l, libnet_ptag_t ptag)
     ah_hdr.ah_seq = htonl(seq);        /* AH sequence number */
     ah_hdr.ah_auth = htonl(auth);      /* authentication data */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&ah_hdr, LIBNET_IPSEC_AH_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ah_hdr, LIBNET_IPSEC_AH_H) == -1)
     {
         goto bad;
     }

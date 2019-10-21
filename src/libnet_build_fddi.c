@@ -83,8 +83,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));   /* Protocol Type */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H) == -1)
     {
         goto bad;
     }
@@ -157,8 +156,7 @@ uint8_t cf, const uint8_t *org, uint16_t type, libnet_t *l)
     protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H) == -1)
     {
         goto bad;
     }

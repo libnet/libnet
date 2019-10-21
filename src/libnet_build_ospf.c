@@ -71,8 +71,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ospf_hdr.ospf_sum             = sum;
     ospf_hdr.ospf_auth_type       = htons(autype);  /* Type of auth */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&ospf_hdr, LIBNET_OSPF_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ospf_hdr, LIBNET_OSPF_H) == -1)
     {
         goto bad;
     }
@@ -143,8 +142,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     hello_hdr.hello_bkup_rtr.s_addr = bkup_rtr; /* Networks backup router */
     hello_hdr.hello_nbr.s_addr      = htonl(neighbor);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&hello_hdr, LIBNET_OSPF_HELLO_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&hello_hdr, LIBNET_OSPF_HELLO_H) == -1)
     {
         goto bad;
     }
@@ -192,8 +190,8 @@ libnet_ptag_t ptag)
     dbd_hdr.dbd_type    = type;	            /* Type of exchange occuring */
     dbd_hdr.dbd_seq     = htonl(seqnum);    /* DBD sequence number */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&dbd_hdr, LIBNET_OSPF_DBD_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&dbd_hdr,
+                             LIBNET_OSPF_DBD_H) == -1)
     {
         goto bad;
     }
@@ -240,8 +238,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     lsr_hdr.lsr_lsid	     = htonl(lsid);     /* Link State ID */
     lsr_hdr.lsr_adrtr.s_addr = htonl(advrtr);   /* Advertising router */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&lsr_hdr, LIBNET_OSPF_LSR_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&lsr_hdr,
+                             LIBNET_OSPF_LSR_H) == -1)
     {
         goto bad;
     }
@@ -286,8 +284,7 @@ libnet_t *l, libnet_ptag_t ptag)
     memset(&lh_hdr, 0, sizeof(lh_hdr));
     lh_hdr.lsu_num = htonl(num);   /* Number of LSAs that will be bcasted */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&lh_hdr, LIBNET_OSPF_LSU_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&lh_hdr, LIBNET_OSPF_LSU_H) == -1)
     {
         goto bad;
     }
@@ -340,8 +337,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     lsa_hdr.lsa_sum         = sum;
     lsa_hdr.lsa_len         = htons(h);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&lsa_hdr, LIBNET_OSPF_LSA_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&lsa_hdr,
+                             LIBNET_OSPF_LSA_H) == -1)
     {
         goto bad;
     }
@@ -402,9 +399,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     rtr_lsa_hdr.rtr_tos_num     = tos;
     rtr_lsa_hdr.rtr_metric      = htons(metric);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&rtr_lsa_hdr,
-            LIBNET_OSPF_LS_RTR_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&rtr_lsa_hdr,
+                             LIBNET_OSPF_LS_RTR_H) == -1)
     {
         goto bad;
     }
@@ -450,9 +446,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     net_lsa_hdr.net_nmask.s_addr    = htonl(nmask);
     net_lsa_hdr.net_rtr_id          = htonl(rtrid);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&net_lsa_hdr,
-            LIBNET_OSPF_LS_NET_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&net_lsa_hdr,
+                             LIBNET_OSPF_LS_NET_H) == -1)
     {
         goto bad;
     }
@@ -499,9 +494,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     sum_lsa_hdr.sum_metric          = htonl(metric);
     sum_lsa_hdr.sum_tos_metric      = htonl(tos);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&sum_lsa_hdr,
-            LIBNET_OSPF_LS_SUM_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&sum_lsa_hdr,
+                             LIBNET_OSPF_LS_SUM_H) == -1)
     {
         goto bad;
     }
@@ -550,9 +544,8 @@ libnet_ptag_t ptag)
     as_lsa_hdr.as_fwd_addr.s_addr   = htonl(fwdaddr);
     as_lsa_hdr.as_rte_tag           = htonl(tag);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&as_lsa_hdr,
-            LIBNET_OSPF_LS_AS_EXT_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&as_lsa_hdr,
+                             LIBNET_OSPF_LS_AS_EXT_H) == -1)
     {
         goto bad;
     }

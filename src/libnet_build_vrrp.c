@@ -70,8 +70,7 @@ libnet_ptag_t ptag)
     vrrp_hdr.vrrp_advert_int = advert_int;
     vrrp_hdr.vrrp_sum        = (sum ? htons(sum) : 0);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&vrrp_hdr, LIBNET_VRRP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&vrrp_hdr, LIBNET_VRRP_H) == -1)
     {
         goto bad;
     }

@@ -71,8 +71,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(sebek_hdr.cmd, cmd, SEBEK_CMD_LENGTH*sizeof(uint8_t));
     sebek_hdr.length = htonl(length);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&sebek_hdr, LIBNET_SEBEK_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&sebek_hdr, LIBNET_SEBEK_H) == -1)
     {
         goto bad;
     }

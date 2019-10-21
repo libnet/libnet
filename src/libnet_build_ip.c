@@ -90,8 +90,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ip_hdr.ip_src.s_addr = src;                       /* source ip */
     ip_hdr.ip_dst.s_addr = dst;                       /* destination ip */
     
-    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H) == -1)
     {
         goto bad;
     }
@@ -255,7 +254,7 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
     h = len;                                          /* header length */
     ptag = LIBNET_PTAG_INITIALIZER;
     src = libnet_get_ipaddr4(l);
-    if (src == -1)
+    if (src == UINT32_MAX)
     {
         /* err msg set in libnet_get_ipaddr() */ 
         return (-1);
@@ -301,8 +300,7 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
     ip_hdr.ip_src.s_addr = src;                       /* source ip */
     ip_hdr.ip_dst.s_addr = dst;                       /* destination ip */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV4_H) == -1)
     {
         goto bad;
     }
@@ -322,7 +320,7 @@ libnet_build_ipv4_options(const uint8_t *options, uint32_t options_s, libnet_t *
 libnet_ptag_t ptag)
 {
     int options_size_increase = 0; /* increase will be negative if it's a decrease */
-    uint32_t n, adj_size;
+    uint32_t adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
 
@@ -371,15 +369,13 @@ libnet_ptag_t ptag)
     }
 
     /* append options */
-    n = libnet_pblock_append(l, p, options, options_s);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, options, options_s) == -1)
     {
         goto bad;
     }
 
     /* append padding */
-    n = libnet_pblock_append(l, p, (uint8_t*)"\0\0\0", adj_size - options_s);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t*)"\0\0\0", adj_size - options_s) == -1)
     {
         goto bad;
     }
@@ -450,8 +446,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ip_hdr.ip_src      = src;
     ip_hdr.ip_dst      = dst;
      
-    n = libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV6_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ip_hdr, LIBNET_IPV6_H) == -1)
     {
         goto bad;
     }
@@ -514,9 +509,8 @@ libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_frag_hdr,
-        LIBNET_IPV6_FRAG_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ipv6_frag_hdr,
+                             LIBNET_IPV6_FRAG_H) == -1)
     {
         goto bad;
     }
@@ -583,9 +577,8 @@ libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_routing_hdr,
-        LIBNET_IPV6_ROUTING_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ipv6_routing_hdr,
+                             LIBNET_IPV6_ROUTING_H) == -1)
     {
         goto bad;
     }
@@ -649,9 +642,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_destopts_hdr,
-        LIBNET_IPV6_DESTOPTS_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ipv6_destopts_hdr,
+                             LIBNET_IPV6_DESTOPTS_H) == -1)
     {
         goto bad;
     }
@@ -715,9 +707,8 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (uint8_t *)&ipv6_hbhopts_hdr,
-        LIBNET_IPV6_HBHOPTS_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ipv6_hbhopts_hdr,
+                             LIBNET_IPV6_HBHOPTS_H) == -1)
     {
         goto bad;
     }
