@@ -49,7 +49,7 @@ extern "C" {
  * TODO move the stuff we ALWAYS need out of the DOXYGEN ifndef block
  * and minimize their redundancies (see doc/TODO)
  */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS // mess
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>

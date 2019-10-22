@@ -8,6 +8,7 @@ Maintenance
 * Reference issues from GitHub pull requests to alert issue subscribers
 * Use version in `configure.ac` for -betaN/-rcN and GA releases
 * Bump ABI version in `src/Makefile.am` just before release! (see below)
+* Coding style is C89 keeping consistent brace and indentation style.
 
 
 Release Checklist
