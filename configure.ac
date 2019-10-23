@@ -54,7 +54,7 @@ LT_INIT([pic-only])
 #
 # Check for headers
 #
-AC_CHECK_HEADERS([sys/sockio.h])
+AC_CHECK_HEADERS([sys/sockio.h net/if.h sys/ioctl.h])
 AC_CHECK_FUNCS([gethostbyname2])
 AC_CHECK_FUNCS([getifaddrs])
 AC_TYPE_UINT16_T
@@ -179,6 +179,9 @@ AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 
 # what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
+
+# Enable some extra features.
+CFLAGS="$CFLAGS -D_DEFAULT_SOURCE=1"
 
 # Check and set OS specific parameters
 AS_CASE([$target_os],

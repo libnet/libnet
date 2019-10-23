@@ -170,9 +170,9 @@ if (payload_s)                                                               \
 /* context queue macros and constants */
 #define LIBNET_LABEL_SIZE   64
 #define LIBNET_LABEL_DEFAULT "cardshark"
-#define CQ_LOCK_UNLOCKED    (u_int)0x00000000
-#define CQ_LOCK_READ        (u_int)0x00000001
-#define CQ_LOCK_WRITE       (u_int)0x00000002
+#define CQ_LOCK_UNLOCKED    (uint32_t)0x00000000
+#define CQ_LOCK_READ        (uint32_t)0x00000001
+#define CQ_LOCK_WRITE       (uint32_t)0x00000002
 
 /**
  * Provides an interface to iterate through the context queue of libnet
