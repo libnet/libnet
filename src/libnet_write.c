@@ -35,7 +35,7 @@
 int
 libnet_write(libnet_t *l)
 {
-    int c;
+    uint32_t c;
     uint32_t len;
     uint8_t *packet = NULL;
 
@@ -45,7 +45,7 @@ libnet_write(libnet_t *l)
     }
 
     c = libnet_pblock_coalesce(l, &packet, &len);
-    if (c == - 1)
+    if (c == UINT32_MAX)
     {
         /* err msg set in libnet_pblock_coalesce() */
         return (-1);
@@ -264,7 +264,7 @@ libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    int c;
+    ssize_t c;
     struct sockaddr_in sin;
     struct libnet_ipv4_hdr *ip_hdr;
 
@@ -298,10 +298,10 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
     ip_hdr->ip_off = UNFIX(ip_hdr->ip_off);
 #endif /* LIBNET_BSD_BYTE_SWAP */
 
-    if (c != size)
+    if (c != (ssize_t)size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%s)", __func__, c,
+                "%s(): %zd bytes written (%s)", __func__, c,
                 strerror(errno));
     }
     return (c);
@@ -310,7 +310,7 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    int c = -1;
+    ssize_t c = -1;
 
 #if defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support",
@@ -332,10 +332,10 @@ libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
             sizeof(ip_hdr->ip_dst.libnet_s6_addr));
 
     c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin, sizeof(sin));
-    if (c != size)
+    if (c != (ssize_t)size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): %d bytes written (%s)", __func__, c,
+                "%s(): %zd bytes written (%s)", __func__, c,
                 strerror(errno));
     }
 #endif  /* HAVE_SOLARIS && !HAVE_SOLARIS_IPV6 */

@@ -201,7 +201,7 @@ get_iface_index(int fd, const char *device)
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    int c;
+    ssize_t c;
 #if (HAVE_PACKET_SOCKET)
     struct sockaddr_ll sa;
 #else
@@ -229,10 +229,10 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 
     c = sendto(l->fd, packet, size, 0,
             (struct sockaddr *)&sa, sizeof (sa));
-    if (c != size)
+    if (c != (ssize_t)size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "libnet_write_link(): only %d bytes written (%s)", c,
+                "libnet_write_link(): only %zd bytes written (%s)", c,
                 strerror(errno));
     }
     return (c);

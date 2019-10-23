@@ -63,8 +63,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     udp_hdr.uh_ulen    = htons(len);            /* total length of UDP packet*/
     udp_hdr.uh_sum     = (sum ? htons(sum) : 0);/* checksum */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&udp_hdr, LIBNET_UDP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&udp_hdr, LIBNET_UDP_H) == -1)
     {
         goto bad;
     }

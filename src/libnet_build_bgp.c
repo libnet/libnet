@@ -64,8 +64,7 @@ libnet_t *l, libnet_ptag_t ptag)
     bgp4_hdr.len = htons(len);
     bgp4_hdr.type = type;
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr, LIBNET_BGP4_HEADER_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr, LIBNET_BGP4_HEADER_H) == -1)
     {
         goto bad;
     }
@@ -108,35 +107,30 @@ libnet_t *l, libnet_ptag_t ptag)
     }
 
     /* for memory alignment reason, we need to append each field separately */
-    n = libnet_pblock_append(l, p, (uint8_t *)&version, sizeof (version));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&version, sizeof (version)) == -1)
     {
         goto bad;
     }
 
     val = htons(src_as);
-    n = libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(src_as));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(src_as)) == -1)
     {
         goto bad;
     }
 
     val = htons(hold_time);
-    n = libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(hold_time));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&val, sizeof(hold_time)) == -1)
     {
         goto bad;
     }
 
     n = htonl(bgp_id);
-    n = libnet_pblock_append(l, p, (uint8_t *)&n, sizeof(bgp_id));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&n, sizeof(bgp_id)) == -1)
     {
         goto bad;
     }
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&opt_len, sizeof(opt_len));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&opt_len, sizeof(opt_len)) == -1)
     {
         goto bad;
     }
@@ -185,34 +179,30 @@ libnet_t *l, libnet_ptag_t ptag)
 
     /* for memory alignment reason, we need to append each field separately */
     length = htons(unfeasible_rt_len);
-    n = libnet_pblock_append(l, p, (uint8_t *)&length,
-        sizeof (unfeasible_rt_len));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&length,
+                             sizeof (unfeasible_rt_len)) == -1)
     {
         goto bad;
     }
 
     if (unfeasible_rt_len && withdrawn_rt)
     {
-	n = libnet_pblock_append(l, p, withdrawn_rt, unfeasible_rt_len);
-	if (n == -1)
+	if (libnet_pblock_append(l, p, withdrawn_rt, unfeasible_rt_len) == -1)
 	{
 	    goto bad;
 	}
     }
 
     length = htons(total_path_attr_len);
-    n = libnet_pblock_append(l, p, (uint8_t *)&length,
-            sizeof (total_path_attr_len));
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&length,
+                             sizeof (total_path_attr_len)) == -1)
     {
         goto bad;
     }
 
     if (total_path_attr_len && path_attributes)
     {
-	n = libnet_pblock_append(l, p, path_attributes, total_path_attr_len);
-	if (n == -1)
+	if (libnet_pblock_append(l, p, path_attributes, total_path_attr_len) == -1)
 	{
 	    goto bad;
 	}
@@ -220,8 +210,7 @@ libnet_t *l, libnet_ptag_t ptag)
 
     if (info_len && reachability_info)
     {
-	n = libnet_pblock_append(l, p, reachability_info, info_len);
-	if (n == -1)
+	if (libnet_pblock_append(l, p, reachability_info, info_len) == -1)
 	{
 	    goto bad;
 	}
@@ -267,9 +256,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     bgp4_hdr.err_code    = err_code;
     bgp4_hdr.err_subcode = err_subcode;
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr,
-            LIBNET_BGP4_NOTIFICATION_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&bgp4_hdr,
+                             LIBNET_BGP4_NOTIFICATION_H) == -1)
     {
         goto bad;
     }

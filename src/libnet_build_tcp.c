@@ -38,7 +38,7 @@ libnet_build_tcp(
             uint8_t control, uint16_t win, uint16_t sum, uint16_t urg, uint16_t h_len,
             const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    int n, offset;
+    int offset;
     libnet_pblock_t *p = NULL;
     libnet_ptag_t ptag_data = 0;
     struct libnet_tcp_hdr tcp_hdr;
@@ -77,8 +77,7 @@ libnet_build_tcp(
     tcp_hdr.th_sum     = (sum ? htons(sum) : 0);   /* checksum */ 
     tcp_hdr.th_urp     = htons(urg);          /* urgent pointer */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&tcp_hdr, LIBNET_TCP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&tcp_hdr, LIBNET_TCP_H) == -1)
     {
         goto bad;
     }
@@ -136,8 +135,7 @@ libnet_build_tcp(
             goto bad;
         }
 
-        n = libnet_pblock_append(l, p_data, payload, payload_s);
-        if (n == -1)
+        if (libnet_pblock_append(l, p_data, payload, payload_s) == -1)
         {
             goto bad;
         }
@@ -182,7 +180,7 @@ libnet_build_tcp_options(const uint8_t *options, uint32_t options_s, libnet_t *l
 libnet_ptag_t ptag)
 {
     static const uint8_t padding[] = { 0 };
-    int n, offset, underflow;
+    int offset, underflow;
     uint32_t i, j, adj_size;
     libnet_pblock_t *p, *p_temp;
     struct libnet_ipv4_hdr *ip_hdr;
@@ -239,14 +237,12 @@ libnet_ptag_t ptag)
         return (-1);
     }
 
-    n = libnet_pblock_append(l, p, options, options_s);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, options, options_s) == -1)
     {
         goto bad;
     }
 
-    n = libnet_pblock_append(l, p, padding, adj_size - options_s);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, padding, adj_size - options_s) == -1)
     {
         goto bad;
     }

@@ -83,8 +83,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     ntp_hdr.ntp_xmt_ts.integer      = htonl(xmt_ts_int);
     ntp_hdr.ntp_xmt_ts.fraction     = htonl(xmt_ts_frac);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&ntp_hdr, LIBNET_NTP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&ntp_hdr, LIBNET_NTP_H) == -1)
     {
         goto bad;
     }

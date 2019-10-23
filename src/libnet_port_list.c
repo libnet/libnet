@@ -40,7 +40,8 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
     char libnet_plist_legal_tokens[] = "0123456789,- ";
     libnet_plist_t *tmp;
     char *tok;
-    int i, j, valid_token, cur_node;
+    int i, valid_token, cur_node;
+    size_t j;
     uint16_t *all_lists_tmp;
     static uint8_t cur_id;
 

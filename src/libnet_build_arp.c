@@ -67,32 +67,27 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     arp_hdr.ar_pln = pln;              /* protocol address length */
     arp_hdr.ar_op  = htons(op);        /* opcode command */
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&arp_hdr, LIBNET_ARP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&arp_hdr, LIBNET_ARP_H) == -1)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad; 
     }
-    n = libnet_pblock_append(l, p, sha, hln);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, sha, hln) == -1)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad;
     }
-    n = libnet_pblock_append(l, p, spa, pln);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, spa, pln) == -1)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad;
     }
-    n = libnet_pblock_append(l, p, tha, hln);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, tha, hln) == -1)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad;
     } 
-    n = libnet_pblock_append(l, p, tpa, pln);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, tpa, pln) == -1)
     {
         /* err msg set in libnet_pblock_append() */
         goto bad;

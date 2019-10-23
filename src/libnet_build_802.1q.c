@@ -67,8 +67,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
             | (vlan_id & LIBNET_802_1Q_VIDMASK));
     _802_1q_hdr.vlan_len = htons(len_proto);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&_802_1q_hdr, LIBNET_802_1Q_H);
-    if (n == (uint32_t)-1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&_802_1q_hdr, LIBNET_802_1Q_H) == -1)
     {
         goto bad;
     }

@@ -63,8 +63,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     _802_2_hdr.llc_ssap = ssap;
     _802_2_hdr.llc_control = control;
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2_H);
-    if (n == (uint32_t)-1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr,
+                             LIBNET_802_2_H) == -1)
     {
         goto bad;
     }
@@ -113,8 +113,7 @@ libnet_t *l, libnet_ptag_t ptag)
     memcpy(_802_2_hdr.snap_oui, oui, 3);
     _802_2_hdr.snap_type = htons(type);
 
-    n = libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2SNAP_H);
-    if (n == -1)
+    if (libnet_pblock_append(l, p, (uint8_t *)&_802_2_hdr, LIBNET_802_2SNAP_H) == -1)
     {
         goto bad;
     }

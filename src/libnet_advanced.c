@@ -81,7 +81,7 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
 int
 libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
-    int c;
+    ssize_t c;
 
     if (l->injection_type != LIBNET_LINK_ADV)
     {
@@ -92,7 +92,7 @@ libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
     c = libnet_write_link(l, packet, packet_s);
 
     /* do statistics */
-    if (c == packet_s)
+    if (c == (ssize_t)packet_s)
     {
         l->stats.packets_sent++;
         l->stats.bytes_written += c;
@@ -115,7 +115,7 @@ libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 int
 libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
-    int c;
+    ssize_t c;
 
     if (l->injection_type != LIBNET_RAW4_ADV)
     {
@@ -126,7 +126,7 @@ libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
     c = libnet_write_raw_ipv4(l, packet, packet_s);
 
     /* do statistics */
-    if (c == packet_s)
+    if (c == (ssize_t)packet_s)
     {
         l->stats.packets_sent++;
         l->stats.bytes_written += c;
