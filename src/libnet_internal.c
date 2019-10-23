@@ -102,8 +102,8 @@ libnet_diag_dump_context(libnet_t *l)
             break;
     }
     
-    fprintf(stderr, "pblock start:\t%p\n", l->protocol_blocks);
-    fprintf(stderr, "pblock end:\t%p\n", l->pblock_end);
+    fprintf(stderr, "pblock start:\t%p\n", (void*)l->protocol_blocks);
+    fprintf(stderr, "pblock end:\t%p\n", (void*)l->pblock_end);
     fprintf(stderr, "link type:\t%d\n", l->link_type);
     fprintf(stderr, "link offset:\t%d\n", l->link_offset);
     fprintf(stderr, "aligner:\t%d\n", l->aligner);
@@ -128,15 +128,15 @@ libnet_diag_dump_pblock(libnet_t *l)
         fprintf(stderr, "pblock type:\t%s\n", 
                 libnet_diag_dump_pblock_type(p->type));
         fprintf(stderr, "ptag number:\t%d\n", p->ptag);
-        fprintf(stderr, "pblock address:\t%p\n", p);
-        fprintf(stderr, "next pblock\t%p ", p->next);
+        fprintf(stderr, "pblock address:\t%p\n", (void*)p);
+        fprintf(stderr, "next pblock\t%p ", (void*)p->next);
         if (p->next)
         {
             fprintf(stderr, "(%s)",
                     libnet_diag_dump_pblock_type(p->next->type));
         }
         fprintf(stderr, "\n");
-        fprintf(stderr, "prev pblock\t%p ", p->prev);
+        fprintf(stderr, "prev pblock\t%p ", (void*)p->prev);
         if (p->prev)
         {
             fprintf(stderr, "(%s)",
