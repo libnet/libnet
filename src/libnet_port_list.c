@@ -250,16 +250,17 @@ libnet_plist_chain_dump_string(libnet_plist_t *plist)
     {
         if (plist->bport == plist->eport)
         {
-            i = snprintf(&buf[j], BUFSIZ, "%d", plist->bport);
+            i = snprintf(&buf[j], BUFSIZ-j, "%d", plist->bport);
         }
         else
         {
-            i = snprintf(&buf[j], BUFSIZ, "%d-%d", plist->bport, plist->eport);
+            i = snprintf(&buf[j], BUFSIZ-j, "%d-%d", plist->bport, plist->eport);
         }
         j += i;
         if (plist->next)
         {
-            snprintf(&buf[j++], BUFSIZ, ",");
+            snprintf(&buf[j], BUFSIZ-j, ",");
+            j++;
         }
     }
     return (strdup(buf));       /* XXX - reentrancy == no */
