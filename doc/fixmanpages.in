@@ -32,10 +32,9 @@ test -d $MANDIR/man3 || die "Could not locate $MANDIR/man3 directory."
 find $MANDIR/man3/ -name "libnet.h.3" -exec sh -c 'rm -f "$1"' _ {} \;
 
 # Let's create libnet.3 before dealing with the rest.
-# BTW: We're using this date format because Doxygen generated man
-# pages have them set like this and our date format shouldn't look different.
+# pod2man's ISO 8601 date format is fine, even if it differs from doxygen's
 
-pod2man -d "$(LC_ALL=C date -u -r @top_srcdir@/doc/libnet.Pod +%d\ %B\ %Y)" -n LIBNET -c "libnet Programmers Guide" -s 3 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" @top_srcdir@/doc/libnet.Pod man/man3/libnet.3 || die "Could not create libnet.3 in $MANDIR/man/man3."
+pod2man -n LIBNET -c "libnet Programmers Guide" -s 3 -r "@PACKAGE_NAME@-@PACKAGE_VERSION@" @top_srcdir@/doc/libnet.Pod man/man3/libnet.3 || die "Could not create libnet.3 in $MANDIR/man/man3."
 
 # pod2html --title="libnet Programmers Guide" --noindex --infile=libnet.Pod --outfile=libnet.html
 
