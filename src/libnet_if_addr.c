@@ -116,7 +116,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     }
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
     {
-        if (ifa->ifa_flags & IFF_LOOPBACK)
+        if (ifa->ifa_flags & IFF_LOOPBACK || ifa->ifa_addr == NULL)
             continue;
 
         if (ifa->ifa_addr->sa_family == AF_INET )
