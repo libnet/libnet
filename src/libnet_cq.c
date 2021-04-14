@@ -128,7 +128,7 @@ libnet_cq_add(libnet_t *l, char *label)
     }
 
     new = (libnet_cq_t *)malloc(sizeof (libnet_cq_t));
-    if (l_cq == NULL)
+    if (new == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): can't malloc new context queue: %s",
