@@ -101,6 +101,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
         all_lists = all_lists_tmp;
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                     "libnet_build_plist_chain: realloc %s", strerror(errno));
+        free(tmp);
         *plist = NULL;
         return(-1);
     }

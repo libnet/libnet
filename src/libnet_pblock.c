@@ -489,7 +489,6 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
                 {
                     if (q->flags & LIBNET_PBLOCK_DO_CHECKSUM)
                     {
-                        uint32_t c;
                         uint8_t* end = *packet + l->aligner + l->total_size;
                         uint8_t* beg = *packet + n;
                         int ip_offset = calculate_ip_offset(l, q);
