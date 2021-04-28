@@ -103,6 +103,7 @@ libnet_check_iface(libnet_t *l)
 int
 libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
 {
+    (void)dev; /* unused */
     static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
     struct ifaddrs *ifap, *ifa;
     int i = 0;

@@ -38,6 +38,8 @@ uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength,
 uint8_t *cdata, uint32_t vflavor, uint32_t vlength, const uint8_t *vdata, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
+    (void)cdata; /* unused */
+    (void)vdata; /* unused */
     uint32_t n, h;
     libnet_pblock_t *p;
     struct libnet_rpc_call_tcp_hdr rpc_hdr;
