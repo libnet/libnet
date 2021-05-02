@@ -70,7 +70,7 @@ clear_cq_lock(uint32_t x)
 int 
 libnet_cq_add(libnet_t *l, char *label)
 {
-    libnet_cq_t *new;
+    libnet_cq_t *new_cq;
 
     if (l == NULL) 
     {
@@ -127,8 +127,8 @@ libnet_cq_add(libnet_t *l, char *label)
         return (-1);
     }
 
-    new = (libnet_cq_t *)malloc(sizeof (libnet_cq_t));
-    if (new == NULL)
+    new_cq = (libnet_cq_t *)malloc(sizeof (libnet_cq_t));
+    if (new_cq == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): can't malloc new context queue: %s",
@@ -136,17 +136,17 @@ libnet_cq_add(libnet_t *l, char *label)
         return (-1);
     }
 
-    new->context = l;
+    new_cq->context = l;
 
     /* label the context with the user specified string */
     strncpy(l->label, label, LIBNET_LABEL_SIZE);
     l->label[LIBNET_LABEL_SIZE -1] = '\0';
 
-    new->next = l_cq;
-    new->prev = NULL;
+    new_cq->next = l_cq;
+    new_cq->prev = NULL;
 
-    l_cq->prev = new;
-    l_cq = new;
+    l_cq->prev = new_cq;
+    l_cq = new_cq;
 
     /* track the number of nodes in the context queue */
     l_cqd.node++;
