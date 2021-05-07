@@ -310,6 +310,17 @@ struct libnet_lldp_hdr
 #define LIBNET_LLDP_TLV_HDR_SIZE 0x02   /* LLDP TLV's header size  2 bytes */
 #define LIBNET_LLDP_SUBTYPE_SIZE 0x01   /* LLDP Subtype field size 2 bytes */
     uint16_t tlv_info;                  /* Type = 7 bits, Length = 9 bits */
+
+/* Mandatory TLVs Types */
+#define LIBNET_LLDP_CHASSIS_ID 0x01     /* Chassis ID     (Mandatory) */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_RESERVED  0x00
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_COMPONENT 0x01 /* Chassis Component */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_IF_ALIAS  0x02 /* Interface Alias */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_PORT      0x03 /* Port Component */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_MAC       0x04 /* MAC Address */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_NETWORK   0x05 /* Network Address */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_IF_NAME   0x06 /* Interface Name */
+    #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_LOCALLY   0x07 /* Locally Assigned */
 };
 
 /*
