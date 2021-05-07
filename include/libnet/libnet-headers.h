@@ -50,6 +50,7 @@
 #define LIBNET_BGP4_UPDATE_H    0x04    /**< BGP open header:      4 bytes */
 #define LIBNET_BGP4_NOTIFICATION_H 0x02 /**< BGP notif. header:    2 bytes */
 #define LIBNET_CDP_H            0x08    /**< CDP header base:      8 bytes */
+#define LIBNET_LLDP_H           0x02    /**< LLDP header base:     2 bytes */
 #define LIBNET_DHCPV4_H         0xf0    /**< DHCP v4 header:     240 bytes */
 #define LIBNET_UDP_DNSV4_H      0x0c    /**< UDP DNS v4 header:   12 bytes */
 #define LIBNET_TCP_DNSV4_H      0x0e    /**< TCP DNS v4 header:   14 bytes */
@@ -297,7 +298,19 @@ struct libnet_bgp4_notification_hdr
     uint8_t err_subcode;
 };
 
+/*
+ * LLDP header
+ * Link Layer Discovery Protocol
+ * Base header size : 2 bytes
+ */
+struct libnet_lldp_hdr
+{
+#define LIBNET_LLDP_ETH_TYPE (0x88cc)   /* LLDP Ethernet type */
 
+#define LIBNET_LLDP_TLV_HDR_SIZE 0x02   /* LLDP TLV's header size  2 bytes */
+#define LIBNET_LLDP_SUBTYPE_SIZE 0x01   /* LLDP Subtype field size 2 bytes */
+    uint16_t tlv_info;                  /* Type = 7 bits, Length = 9 bits */
+};
 
 /*
  *  For checksum stuff -- IANA says 135-254 is "unassigned" as of 12.2001.
