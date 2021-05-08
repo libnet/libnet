@@ -43,6 +43,7 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_build_token_ring.c \
 			libnet_build_udp.c \
 			libnet_build_vrrp.c \
+			libnet_build_lldp.c \
 			libnet_advanced.c \
 			libnet_checksum.c \
 			libnet_cq.c \
