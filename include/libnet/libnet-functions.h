@@ -747,6 +747,21 @@ const uint8_t *const value, const uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * Builds a LLDP Port ID TLV. The Port ID TLV is the _second_ mandatory TLV in the LLDPDU.
+ * @param subtype Port ID Subtype
+ * @param value the Port ID string
+ * @param value_s length of value argument
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
+const uint8_t *const value, const uint8_t value_s,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP)
  * echo request/reply header
  * @param type type of ICMP packet (should be ICMP_ECHOREPLY or ICMP_ECHO)
