@@ -312,6 +312,8 @@ struct libnet_lldp_hdr
     uint16_t tlv_info;                  /* Type = 7 bits, Length = 9 bits */
 
 /* Mandatory TLVs Types */
+#define LIBNET_LLDP_END_LLDPDU 0x00     /* End of LLDPDU  (Mandatory) */
+
 #define LIBNET_LLDP_CHASSIS_ID 0x01     /* Chassis ID     (Mandatory) */
     #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_RESERVED  0x00
     #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_COMPONENT 0x01 /* Chassis Component */
