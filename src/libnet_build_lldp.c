@@ -257,6 +257,65 @@ bad:
   return (-1);
 }
 
+LIBNET_API
+libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *const value,
+const uint16_t value_s, libnet_t *l, libnet_ptag_t ptag)
+{
+  uint32_t n, h;
+  libnet_pblock_t *p;
+  struct libnet_lldp_hdr hdr;
+  memset(&hdr, 0, sizeof(struct libnet_lldp_hdr));
+
+  if (l == NULL) {
+    return (-1);
+  }
+
+  if(value == NULL)
+  {
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+    "%s(): Organization Specific string is NULL", __func__);
+    return (-1);
+  }
+
+  if((value_s < 4) || (value_s > 511))
+  {
+      snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+      "%s(): Incorrect TLV information string length", __func__);
+      return (-1);
+  }
+
+  LIBNET_LLDP_TLV_SET_TYPE(hdr.tlv_info, LIBNET_LLDP_ORG_SPEC);
+  LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, value_s);
+
+  /* size of memory block */
+  n = h = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
+          value_s;                   /* TLV Information length*/
+
+  /*
+   *  Find the existing protocol block if a ptag is specified, or create
+   *  a new one.
+   */
+  p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_ORG_SPEC_H);
+  if (p == NULL) {
+    return (-1);
+  }
+
+  const uint16_t type_and_len = htons(hdr.tlv_info);
+  if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
+  {
+    goto bad;
+  }
+
+  if (libnet_pblock_append(l, p, value, value_s) == -1) {
+    goto bad;
+  }
+
+  return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_LLDP_ORG_SPEC_H));
+bad:
+  libnet_pblock_delete(l, p);
+  return (-1);
+}
+
 /**
  * Local Variables:
  *  indent-tabs-mode: nil
