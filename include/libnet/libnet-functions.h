@@ -799,6 +799,15 @@ libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *const value,
 const uint16_t value_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * At the moment, this function is not implemented.
+ * This stub may be useful in feature to let to the user
+ *  to build the LLDPDU in one function by passing corresponding
+ *  arguments.
+ */
+LIBNET_API
+libnet_ptag_t libnet_build_lldp(libnet_t *l, libnet_ptag_t ptag);
+
+/**
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP)
  * echo request/reply header
  * @param type type of ICMP packet (should be ICMP_ECHOREPLY or ICMP_ECHO)
