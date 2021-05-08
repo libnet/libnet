@@ -762,6 +762,18 @@ const uint8_t *const value, const uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * Builds a LLDP TTL TLV. The TTL TLV is the _third_ mandatory TLV in the LLDPDU.
+ * @param ttl number of seconds
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t libnet_build_lldp_ttl(const uint16_t ttl,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP)
  * echo request/reply header
  * @param type type of ICMP packet (should be ICMP_ECHOREPLY or ICMP_ECHO)
