@@ -321,6 +321,17 @@ struct libnet_lldp_hdr
     #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_NETWORK   0x05 /* Network Address */
     #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_IF_NAME   0x06 /* Interface Name */
     #define LIBNET_LLDP_CHASSIS_ID_SUBTYPE_LOCALLY   0x07 /* Locally Assigned */
+
+#define LIBNET_LLDP_PORT_ID    0x02    /* Port ID         (Mandatory) */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_RESERVED     0x00
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_IF_ALIAS     0x01 /* Interface Alias */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_MAC          0x03 /* MAC Address */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_NETWORK      0x04 /* Network Address */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_IF_NAME      0x05 /* Interface Name */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_AGENT_ID     0x06 /* Agent circuit ID */
+    #define LIBNET_LLDP_PORT_ID_SUBTYPE_LOCALLY      0x07 /* Locally Assigned */
+                                                     /* 8 - 255 Reserved */
+
 };
 
 /*
