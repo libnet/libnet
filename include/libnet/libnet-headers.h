@@ -332,6 +332,8 @@ struct libnet_lldp_hdr
     #define LIBNET_LLDP_PORT_ID_SUBTYPE_LOCALLY      0x07 /* Locally Assigned */
                                                      /* 8 - 255 Reserved */
 
+#define LIBNET_LLDP_TTL        0x03    /* Time To Live    (Mandatory) */
+
 };
 
 /*
