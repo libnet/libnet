@@ -52,7 +52,8 @@ samples = arp \
           test_ipv6_icmpv4 \
           test_ipv4_options \
           tring_tcp1 \
-          tring_tcp2
+          tring_tcp2 \
+          lldp
 
 noinst_PROGRAMS = $(samples)
 
@@ -104,6 +105,7 @@ tring_tcp1_SOURCES        = tring_tcp1.c
 tring_tcp2_SOURCES        = tring_tcp2.c
 udp1_SOURCES              = udp1.c
 udp2_SOURCES              = udp2.c
+lldp_SOURCES              = lldp.c
 
 LDADD      = $(top_builddir)/src/libnet.la
 
