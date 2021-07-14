@@ -142,6 +142,9 @@ if (payload_s)                                                               \
     }                                                                        \
 }                                                                            \
 
+/* used internally for LLDP stuff */
+#define LIBNET_LLDP_TLV_SET_TYPE(tlv, type) (tlv |= (type << 9))
+#define LIBNET_LLDP_TLV_SET_LEN(tlv, len)   (tlv |= len)
 
 /* used internally for checksum stuff */
 #define LIBNET_CKSUM_CARRY(x) \

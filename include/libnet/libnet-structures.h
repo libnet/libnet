@@ -156,6 +156,12 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_ICMPV6_NDP_NSOL_H 0x43    /* ICMPv6 NDP neighbor solicitation header */
 #define LIBNET_PBLOCK_ICMPV6_NDP_NADV_H 0x44    /* ICMPv6 NDP neighbor advertisement header */
 #define LIBNET_PBLOCK_ICMPV6_NDP_OPT_H  0x45    /* ICMPv6 NDP option */
+#define LIBNET_PBLOCK_LLDP_H            0x50    /* LLDP header */
+#define LIBNET_PBLOCK_LLDP_CHASSIS_H    0x51    /* LLDP Chassis header */
+#define LIBNET_PBLOCK_LLDP_PORT_H       0x52    /* LLDP Port header */
+#define LIBNET_PBLOCK_LLDP_TTL_H        0x53    /* LLDP TTL header */
+#define LIBNET_PBLOCK_LLDP_END_H        0x54    /* LLDP End of LLDPDU header */
+#define LIBNET_PBLOCK_LLDP_ORG_SPEC_H   0x55    /* LLDP Organization Specific header */
 
     uint8_t flags;                             /* control flags */
 #define LIBNET_PBLOCK_DO_CHECKSUM       0x01    /* needs a checksum */

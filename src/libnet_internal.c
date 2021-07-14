@@ -308,6 +308,18 @@ libnet_diag_dump_pblock_type(uint8_t type)
             return ("icmpv6_ndp_nadv");
         case LIBNET_PBLOCK_ICMPV6_NDP_OPT_H:
             return ("icmpv6_ndp_opt");
+        case LIBNET_PBLOCK_LLDP_H:
+            return ("lldp");
+        case LIBNET_PBLOCK_LLDP_CHASSIS_H:
+            return ("lldp_chassis_id");
+        case LIBNET_PBLOCK_LLDP_PORT_H:
+            return ("lldp_port_id");
+        case LIBNET_PBLOCK_LLDP_TTL_H:
+            return ("lldp_ttl");
+        case LIBNET_PBLOCK_LLDP_END_H:
+            return ("lldp_end_lldpdu");
+        case LIBNET_PBLOCK_LLDP_ORG_SPEC_H:
+            return ("lldp_org_specific");
     }
     return ("unrecognized pblock");
 }
