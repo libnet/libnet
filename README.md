@@ -58,7 +58,7 @@ systems, `apt` can be used:
 
 ### Using Conan
 
-Libnet now is available on Conan Center.  
+Libnet now is available on [Conan Center](https://conan.io/center/libnet).  
 Please add `libnet/1.2` to your `conanfile.txt`  
 
 ### Building the Documentation
