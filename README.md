@@ -56,6 +56,11 @@ systems, `apt` can be used:
 
     sudo apt install autoconf automake libtool
 
+### Using Conan
+
+Libnet now is available on [Conan Center](https://conan.io/center/libnet).  
+Please add `libnet/1.2` to your `conanfile.txt`  
+
 ### Building the Documentation
 
 To build the documentation (optional) you need doxygen and pod2man:
