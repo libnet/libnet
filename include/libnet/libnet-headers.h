@@ -852,7 +852,6 @@ struct libnet_ipv6_hdr
     uint8_t ip_nh;           /* next header */
     uint8_t ip_hl;           /* hop limit */
     struct libnet_in6_addr ip_src, ip_dst; /* source and dest address */
-
 };
 
 /*
