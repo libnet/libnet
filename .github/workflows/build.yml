@@ -31,21 +31,3 @@ jobs:
           make V=1
           make install-strip DESTDIR=/tmp
           tree /tmp/usr
-  debian:
-    # Verify Debian package building
-    runs-on: ubuntu-latest
-    container: debian:stable
-    steps:
-      - uses: actions/checkout@v2
-      - name: Installing dependencies
-        run: |
-          apt-get update
-          apt-get install -y build-essential autoconf automake doxygen \
-                             dpkg-dev debhelper devscripts
-      - name: Configure
-        run: |
-          ./autogen.sh
-          ./configure
-      - name: Building Debian package
-        run: |
-          make package
