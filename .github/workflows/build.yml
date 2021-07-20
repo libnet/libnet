@@ -11,21 +11,37 @@ env:
 
 jobs:
   build:
-    # Verify we can build on latest Ubuntu with both gcc and clang
-    name: ${{ matrix.compiler }}
     strategy:
       matrix:
-        compiler: [gcc, clang]
-    runs-on: ubuntu-latest
+        name: [ ubuntu-latest-gcc, ubuntu-latest-clang, macos-latest-clang ]
+        include:
+          - name: ubuntu-latest-gcc
+            os: ubuntu-latest
+            cc: gcc
+          - name: ubuntu-latest-clang
+            os: ubuntu-latest
+            cc: clang
+          - name: macos-latest-clang
+            os: macos-latest
+            cc: clang
+
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Installing dependencies
+      - name: Install MacOS dependencies
+        if: startsWith(matrix.os,'macos')
         run: |
+          brew update
+          brew install automake autoconf doxygen
+      - name: Install Linux dependencies
+        if: startsWith(matrix.os,'ubuntu')
+        run: |
+          sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake clang tree doxygen
       - name: Configure
         run: |
           ./autogen.sh
-          ./configure --prefix=/usr CC=${{ matrix.compiler }}
+          ./configure --prefix=/usr CC=${{ matrix.cc }}
       - name: Build
         run: |
           make V=1
