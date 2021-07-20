@@ -32,7 +32,7 @@ jobs:
         if: startsWith(matrix.os,'macos')
         run: |
           brew update
-          brew install automake autoconf tree doxygen
+          brew install automake tree doxygen
       - name: Install Linux dependencies
         if: startsWith(matrix.os,'ubuntu')
         run: |
