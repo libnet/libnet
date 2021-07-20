@@ -362,7 +362,7 @@ AC_MSG_RESULT([
     Prefix ........................ ${prefix}
 
     Cross-compiling ............... ${cross_compiling}
-    Compiler is GCC ............... ${ac_cv_c_compiler_gnu}
+    Compiler is GNU (compatible) .. ${ac_cv_c_compiler_gnu}
     CC ............................ ${CC}
     CFLAGS ........................ ${CFLAGS}
     LD ............................ ${LD}
