@@ -58,25 +58,24 @@ main(int argc, char **argv)
     char srcname[100], dstname[100];
     uint8_t payload[56];
 
-    packet_amt  = 0;
-    burst_int   = 0;
-    burst_amt   = 1;
+    packet_amt = 0;
+    burst_int = 0;
+    burst_amt = 1;
     tcp = ip_frag = ip = LIBNET_PTAG_INITIALIZER;
 
     printf("libnet 1.1 syn flooding: TCP IPv6 fragments [raw]\n");
-    
-    l = libnet_init(
-            LIBNET_RAW6,                            /* injection type */
-            NULL,                                   /* network interface */
-            errbuf);                                /* error buffer */
+
+    l = libnet_init(LIBNET_RAW6,                    /* injection type */
+                    NULL,                           /* network interface */
+                    errbuf);                        /* error buffer */
 
     if (l == NULL)
     {
         fprintf(stderr, "libnet_init() failed: %s", errbuf);
-        exit(EXIT_FAILURE); 
+        exit(EXIT_FAILURE);
     }
 
-    while((c = getopt(argc, argv, "t:a:i:b:")) != EOF)
+    while ((c = getopt(argc, argv, "t:a:i:b:")) != EOF)
     {
         switch (c)
         {
@@ -89,21 +88,20 @@ main(int argc, char **argv)
                 *cp++ = 0;
                 dst_prt = (u_short)atoi(cp);
                 dst_ip = libnet_name2addr6(l, optarg, LIBNET_RESOLVE);
-                if (strncmp((char*)&dst_ip,
-                   (char*)&in6addr_error,sizeof(in6addr_error))==0)
+                if (strncmp((char *)&dst_ip, (char *)&in6addr_error, sizeof(in6addr_error)) == 0)
                 {
                     fprintf(stderr, "Bad IPv6 address: %s\n", optarg);
                     exit(EXIT_FAILURE);
                 }
                 break;
             case 'a':
-                packet_amt  = atoi(optarg);
+                packet_amt = atoi(optarg);
                 break;
             case 'i':
-                burst_int   = atoi(optarg);
+                burst_int = atoi(optarg);
                 break;
             case 'b':
-                burst_amt   = atoi(optarg);
+                burst_amt = atoi(optarg);
                 break;
             default:
                 usage(argv[0]);
@@ -114,13 +112,12 @@ main(int argc, char **argv)
     src_ip = libnet_name2addr6(l, "0:0:0:0:0:0:0:1", LIBNET_DONT_RESOLVE);
     /* src_ip = libnet_name2addr6(l, 
        "3ffe:400:60:4d:250:fcff:fe2c:a9cd", LIBNET_DONT_RESOLVE);
-	dst_prt = 113;
-	dst_ip = libnet_name2addr6(l, "nathan.ip6.uni-ulm.de", LIBNET_RESOLVE);
-	packet_amt = 1;
-    */
+       dst_prt = 113;
+       dst_ip = libnet_name2addr6(l, "nathan.ip6.uni-ulm.de", LIBNET_RESOLVE);
+       packet_amt = 1;
+     */
 
-    if (!dst_prt || strncmp((char*)&dst_ip,
-       (char*)&in6addr_error,sizeof(in6addr_error))==0 || !packet_amt)
+    if (!dst_prt || strncmp((char *)&dst_ip, (char *)&in6addr_error, sizeof(in6addr_error)) == 0 || !packet_amt)
     {
         usage(argv[0]);
         exit(EXIT_FAILURE);
@@ -130,72 +127,43 @@ main(int argc, char **argv)
     libnet_addr2name6_r(src_ip, LIBNET_RESOLVE, srcname, sizeof(srcname));
     libnet_addr2name6_r(dst_ip, LIBNET_RESOLVE, dstname, sizeof(dstname));
 
-    for(; burst_amt--;)
+    for (; burst_amt--;)
     {
         for (i = 0; i < packet_amt; i++)
         {
-            for (j = 0; j < 56; j++) payload[j] = 'A' + ((char)(j % 26));
+            for (j = 0; j < 56; j++)
+                payload[j] = 'A' + ((char)(j % 26));
 
-            tcp = libnet_build_tcp(
-                src_prt = libnet_get_prand(LIBNET_PRu16),
-                dst_prt,
-                libnet_get_prand(LIBNET_PRu32),
-                libnet_get_prand(LIBNET_PRu32),
-                TH_SYN,
-                libnet_get_prand(LIBNET_PRu16),
-                0,
-                0,
-                LIBNET_TCP_H,
-                NULL,
-                0,
-                l,
-                tcp);
+            tcp = libnet_build_tcp(src_prt = libnet_get_prand(LIBNET_PRu16),
+                                   dst_prt,
+                                   libnet_get_prand(LIBNET_PRu32),
+                                   libnet_get_prand(LIBNET_PRu32),
+                                   TH_SYN, libnet_get_prand(LIBNET_PRu16), 0, 0, LIBNET_TCP_H, NULL, 0, l, tcp);
             if (tcp == -1)
             {
-                fprintf(stderr, "Can't build or modify TCP header: %s\n",
-                        libnet_geterror(l));
+                fprintf(stderr, "Can't build or modify TCP header: %s\n", libnet_geterror(l));
                 return (EXIT_FAILURE);
             }
 
-            ip_frag = libnet_build_ipv6_frag(
-                IPPROTO_TCP,                  /* next header */
-                0,                            /* reserved */
-                0,                            /* frag bits */
-                1,                            /* ip id */
-                NULL,
-                0,
-                l,
-                ip_frag);
+            ip_frag = libnet_build_ipv6_frag(IPPROTO_TCP,       /* next header */
+                                             0,     /* reserved */
+                                             0,     /* frag bits */
+                                             1,     /* ip id */
+                                             NULL, 0, l, ip_frag);
             if (ip_frag == -1)
             {
-                fprintf(stderr, "Can't build or modify TCP header: %s\n",
-                        libnet_geterror(l));
+                fprintf(stderr, "Can't build or modify TCP header: %s\n", libnet_geterror(l));
                 return (EXIT_FAILURE);
             }
 
-            ip = libnet_build_ipv6(
-                0, 0,
- 	        LIBNET_TCP_H,
- 	        IPPROTO_TCP,
-	        64,
-	        src_ip,
-	        dst_ip,
-                NULL,
-                0,
-                l,
-                ip);
+            ip = libnet_build_ipv6(0, 0, LIBNET_TCP_H, IPPROTO_TCP, 64, src_ip, dst_ip, NULL, 0, l, ip);
             if (ip == -1)
             {
-                fprintf(stderr, "Can't build or modify TCP header: %s\n",
-                        libnet_geterror(l));
+                fprintf(stderr, "Can't build or modify TCP header: %s\n", libnet_geterror(l));
                 return (EXIT_FAILURE);
             }
 
-            printf("%15s/%5d -> %15s/%5d\n", 
-                   srcname,
-                   ntohs(src_prt),
-                   dstname,
-                   dst_prt);
+            printf("%15s/%5d -> %15s/%5d\n", srcname, ntohs(src_prt), dstname, dst_prt);
 
             c = libnet_write(l);
             if (c == -1)
@@ -223,11 +191,17 @@ void
 usage(char *nomenclature)
 {
     fprintf(stderr,
-        "\n\nusage: %s -t -a [-i -b]\n"
-        "\t-t target, (ip6:address/port, e.g. ::1/23)\n"
-        "\t-a number of packets to send per burst\n"
-        "\t-i packet burst sending interval (defaults to 0)\n"
-        "\t-b number packet bursts to send (defaults to 1)\n" , nomenclature);
+            "\n\nusage: %s -t -a [-i -b]\n"
+            "\t-t target, (ip6:address/port, e.g. ::1/23)\n"
+            "\t-a number of packets to send per burst\n"
+            "\t-i packet burst sending interval (defaults to 0)\n"
+            "\t-b number packet bursts to send (defaults to 1)\n", nomenclature);
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ *  c-file-offsets: ((case-label . +))
+ * End:
+ */

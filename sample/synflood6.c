@@ -55,29 +55,28 @@ main(int argc, char **argv)
     char *cp;
     char errbuf[LIBNET_ERRBUF_SIZE];
     int i, c, packet_amt, burst_int, burst_amt, build_ip;
-	char srcname[100],dstname[100];
+    char srcname[100], dstname[100];
 
-    packet_amt  = 0;
-    burst_int   = 0;
-    burst_amt   = 1;
+    packet_amt = 0;
+    burst_int = 0;
+    burst_amt = 1;
 
     printf("libnet 1.1 syn flooding: TCP6[raw]\n");
 
     /*
      *  Initialize the library.  Root priviledges are required.
      */
-    l = libnet_init(
-            LIBNET_RAW6,                            /* injection type */
-            NULL,                                   /* network interface */
-            errbuf);                                /* error buffer */
+    l = libnet_init(LIBNET_RAW6,                    /* injection type */
+                    NULL,                           /* network interface */
+                    errbuf);                        /* error buffer */
 
     if (l == NULL)
     {
         fprintf(stderr, "libnet_init() failed: %s", errbuf);
-        exit(EXIT_FAILURE); 
+        exit(EXIT_FAILURE);
     }
 
-    while((c = getopt(argc, argv, "t:a:i:b:")) != EOF)
+    while ((c = getopt(argc, argv, "t:a:i:b:")) != EOF)
     {
         switch (c)
         {
@@ -89,21 +88,21 @@ main(int argc, char **argv)
                 }
                 *cp++ = 0;
                 dst_prt = (u_short)atoi(cp);
-				dst_ip = libnet_name2addr6(l, optarg, 1);
-                if (strncmp((char*)&dst_ip,(char*)&in6addr_error,sizeof(in6addr_error))==0)
+                dst_ip = libnet_name2addr6(l, optarg, 1);
+                if (strncmp((char *)&dst_ip, (char *)&in6addr_error, sizeof(in6addr_error)) == 0)
                 {
                     fprintf(stderr, "Bad IP6 address: %s\n", optarg);
                     exit(EXIT_FAILURE);
                 }
                 break;
             case 'a':
-                packet_amt  = atoi(optarg);
+                packet_amt = atoi(optarg);
                 break;
             case 'i':
-                burst_int   = atoi(optarg);
+                burst_int = atoi(optarg);
                 break;
             case 'b':
-                burst_amt   = atoi(optarg);
+                burst_amt = atoi(optarg);
                 break;
             default:
                 usage(argv[0]);
@@ -111,66 +110,46 @@ main(int argc, char **argv)
         }
     }
 
-	src_ip = libnet_name2addr6(l, "0:0:0:0:0:0:0:1", LIBNET_DONT_RESOLVE);
-	/*src_ip = libnet_name2addr6(l, "3ffe:400:60:4d:250:fcff:fe2c:a9cd", LIBNET_DONT_RESOLVE);
-	dst_prt = 113;
-	dst_ip = libnet_name2addr6(l, "nathan.ip6.uni-ulm.de", LIBNET_RESOLVE);
-	packet_amt = 1;*/
+    src_ip = libnet_name2addr6(l, "0:0:0:0:0:0:0:1", LIBNET_DONT_RESOLVE);
+    /*src_ip = libnet_name2addr6(l, "3ffe:400:60:4d:250:fcff:fe2c:a9cd", LIBNET_DONT_RESOLVE);
+       dst_prt = 113;
+       dst_ip = libnet_name2addr6(l, "nathan.ip6.uni-ulm.de", LIBNET_RESOLVE);
+       packet_amt = 1; */
 
-    if (!dst_prt || strncmp((char*)&dst_ip,(char*)&in6addr_error,sizeof(in6addr_error))==0 || !packet_amt)
+    if (!dst_prt || strncmp((char *)&dst_ip, (char *)&in6addr_error, sizeof(in6addr_error)) == 0 || !packet_amt)
     {
         usage(argv[0]);
         exit(EXIT_FAILURE);
     }
-	
-	
 
     libnet_seed_prand(l);
-	libnet_addr2name6_r(src_ip,1,srcname,sizeof(srcname));
-	libnet_addr2name6_r(dst_ip,1,dstname,sizeof(dstname));
+    libnet_addr2name6_r(src_ip, 1, srcname, sizeof(srcname));
+    libnet_addr2name6_r(dst_ip, 1, dstname, sizeof(dstname));
 
-    for(t = LIBNET_PTAG_INITIALIZER, build_ip = 1; burst_amt--;)
+    for (t = LIBNET_PTAG_INITIALIZER, build_ip = 1; burst_amt--;)
     {
         for (i = 0; i < packet_amt; i++)
         {
-			char payload[56];
-			int i;
-			for (i=0; i<56; i++) payload[i]='A'+((char)(i%26));
-            t = libnet_build_tcp(
-                    src_prt = libnet_get_prand(LIBNET_PRu16),
-                    dst_prt,
-                    libnet_get_prand(LIBNET_PRu32),
-                    libnet_get_prand(LIBNET_PRu32),
-                    TH_SYN,
-                    libnet_get_prand(LIBNET_PRu16),
-                    0,
-                    0,
-                    LIBNET_TCP_H,
-                    NULL,
-                    0,
-                    l,
-                    t);
+            char payload[56];
+            int i;
+
+            for (i = 0; i < 56; i++)
+                payload[i] = 'A' + ((char)(i % 26));
+
+	    src_prt = libnet_get_prand(LIBNET_PRu16);
+            t = libnet_build_tcp(src_prt,
+                                 dst_prt,
+                                 libnet_get_prand(LIBNET_PRu32),
+                                 libnet_get_prand(LIBNET_PRu32),
+                                 TH_SYN, libnet_get_prand(LIBNET_PRu16), 0, 0, LIBNET_TCP_H, NULL, 0, l, t);
 
             if (build_ip)
             {
-                build_ip = 0;				
-		printf("Packet len = %ld\n", (long)LIBNET_ICMPV6_H+sizeof(payload));
-                libnet_build_ipv6(0,0,
- 				    LIBNET_TCP_H,
- 		            IPPROTO_TCP,
-		            64,
-		            src_ip,
-		            dst_ip,
-                    NULL,
-                    0,
-                    l,
-                    0);
+                build_ip = 0;
+                printf("Packet len = %ld\n", (long)LIBNET_ICMPV6_H + sizeof(payload));
+                libnet_build_ipv6(0, 0, LIBNET_TCP_H, IPPROTO_TCP, 64, src_ip, dst_ip, NULL, 0, l, 0);
             }
-            printf("%15s/%5d -> %15s/%5d\n", 
-                    srcname,
-                    ntohs(src_prt),
-                    dstname,
-                    dst_prt);
+            printf("%15s/%5d -> %15s/%5d\n", srcname, ntohs(src_prt), dstname, dst_prt);
             c = libnet_write(l);
             if (c == -1)
             {
@@ -197,11 +176,17 @@ void
 usage(char *nomenclature)
 {
     fprintf(stderr,
-        "\n\nusage: %s -t -a [-i -b]\n"
-        "\t-t target, (ip6:address/port, e.g. ::1/23)\n"
-        "\t-a number of packets to send per burst\n"
-        "\t-i packet burst sending interval (defaults to 0)\n"
-        "\t-b number packet bursts to send (defaults to 1)\n" , nomenclature);
+            "\n\nusage: %s -t -a [-i -b]\n"
+            "\t-t target, (ip6:address/port, e.g. ::1/23)\n"
+            "\t-a number of packets to send per burst\n"
+            "\t-i packet burst sending interval (defaults to 0)\n"
+            "\t-b number packet bursts to send (defaults to 1)\n", nomenclature);
 }
 
-
+/**
+ * Local Variables:
+ *  indent-tabs-mode: nil
+ *  c-file-style: "stroustrup"
+ *  c-file-offsets: ((case-label . +))
+ * End:
+ */
