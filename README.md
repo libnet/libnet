@@ -1,4 +1,4 @@
-[![Appveyor Status][]][Appveyor] [![Travis Status][]][Travis] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
+[![Appveyor Status][]][Appveyor] [![GitHub Status][]][GitHub] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
 
 Packet Construction and Injection
 =================================
@@ -18,7 +18,7 @@ libnet are:
 - [ettercap](https://www.ettercap-project.org/)
 - [ipguard](http://ipguard.deep.perm.ru/)
 - [isic](http://isic.sourceforge.net/)
-- [nemesis](https://troglobit.com/projects/nemesis/)
+- [nemesis](https://github.com/libnet/nemesis/)
 - [packit](http://packetfactory.openwall.net/projects/packit/)
 - [tcptraceroute](https://web.archive.org/web/20130424094134/http://michael.toren.net/code/tcptraceroute/)
 - [yersinia](https://web.archive.org/web/20180522141004/http://www.yersinia.net/)
@@ -140,7 +140,7 @@ Some old docs are available at:
 [origin]:          http://packetfactory.openwall.net/projects/libnet/
 [Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
 [Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
-[Travis]:          https://travis-ci.org/libnet/libnet
-[Travis Status]:   https://travis-ci.org/libnet/libnet.png?branch=master
+[GitHub]:          https://github.com/libnet/libnet/actions/workflows/build.yml/
+[GitHub Status]:   https://github.com/libnet/libnet/actions/workflows/build.yml/badge.svg
 [CodeDocs]:        https://codedocs.xyz/libnet/libnet/
 [CodeDocs Status]: https://codedocs.xyz/libnet/libnet.svg
