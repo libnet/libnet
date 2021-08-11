@@ -8,8 +8,6 @@
 #endif
 #include "./libnet_test.h"
 
-#include <assert.h>
-
 #define DEVICE_NAME "lo"
 
 int

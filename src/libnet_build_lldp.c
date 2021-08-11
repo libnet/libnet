@@ -5,11 +5,6 @@ libnet_ptag_t libnet_build_lldp_chassis(const uint8_t subtype,
 const uint8_t *const value,const uint8_t value_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-  assert(value != NULL && "Chassis ID string cannot be a NULL");
-  assert((value_s != 0) && "Chassis ID string length must be greater or equal to 1");
-  assert(LIBNET_LLDP_TLV_HDR_SIZE == 0x02 && "TLV header size must be a 2 bytes");
-  assert(LIBNET_LLDP_SUBTYPE_SIZE == 0x01 && "Subtype field size must be 1 byte");
-
   uint32_t n, h;
   libnet_pblock_t *p;
   struct libnet_lldp_hdr hdr;
@@ -81,11 +76,6 @@ libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
 const uint8_t *const value, const uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-  assert(value != NULL && "Port ID string cannot be a NULL");
-  assert((value_s != 0) && "Port ID string length must be greater or equal to 1");
-  assert(LIBNET_LLDP_TLV_HDR_SIZE == 0x02 && "TLV header size must be a 2 bytes");
-  assert(LIBNET_LLDP_SUBTYPE_SIZE == 0x01 && "Subtype field size must be 1 byte");
-
   uint32_t n, h;
   libnet_pblock_t *p;
   struct libnet_lldp_hdr hdr;
@@ -155,10 +145,6 @@ LIBNET_API
 libnet_ptag_t libnet_build_lldp_ttl(const uint16_t ttl,
 libnet_t *l, libnet_ptag_t ptag)
 {
-  assert(ttl <= UINT16_MAX && "Incorrect value of ttl");
-  assert(LIBNET_LLDP_TLV_HDR_SIZE == 0x02 && "TLV header size must be a 2 bytes");
-  assert(LIBNET_LLDP_SUBTYPE_SIZE == 0x01 && "Subtype field size must be 1 byte");
-
   uint32_t n, h;
   libnet_pblock_t *p;
   struct libnet_lldp_hdr hdr;
@@ -215,9 +201,6 @@ bad:
 LIBNET_API
 libnet_ptag_t libnet_build_lldp_end(libnet_t *l, libnet_ptag_t ptag)
 {
-  assert(LIBNET_LLDP_TLV_HDR_SIZE == 0x02 && "TLV header size must be a 2 bytes");
-  assert(LIBNET_LLDP_SUBTYPE_SIZE == 0x01 && "Subtype field size must be 1 byte");
-
   uint32_t n, h;
   libnet_pblock_t *p;
   struct libnet_lldp_hdr hdr;
