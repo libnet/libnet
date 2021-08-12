@@ -743,7 +743,7 @@ libnet_t *l, libnet_ptag_t ptag);
  */
 LIBNET_API
 libnet_ptag_t libnet_build_lldp_chassis(const uint8_t subtype,
-const uint8_t *const value, const uint8_t value_s,
+const uint8_t *value, const uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -758,7 +758,7 @@ libnet_t *l, libnet_ptag_t ptag);
  */
 LIBNET_API
 libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
-const uint8_t *const value, const uint8_t value_s,
+const uint8_t *value, const uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -795,7 +795,7 @@ libnet_ptag_t libnet_build_lldp_end(libnet_t *l, libnet_ptag_t ptag);
  * @retval -1 on error
  */
 LIBNET_API
-libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *const value,
+libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *value,
 const uint16_t value_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
