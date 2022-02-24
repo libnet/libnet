@@ -40,6 +40,7 @@ AC_CONFIG_FILES([Makefile \
 		 libnet.pc \
                  src/Makefile \
                  sample/Makefile \
+		 tests/Makefile \
 		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 
@@ -176,6 +177,16 @@ AC_ARG_ENABLE([samples],
 )
 AC_MSG_RESULT([$enable_samples])
 AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
+
+# Check for tests enabling
+AC_MSG_CHECKING([enable tests])
+AC_ARG_ENABLE([tests],
+    [AS_HELP_STRING([--enable-tests],[do not enable tests @<:@default=no@:>@])],
+    [enable_tests=$enableval],
+    [enable_tests=no]
+)
+AC_MSG_RESULT([$enable_tests])
+AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
 
 # what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])
@@ -375,6 +386,7 @@ AC_MSG_RESULT([
     PIC ........................... ${pic_mode}
     Build Sample Programs ......... ${enable_samples}
     Rebuild docs .................. ${rebuild_docs}
+    Tests.......................... ${enable_tests}
 
 To override options
 

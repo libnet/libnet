@@ -76,6 +76,25 @@ docker run -it --rm -v $(pwd):$(pwd) --workdir=$(pwd) libnet-builder
 make
 ```
 
+### Running Unit Tests with CMocka
+```bash
+# Running tests in the building Docker ^
+
+./autogen.sh
+./configure --enable-tests
+make
+./tests/libnet_unit_tests
+
+# Approximate output:
+builder$ ./tests/libnet_unit_tests
+[==========] Running 1 test(s).
+[ RUN      ] bool_always_success
+[       OK ] bool_always_success
+[==========] 1 test(s) run.
+[  PASSED  ] 1 test(s).
+builder$
+```
+
 ### Building the Documentation
 
 To build the documentation (optional) you need doxygen and pod2man:
