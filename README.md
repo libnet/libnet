@@ -83,13 +83,13 @@ make
 ./autogen.sh
 ./configure --enable-tests
 make
-./tests/libnet_unit_tests
+sudo ./tests/libnet_unit_tests
 
 # Approximate output:
 builder$ ./tests/libnet_unit_tests
 [==========] Running 1 test(s).
-[ RUN      ] bool_always_success
-[       OK ] bool_always_success
+[ RUN      ] test_libnet_build_ethernet
+[       OK ] test_libnet_build_ethernet
 [==========] 1 test(s) run.
 [  PASSED  ] 1 test(s).
 builder$
