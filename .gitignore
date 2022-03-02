@@ -44,3 +44,5 @@ ltmain.sh
 missing
 stamp-*
 tags
+.cache
+compile_commands*

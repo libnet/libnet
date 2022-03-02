@@ -61,6 +61,21 @@ systems, `apt` can be used:
 Libnet now is available on [Conan Center](https://conan.io/center/libnet).  
 Please add `libnet/1.2` to your `conanfile.txt`  
 
+### Building with Docker
+```bash
+# Build image
+cd tools
+docker build -t libnet-builder .
+
+# Compile libnet with docker
+cd ..
+docker run -it --rm -v $(pwd):$(pwd) --workdir=$(pwd) libnet-builder
+
+./autogen.sh
+./configure
+make
+```
+
 ### Building the Documentation
 
 To build the documentation (optional) you need doxygen and pod2man:
