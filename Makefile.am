@@ -17,6 +17,10 @@ if ENABLE_SAMPLES
 SUBDIRS       += sample
 endif
 
+if ENABLE_TESTS
+SUBDIRS       += tests
+endif
+
 if ENABLE_DOXYGEN
 SUBDIRS       += doc
 
