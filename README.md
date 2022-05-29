@@ -64,7 +64,7 @@ Please add `libnet/1.2` to your `conanfile.txt`
 ### Building with Docker
 ```bash
 # Build image
-cd tools
+cd .devcontainer
 docker build -t libnet-builder .
 
 # Compile libnet with docker
