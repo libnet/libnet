@@ -54,6 +54,7 @@ extern "C" {
 #include <string.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include <sys/stat.h>
@@ -82,7 +83,6 @@ extern "C" {
 #if (__CYGWIN__)
 #include <sys/socket.h>
 #endif
-#include <stdint.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <winsock2.h>
