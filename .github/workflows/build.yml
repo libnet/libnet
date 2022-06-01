@@ -8,6 +8,9 @@ on:
 env:
   # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
   MAKEFLAGS: -j3
+  GCC_CFLAGS: "-Wall -Wextra -Wshadow -Wunused -Wpedantic -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op"
+  CLANG_CFLAGS: "-Wall -Wextra -Wshadow -Wunused -Wpedantic"
+
 
 jobs:
   build:
@@ -47,3 +50,46 @@ jobs:
           make V=1
           make install-strip DESTDIR=/tmp
           tree /tmp/usr
+  unit-tests:
+    strategy:
+      matrix:
+        name: [ ubuntu-latest-gcc, ubuntu-latest-clang, macos-latest-clang ]
+        include:
+          - name: ubuntu-latest-gcc
+            os: ubuntu-latest
+            cc: gcc
+          - name: ubuntu-latest-clang
+            os: ubuntu-latest
+            cc: clang
+          - name: macos-latest-clang
+            os: macos-latest
+            cc: clang
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install MacOS dependencies
+        if: startsWith(matrix.os,'macos')
+        run: |
+          brew update
+          brew install automake tree doxygen cmocka
+      - name: Install Linux dependencies
+        if: startsWith(matrix.os,'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake tree doxygen libcmocka-dev
+      - name: Configure
+        run: |
+          if ${{ matrix.cc == 'gcc' }}; then
+              ./autogen.sh
+              ./configure --prefix=/usr CC=${{ matrix.cc }} CFLAGS="${GCC_CFLAGS}" --enable-tests
+          else
+              ./autogen.sh
+              ./configure --prefix=/usr CC=${{ matrix.cc }} CFLAGS="${CLANG_CFLAGS}" --enable-tests
+          fi
+      - name: Build
+        run: |
+          make V=1
+      - name: Run Unit-Test
+        run: |
+          sudo ./tests/libnet_unit_tests
