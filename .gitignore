@@ -47,3 +47,4 @@ tags
 .cache
 compile_commands*
 libnet_unit_tests
+.vscode/cscope
