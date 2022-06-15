@@ -103,13 +103,13 @@ main(int argc, char *argv[])
 	    device,                                 /* network interface */
             errbuf);                                /* error buffer */
 
-    printf("Using device %s\n", l->device);
-
     if (l == NULL)
     {
         fprintf(stderr, "libnet_init() failed: %s", errbuf);
         exit(EXIT_FAILURE); 
     }
+
+    printf("Using device %s\n", l->device);
 
     if ((dst_ip = libnet_name2addr4(l, dst, LIBNET_RESOLVE)) == -1)
     {
