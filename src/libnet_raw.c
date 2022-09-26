@@ -79,40 +79,6 @@ static int libnet_finish_setup_socket(libnet_t *l)
 #endif
     unsigned len;
 
-#ifdef SO_SNDBUF
-
-/*
- * man 7 socket 
- *
- * Sets and  gets  the  maximum  socket  send buffer in bytes. 
- *
- * Taken from libdnet by Dug Song
- */
-    len = sizeof(n);
-    if (getsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, &len) < 0)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-		 "%s(): get SO_SNDBUF failed: %s",
-		 __func__, strerror(errno));
-        goto bad;
-    }
-    
-    for (n += 128; n < 1048576; n += 128)
-    {
-        if (setsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &n, len) < 0)
-        {
-            if (errno == ENOBUFS)
-            {
-                break;
-            }
-             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                     "%s(): set SO_SNDBUF failed: %s",
-                     __func__, strerror(errno));
-             goto bad;
-        }
-    }
-#endif
-
 #ifdef SO_BROADCAST
 /*
  * man 7 socket
@@ -145,9 +111,6 @@ static int libnet_finish_setup_socket(libnet_t *l)
 bad:
     return (-1);
 }
-
-
-
 
 int
 libnet_open_raw4(libnet_t *l)

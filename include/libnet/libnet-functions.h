@@ -101,6 +101,18 @@ LIBNET_API
 int 
 libnet_getfd(libnet_t *l);
 
+#ifdef SO_SNDBUF
+/**
+ * Tries to set the TX buffer size to a max_bytes value
+ * @param l pointer to a libnet context
+ * @param max_bytes new TX buffer size
+ * @return 0 on success, -1 on failure
+ */
+LIBNET_API
+int 
+libnet_setfd_max_sndbuf(libnet_t *l, int max_bytes);
+#endif /* SO_SNDBUF */
+
 /**
  * Returns the canonical name of the device used for packet injection.
  * @param l pointer to a libnet context

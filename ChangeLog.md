@@ -10,6 +10,9 @@ of contributors, see the GIT commit log.
 
 ### Changes
 
+- Don't try to configure TX buffer max size for every raw socket. Instead, add a new API
+  that can be used when needed, called `libnet_setfd_max_sndbuf()`.
+
 ### Fixes
 
 

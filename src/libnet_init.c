@@ -172,6 +172,26 @@ libnet_getfd(libnet_t *l)
     return (int)(l->fd);
 }
 
+#ifdef SO_SNDBUF
+int
+libnet_setfd_max_sndbuf(libnet_t *l, int max_bytes)
+{
+    if (l == NULL)
+        return (-1);
+
+    /* Try to set the buffer size to max_bytes */
+    if (setsockopt(l->fd, SOL_SOCKET, SO_SNDBUF, &max_bytes, sizeof(max_bytes)) < 0)
+    {
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                    "%s(): set SO_SNDBUF failed: %s",
+                    __func__, strerror(errno));
+        return (-1);
+    }
+
+    return (0);
+}
+#endif /* SO_SNDBUF */
+
 const char *
 libnet_getdevice(libnet_t *l)
 {
