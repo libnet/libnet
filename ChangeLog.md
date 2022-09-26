@@ -5,6 +5,14 @@ All relevant changes are documented in this file.  For a complete list
 of contributors, see the GIT commit log.
 
 
+[v1.3][UNRELEASED]
+---------------------
+
+### Changes
+
+### Fixes
+
+
 [v1.2][] - 2019-10-16
 ---------------------
 
