@@ -64,8 +64,7 @@ libnet_check_iface(libnet_t *l)
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() socket: %s", __func__,
-                strerror(errno));
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() socket: %s", __func__, strerror(errno));
         return (-1);
     }
 
@@ -75,15 +74,13 @@ libnet_check_iface(libnet_t *l)
     res = ioctl(fd, SIOCGIFFLAGS, (int8_t *)&ifr);
     if (res < 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() ioctl: %s", __func__,
-                strerror(errno));
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() ioctl: %s", __func__, strerror(errno));
     }
     else
     {
         if ((ifr.ifr_flags & IFF_UP) == 0)
         {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): %s is down",
-                    __func__, l->device);
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): %s is down", __func__, l->device);
 	    res = -1;
         }
     }
@@ -104,14 +101,17 @@ libnet_check_iface(libnet_t *l)
 int
 libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
 {
-    (void)dev; /* unused */
-    static struct libnet_ifaddr_list *ifaddrlist = NULL, *ifaddrlist_tmp = NULL;
+    static struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
     int i = 0;
 
-    if (!ifaddrlist) {
+    (void)dev; /* unused */
+
+    if (!ifaddrlist)
+    {
         ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
-        if (!ifaddrlist) {
+        if (!ifaddrlist)
+        {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
             return 0;
         }
@@ -119,10 +119,10 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 
     if (getifaddrs(&ifap) != 0)
     {
-        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): getifaddrs: %s",
-                    __func__, strerror(errno));
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): getifaddrs: %s", __func__, strerror(errno));
         return 0;
     }
+
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
     {
         if (ifa->ifa_flags & IFF_LOOPBACK || ifa->ifa_addr == NULL)
@@ -131,7 +131,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         if (ifa->ifa_addr->sa_family == AF_INET )
         {
             ifaddrlist[i].device = strdup(ifa->ifa_name);
-            if (ifaddrlist[i].device == NULL) {
+            if (ifaddrlist[i].device == NULL)
+            {
                 snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM", __func__);
                 continue;
             }
@@ -140,15 +141,18 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         }
 
         if (i == ip_addr_num) {
-            // grow by a factor of 1.5, close enough to golden ratio
+            struct libnet_ifaddr_list *tmp;
+
+            /* grow by a factor of 1.5, close enough to golden ratio */
             ip_addr_num += ip_addr_num >> 2;
-            ifaddrlist_tmp = realloc(ifaddrlist, ip_addr_num * sizeof(struct libnet_ifaddr_list));
-            if (!ifaddrlist_tmp) {
-                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when reallocating larger ifaddrlist", __func__);
+            tmp = realloc(ifaddrlist, ip_addr_num * sizeof(struct libnet_ifaddr_list));
+            if (!tmp)
+            {
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM reallocating ifaddrlist", __func__);
                 break;
             }
 
-            ifaddrlist = ifaddrlist_tmp;
+            ifaddrlist = tmp;
         }
     }
 
@@ -202,8 +206,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
-	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s",
-                __func__, strerror(errno));
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s", __func__, strerror(errno));
 	return (-1);
     }
 
@@ -211,9 +214,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     fp = fopen(PROC_DEV_FILE, "r");
     if (!fp)
     {
-	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): fopen(proc_dev_file) failed: %s",  __func__,
-                strerror(errno));
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): fopen(proc_dev_file) failed: %s",  __func__, strerror(errno));
 	goto bad;
     }
 #endif
@@ -224,9 +225,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 
     if (ioctl(fd, SIOCGIFCONF, &ifc) < 0)
     {
-	snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): ioctl(SIOCGIFCONF) error: %s", 
-                __func__, strerror(errno));
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): ioctl(SIOCGIFCONF) error: %s", __func__, strerror(errno));
 	goto bad;
     }
 
@@ -293,15 +292,12 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         {
             if (errno != EADDRNOTAVAIL)
             {
-                snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                        "%s(): SIOCGIFADDR: dev=%s: %s", __func__, device,
-                        strerror(errno));
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): SIOCGIFADDR: dev=%s: %s", __func__, device, strerror(errno));
                 goto bad;
 	    }
-            else /* device has no IP address => set to 0 */
-            {
-                al->addr = 0;
-            }
+
+            /* device has no IP address => set to 0 */
+            al->addr = 0;
         }
         else
         {
@@ -313,8 +309,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
         al->device = strdup(device);
         if (al->device == NULL)
         {
-            snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
-                    "%s(): strdup not enough memory", __func__);
+            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): strdup not enough memory", __func__);
             goto bad;
         }
 
@@ -324,14 +319,12 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 #ifndef HAVE_LINUX_PROCFS
         pifr = ifr;
 #endif
-
-    } /* while|for */
+    }
 	
 #ifdef HAVE_LINUX_PROCFS
     if (ferror(fp))
     {
-        snprintf(errbuf, LIBNET_ERRBUF_SIZE,
-                "%s(): ferror: %s", __func__, strerror(errno));
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): ferror: %s", __func__, strerror(errno));
 	goto bad;
     }
     fclose(fp);
@@ -342,7 +335,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 
     return (nipaddr);
 
-    bad:
+bad:
 #ifdef HAVE_LINUX_PROCFS
     if (fp)
 	fclose(fp);
@@ -364,8 +357,8 @@ static int8_t *iptos(uint32_t in)
 
     p = (uint8_t *)&in;
     which = (which + 1 == IPTOSBUFFERS ? 0 : which + 1);
-    snprintf(output[which], IPTOSBUFFERS, "%d.%d.%d.%d", 
-            p[0], p[1], p[2], p[3]);
+    snprintf(output[which], IPTOSBUFFERS, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
+
     return output[which];
 }
 
@@ -382,8 +375,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
     /* Retrieve the interfaces list */
     if (pcap_findalldevs(&devlist, err) == -1)
     {
-        snprintf(errbuf, LIBNET_ERRBUF_SIZE, 
-                "%s(): error in pcap_findalldevs: %s", __func__, err);
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): error in pcap_findalldevs: %s", __func__, err);
         return (-1);
     }
 
@@ -430,10 +422,9 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
 int
 libnet_select_device(libnet_t *l)
 {
-    int c, i;
-    struct libnet_ifaddr_list *address_list, *al;
+    struct libnet_ifaddr_list *address_list = NULL, *al;
     uint32_t addr;
-
+    int c, i, rc;
 
     if (l == NULL)
     { 
@@ -462,11 +453,10 @@ libnet_select_device(libnet_t *l)
     }
     else if (c == 0)
     {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                "%s(): no network interface found", __func__);
+        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no network interface found", __func__);
         return (-1);
     }
-	
+
     al = address_list;
     if (l->device)
     {
@@ -488,9 +478,7 @@ libnet_select_device(libnet_t *l)
         }
         if (i <= 0)
         {
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                    "%s(): can't find interface for IP %s", __func__,
-                    l->device);
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): can't find interface for IP %s", __func__, l->device);
 	    goto bad;
         }
     }

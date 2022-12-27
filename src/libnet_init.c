@@ -139,7 +139,7 @@ libnet_clear_packet(libnet_t *l)
         return;
     }
 
-    while((p = l->protocol_blocks))
+    while ((p = l->protocol_blocks))
     {
         libnet_pblock_delete(l, p);
     }
