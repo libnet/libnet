@@ -23,6 +23,7 @@ ieee
 ip_link
 ip_raw
 isl
+lldp
 mpls
 ntp
 ospf_hello
