@@ -387,12 +387,12 @@ static int8_t *iptos(uint32_t in)
 int
 libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused, register char *errbuf)
 {
-    int nipaddr = 0;
-    int i = 0;
-    static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
+    static struct libnet_ifaddr_list *ifaddrlist = NULL;
+    int8_t err[PCAP_ERRBUF_SIZE];
     pcap_if_t *devlist = NULL;
     pcap_if_t *dev = NULL;
-    int8_t err[PCAP_ERRBUF_SIZE];
+    int nipaddr = 0;
+    int i = 0;
 
     /* Retrieve the interfaces list */
     if (pcap_findalldevs(&devlist, err) == -1)
@@ -401,10 +401,22 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
         return (-1);
     }
 
+    if (!ifaddrlist)
+    {
+        ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
+        if (!ifaddrlist)
+        {
+            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+            return 0;
+        }
+    }
+
     for (dev = devlist; dev; dev = dev->next)
     {
         struct pcap_addr* pcapaddr;
-        for(pcapaddr = dev->addresses; pcapaddr; pcapaddr = pcapaddr->next) {
+
+        for (pcapaddr = dev->addresses; pcapaddr; pcapaddr = pcapaddr->next)
+        {
             struct sockaddr* addr = pcapaddr->addr;
 #if 0
             printf("if name '%s' description '%s' loop? %d\n", dev->name, dev->description, dev->flags);
@@ -422,11 +434,28 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused
 
             /* this code ignores IPv6 addresses, a limitation of the libnet_ifaddr_list struct */
 
-            if (addr->sa_family == AF_INET) {
-                ifaddrlist[i].device = strdup(dev->name);
-                ifaddrlist[i].addr = ((struct sockaddr_in *)addr)->sin_addr.s_addr;
-                ++i;
-                ++nipaddr;
+            if (addr->sa_family != AF_INET)
+                continue;
+
+            ifaddrlist[i].device = strdup(dev->name);
+            ifaddrlist[i].addr = ((struct sockaddr_in *)addr)->sin_addr.s_addr;
+            ++i;
+            ++nipaddr;
+
+            if (nipaddr == ip_addr_num)
+            {
+                struct libnet_ifaddr_list *tmp;
+
+                /* grow by a factor of 1.5, close enough to golden ratio */
+                ip_addr_num += ip_addr_num >> 2;
+                tmp = realloc(ifaddrlist, ip_addr_num * sizeof(struct libnet_ifaddr_list));
+                if (!tmp)
+                {
+                    snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM reallocating ifaddrlist", __func__);
+                    break;
+                }
+
+                ifaddrlist = tmp;
             }
         }
     }
