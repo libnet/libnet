@@ -488,22 +488,21 @@ libnet_select_device(libnet_t *l)
     }
 
 good:
-    for (i = 0; i < c; i++)
-    {
-        free(al[i].device);
-        al[i].device = NULL;
-    }
-    free(al);
-    return (1);
-
+    rc = 1;
+    goto end;
 bad:
-    for (i = 0; i < c; i++)
-    {
-        free(al[i].device);
-        al[i].device = NULL;
+    rc = -1;
+end:
+    if (al) {
+        for (i = 0; i < c; i++)
+        {
+            free(al[i].device);
+            al[i].device = NULL;
+        }
+        free(al);
     }
-    free(al);
-    return (-1);
+
+    return rc;
 }
 
 /**
