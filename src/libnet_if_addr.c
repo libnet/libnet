@@ -188,10 +188,9 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 int
 libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
 {
-    register struct libnet_ifaddr_list *al;
+    static struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq *ifr, *lifr, *pifr, nifr;
     char device[sizeof(nifr.ifr_name)];
-    static struct libnet_ifaddr_list ifaddrlist[MAX_IPADDR];
     
     char *p;
     struct ifconf ifc;
@@ -232,7 +231,16 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     pifr = NULL;
     lifr = (struct ifreq *)&ifc.ifc_buf[ifc.ifc_len];
     
-    al = ifaddrlist;
+    if (!ifaddrlist)
+    {
+        ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
+        if (!ifaddrlist)
+        {
+            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+            return 0;
+        }
+    }
+
     nipaddr = 0;
 
 #ifdef HAVE_LINUX_PROCFS
@@ -253,6 +261,8 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 
     for (ifr = ifc.ifc_req; ifr < lifr; ifr = NEXTIFR(ifr))
     {
+        struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
+
 	/* XXX LINUX SOLARIS ifalias */
         p = strchr(ifr->ifr_name, ':');
 	if (p)
@@ -313,8 +323,20 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
             goto bad;
         }
 
-        ++al;
         ++nipaddr;
+        if (nipaddr == ip_addr_num) {
+            struct libnet_ifaddr_list *tmp;
+
+            /* grow by a factor of 1.5, close enough to golden ratio */
+            ip_addr_num += ip_addr_num >> 2;
+            tmp = realloc(ifaddrlist, ip_addr_num * sizeof(struct libnet_ifaddr_list));
+            if (!tmp) {
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM reallocating ifaddrlist", __func__);
+                break;
+            }
+
+            ifaddrlist = tmp;
+        }
 
 #ifndef HAVE_LINUX_PROCFS
         pifr = ifr;
