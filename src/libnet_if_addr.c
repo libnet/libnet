@@ -99,7 +99,7 @@ libnet_check_iface(libnet_t *l)
 #include <ifaddrs.h>
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     static struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
@@ -186,7 +186,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
 #endif
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, register char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     static struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq *ifr, *lifr, *pifr, nifr;
@@ -195,7 +195,7 @@ libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev, regis
     char *p;
     struct ifconf ifc;
     struct ifreq ibuf[MAX_IPADDR];
-    register int fd, nipaddr;
+    int fd, nipaddr;
     
 #ifdef HAVE_LINUX_PROCFS
     FILE *fp;
@@ -385,7 +385,7 @@ static int8_t *iptos(uint32_t in)
 }
 
 int
-libnet_ifaddrlist(register struct libnet_ifaddr_list **ipaddrp, char *dev_unused, register char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *errbuf)
 {
     static struct libnet_ifaddr_list *ifaddrlist = NULL;
     int8_t err[PCAP_ERRBUF_SIZE];

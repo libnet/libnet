@@ -202,10 +202,10 @@ try_open_dev(libnet_t *l, const char *dev, int unit)
 int
 libnet_open_link(libnet_t *l)
 {
-    register int8_t *cp;
+    int8_t *cp;
     int8_t *eos;
     int ppa;
-    register dl_info_ack_t *infop;
+    dl_info_ack_t *infop;
     bpf_u_int32 buf[MAXDLBUF];
     int namelen;
     int8_t dname[MAXPATHLEN];
@@ -349,8 +349,7 @@ bad:
 
 
 static int
-send_request(int fd, int8_t *ptr, int len, int8_t *what, int8_t *ebuf,
-int flags)
+send_request(int fd, int8_t *ptr, int len, int8_t *what, int8_t *ebuf, int flags)
 {
     struct strbuf ctl;
 
@@ -538,13 +537,12 @@ strioctl(int fd, int cmd, int len, int8_t *dp)
  * Under HP-UX 10, we can ask for the ppa
  */
 static int
-get_dlpi_ppa(register int fd, register const int8_t *device, register int unit,
-register int8_t *ebuf)
+get_dlpi_ppa(int fd, const int8_t *device, int unit, int8_t *ebuf)
 {
-    register dl_hp_ppa_ack_t *ap;
-    register dl_hp_ppa_info_t *ip;
-    register int i;
-    register uint32_t majdev;
+    dl_hp_ppa_ack_t *ap;
+    dl_hp_ppa_info_t *ip;
+    int i;
+    uint32_t majdev;
     dl_hp_ppa_req_t	req;
     struct stat statbuf;
     bpf_u_int32 buf[MAXDLBUF];
@@ -613,11 +611,10 @@ static int8_t path_vmunix[] = "/hp-ux";
  *  Determine ppa number that specifies ifname
  */
 static int
-get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
-    register int8_t *ebuf)
+get_dlpi_ppa(int fd, const int8_t *ifname, int unit, int8_t *ebuf)
 {
-    register const int8_t *cp;
-    register int kd;
+    const int8_t *cp;
+    int kd;
     void *addr;
     struct ifnet ifnet;
     int8_t if_name[sizeof(ifnet.if_name)], tifname[32];
@@ -671,16 +668,14 @@ get_dlpi_ppa(register int fd, register const int8_t *ifname, register int unit,
             }
     }
 
-    snprintf(ebuf, LIBNET_ERRBUF_SIZE,
-             "Can't find %s", ifname);
+    snprintf(ebuf, LIBNET_ERRBUF_SIZE, "Can't find %s", ifname);
     return (-1);
 }
 
 static int
-dlpi_kread(register int fd, register off_t addr, register void *buf,
-register uint len, register int8_t *ebuf)
+dlpi_kread(int fd, off_t addr, void *buf, uint len, int8_t *ebuf)
 {
-    register int cc;
+    int cc;
 
     if (lseek(fd, addr, SEEK_SET) < 0)
     {

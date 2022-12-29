@@ -359,7 +359,7 @@ uint32_t
 libnet_get_ipaddr4(libnet_t *l)
 {
     struct ifreq ifr;
-    register struct sockaddr_in *sin;
+    struct sockaddr_in *sin;
     int fd;
 
     if (l == NULL)

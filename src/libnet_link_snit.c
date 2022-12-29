@@ -52,7 +52,7 @@ libnet_open_link_interface(int8_t *device, int8_t *ebuf)
     struct strioctl si;	    /* struct for ioctl() */
     struct ifreq ifr;       /* interface request struct */
     static int8_t dev[] = "/dev/nit";
-    register struct libnet_link_int *l;
+    struct libnet_link_int *l;
 
     l = (struct libnet_link_int *)malloc(sizeof(*l));
     if (l == NULL)

@@ -64,8 +64,8 @@ libnet_build_asn1_int(uint8_t *data, int *datalen, uint8_t type, int32_t *int_p,
     /*
      *  ASN.1 integer ::= 0x02 asnlength byte {byte}*
      */
-     register int32_t integer;
-     register uint32_t mask;
+     int32_t integer;
+     uint32_t mask;
 
     if (int_s != sizeof (int32_t))
     {
@@ -115,8 +115,8 @@ libnet_build_asn1_uint(uint8_t *data, int *datalen, uint8_t type, uint32_t *int_
     /*
      *  ASN.1 integer ::= 0x02 asnlength byte {byte}*
      */
-    register uint32_t integer;
-    register uint32_t mask;
+    uint32_t integer;
+    uint32_t mask;
     int add_null_byte = 0;
 
     if (int_s != sizeof (int32_t))
@@ -283,11 +283,11 @@ libnet_build_asn1_objid(uint8_t *data, int *datalen, uint8_t type, oid *objid,
      *  lastbyte ::= 0 7bitvalue
      */
     int asnlen;
-    register oid *op = objid;
+    oid *op = objid;
     uint8_t objid_size[MAX_OID_LEN];
-    register uint32_t objid_val;
+    uint32_t objid_val;
     uint32_t first_objid_val;
-    register int i;
+    int i;
 
     /* check if there are at least 2 sub-identifiers */
     if (objidlen < 2)

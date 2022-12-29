@@ -46,7 +46,7 @@ struct libnet_link_int *
 libnet_open_link_interface(int8_t *device, int8_t *ebuf)
 {
     struct sockaddr_nit snit;
-    register struct libnet_link_int *l;
+    struct libnet_link_int *l;
 
     l = (struct libnet_link_int *)malloc(sizeof(*p));
     if (l == NULL)
