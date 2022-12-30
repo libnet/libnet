@@ -117,7 +117,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
-    int nipaddr = 0;
+    size_t nipaddr = 0;
 
     (void)dev; /* unused */
 
@@ -171,7 +171,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 
     freeifaddrs(ifap);
     *ipaddrp = ifaddrlist;
-    return (nipaddr);
+    return ((int)nipaddr);
 }
 
 
@@ -191,10 +191,11 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq ibuf[MAX_IPADDR];
+    size_t nipaddr = 0;
     struct ifconf ifc;
     char buf[BUFSIZE];
-    int fd, nipaddr;
     FILE *fp;
+    int fd;
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
@@ -226,8 +227,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
 	goto bad;
     }
-
-    nipaddr = 0;
 
     while (fgets(buf, sizeof(buf), fp))
     {
@@ -301,7 +300,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     close(fd);
     *ipaddrp = ifaddrlist;
 
-    return (nipaddr);
+    return ((int)nipaddr);
 bad:
     if (ifaddrlist)
         free(ifaddrlist);
@@ -325,8 +324,9 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq *ifr, *lifr, *pifr, nifr;
     struct ifreq ibuf[MAX_IPADDR];
+    size_t nipaddr = 0;
     struct ifconf ifc;
-    int fd, nipaddr;
+    int fd;
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
@@ -354,8 +354,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
 	goto bad;
     }
-
-    nipaddr = 0;
 
     for (ifr = ifc.ifc_req; ifr < lifr; ifr = NEXTIFR(ifr))
     {
@@ -433,7 +431,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     close(fd);
     *ipaddrp = ifaddrlist;
 
-    return (nipaddr);
+    return ((int)nipaddr);
 bad:
     if (ifaddrlist)
         free(ifaddrlist);
@@ -469,7 +467,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
     int8_t err[PCAP_ERRBUF_SIZE];
     pcap_if_t *devlist = NULL;
     pcap_if_t *dev = NULL;
-    int nipaddr = 0;
+    size_t nipaddr = 0;
 
     /* Retrieve the interfaces list */
     if (pcap_findalldevs(&devlist, err) == -1)
@@ -482,7 +480,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
     if (!ifaddrlist)
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
-        return 0;
+        return (0);
     }
 
     for (dev = devlist; dev; dev = dev->next)
@@ -539,7 +537,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
 
     *ipaddrp = ifaddrlist;
 
-    return nipaddr;
+    return ((int)nipaddr);
 }
 #endif /* __WIN32__ */
 
