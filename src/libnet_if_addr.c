@@ -119,8 +119,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     struct ifaddrs *ifap, *ifa;
     size_t nipaddr = 0;
 
-    (void)dev; /* unused */
-
     if (getifaddrs(&ifap) != 0)
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): getifaddrs: %s", __func__, strerror(errno));
@@ -138,10 +136,10 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     {
         struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
 
-        if (ifa->ifa_flags & IFF_LOOPBACK || ifa->ifa_addr == NULL)
+        if (dev == NULL && (ifa->ifa_flags & IFF_LOOPBACK))
             continue;
 
-        if (ifa->ifa_addr->sa_family != AF_INET)
+        if (ifa->ifa_addr == NULL || ifa->ifa_addr->sa_family != AF_INET)
             continue;
 
         al->device = strdup(ifa->ifa_name);
