@@ -117,7 +117,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
-    int i = 0;
+    int nipaddr = 0;
 
     (void)dev; /* unused */
 
@@ -136,22 +136,24 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
     {
+        struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
+
         if (ifa->ifa_flags & IFF_LOOPBACK || ifa->ifa_addr == NULL)
             continue;
 
-        if (ifa->ifa_addr->sa_family == AF_INET )
-        {
-            ifaddrlist[i].device = strdup(ifa->ifa_name);
-            if (ifaddrlist[i].device == NULL)
-            {
-                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM", __func__);
-                continue;
-            }
-            ifaddrlist[i].addr = ((struct sockaddr_in *)ifa->ifa_addr)->sin_addr.s_addr;
-            ++i;
-        }
+        if (ifa->ifa_addr->sa_family != AF_INET)
+            continue;
 
-        if (i == ip_addr_num) {
+        al->device = strdup(ifa->ifa_name);
+        if (al->device == NULL)
+        {
+            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM", __func__);
+            continue;
+        }
+        al->addr = ((struct sockaddr_in *)ifa->ifa_addr)->sin_addr.s_addr;
+        nipaddr++;
+
+        if (nipaddr == ip_addr_num) {
             struct libnet_ifaddr_list *tmp;
 
             /* grow by a factor of 1.5, close enough to golden ratio */
@@ -169,7 +171,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 
     freeifaddrs(ifap);
     *ipaddrp = ifaddrlist;
-    return (i);
+    return (nipaddr);
 }
 
 
@@ -329,7 +331,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
             goto bad;
         }
 
-        ++nipaddr;
+        nipaddr++;
         if (nipaddr == ip_addr_num) {
             struct libnet_ifaddr_list *tmp;
 
@@ -362,7 +364,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     *ipaddrp = ifaddrlist;
 
     return (nipaddr);
-
 bad:
     if (ifaddrlist)
         free(ifaddrlist);
@@ -400,7 +401,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
     pcap_if_t *devlist = NULL;
     pcap_if_t *dev = NULL;
     int nipaddr = 0;
-    int i = 0;
 
     /* Retrieve the interfaces list */
     if (pcap_findalldevs(&devlist, err) == -1)
@@ -418,11 +418,13 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
 
     for (dev = devlist; dev; dev = dev->next)
     {
-        struct pcap_addr* pcapaddr;
+        struct pcap_addr *pcapaddr;
 
         for (pcapaddr = dev->addresses; pcapaddr; pcapaddr = pcapaddr->next)
         {
-            struct sockaddr* addr = pcapaddr->addr;
+            struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
+            struct sockaddr *addr = pcapaddr->addr;
+
 #if 0
             printf("if name '%s' description '%s' loop? %d\n", dev->name, dev->description, dev->flags);
             {
@@ -442,9 +444,8 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
             if (addr->sa_family != AF_INET)
                 continue;
 
-            ifaddrlist[i].device = strdup(dev->name);
-            ifaddrlist[i].addr = ((struct sockaddr_in *)addr)->sin_addr.s_addr;
-            ++i;
+            al->device = strdup(dev->name);
+            al->addr = ((struct sockaddr_in *)addr)->sin_addr.s_addr;
             ++nipaddr;
 
             if (nipaddr == ip_addr_num)
