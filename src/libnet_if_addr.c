@@ -44,7 +44,21 @@
 #include <net/if.h>
 #endif
 
-#include "../include/ifaddrlist.h"
+struct ifaddrlist
+{
+#if (HAVE_SOLARIS || HAVE_HPUX11)
+    uint addr;
+#else
+    uint32_t addr;
+#endif
+    char *device;
+};
+
+struct libnet_ifaddr_list
+{
+    uint32_t addr;
+    char *device;
+};
 
 #define MAX_IPADDR 512
 static size_t ip_addr_num = MAX_IPADDR;
