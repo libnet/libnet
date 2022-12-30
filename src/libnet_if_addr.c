@@ -322,8 +322,6 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
             al->addr = ((struct sockaddr_in *)&nifr.ifr_addr)->sin_addr.s_addr;
         }
         
-        free(al->device);
-
         al->device = strdup(device);
         if (al->device == NULL)
         {
