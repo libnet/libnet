@@ -519,13 +519,9 @@ libnet_select_device(libnet_t *l)
     {
         addr = libnet_name2addr4(l, l->device, LIBNET_DONT_RESOLVE);
 
-        for (i = c; i; --i, ++address_list)
+        for (i = c; i; --i, ++al)
         {
-            if (
-                    0 == strcmp(l->device, address_list->device)
-                    || 
-                    address_list->addr == addr
-               )
+            if (!strcmp(l->device, al->device) ||  al->addr == addr)
             {
                 /* free the "user supplied device" - see libnet_init() */
                 free(l->device);
@@ -533,6 +529,7 @@ libnet_select_device(libnet_t *l)
                 goto good;
             }
         }
+
         if (i <= 0)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): can't find interface for IP %s", __func__, l->device);
@@ -550,13 +547,13 @@ good:
 bad:
     rc = -1;
 end:
-    if (al) {
+    if (address_list) {
         for (i = 0; i < c; i++)
         {
-            free(al[i].device);
-            al[i].device = NULL;
+            free(address_list[i].device);
+            address_list[i].device = NULL;
         }
-        free(al);
+        free(address_list);
     }
 
     return rc;
