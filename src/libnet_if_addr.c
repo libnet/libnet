@@ -115,26 +115,23 @@ libnet_check_iface(libnet_t *l)
 int
 libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
-    static struct libnet_ifaddr_list *ifaddrlist = NULL;
+    struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
     int i = 0;
 
     (void)dev; /* unused */
 
-    if (!ifaddrlist)
-    {
-        ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
-        if (!ifaddrlist)
-        {
-            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
-            return 0;
-        }
-    }
-
     if (getifaddrs(&ifap) != 0)
     {
         snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): getifaddrs: %s", __func__, strerror(errno));
         return 0;
+    }
+
+    ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
+    if (!ifaddrlist)
+    {
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+        return (-1);
     }
 
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
@@ -202,7 +199,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 int
 libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
-    static struct libnet_ifaddr_list *ifaddrlist = NULL;
+    struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq *ifr, *lifr, *pifr, nifr;
     char device[sizeof(nifr.ifr_name)];
     
@@ -245,14 +242,11 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     pifr = NULL;
     lifr = (struct ifreq *)&ifc.ifc_buf[ifc.ifc_len];
     
+    ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
     if (!ifaddrlist)
     {
-        ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
-        if (!ifaddrlist)
-        {
-            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
-            return 0;
-        }
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+	goto bad;
     }
 
     nipaddr = 0;
@@ -372,6 +366,8 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     return (nipaddr);
 
 bad:
+    if (ifaddrlist)
+        free(ifaddrlist);
 #ifdef HAVE_LINUX_PROCFS
     if (fp)
 	fclose(fp);
@@ -401,7 +397,7 @@ static int8_t *iptos(uint32_t in)
 int
 libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *errbuf)
 {
-    static struct libnet_ifaddr_list *ifaddrlist = NULL;
+    struct libnet_ifaddr_list *ifaddrlist = NULL;
     int8_t err[PCAP_ERRBUF_SIZE];
     pcap_if_t *devlist = NULL;
     pcap_if_t *dev = NULL;
@@ -415,14 +411,11 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev_unused, char *e
         return (-1);
     }
 
+    ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
     if (!ifaddrlist)
     {
-        ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
-        if (!ifaddrlist)
-        {
-            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
-            return 0;
-        }
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+        return 0;
     }
 
     for (dev = devlist; dev; dev = dev->next)
@@ -514,12 +507,12 @@ libnet_select_device(libnet_t *l)
     c = libnet_ifaddrlist(&address_list, l->device, l->err_buf);
     if (c < 0)
     {
-        return (-1);
+        goto end;
     }
     else if (c == 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no network interface found", __func__);
-        return (-1);
+        goto end;
     }
 
     al = address_list;
