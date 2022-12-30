@@ -6,8 +6,18 @@
 @rem We assume WpdPack\ and libnet-master\ to have the same path,
 @rem and that this script is executed from either a VS2015 Developer Command Prompt
 @rem or an elevated Command Prompt.
+@rem
+@rem Helpful links for non-Windows users:
+@rem https://github.com/microsoft/vswhere/wiki/Find-VC#batch
+@rem https://renenyffenegger.ch/notes/Windows/dirs/Program-Files-x86/Microsoft-Visual-Studio/version/edition/Common7/Tools/VsDevCmd_bat
+@rem https://renenyffenegger.ch/notes/Windows/development/Visual-Studio/environment-variables/index
 
 :start
+for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -nologo`) do (
+  set InstallDir=%%i
+)
+if not exist "%InstallDir%\Common7\Tools\VsDevCmd.bat" (goto fail)
+
 @if "%1" == "" goto x86
 @setlocal
 @set userinput=%1
@@ -18,18 +28,15 @@
 @endlocal
 
 :x86
-if not exist "%VCINSTALLDIR%bin\vcvars32.bat" goto path
-call "%VCINSTALLDIR%bin\vcvars32.bat"
+call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x86
 goto msvcbuild32
 
 :x64
-if not exist "%VCINSTALLDIR%bin\amd64\vcvars64.bat" goto path
-call "%VCINSTALLDIR%bin\amd64\vcvars64.bat"
+call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x64
 goto msvcbuild64
 
 :x86_x64
-if not exist "%VCINSTALLDIR%vcvarsall.bat" goto path
-call "%VCINSTALLDIR%vcvarsall.bat" x86_amd64
+call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x86_amd64
 goto msvcbuild64
 
 :msvcbuild32
@@ -82,6 +89,12 @@ copy win32\config.h include\
 copy win32\getopt.h include\
 
 cd src
+dir ..\..\
+dir ..\..\WpdPack
+dir ..\..\WpdPack\Include
+type ..\..\WpdPack\Include\Packet32.h
+@echo "Foo"
+dir "%WINPCAP%\Include\"
 %MYCOMPILE% /I..\include /I%WINPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
 %MYLINK% /DLL /libpath:%WINPCAP%\Lib\x64  /out:..\lib\x64\libnet%VERSION%.dll win64\*.obj Advapi32.lib
 if exist libnet.dll.manifest^
@@ -111,11 +124,6 @@ echo Please make sure Visual Studio or the C++ Build SKU is installed,
 echo and that this script is executed from a Developer Command Prompt.
 echo :
 goto end
-
-:path
-call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
-if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat" goto fail
-goto start
 
 :fail
 echo Visual Studio or the C++ Build SKU do not seem to be installed.
