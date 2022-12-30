@@ -1,0 +1,20 @@
+name: Wiondows Builder
+
+on: [push, pull_request]
+
+jobs:
+  windows-build:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: microsoft/setup-msbuild@v1.1
+      - name: Install WinPcap
+        run: |
+          Invoke-WebRequest http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip -OutFile WpdPack.zip
+          Expand-Archive WpdPack.zip -DestinationPath ../WpdPack
+      - name: Build 64-bit
+        shell: cmd
+        run: |
+          .\win32\msvcbuild.bat x64
