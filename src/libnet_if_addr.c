@@ -179,42 +179,23 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 #if !(__WIN32__)
 
 
-/*
- *  Return the interface list
- */
-
-#ifdef HAVE_SOCKADDR_SA_LEN
-#define NEXTIFR(i) \
-((struct ifreq *)((u_char *)&i->ifr_addr + i->ifr_addr.sa_len))
-#else
-#define NEXTIFR(i) (i + 1)
-#endif
+#ifdef HAVE_LINUX_PROCFS /* Unclear (2022) which OSs end up here ... speculative code */
+#define PROC_DEV_FILE "/proc/net/dev"
 
 #ifndef BUFSIZE
 #define BUFSIZE 2048
-#endif
-
-#ifdef HAVE_LINUX_PROCFS
-#define PROC_DEV_FILE "/proc/net/dev"
 #endif
 
 int
 libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
-    struct ifreq *ifr, *lifr, *pifr, nifr;
-    char device[sizeof(nifr.ifr_name)];
-    
-    char *p;
-    struct ifconf ifc;
     struct ifreq ibuf[MAX_IPADDR];
+    struct ifconf ifc;
+    char buf[BUFSIZE];
     int fd, nipaddr;
-    
-#ifdef HAVE_LINUX_PROCFS
     FILE *fp;
-    char buf[2048];
-#endif
-    
+
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
@@ -222,14 +203,137 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 	return (-1);
     }
 
-#ifdef HAVE_LINUX_PROCFS
     fp = fopen(PROC_DEV_FILE, "r");
     if (!fp)
     {
-	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): fopen(proc_dev_file) failed: %s",  __func__, strerror(errno));
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): failed opening %s: %s",  __func__, PROC_DEV_FILE, strerror(errno));
 	goto bad;
     }
+
+    memset(&ifc, 0, sizeof(ifc));
+    ifc.ifc_len = sizeof(ibuf);
+    ifc.ifc_buf = (caddr_t)ibuf;
+
+    if (ioctl(fd, SIOCGIFCONF, &ifc) < 0)
+    {
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): ioctl(SIOCGIFCONF) error: %s", __func__, strerror(errno));
+	goto bad;
+    }
+
+    ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
+    if (!ifaddrlist)
+    {
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM when allocating initial ifaddrlist", __func__);
+	goto bad;
+    }
+
+    nipaddr = 0;
+
+    while (fgets(buf, sizeof(buf), fp))
+    {
+        struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
+        struct ifreq ifr;
+        char *nm;
+
+        nm = strchr(buf, ':');
+	if (!nm)
+            continue;
+
+        *nm = '\0';
+        for (nm = buf; *nm == ' '; nm++)
+	    ;
+	
+        strncpy(ifr.ifr_name, nm, sizeof(ifr.ifr_name) - 1);
+        ifr.ifr_name[sizeof(ifr.ifr_name) - 1] = 0;
+        if (ioctl(fd, SIOCGIFFLAGS, &ifr) < 0)
+            continue;
+        if ((ifr.ifr_flags & IFF_UP) == 0)
+            continue;
+        if (dev == NULL && LIBNET_ISLOOPBACK(&ifr))
+            continue;
+
+        if (ioctl(fd, SIOCGIFADDR, &ifr) < 0)
+        {
+            if (errno != EADDRNOTAVAIL)
+            {
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): SIOCGIFADDR: dev=%s: %s", __func__, ifr.ifr_name, strerror(errno));
+                goto bad;
+	    }
+
+            /* device has no IP address => set to 0 */
+            al->addr = 0;
+        }
+        else
+        {
+            al->addr = ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr;
+        }
+
+        al->device = strdup(ifr.ifr_name);
+        if (al->device == NULL)
+        {
+            snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): strdup not enough memory", __func__);
+            goto bad;
+        }
+
+        nipaddr++;
+        if (nipaddr == ip_addr_num) {
+            struct libnet_ifaddr_list *tmp;
+
+            /* grow by a factor of 1.5, close enough to golden ratio */
+            ip_addr_num += ip_addr_num >> 2;
+            tmp = realloc(ifaddrlist, ip_addr_num * sizeof(struct libnet_ifaddr_list));
+            if (!tmp) {
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): OOM reallocating ifaddrlist", __func__);
+                break;
+            }
+
+            ifaddrlist = tmp;
+        }
+    }
+	
+    if (ferror(fp))
+    {
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): ferror: %s", __func__, strerror(errno));
+	goto bad;
+    }
+    fclose(fp);
+
+    close(fd);
+    *ipaddrp = ifaddrlist;
+
+    return (nipaddr);
+bad:
+    if (ifaddrlist)
+        free(ifaddrlist);
+    if (fp)
+	fclose(fp);
+    close(fd);
+    return (-1);
+}
+
+#else  /* !HAVE_LINUX_PROCFS && !__WIN32__ */
+
+#ifdef HAVE_SOCKADDR_SA_LEN
+#define NEXTIFR(i) ((struct ifreq *)((u_char *)&i->ifr_addr + i->ifr_addr.sa_len))
+#else
+#define NEXTIFR(i) (i + 1)
 #endif
+
+int
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
+{
+    struct libnet_ifaddr_list *ifaddrlist = NULL;
+    struct ifreq *ifr, *lifr, *pifr, nifr;
+    struct ifreq ibuf[MAX_IPADDR];
+    struct ifconf ifc;
+    int fd, nipaddr;
+
+    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd < 0)
+    {
+	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s", __func__, strerror(errno));
+	return (-1);
+    }
 
     memset(&ifc, 0, sizeof(ifc));
     ifc.ifc_len = sizeof(ibuf);
@@ -243,7 +347,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 
     pifr = NULL;
     lifr = (struct ifreq *)&ifc.ifc_buf[ifc.ifc_len];
-    
+
     ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
     if (!ifaddrlist)
     {
@@ -253,42 +357,21 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 
     nipaddr = 0;
 
-#ifdef HAVE_LINUX_PROCFS
-    while (fgets(buf, sizeof(buf), fp))
-    {
-        p = strchr(buf, ':');
-	if (!p)
-            continue;
-
-        *p = '\0';
-        for (p = buf; *p == ' '; p++)
-	    ;
-	
-        strncpy(nifr.ifr_name, p, sizeof(nifr.ifr_name) - 1);
-        nifr.ifr_name[sizeof(nifr.ifr_name) - 1] = '\0';
-	
-#else /* !HAVE_LINUX_PROCFS */
-
     for (ifr = ifc.ifc_req; ifr < lifr; ifr = NEXTIFR(ifr))
     {
         struct libnet_ifaddr_list *al = &ifaddrlist[nipaddr];
+        char *ptr;
 
 	/* XXX LINUX SOLARIS ifalias */
-        p = strchr(ifr->ifr_name, ':');
-	if (p)
-            *p = '\0';
+        ptr = strchr(ifr->ifr_name, ':');
+	if (ptr)
+            *ptr = '\0';
 
 	if (pifr && strcmp(ifr->ifr_name, pifr->ifr_name) == 0)
             continue;
 
 	strncpy(nifr.ifr_name, ifr->ifr_name, sizeof(nifr.ifr_name) - 1);
 	nifr.ifr_name[sizeof(nifr.ifr_name) - 1] = '\0';
-#endif
-
-        /* save device name */
-        strncpy(device, nifr.ifr_name, sizeof(device) - 1);
-        device[sizeof(device) - 1] = '\0';
-
         if (ioctl(fd, SIOCGIFFLAGS, &nifr) < 0)
         {
             pifr = ifr;
@@ -306,13 +389,11 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
             continue;
 	}
 	
-        strncpy(nifr.ifr_name, device, sizeof(device) - 1);
-        nifr.ifr_name[sizeof(nifr.ifr_name) - 1] = '\0';
-        if (ioctl(fd, SIOCGIFADDR, (int8_t *)&nifr) < 0)
+        if (ioctl(fd, SIOCGIFADDR, &nifr) < 0)
         {
             if (errno != EADDRNOTAVAIL)
             {
-                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): SIOCGIFADDR: dev=%s: %s", __func__, device, strerror(errno));
+                snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): SIOCGIFADDR: dev=%s: %s", __func__, nifr.ifr_name, strerror(errno));
                 goto bad;
 	    }
 
@@ -324,7 +405,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
             al->addr = ((struct sockaddr_in *)&nifr.ifr_addr)->sin_addr.s_addr;
         }
         
-        al->device = strdup(device);
+        al->device = strdup(nifr.ifr_name);
         if (al->device == NULL)
         {
             snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): strdup not enough memory", __func__);
@@ -346,20 +427,9 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
             ifaddrlist = tmp;
         }
 
-#ifndef HAVE_LINUX_PROCFS
         pifr = ifr;
-#endif
     }
 	
-#ifdef HAVE_LINUX_PROCFS
-    if (ferror(fp))
-    {
-        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): ferror: %s", __func__, strerror(errno));
-	goto bad;
-    }
-    fclose(fp);
-#endif
-
     close(fd);
     *ipaddrp = ifaddrlist;
 
@@ -367,13 +437,12 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 bad:
     if (ifaddrlist)
         free(ifaddrlist);
-#ifdef HAVE_LINUX_PROCFS
-    if (fp)
-	fclose(fp);
-#endif
     close(fd);
     return (-1);
 }
+
+#endif  /* HAVE_LINUX_PROCFS */
+
 #else
 /* WIN32 support *
  * TODO move win32 support into win32 specific source file */
