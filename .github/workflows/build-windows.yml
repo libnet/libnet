@@ -13,7 +13,7 @@ jobs:
       - name: Install WinPcap
         run: |
           Invoke-WebRequest http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip -OutFile WpdPack.zip
-          Expand-Archive WpdPack.zip -DestinationPath ../WpdPack
+          Expand-Archive WpdPack.zip
       - name: Build 64-bit
         shell: cmd
         run: |
