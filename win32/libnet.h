@@ -94,16 +94,18 @@ extern "C" {
 #include <string.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdlib.h>
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <ctype.h>
+
 #include <errno.h>
 #include <stdarg.h>
 
 #define LIBNET_API __declspec(dllexport)
 
-#include "libnet/stdint.h"
 #include "libnet/libnet-macros.h"
 #include "libnet/libnet-headers.h"
 #include "libnet/libnet-structures.h"

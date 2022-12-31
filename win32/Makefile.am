@@ -1,2 +1,2 @@
-EXTRA_DIST = getopt.h libnet.h config.h stdint.h msvcbuild.bat
+EXTRA_DIST = getopt.h libnet.h config.h msvcbuild.bat
 

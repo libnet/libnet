@@ -81,7 +81,7 @@ if not exist "src\win64\" mkdir "src\win64\"
 if not exist "lib\x64\" mkdir "lib\x64\"
 
 copy win32\libnet.h include\
-copy win32\stdint.h include\libnet\
+@rem copy win32\stdint.h include\libnet\
 copy win32\config.h include\
 copy win32\getopt.h include\
 
