@@ -20,7 +20,7 @@ if not exist "%InstallDir%\Common7\Tools\VsDevCmd.bat" (goto fail)
 @set userinput=%1
 @if not "%1"=="x86" @if not "%1"=="x64" @if not "%1"=="x86_x64" goto usage
 @if "%1"=="x86"  goto x86
-@if "%1"=="x64" goto x64
+@if "%1"=="x64" goto x86_x64
 @if "%1"=="x86_x64" goto x86_x64
 @endlocal
 
@@ -33,7 +33,7 @@ call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x64
 goto msvcbuild64
 
 :x86_x64
-call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x86_amd64
+call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=amd64
 goto msvcbuild64
 
 :msvcbuild32
@@ -86,15 +86,10 @@ copy win32\config.h include\
 copy win32\getopt.h include\
 
 cd src
-dir ..\..\..\
-dir ..\..\..\npcap-sdk
-dir ..\..\
-dir ..\..\npcap-sdk
-dir ..\..\npcap-sdk\Include
-@echo "Foo"
-dir "%NPCAP%\Include\"
 %MYCOMPILE% /I..\include /I%NPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
+dir .\win64\
 %MYLINK% /DLL /libpath:%NPCAP%\Lib\x64  /out:..\lib\x64\libnet%VERSION%.dll win64\*.obj Advapi32.lib
+dir ..\lib\x64\
 if exist libnet.dll.manifest^
   %MYMT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
 cd ..
