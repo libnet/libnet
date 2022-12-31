@@ -16,6 +16,7 @@ for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Micros
 if not exist "%InstallDir%\Common7\Tools\VsDevCmd.bat" (goto fail)
 
 @rem Set up common files, paths, and envs
+@for /f "delims=-" %%V in ('type VERSION') do set VERSION=%%V
 @rem relative to C code in src/
 @set NPCAP=..\..\npcap-sdk
 copy win32\*.h include\
@@ -61,7 +62,6 @@ goto msvcbuild
 @set CC=cl /nologo /MD /MP /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%OBJDIR%\
 @set LD=link /nologo
 @set MT=mt /nologo
-@set VERSION=1.2
 @mkdir %OBJDIR% %LIBDIR%
 
 %CC% /I..\include /I%PCAPINC% libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c

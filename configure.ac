@@ -7,7 +7,8 @@
 #
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([libnet], [1.3-dev], [https://github.com/libnet/libnet/issues],,
+AC_INIT([libnet], m4_esyscmd([sed -n '1p' VERSION | tr -d '\n']),
+	[https://github.com/libnet/libnet/issues],,
 	[https://github.com/libnet/libnet])
 
 # Visible in resulting configure script, e.g. with ./configure --version
