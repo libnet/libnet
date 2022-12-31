@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: microsoft/setup-msbuild@v1.1
-      - name: Install WinPcap
+      - name: Install Npcap
         run: |
-          Invoke-WebRequest https://npcap.com/dist/npcap-sdk-1.13.zip -OutFile WpdPack.zip
-          Expand-Archive WpdPack.zip -DestinationPath ../WpdPack
+          Invoke-WebRequest https://npcap.com/dist/npcap-sdk-1.13.zip -OutFile ../npcap-sdk.zip
+          Expand-Archive ../npcap-sdk.zip -DestinationPath ../npcap-sdk
       - name: Build 64-bit
         shell: cmd
         run: |
