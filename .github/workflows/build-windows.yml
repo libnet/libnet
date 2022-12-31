@@ -1,4 +1,4 @@
-name: Wiondows Builder
+name: Windows Builder
 
 on: [push, pull_request]
 
