@@ -12,8 +12,8 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.1
       - name: Install WinPcap
         run: |
-          Invoke-WebRequest http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip -OutFile WpdPack.zip
-          Expand-Archive WpdPack.zip
+          Invoke-WebRequest https://npcap.com/dist/npcap-sdk-1.13.zip -OutFile WpdPack.zip
+          Expand-Archive WpdPack.zip -DestinationPath ../WpdPack
       - name: Build 64-bit
         shell: cmd
         run: |

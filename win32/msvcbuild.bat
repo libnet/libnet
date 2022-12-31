@@ -89,10 +89,11 @@ copy win32\config.h include\
 copy win32\getopt.h include\
 
 cd src
+dir ..\..\..\
+dir ..\..\..\WpdPack
 dir ..\..\
 dir ..\..\WpdPack
 dir ..\..\WpdPack\Include
-type ..\..\WpdPack\Include\Packet32.h
 @echo "Foo"
 dir "%WINPCAP%\Include\"
 %MYCOMPILE% /I..\include /I%WINPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
