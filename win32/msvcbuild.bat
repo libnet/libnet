@@ -18,24 +18,24 @@ if not exist "%InstallDir%\Common7\Tools\VsDevCmd.bat" (goto fail)
 @rem Set up common files, paths, and envs
 @rem relative to C code in src/
 @set NPCAP=..\..\npcap-sdk
-mkdir src\win64 src\win32 lib\x64 lib\x86
 copy win32\*.h include\
+cd src
 
 @if "%1" == "" goto x86
 @setlocal
 @set userinput=%1
-@if not "%1"=="x86" @if not "%1"=="x64" @if not "%1"=="x86_x64" goto usage
 @if "%1"=="x86"  goto x86
 @if "%1"=="x64" goto x64
 @if "%1"=="x86_64" goto x86_64
 @if "%1"=="x86_x64" goto x86_64
+goto usage
 @endlocal
 
 :x86
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x86
 set PCAPLIB=%NPCAP%\Lib
 set PCAPINC=%NPCAP%\Include
-set BUILDDIR=win32
+set OBJDIR=win32
 set LIBDIR=..\lib\x86
 goto msvcbuild
 
@@ -43,7 +43,7 @@ goto msvcbuild
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x64
 set PCAPLIB=%NPCAP%\Lib\x64
 set PCAPINC=%NPCAP%\Include
-set BUILDDIR=win64
+set OBJDIR=win64
 set LIBDIR=..\lib\x64
 goto msvcbuild
 
@@ -51,26 +51,36 @@ goto msvcbuild
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=amd64
 set PCAPLIB=%NPCAP%\Lib\x64
 set PCAPINC=%NPCAP%\Include
-set BUILDDIR=win64
+set OBJDIR=win64
 set LIBDIR=..\lib\x64
 goto msvcbuild
 
 :msvcbuild
 @echo on
 @setlocal
-@set CC=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%BUILDDIR%\
+@set CC=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%OBJDIR%\
 @set LD=link /nologo
 @set MT=mt /nologo
 @set VERSION=1.2
+@mkdir %OBJDIR% %LIBDIR%
 
-cd src
 %CC% /I..\include /I%PCAPINC% libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
-%LD% /DLL /libpath:%PCAPLIB% /out:%LIBDIR%\libnet%VERSION%.dll %BUILDDIR%\*.obj Advapi32.lib
+if %errorlevel% == 0 goto :link
+@echo "Failed building, error %errorlevel%"
+exit /b %errorlevel%
 
+:link
+%LD% /DLL /libpath:%PCAPLIB% /out:%LIBDIR%\libnet%VERSION%.dll %OBJDIR%\*.obj Advapi32.lib
+if %errorlevel% == 0 goto :sign
+@echo "Failed linking, error %errorlevel%"
+exit /b %errorlevel%
+
+:sign
 if exist libnet.dll.manifest^
   %MT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
-cd ..
 
+dir %LIBDIR%
+cd ..
 exit /b %errorlevel%
 
 :usage
