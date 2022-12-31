@@ -80,6 +80,11 @@ extern "C" {
 #pragma comment (lib,"iphlpapi")  /* IP Helper */
 #pragma comment (lib,"wpcap")     /* Winpcap   */
 #pragma comment (lib,"packet")   
+
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#else
+#include <unistd.h>
 #endif
 
 /* FIXME this needs manual update during release packaging. */
