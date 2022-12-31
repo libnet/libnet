@@ -52,7 +52,7 @@ call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=amd64
 set PCAPLIB=%NPCAP%\Lib\x64
 set PCAPINC=%NPCAP%\Include
 set OBJDIR=win64
-set LIBDIR=..\lib\x64
+set LIBDIR=..\lib\x86_64
 goto msvcbuild
 
 :msvcbuild

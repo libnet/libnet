@@ -6,6 +6,8 @@ jobs:
   windows-build:
     runs-on: windows-2019
     strategy:
+      matrix:
+        arch: [x86, x86_64]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -14,16 +16,12 @@ jobs:
         run: |
           Invoke-WebRequest https://npcap.com/dist/npcap-sdk-1.13.zip -OutFile ../npcap-sdk.zip
           Expand-Archive ../npcap-sdk.zip -DestinationPath ../npcap-sdk
-      - name: Build 32-bit
+      - name: Build ${{ matrix.arch }}
         shell: cmd
         run: |
-          .\win32\msvcbuild.bat x86
-      - name: Build 64-bit
-        shell: cmd
-        run: |
-          .\win32\msvcbuild.bat x86_64
+          .\win32\msvcbuild.bat ${{ matrix.arch }}
       - name: Archive DLL files
         uses: actions/upload-artifact@v3
         with:
-          name: libnet-${{ github.run_number }}
-          path: lib/*
+          name: libnet-${{ matrix.arch }}-build${{ github.run_number }}
+          path: lib/${{ matrix.arch }}
