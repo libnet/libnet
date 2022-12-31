@@ -15,83 +15,60 @@ for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Micros
 )
 if not exist "%InstallDir%\Common7\Tools\VsDevCmd.bat" (goto fail)
 
+@rem Set up common files, paths, and envs
+@rem relative to C code in src/
+@set NPCAP=..\..\npcap-sdk
+mkdir src\win64 src\win32 lib\x64 lib\x86
+copy win32\*.h include\
+
 @if "%1" == "" goto x86
 @setlocal
 @set userinput=%1
 @if not "%1"=="x86" @if not "%1"=="x64" @if not "%1"=="x86_x64" goto usage
 @if "%1"=="x86"  goto x86
-@if "%1"=="x64" goto x86_x64
-@if "%1"=="x86_x64" goto x86_x64
+@if "%1"=="x64" goto x64
+@if "%1"=="x86_64" goto x86_64
+@if "%1"=="x86_x64" goto x86_64
 @endlocal
 
 :x86
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x86
-goto msvcbuild32
+set PCAPLIB=%NPCAP%\Lib
+set PCAPINC=%NPCAP%\Include
+set BUILDDIR=win32
+set LIBDIR=..\lib\x86
+goto msvcbuild
 
 :x64
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=x64
-goto msvcbuild64
+set PCAPLIB=%NPCAP%\Lib\x64
+set PCAPINC=%NPCAP%\Include
+set BUILDDIR=win64
+set LIBDIR=..\lib\x64
+goto msvcbuild
 
-:x86_x64
+:x86_64
 call "%InstallDir%\Common7\Tools\VsDevCmd.bat" -arch=amd64
-goto msvcbuild64
+set PCAPLIB=%NPCAP%\Lib\x64
+set PCAPINC=%NPCAP%\Include
+set BUILDDIR=win64
+set LIBDIR=..\lib\x64
+goto msvcbuild
 
-:msvcbuild32
+:msvcbuild
 @echo on
 @setlocal
-@set MYCOMPILE=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fowin32\
-@set MYLINK=link /nologo
-@set MYMT=mt /nologo
+@set CC=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%BUILDDIR%\
+@set LD=link /nologo
+@set MT=mt /nologo
 @set VERSION=1.2
 
-@rem relative to C code in src/
-@set NPCAP=..\..\npcap-sdk
-
-if not exist "src\win32\" mkdir "src\win32\"
-
-if not exist "lib\x86\" mkdir "lib\x86\"
-
-copy win32\libnet.h include\
-copy win32\stdint.h include\libnet\
-copy win32\config.h include\
-copy win32\getopt.h include\
-
 cd src
-%MYCOMPILE% /I..\include /I%NPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
-%MYLINK% /DLL /libpath:%NPCAP%\Lib  /out:..\lib\x86\libnet%VERSION%.dll win32\*.obj Advapi32.lib
+%CC% /I..\include /I%PCAPINC% libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
+%LD% /DLL /libpath:%PCAPLIB% /out:%LIBDIR%\libnet%VERSION%.dll %BUILDDIR%\*.obj Advapi32.lib
+
 if exist libnet.dll.manifest^
-  %MYMT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
-cd ..
-
-exit /b %errorlevel%
-
-:msvcbuild64
-@echo on
-@setlocal
-@set MYCOMPILE=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fowin64\
-@set MYLINK=link /nologo
-@set MYMT=mt /nologo
-@set VERSION=1.2
-
-@rem relative to C code in src/
-@set NPCAP=..\..\npcap-sdk
-
-if not exist "src\win64\" mkdir "src\win64\"
-
-if not exist "lib\x64\" mkdir "lib\x64\"
-
-copy win32\libnet.h include\
-@rem copy win32\stdint.h include\libnet\
-copy win32\config.h include\
-copy win32\getopt.h include\
-
-cd src
-%MYCOMPILE% /I..\include /I%NPCAP%\Include libnet_a*.c libnet_build_*.c libnet_c*.c libnet_dll.c libnet_error.c libnet_i*.c libnet_link_win32.c libnet_p*.c libnet_raw.c libnet_resolve.c libnet_version.c libnet_write.c
-dir .\win64\
-%MYLINK% /DLL /libpath:%NPCAP%\Lib\x64  /out:..\lib\x64\libnet%VERSION%.dll win64\*.obj Advapi32.lib
-dir ..\lib\x64\
-if exist libnet.dll.manifest^
-  %MYMT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
+  %MT% -manifest libnet.dll.manifest -outputresource:libnet.dll;2
 cd ..
 
 exit /b %errorlevel%
