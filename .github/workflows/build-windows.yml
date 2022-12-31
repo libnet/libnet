@@ -22,3 +22,8 @@ jobs:
         shell: cmd
         run: |
           .\win32\msvcbuild.bat x86_64
+      - name: Archive DLL files
+        uses: actions/upload-artifact@v3
+        with:
+          name: libnet-${{ github.run_number }}
+          path: lib/*
