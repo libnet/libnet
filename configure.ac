@@ -12,7 +12,7 @@ AC_INIT([libnet], m4_esyscmd([sed -n '1p' VERSION | tr -d '\n']),
 	[https://github.com/libnet/libnet])
 
 # Visible in resulting configure script, e.g. with ./configure --version
-AC_COPYRIGHT([Copyright (C) 1998 - 2019 The libnet Developer Community.])
+AC_COPYRIGHT([Copyright (C) 1998 - 2022 The libnet Developer Community.])
 AC_REVISION(${VERSION})
 
 # the autotools and libtool should be at least these versions
