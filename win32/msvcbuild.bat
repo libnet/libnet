@@ -70,7 +70,7 @@ if %errorlevel% == 0 goto :link
 exit /b %errorlevel%
 
 :link
-%LD% /DLL /libpath:%PCAPLIB% /out:%LIBDIR%\libnet%VERSION%.dll %OBJDIR%\*.obj Advapi32.lib
+%LD% /dll /version:%VERSION% /libpath:%PCAPLIB% /out:%LIBDIR%\libnet.dll %OBJDIR%\*.obj Advapi32.lib
 if %errorlevel% == 0 goto :sign
 @echo "Failed linking, error %errorlevel%"
 exit /b %errorlevel%
