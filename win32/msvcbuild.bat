@@ -58,7 +58,7 @@ goto msvcbuild
 :msvcbuild
 @echo on
 @setlocal
-@set CC=cl /nologo /MD /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%OBJDIR%\
+@set CC=cl /nologo /MD /MP /O2 /W4 /c /D_CRT_SECURE_NO_DEPRECATE /Fo%OBJDIR%\
 @set LD=link /nologo
 @set MT=mt /nologo
 @set VERSION=1.2
