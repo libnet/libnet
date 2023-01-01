@@ -8,7 +8,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_INIT([libnet], m4_esyscmd([sed -n '1p' VERSION | tr -d '\n']),
-	[https://github.com/libnet/libnet/issues],,
+	[https://github.com/libnet/libnet/issues],[],
 	[https://github.com/libnet/libnet])
 
 # Visible in resulting configure script, e.g. with ./configure --version
@@ -213,16 +213,14 @@ AS_CASE([$target_os],
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1, [FreeBSD has sa_len in struct sockaddr.])
 
     AC_MSG_CHECKING([FreeBSD version, is SOCK_RAW really raw?])
-    AC_TRY_COMPILE([#include <sys/param.h>], [
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/param.h>]], [[
 #if (__FreeBSD_version >= 1100030)
     return 0;
 #else
 #error FreeBSD pre-11, SOCK_RAW isn't really raw, see https://www.freebsd.org/cgi/man.cgi?ip(4)#end
-#endif],
-    AC_MSG_RESULT([yes]),
-    AC_MSG_RESULT([no])
-    AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, [FreeBSD pre-11, libnet must byteswap raw ip_len, ip_off])
-    PKG_CONFIG_DEFINES="${PKG_CONFIG_DEFINES} -DLIBNET_BSD_BYTE_SWAP")],
+#endif]])],[AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)
+    AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1, FreeBSD pre-11, libnet must byteswap raw ip_len, ip_off)
+    PKG_CONFIG_DEFINES="${PKG_CONFIG_DEFINES} -DLIBNET_BSD_BYTE_SWAP"])],
 
 [*netbsd*], [
     AC_DEFINE(LIBNET_BSD_BYTE_SWAP, 1,
