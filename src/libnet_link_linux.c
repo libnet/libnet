@@ -41,13 +41,11 @@
 #include <netinet/if_ether.h>
 #include <net/if_arp.h>
 
-#if (HAVE_PACKET_SOCKET)
 #ifndef SOL_PACKET
 #define SOL_PACKET 263
 #endif  /* SOL_PACKET */
 #include <netpacket/packet.h>
 #include <net/ethernet.h>     /* the L2 protocols */
-#endif  /* HAVE_PACKET_SOCKET */
 
 #include "../include/libnet.h"
 
@@ -77,11 +75,7 @@ libnet_open_link(libnet_t *l)
         return (-1);
     } 
 
-#if (HAVE_PACKET_SOCKET)
     l->fd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-#else
-    l->fd = socket(PF_INET, SOCK_PACKET, htons(ETH_P_ALL));
-#endif
     if (l->fd == -1)
     {
         if (errno == EPERM) {
@@ -186,7 +180,6 @@ libnet_close_link(libnet_t *l)
 }
 
 
-#if (HAVE_PACKET_SOCKET)
 static int
 get_iface_index(int fd, const char *device)
 {
@@ -203,18 +196,13 @@ get_iface_index(int fd, const char *device)
  
     return ifr.ifr_ifindex;
 }
-#endif
 
 
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
     ssize_t c;
-#if (HAVE_PACKET_SOCKET)
     struct sockaddr_ll sa;
-#else
-    struct sockaddr sa;
-#endif
 
     if (l == NULL)
     { 
@@ -222,7 +210,6 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     }
 
     memset(&sa, 0, sizeof (sa));
-#if (HAVE_PACKET_SOCKET)
     sa.sll_family    = AF_PACKET;
     sa.sll_ifindex   = get_iface_index(l->fd, l->device);
     if (sa.sll_ifindex == -1)
@@ -230,10 +217,6 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
         return (-1);
     }
     sa.sll_protocol  = htons(ETH_P_ALL);
-#else
-	strncpy(sa.sa_data, l->device, sizeof (sa.sa_data) - 1);
-    sa.sa_data[sizeof (sa.sa_data) - 1] = 0;
-#endif
 
     c = sendto(l->fd, packet, size, 0,
             (struct sockaddr *)&sa, sizeof (sa));

@@ -77,7 +77,6 @@ AC_MSG_RESULT($have_socklen_t)
 #
 AC_LIBNET_ENDIAN_CHECK
 AC_SUBST(ENDIANESS)
-AC_SUBST(HAVE_PACKET_SOCKET)
 AC_SUBST(ADDITIONAL_LIBS)
 AC_SUBST(PKG_CONFIG_DEFINES)
 AC_SUBST(PKG_CONFIG_LIBS)
@@ -105,7 +104,6 @@ AS_IF([test -n "${with_link_layer}"], [
         [win32], [AC_LIBOBJ([libnet_link_win32])],
         [none],  [AC_LIBOBJ([libnet_link_none])],
         [linux], [AC_LIBOBJ([libnet_link_linux])
-                  AC_LIBNET_CHECK_PF_PACKET
                   AC_LIBNET_LINUX_PROCFS],
         [AC_MSG_ERROR([Invalid link type "${with_link_layer}"])])
      AC_MSG_RESULT(user selected link layer ${with_link_layer})],
@@ -131,7 +129,6 @@ AS_IF([test -n "${with_link_layer}"], [
 [test "${ac_cv_header_linux_socket_h}" = "yes"], [
     AC_LIBOBJ([libnet_link_linux])
     AC_MSG_RESULT(found link layer linux)
-    AC_LIBNET_CHECK_PF_PACKET
     AC_LIBNET_LINUX_PROCFS],
 [test "${cross_compiling}" != "yes" -a -c /dev/bpf0], [
     # check again in case not readable
