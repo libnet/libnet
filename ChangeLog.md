@@ -110,7 +110,7 @@ Release curated by Sam Roberts.
 - pblock_append deals with raw memory and structs, so declare it correctly
   (Sam Roberts)
 - Clarified types and sizes of DHCP/BOOTP chaddr, sname, and file. chaddr is a
-  hardware address, with size specified seperately, whereas sname and file are
+  hardware address, with size specified separately, whereas sname and file are
   null terminated strings. (Sam Roberts)
 - Explicitly ignore return value of write (some systems now warn about this).
   (Sam Roberts)
@@ -279,7 +279,7 @@ Release curated by Sam Roberts.
   message. (Sam Roberts)
 - man doc makefile wasn't correctly referring to the srcdir
   (alon.barlev@gmail.com) (Sam Roberts)
-- autotools patches for cross compiling and seperate builddir
+- autotools patches for cross compiling and separate builddir
   (alon.barlev@gmail.com) (Sam Roberts)
 - html doc makefile wasn't correctly referring to the srcdir
   (alon.barlev@gmail.com) (Sam Roberts)
