@@ -21,7 +21,7 @@
 #   The DX_*_FEATURE macros control the default setting for the given
 #   Doxygen feature. Supported features are 'DOXYGEN' itself, 'DOT' for
 #   generating graphics, 'HTML' for plain HTML, 'CHM' for compressed HTML
-#   help (for MS users), 'CHI' for generating a seperate .chi file by the
+#   help (for MS users), 'CHI' for generating a separate .chi file by the
 #   .chm file, and 'MAN', 'RTF', 'XML', 'PDF' and 'PS' for the appropriate
 #   output formats. The environment variable DOXYGEN_PAPER_SIZE may be
 #   specified to override the default 'a4wide' paper size.
@@ -321,8 +321,8 @@ DX_ARG_ABLE(chm, [generate doxygen compressed HTML help documentation],
              DX_ENV_APPEND(GENERATE_HTMLHELP, YES)],
             [DX_ENV_APPEND(GENERATE_HTMLHELP, NO)])
 
-# Seperate CHI file generation.
-DX_ARG_ABLE(chi, [generate doxygen seperate compressed HTML help index file],
+# Separate CHI file generation.
+DX_ARG_ABLE(chi, [generate doxygen separate compressed HTML help index file],
             [DX_CHECK_DEPEND(chm, 1)],
             [DX_CLEAR_DEPEND(chm, 1)],
             [],
