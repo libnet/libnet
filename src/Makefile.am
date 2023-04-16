@@ -39,6 +39,7 @@ libnet_la_SOURCES = libnet_asn1.c \
 			libnet_build_sebek.c \
 			libnet_build_snmp.c \
 			libnet_build_stp.c \
+			libnet_build_udld.c \
 			libnet_build_tcp.c \
 			libnet_build_token_ring.c \
 			libnet_build_udp.c \

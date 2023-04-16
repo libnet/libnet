@@ -320,6 +320,22 @@ libnet_diag_dump_pblock_type(uint8_t type)
             return ("lldp_end_lldpdu");
         case LIBNET_PBLOCK_LLDP_ORG_SPEC_H:
             return ("lldp_org_specific");
+        case LIBNET_PBLOCK_UDLD_H:
+            return ("udld");
+        case LIBNET_PBLOCK_UDLD_DEVICE_ID_H:
+            return ("udld_device_id");
+        case LIBNET_PBLOCK_UDLD_PORT_ID_H:
+            return ("udld_port_id");
+        case LIBNET_PBLOCK_UDLD_ECHO_H:
+            return ("udld_echo");
+        case LIBNET_PBLOCK_UDLD_MSG_INTERVAL_H:
+            return ("udld_message_interval");
+        case LIBNET_PBLOCK_UDLD_TMT_INTERVAL_H:
+            return ("udld_timeout_interval");
+        case LIBNET_PBLOCK_UDLD_DEVICE_NAME_H:
+            return ("udld_device_name");
+        case LIBNET_PBLOCK_UDLD_SEQ_NUMBER_H:
+            return ("udld_sequence_number");
     }
     return ("unrecognized pblock");
 }

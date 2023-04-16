@@ -90,3 +90,4 @@ jobs:
       - name: Run Unit-Test
         run: |
           sudo ./tests/libnet_unit_tests
+          ./tests/libnet_udld_unit_tests

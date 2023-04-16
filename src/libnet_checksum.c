@@ -526,6 +526,32 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
              *  the ISL frame itself.  Use the libnet_crc function.
              */
         }
+        case LIBNET_PROTO_UDLD:
+        {
+            /**
+             * Once again.
+             * iphdr points to the packet, which has the following structure:
+             *   IEEE 802.3 Ethernet  14 bytes
+             *   LLC                  8 bytes
+             *   UDLD                 <<<<---- udld_hdr_offset
+            */
+            /* FIXME: should we use ptrdiff_t for pointer arithmetics? */
+            int whole_packet_length = (end - iphdr); /* The length of IEEE 802.3 Ethernet + LLC + UDLD(include TLVs) */
+            if (whole_packet_length < 0)
+            {
+                snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+                        "%s(): cannot calculate packet lenght", __func__);
+                return (-1);
+            }
+            const uint8_t udld_hdr_offset = (LIBNET_802_3_H + LIBNET_802_2SNAP_H);
+            int udld_packet_length = (whole_packet_length - udld_hdr_offset);
+
+            const uint16_t checksum = libnet_ip_check((uint16_t *)iphdr + (udld_hdr_offset/sizeof(uint16_t)), udld_packet_length);
+
+            struct libnet_udld_hdr *udld_hdr = (struct libnet_udld_hdr *)(iphdr + udld_hdr_offset);
+            udld_hdr->checksum = checksum;
+            break;
+        }
         default:
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,

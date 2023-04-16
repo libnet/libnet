@@ -598,6 +598,8 @@ libnet_pblock_p2p(uint8_t type)
             return (IPPROTO_VRRP);
         case LIBNET_PBLOCK_GRE_H:
             return (IPPROTO_GRE);
+        case LIBNET_PBLOCK_UDLD_H:
+            return (LIBNET_PROTO_UDLD);
         default:
             return (-1);
     }
