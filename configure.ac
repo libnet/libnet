@@ -185,6 +185,9 @@ AC_ARG_ENABLE([tests],
 )
 AC_MSG_RESULT([$enable_tests])
 AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
+AS_IF([test "$enable_tests" = "yes"], [
+    AC_DEFINE(LIBNET_ENABLE_TESTS, 1, [Useful define for testing purposes.])
+])
 
 # what (not) to do if the user disables shared libraries
 AM_CONDITIONAL([COND_SHARED], [test "x$enable_shared" != xno])

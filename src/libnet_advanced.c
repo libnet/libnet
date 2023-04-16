@@ -38,12 +38,18 @@ libnet_adv_cull_packet(libnet_t *l, uint8_t **packet, uint32_t *packet_s)
     *packet = NULL;
     *packet_s = 0;
 
+#ifdef LIBNET_ENABLE_TESTS
+    /*
+     *  Allow to fetch the packet without advanced mode. Useful for unit tests.
+     */
+#else
     if (l->injection_type != LIBNET_LINK_ADV)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): advanced link mode not enabled", __func__);
         return (-1);
     }
+#endif
 
     /* checksums will be written in */
     return (libnet_pblock_coalesce(l, packet, packet_s));
@@ -58,12 +64,18 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
     *header = NULL;
     *header_s = 0;
 
+#ifdef LIBNET_ENABLE_TESTS
+    /*
+     *  Allow to fetch the packet's header without advanced mode. Useful for unit tests.
+     */
+#else
     if (l->injection_type != LIBNET_LINK_ADV)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): advanced link mode not enabled", __func__);
         return (-1);
     }
+#endif
 
     p = libnet_pblock_find(l, ptag);
     if (p == NULL)
