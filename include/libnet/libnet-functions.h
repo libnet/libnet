@@ -1464,6 +1464,121 @@ libnet_build_stp_tcn(uint16_t id, uint8_t version, uint8_t bpdu_type,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * Builds an UniDirectional Link Detection(UDLD) header.
+ * UDLD frames are usually encapsulated inside of an 802.2 + 802.3 frame 
+ * combination.
+ * @param version UDLD PDU version number
+ * @param opcode operation code
+ * @param flags flags
+ * @param checksum checksum (0 for libnet to auto-fill)
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_hdr(uint8_t version, uint8_t opcode, uint8_t flags, uint8_t checksum,
+const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Device ID TLV.
+ * @param value device id(ASCII character string)
+ * @param value_s device id(ASCII character string) length
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_device_id(const uint8_t *value, const uint8_t value_s,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Port ID TLV.
+ * @param value port id(ASCII character string)
+ * @param value_s port id(ASCII character string) length
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_port_id(const uint8_t *value, const uint8_t value_s,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Echo TLV.
+ * @param value list of ID pairs
+ * @param value_s ID pairs length
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_echo(const uint8_t *value, const uint8_t value_s,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Message Interval TLV.
+ * @param value time interval(8-bit unsigned integer)
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_message_interval(const uint8_t *value, libnet_t *l,
+libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Timeout Interval TLV.
+ * @param value timeout interval(8-bit unsigned integer)
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_timeout_interval(const uint8_t *value, libnet_t *l,
+libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Device Name TLV.
+ * @param value device name(ASCII character string)
+ * @param value_s device name length
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_device_name(const uint8_t *value, const uint8_t value_s,
+libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds an UniDirectional Link Detection(UDLD) Sequence Number TLV.
+ * @param value sequence number(32-bit unsigned integer)
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success
+ * @retval -1 on error
+ */
+LIBNET_API
+libnet_ptag_t
+libnet_build_udld_sequence_number(const uint8_t *value, libnet_t *l,
+libnet_ptag_t ptag);
+
+/**
  * Builds a token ring header.
  * @param ac access control
  * @param fc frame control

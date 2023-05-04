@@ -107,6 +107,7 @@
 #define LIBNET_SEBEK_H          0x30    /* sebek header:          48 bytes */   
 #define LIBNET_STP_CONF_H       0x23    /**< STP conf header:     35 bytes */
 #define LIBNET_STP_TCN_H        0x04    /**< STP tcn header:       4 bytes */
+#define LIBNET_UDLD_H           0x04    /**< UDLD header:          4 bytes */
 #define LIBNET_TOKEN_RING_H     0x16    /**< Token Ring header:   22 bytes */
 #define LIBNET_TCP_H            0x14    /**< TCP header:          20 bytes */
 #define LIBNET_UDP_H            0x08    /**< UDP header:           8 bytes */
@@ -1734,6 +1735,64 @@ struct libnet_stp_tcn_hdr
     uint8_t stp_bpdu_type;   /* bridge protocol data unit type */
 };
 
+/*
+ * UDLD header
+ * UniDirectional Link Detection
+ * Base header size: 4 bytes
+*/
+struct libnet_udld_hdr
+{
+    /* LLC Info */
+#define LIBNET_UDLD_DEST_MAC {0x01, 0x00, 0x0C, 0xCC, 0xCC, 0xCC}
+
+    /* UDLD SNAP Format */
+#define LIBNET_UDLD_LLC_DSAP        0xAA
+#define LIBNET_UDLD_LLC_SSAP        0xAA
+#define LIBNET_UDLD_LLC_CONTROL     0x03
+#define LIBNET_UDLD_OID             {0x00, 0x00, 0x0C}
+#define LIBNET_UDLD_HDLC_PROTO_TYPE 0x0111
+
+    /* Protocol Data Unit (PDU) Format */
+    uint8_t version_opcode;
+#define LIBNET_UDLD_PDU_VERSION                0x01
+#define LIBNET_UDLD_PDU_VERSION_OFFSET         (5)
+
+#define LIBNET_UDLD_PDU_OPCODE_RESERVED        0x00 /* Reserved opcode message           */
+#define LIBNET_UDLD_PDU_OPCODE_PROBE           0x01 /* Probe opcode message              */
+#define LIBNET_UDLD_PDU_OPCODE_ECHO            0x02 /* Echo opcode message               */
+#define LIBNET_UDLD_PDU_OPCODE_FLUSH           0x03 /* Flush opcode message              */
+#define LIBNET_UDLD_PDU_OPCODE_RESERVED_FUTURE 0x04 /* Reserved for future use 0x04-0x1F */
+#define LIBNET_UDLD_PDU_OPCODE_MASK            0x1F
+
+    uint8_t flags;
+#define LIBNET_UDLD_FLAG_RT       0x01 /* Bit 0  : Recommended timeout flag (RT) */
+#define LIBNET_UDLD_FLAG_RSY      0x02 /* Bit 1  : ReSynch flag (RSY)            */
+#define LIBNET_UDLD_FLAG_RESERVED 0x03 /* Bit 2-7: Reserved for future use       */
+
+    uint16_t checksum; /* IP-like checksum */
+#define LIBNET_PROTO_UDLD    202
+
+    /* TLVs */
+#define LIBNET_UDLD_TLV_HDR_SIZE               0x04 /* UDLD TLV's header size 4 bytes */
+
+    uint16_t tlv__type;
+#define LIBNET_UDLD_DEVICE_ID        0x0001   /* Value format: ASCII character string           */
+#define LIBNET_UDLD_PORT_ID          0x0002   /* Value format: ASCII character string           */
+#define LIBNET_UDLD_ECHO             0x0003   /* Value format: List of ID pairs                 */
+#define LIBNET_UDLD_MESSAGE_INTERVAL 0x0004   /* Value format: 8-bit unsigned integer           */
+#define LIBNET_UDLD_TIMEOUT_INTERVAL 0x0005   /* Value format: 8-bit unsigned integer           */
+#define LIBNET_UDLD_DEVICE_NAME      0x0006   /* Value format: ASCII character string           */
+#define LIBNET_UDLD_SEQUENCE_NUMBER  0x0007   /* Value format: 32-bit unsigned integer          */
+/* Reserved TLVs                     >0x0007     Value format: To be skipped by parsing routine */
+
+    uint16_t tlv__length;
+
+    /* TLV value types */
+#define LIBNET_UDLD_VALUE_TYPE_ASCII       (0)
+#define LIBNET_UDLD_VALUE_TYPE_ID_PAIRS    (1)
+#define LIBNET_UDLD_VALUE_TYPE_8_BIT_UINT  (2)
+#define LIBNET_UDLD_VALUE_TYPE_32_BIT_UINT (3)
+};
 
 /*
  *  TCP header
