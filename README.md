@@ -1,4 +1,4 @@
-[![GitHub Status][]][GitHub] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
+[![1b][]][1] [![2b][]][2] [![3b][]][3] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
 
 Packet Construction and Injection
 =================================
@@ -172,7 +172,11 @@ Some old docs are available at:
 [latest release]:  https://github.com/libnet/libnet/releases
 [autotools]:       https://autotools.io/
 [origin]:          http://packetfactory.openwall.net/projects/libnet/
-[GitHub]:          https://github.com/libnet/libnet/actions/workflows/build.yml/
-[GitHub Status]:   https://github.com/libnet/libnet/actions/workflows/build.yml/badge.svg
+[1]:               https://github.com/libnet/libnet/actions/workflows/build.yml/
+[1b]:              https://github.com/libnet/libnet/actions/workflows/build.yml/badge.svg
+[2]:               https://github.com/libnet/libnet/actions/workflows/build-freebsd.yml/
+[2b]:              https://github.com/libnet/libnet/actions/workflows/build-freebsd.yml/badge.svg
+[3]:               https://github.com/libnet/libnet/actions/workflows/build-windows.yml/
+[3b]:              https://github.com/libnet/libnet/actions/workflows/build-windows.yml/badge.svg
 [CodeDocs]:        https://codedocs.xyz/libnet/libnet/
 [CodeDocs Status]: https://codedocs.xyz/libnet/libnet.svg
