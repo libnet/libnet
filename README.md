@@ -23,12 +23,40 @@ libnet are:
 - [tcptraceroute](https://web.archive.org/web/20130424094134/http://michael.toren.net/code/tcptraceroute/)
 - [yersinia](https://web.archive.org/web/20180522141004/http://www.yersinia.net/)
 
-See the man page and sample test code for more detailed information.
-Online documentation is available at https://codedocs.xyz/libnet/libnet/
-
 > **NOTE:** Legacy code written for *libnet-1.0.x* is unfortunately
 >           **incompatible** with *libnet-1.1.x* and later.  
 >           See the [Migration Guide](doc/MIGRATION.md) for porting help.
+
+
+Using -lnet
+-----------
+
+Libnet is installed as a library and a set of include files.  The main
+include file to use in your program is:
+
+    #include <libnet.h>
+
+To get the correct search paths to both the header and library files,
+use the standard `pkg-config` tool (old `libnet-config` is deprecated):
+
+    $ pkg-config --libs --static --cflags libnet
+    -I/usr/local/include -L/usr/local/lib -lnet
+
+The prefix path `/usr/local/` shown here is only the default.  Use the
+`configure` script to select a different prefix when installing libnet.
+
+For GNU autotools based projects, use the following in `configure.ac`:
+
+    # Check for required libraries
+    PKG_CHECK_MODULES([libnet], [libnet >= 1.2])
+
+and in your `Makefile.am`:
+
+    proggy_CFLAGS = $(libnet_CFLAGS)
+    proggy_LDADD  = $(libnet_LIBS)
+
+> Online docs available at <https://codedocs.xyz/libnet/libnet/>.  See
+> the man page and [sample test code](sample/) for more information.
 
 
 Building
@@ -120,34 +148,6 @@ UNIX and GNU/Linux systems, see `chmcmd`, which is available in the
 [FreePascal](http://www.freepascal.org/) suite:
 
     $ sudo apt install fp-utils-3.0.4
-
-
-Using -lnet
------------
-
-Libnet is installed as a library and a set of include files.  The main
-include file to use in your program is:
-
-    #include <libnet.h>
-
-To get the correct search paths to both the header and library files,
-use the standard `pkg-config` tool (old `libnet-config` is deprecated):
-
-    $ pkg-config --libs --static --cflags libnet
-    -I/usr/local/include -L/usr/local/lib -lnet
-
-The prefix path `/usr/local/` shown here is only the default.  Use the
-`configure` script to select a different prefix when installing libnet.
-
-For GNU autotools based projects, use the following in `configure.ac`:
-
-    # Check for required libraries
-    PKG_CHECK_MODULES([libnet], [libnet >= 1.2])
-
-and in your `Makefile.am`:
-
-    proggy_CFLAGS = $(libnet_CFLAGS)
-    proggy_LDADD  = $(libnet_LIBS)
 
 
 Origin & References
