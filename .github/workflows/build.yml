@@ -1,4 +1,4 @@
-name: Bob the Builder
+name: Linux/macOS Builder
 
 on: [push, pull_request]
 
