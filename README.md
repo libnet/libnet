@@ -38,10 +38,10 @@ First download the [latest release][] from GitHub.  Libnet employs the
 [GNU configure and build system][autotools].  The release tarballs and
 zip files ship with a pre-built `configure` script:
 
-    tar xf libnet-x.y.z.tar.gz
-    cd libnet-x.y.z/
-    ./configure && make
-    sudo make install
+    $ tar xf libnet-x.y.z.tar.gz
+    $ cd libnet-x.y.z/
+    $ ./configure && make
+    $ sudo make install
 
 To list available options, type <kbd>./configure --help</kbd>
 
@@ -54,68 +54,72 @@ autotools: autoconf (>=2.69), automake (>=1.14), libtool (>=2.4.2).
 How to install the dependencies varies by system, but on many Debian derived
 systems, `apt` can be used:
 
-    sudo apt install autoconf automake libtool
+    $ sudo apt install autoconf automake libtool
+    $ ./autogen.sh
+    $ ./configure && make
+    $ sudo make install
+
 
 ### Using Conan
 
-Libnet now is available on [Conan Center](https://conan.io/center/libnet).  
-Please add `libnet/1.2` to your `conanfile.txt`  
+Libnet is available on [Conan Center](https://conan.io/center/libnet).  To use,
+add `libnet/1.2` to your `conanfile.txt`
 
 ### Building with Docker
-```bash
-# Build image
-cd .devcontainer
-docker build -t libnet-builder .
 
-# Compile libnet with docker
-cd ..
-docker run -it --rm -v $(pwd):$(pwd) --workdir=$(pwd) libnet-builder
+First build the dev. contrainer:
 
-./autogen.sh
-./configure
-make
-```
+    $ cd .devcontainer
+    $ docker build -t libnet-builder .
+
+Then compile libnet with docker:
+
+    $ cd ..
+    $ docker run -it --rm -v $(pwd):$(pwd) --workdir=$(pwd) libnet-builder
+    $ ./autogen.sh
+    $ ./configure
+    $ make
+
 
 ### Running Unit Tests with CMocka
-```bash
-# Running tests in the building Docker ^
 
-./autogen.sh
-./configure --enable-tests
-make
-sudo ./tests/libnet_unit_tests
+Running tests in the dev. container (above):
 
-# Approximate output:
-builder$ ./tests/libnet_unit_tests
-[==========] Running 1 test(s).
-[ RUN      ] test_libnet_build_ethernet
-[       OK ] test_libnet_build_ethernet
-[==========] 1 test(s) run.
-[  PASSED  ] 1 test(s).
-builder$
-```
+    $ ./autogen.sh
+    $ ./configure --enable-tests
+    $ make
+    $ sudo ./tests/libnet_unit_tests
+
+Approximate output:
+
+    $ ./tests/libnet_unit_tests
+    [==========] Running 1 test(s).
+    [ RUN      ] test_libnet_build_ethernet
+    [       OK ] test_libnet_build_ethernet
+    [==========] 1 test(s) run.
+    [  PASSED  ] 1 test(s).
 
 ### Building the Documentation
 
 To build the documentation (optional) you need doxygen and pod2man:
 
-    sudo apt install doxygen
-    sudo apt install pod2man || sudo apt install perl
+    $ sudo apt install doxygen
+    $ sudo apt install pod2man || sudo apt install perl
 
 For neat graphics in the HTML documentation, also install graphviz.
 There is also a PDF version of the docs, to build that you need quite a
 few more packages:
 
-    sudo apt install texlive-extra-utils texlive-latex-extra \
-                     texlive-fonts-recommended latex-xcolor  \
-                     texlive-font-utils
+    $ sudo apt install texlive-extra-utils texlive-latex-extra \
+                       texlive-fonts-recommended latex-xcolor  \
+                       texlive-font-utils
 
 For Microsoft CHM docs you need the HTML Help Workshop, which is part
 of Visual Studio: http://go.microsoft.com/fwlink/p/?linkid=154968, on
 UNIX and GNU/Linux systems, see `chmcmd`, which is available in the
 [FreePascal](http://www.freepascal.org/) suite:
 
-    sudo apt install fp-utils-3.0.4
+    $ sudo apt install fp-utils-3.0.4
 
 
 Using -lnet
