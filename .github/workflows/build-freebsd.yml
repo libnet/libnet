@@ -13,17 +13,17 @@ jobs:
         name: [ freebsd-13-gcc, freebsd-13-clang ]
         include:
           - name: freebsd-13-gcc
-            os: macos-10.15
+            os: macos-latest
             cc: gcc
           - name: freebsd-13-clang
-            os: macos-10.15
+            os: macos-latest
             cc: clang
 
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-
       - name: Build
+        # https://github.com/vmactions/freebsd-vm
         uses: vmactions/freebsd-vm@v0
         with:
           prepare: |
