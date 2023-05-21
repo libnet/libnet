@@ -131,7 +131,7 @@ include file to use in your program is:
     #include <libnet.h>
 
 To get the correct search paths to both the header and library files,
-use the standard `pkg-config` tool:
+use the standard `pkg-config` tool (old `libnet-config` is deprecated):
 
     $ pkg-config --libs --static --cflags libnet
     -I/usr/local/include -L/usr/local/lib -lnet
