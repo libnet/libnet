@@ -1,4 +1,4 @@
-[![Appveyor Status][]][Appveyor] [![GitHub Status][]][GitHub] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
+[![GitHub Status][]][GitHub] [![CodeDocs Status][]][CodeDocs] <img align="right" src="doc/libnet.gif">
 
 Packet Construction and Injection
 =================================
@@ -172,8 +172,6 @@ Some old docs are available at:
 [latest release]:  https://github.com/libnet/libnet/releases
 [autotools]:       https://autotools.io/
 [origin]:          http://packetfactory.openwall.net/projects/libnet/
-[Appveyor]:        https://ci.appveyor.com/project/troglobit/libnet
-[Appveyor Status]: https://ci.appveyor.com/api/projects/status/fkw05hw8cysfl2p1?svg=true
 [GitHub]:          https://github.com/libnet/libnet/actions/workflows/build.yml/
 [GitHub Status]:   https://github.com/libnet/libnet/actions/workflows/build.yml/badge.svg
 [CodeDocs]:        https://codedocs.xyz/libnet/libnet/
