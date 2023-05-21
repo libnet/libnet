@@ -1,4 +1,4 @@
-name: FreeBSD Builder
+name: FreeBSD
 
 on: [push, pull_request]
 

@@ -1,4 +1,4 @@
-name: Linux/macOS Builder
+name: Linux/macOS
 
 on: [push, pull_request]
 
