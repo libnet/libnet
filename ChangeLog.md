@@ -10,10 +10,63 @@ of contributors, see the GIT commit log.
 
 ### Changes
 
-- Don't try to configure TX buffer max size for every raw socket. Instead, add a new API
-  that can be used when needed, called `libnet_setfd_max_sndbuf()`.
+- License change of critical files from 4-clause BSD to 3-clause and
+  2-clause BSD.  This fixes issue #85: "GPL license compatibility".
+- Migrate from Travis-CI (Linux) and Appveyor (Win32) to GitHub Actions
+- Win32 changes:
+  - switch to npcap from winpcap
+  - Simplify and update build scripts
+  - Encode version in DLL instead of in filename
+
+**Valery Ivanov:**
+- Add support for LLDP, mandatory TLVs.
+- Add support for Cisco UniDirectional Link Detection (UDLD), RFC5171
+- Initial support for unit tests:
+  - `libnet-build_ethernet()`
+  - Complete UDLD API tests
+- Initial "devcontainer": provide VS Code development environment for
+  rapid setup of a development environment
+- Run unit tests in GitHub Actions
+- New  GitHub Action for FreeBSD 13 clang/gcc
+
+**Beniamin Sandu:**
+- Calling `libnet_init()` with a RAW type no longer sets a TX buffer max
+  size.  Use the new `libnet_setfd_max_sndbuf()` instead when needed.
+
+**Hervé Boisse:**
+- Remove support for `SOCK_PACKET` sockets causing invalid builds on,
+  e.g., musl libc.  We assume everyone on Linux has `PF_PACKET` now.
 
 ### Fixes
+
+- Fix #139: fail-to-build-from-source on FreeBSD
+
+**Valery Ivanov:**
+- Fix #122: unused parameter warnings
+- Fix #123: potential memory leak in `libnet_cq_add()`
+- Fix #124: potential name conflict with C++ keyword `new`
+
+**Thomas Habets:**
+- Fix #96: pointer type warnings when dumping raw data with `%p`
+- Fix #97: non-standard types:
+  - `int64_t` instead of `__int64_t` for mingw cross build
+  - `uint32_t` instead of `u_int` and `uint16_t` instead of `u_short`
+- Fix #98: lots of signed vs unsigned comparisons
+- Fix #102: possible buffer overflows in `libnet_plist_chain_dump_string()`
+
+**Bernhard M. Wiedemann:**
+- Reproducible build fixes for man-page generation, use LC_ALL=C and UTC
+- Simplify `fixmanpages`
+
+**Adrian Reber:**
+- Fix #120: possible NULL pointer dereference in `libnet_cq_add()`
+- Fix #120: memory leak in `libnet_plist_chain_new()`
+
+**Stephan Hartmann:**
+- Fix segmentation fault in `libnet_ifaddrlist()`
+
+**Andy Roulin:**
+- Fix #150: segfault when number of IPs > 512
 
 
 [v1.2][] - 2019-10-16
