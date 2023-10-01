@@ -92,7 +92,8 @@ jobs:
           rc=true
           make check || rc=false
           echo "## Test Results"  >> $GITHUB_STEP_SUMMARY
-          echo "```"  >> $GITHUB_STEP_SUMMARY
+          echo '```'              >> $GITHUB_STEP_SUMMARY
           cat test/test-suite.log >> $GITHUB_STEP_SUMMARY
-          echo "```"  >> $GITHUB_STEP_SUMMARY
+          echo '```'              >> $GITHUB_STEP_SUMMARY
+          cat test/test-suite.log
           eval $rc
