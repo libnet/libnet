@@ -286,12 +286,24 @@ struct libnet_in6_addr
 libnet_name2addr6(libnet_t *l, const char *host_name, uint8_t use_name);
 
 /**
- * Should document this baby right here.
+ * Translate an IPv6 address to a canonical DNS name or hexadecimal string.
+
+ * This may incur a DNS lookup if the mode is set to LIBNET_RESOLVE.  If
+ * mode is set to LIBNET_DONT_RESOLVE, no DNS lookup will be performed.
+ * The function cannot fail -- if no canonical name exists, it will fall
+ * back to the hexadecimal string representation.
+ *
+ * This function is reentrant.
+ *
+ * @param addr          address to convert
+ * @param use_name      LIBNET_RESOLVE or LIBNET_DONT_RESOLVE
+ * @param host_name     Buffer to return result in
+ * @param host_name_len Length of @p host_name buffer
  */
 LIBNET_API
 void
 libnet_addr2name6_r(struct libnet_in6_addr addr, uint8_t use_name,
-char *host_name, int host_name_len);
+	char *host_name, int host_name_len);
 
 /**
  * Creates a new port list. Port list chains are useful for TCP and UDP-based
@@ -812,12 +824,11 @@ const uint16_t value_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * At the moment, this function is not implemented.
- * This stub may be useful in feature to let to the user
- *  to build the LLDPDU in one function by passing corresponding
- *  arguments.
+ *
+ * This stub may be useful in feature to let to the user build the
+ * LLDPDU in one function by passing corresponding arguments.
  */
-LIBNET_API
-libnet_ptag_t libnet_build_lldp(libnet_t *l, libnet_ptag_t ptag);
+//libnet_ptag_t libnet_build_lldp(libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP)
@@ -906,10 +917,10 @@ libnet_ptag_t ptag);
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP) time
  * exceeded header.  The IP header that caused the error message should be 
  * built by a previous call to libnet_build_ipv4().
+ *
  * @param type type of ICMP packet (should be ICMP_TIMXCEED)
  * @param code code of ICMP packet (ICMP_TIMXCEED_INTRANS / ICMP_TIMXCEED_REASS)
  * @param sum checksum (0 for libnet to auto-fill)
- * @param payload optional payload or NULL
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -925,6 +936,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds an IP version 4 RFC 792 Internet Control Message Protocol (ICMP)
  * timestamp request/reply header.
+ *
  * @param type type of ICMP packet (should be ICMP_TSTAMP or ICMP_TSTAMPREPLY)
  * @param code code of ICMP packet (should be 0)
  * @param sum checksum (0 for libnet to auto-fill)
@@ -949,6 +961,7 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP)
  * echo or echo reply header.
+ *
  * @param type type of ICMP packet (should be ICMP6_ECHO_REQUEST or ICMP6_ECHO_REPLY)
  * @param code code of ICMP packet (should be zero)
  * @param sum checksum (0 for libnet to auto-fill)
@@ -968,8 +981,9 @@ libnet_ptag_t libnet_build_icmpv6_echo(uint8_t type, uint8_t code, uint16_t
 
 /**
  * Builds an IP version 6 RFC 4443 Internet Control Message Protocol (ICMP)
- * unreachable header. The IP header that caused the error message should be 
+ * unreachable header. The IP header that caused the error message should be
  * built by a previous call to libnet_build_ipv6().
+ *
  * @param type type of ICMP packet (should be ICMP6_DST_UNREACH)
  * @param code code of ICMP packet (should be one of the 5 ICMP6_DST_UNREACH_* codes)
  * @param sum checksum (0 for libnet to auto-fill)
@@ -2558,6 +2572,9 @@ libnet_cq_size(void);
 
 /**
  * [Context Queue]
+ * Cleanup from iterating through the context queue.
+ * @retval 1 Cleanup completed OK
+ * @retval 0 failed clearing the write lock
  */
 LIBNET_API
 uint32_t
