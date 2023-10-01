@@ -18,7 +18,7 @@ SUBDIRS       += sample
 endif
 
 if ENABLE_TESTS
-SUBDIRS       += tests
+SUBDIRS       += test
 endif
 
 if ENABLE_DOXYGEN

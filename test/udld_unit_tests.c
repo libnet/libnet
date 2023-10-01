@@ -59,7 +59,7 @@ libnet_build_udld__pdu_header_only(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Device ID */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Device ID */
 static void
 libnet_build_udld__tlv_device_id(void **state)
 {
@@ -93,7 +93,7 @@ libnet_build_udld__tlv_device_id(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Port ID */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Port ID */
 static void
 libnet_build_udld__tlv_port_id(void **state)
 {
@@ -126,7 +126,7 @@ libnet_build_udld__tlv_port_id(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Echo */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Echo */
 static void
 libnet_build_udld__tlv_echo(void **state)
 {
@@ -161,7 +161,7 @@ libnet_build_udld__tlv_echo(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Message Interval */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Message Interval */
 static void
 libnet_build_udld__tlv_message_interval(void **state)
 {
@@ -193,7 +193,7 @@ libnet_build_udld__tlv_message_interval(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Timeout Interval */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Timeout Interval */
 static void
 libnet_build_udld__tlv_timeout_interval(void **state)
 {
@@ -225,7 +225,7 @@ libnet_build_udld__tlv_timeout_interval(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Device Name */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Device Name */
 static void
 libnet_build_udld__tlv_device_name(void **state)
 {
@@ -258,7 +258,7 @@ libnet_build_udld__tlv_device_name(void **state)
     libnet_destroy(l);
 }
 
-/* Refs: tests/data/packet_captures/UDLD.cap, Packet #1, UDLD Sequence Number */
+/* Refs: test/data/packet_captures/UDLD.cap, Packet #1, UDLD Sequence Number */
 static void
 libnet_build_udld__tlv_sequence_number(void **state)
 {
@@ -321,7 +321,7 @@ libnet_udld__checksum_calculation(void **state)
 /**
  * Build the whole UDLD packet, including the payload and IEEE802.3 Ethernet + LLC headers.
  *
- * Refs: tests/data/packet_captures/UDLD.cap, Packet #2
+ * Refs: test/data/packet_captures/UDLD.cap, Packet #2
 */
 static void
 libnet_build_udld__build_whole_packet_with_checksum(void **state)

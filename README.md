@@ -116,11 +116,11 @@ Running tests in the dev. container (above):
     $ ./autogen.sh
     $ ./configure --enable-tests
     $ make
-    $ sudo ./tests/libnet_unit_tests
+    $ sudo ./test/libnet_unit_tests
 
 Approximate output:
 
-    $ ./tests/libnet_unit_tests
+    $ ./test/libnet_unit_tests
     [==========] Running 1 test(s).
     [ RUN      ] test_libnet_build_ethernet
     [       OK ] test_libnet_build_ethernet

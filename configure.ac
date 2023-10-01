@@ -42,7 +42,7 @@ AC_CONFIG_FILES([Makefile \
 		 libnet.pc \
                  src/Makefile \
                  sample/Makefile \
-		 tests/Makefile \
+		 test/Makefile \
 		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 
