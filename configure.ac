@@ -31,12 +31,9 @@ AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([include/config.h])
 
 AC_CONFIG_FILES([Makefile \
-		 Doxyfile \
 		 libnet-config \
+		 doc/Doxyfile \
                  doc/Makefile \
-                 doc/man/Makefile \
-                 doc/man/man1/Makefile \
-                 doc/man/man3/Makefile \
                  include/Makefile \
                  include/libnet.h \
 		 libnet.pc \
@@ -165,10 +162,10 @@ DX_PS_FEATURE(OFF)
 DX_CHM_FEATURE(OFF)
 DX_HTML_FEATURE(ON)
 DX_MAN_FEATURE(ON)
-DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/Doxyfile], [doc])
-AM_CONDITIONAL(ENABLE_DOXYGEN,[test "x${DX_FLAG_doc}" = x1])
-AM_CONDITIONAL(ENABLE_HTML,[test "x${DX_FLAG_html}" = x1])
-AM_CONDITIONAL(ENABLE_MAN,[test "x${DX_FLAG_man}" = x1])
+DX_INIT_DOXYGEN(${PACKAGE_NAME}, [${top_builddir}/doc/Doxyfile], [${top_builddir}/doc])
+AM_CONDITIONAL(ENABLE_DOXYGEN, [test "x${DX_FLAG_doc}"  = x1])
+AM_CONDITIONAL(ENABLE_HTML,    [test "x${DX_FLAG_html}" = x1])
+AM_CONDITIONAL(ENABLE_MAN,     [test "x${DX_FLAG_man}"  = x1])
 
 # Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
@@ -362,7 +359,7 @@ AM_CONDITIONAL([LINUX], [test "${LINUX}" = "yes"])
 AC_OUTPUT
 
 # Helper variables for summary, below
-AS_IF([test ${DX_FLAG_doc} -eq 1], [rebuild_docs=yes], [rebuild_docs=no])
+AS_IF([test ${DX_FLAG_doc} -eq 1], [build_docs=yes], [build_docs=no])
 link_layer=`"echo"${LTLIBOBJS}"" | sed 's/.*libnet_link_\(.*\)\$.*/\1/'`
 
 AC_MSG_RESULT([
@@ -390,8 +387,8 @@ AC_MSG_RESULT([
     Static Libraries .............. ${enable_static}
     PIC ........................... ${pic_mode}
     Build Sample Programs ......... ${enable_samples}
-    Rebuild docs .................. ${rebuild_docs}
-    Tests.......................... ${enable_tests}
+    Build Doxygen documentation.... ${build_docs}
+    Run Unit Tests................. ${enable_tests}
 
 To override options
 
@@ -409,7 +406,7 @@ AS_IF([test "$WIN32" = "yes"], [AC_MSG_RESULT(
 in ./win32/.  GCC can NOT produce x64 compatible images with official
 WinPcap Developer Pack.  See README.win32 for more info.
 ])])
-AS_IF([test "$rebuild_docs" = "yes"], [AC_MSG_RESULT(
+AS_IF([test "$build_docs" = "yes"], [AC_MSG_RESULT(
 [To build/update the documentation
 
 	make doc

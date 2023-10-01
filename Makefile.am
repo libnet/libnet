@@ -24,13 +24,9 @@ endif
 if ENABLE_DOXYGEN
 SUBDIRS       += doc
 
-#
-# Doxygen rules from m4/ax_prog_doxygen.m4
-# 
-@DX_RULES@
-
-doc: doxygen-doc
-	$(AM_V_GEN)cd $(DX_DOCDIR) && ./fixmanpages && cd -
+.PHONY: doc
+doc:
+	$(MAKE) -C @top_builddir@/doc $@
 
 ## The distribution should include man pages, which are generated
 dist-hook: doc

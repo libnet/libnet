@@ -102,7 +102,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = @top_srcdir@/doc/api-main.md \
                          @top_srcdir@/include/libnet  \
-                         include/libnet.h
+                         @top_srcdir@/include/libnet.h
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
