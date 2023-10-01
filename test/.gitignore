@@ -1,4 +1,4 @@
 *.trs
 *.log
-udld_unit_tests
-unit_tests
+ethernet
+udld

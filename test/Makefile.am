@@ -1,8 +1,8 @@
 LOG_DRIVER        = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/tap-driver.sh
 
 AM_LDFLAGS        = -lcmocka $(top_builddir)/src/libnet.la
-TESTS             = unit_tests
-TESTS            += udld_unit_tests
+TESTS             = ethernet
+TESTS            += udld
 
 check_PROGRAMS    = $(TESTS)
 

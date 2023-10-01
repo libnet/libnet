@@ -104,7 +104,7 @@ Then compile libnet with docker:
 
     $ cd ..
     $ docker run -it --rm -v $(pwd):$(pwd) --workdir=$(pwd) libnet-builder
-    $ ./autogen.sh
+    $ ./autogen.sh                 # If you've cloned from GitHub
     $ ./configure
     $ make
 
@@ -113,19 +113,37 @@ Then compile libnet with docker:
 
 Running tests in the dev. container (above):
 
-    $ ./autogen.sh
+    $ ./autogen.sh                 # If you've cloned from GitHub
     $ ./configure --enable-tests
-    $ make
-    $ sudo ./test/libnet_unit_tests
+    $ make check
+    make  check-TESTS
+    PASS: udld 1 - libnet_udld__checksum_calculation
+    PASS: udld 2 - libnet_build_udld__pdu_header_only
+    PASS: udld 3 - libnet_build_udld__tlv_device_id
+    PASS: udld 4 - libnet_build_udld__tlv_port_id
+    PASS: udld 5 - libnet_build_udld__tlv_echo
+    PASS: udld 6 - libnet_build_udld__tlv_message_interval
+    PASS: udld 7 - libnet_build_udld__tlv_timeout_interval
+    PASS: udld 8 - libnet_build_udld__tlv_device_name
+    PASS: udld 9 - libnet_build_udld__tlv_sequence_number
+    PASS: udld 10 - libnet_build_udld__build_whole_packet_with_checksum
+    PASS: ethernet 1 - test_libnet_build_ethernet
+    ============================================================================
+    Testsuite summary for libnet 1.3
+    ============================================================================
+    # TOTAL: 11
+    # PASS:  11
+    # SKIP:  0
+    # XFAIL: 0
+    # FAIL:  0
+    # XPASS: 0
+    # ERROR: 0
+    ============================================================================
 
-Approximate output:
-
-    $ ./test/libnet_unit_tests
-    [==========] Running 1 test(s).
-    [ RUN      ] test_libnet_build_ethernet
-    [       OK ] test_libnet_build_ethernet
-    [==========] 1 test(s) run.
-    [  PASSED  ] 1 test(s).
+> **Note:** on Linux the tests run in a separate network namespace
+> (using `unshare`), so no root (sudo) access is needed, but on other
+> systems you may need to to be root, or have to correct capabilities
+> or permissions.
 
 ### Building the Documentation
 
