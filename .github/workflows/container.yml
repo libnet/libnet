@@ -1,0 +1,23 @@
+name: Visual Studio Codespaces Image
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: ${{github.repository_owner == 'libnet' && github.ref_name == 'master'}}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        dockerfile: .devcontainer/Dockerfile
+        repository: libnet/libnet-vscode
+        tag_with_ref: true
