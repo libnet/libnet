@@ -8,6 +8,10 @@ of contributors, see the GIT commit log.
 [v1.3][UNRELEASED]
 ---------------------
 
+> **Note:** MSYS2 and Cygwin builds for Windows do not work.  Instead we
+> recommend msbuild (and npcap).  If you are a Windows hacker and have
+> experience with MSYS2 and C, and want to help, please get in touch!
+
 ### Changes
 
 - License change of critical files from 4-clause BSD to 3-clause and
