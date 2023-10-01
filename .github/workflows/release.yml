@@ -1,0 +1,39 @@
+name: Release General
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+*'
+
+jobs:
+  release:
+    name: Build and upload release tarball
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Installing dependencies ...
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake tree doxygen libcmocka-dev
+      - name: Creating Makefiles ...
+        run: |
+          ./autogen.sh
+          ./configure --prefix= --enable-tests
+      - name: Build release ...
+        run: |
+          make release || (cat test/test-suite.log; false)
+          ls -lF ../
+          mkdir -p artifacts/
+          mv ../*.tar.* ../*.zip* artifacts/
+      - name: Extract ChangeLog entry ...
+        run: |
+          awk '/-----*/{if (x == 1) exit; x=1;next}x' ChangeLog.md \
+              |head -n -1 > release.md
+          cat release.md
+      - name: Create and upload release ...
+        uses: ncipollo/release-action@v1
+        with:
+          name: libnet v${{ github.ref_name }}
+          bodyFile: "release.md"
+          artifacts: "artifacts/*"
