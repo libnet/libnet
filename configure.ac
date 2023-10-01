@@ -46,6 +46,9 @@ AC_CONFIG_FILES([Makefile \
 		 win32/Makefile])
 AC_CONFIG_FILES([doc/fixmanpages], [chmod a+x doc/fixmanpages])
 
+# For CMocka tests to fit in with autotools `make check`
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
+
 # Check for the usual programs
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -199,6 +202,7 @@ CFLAGS="$CFLAGS -D_DEFAULT_SOURCE=1"
 # Check and set OS specific parameters
 AS_CASE([$target_os],
 [*linux*], [
+    LINUX="yes"
     AC_DEFINE(_BSD_SOURCE, 1,
         [Define as necessary to "unhide" header symbols.])
     AC_DEFINE(_DEFAULT_SOURCE, 1,
@@ -350,8 +354,9 @@ AS_CASE([$target_os],
     AC_MSG_WARN(${target_os} is not officially supported yet.)
     AC_MSG_RESULT(Please report this to ${PACKAGE_BUGREPORT})])
 
-# this only matters if we are building for Windows...
+# Automake conditionals for different operating systems
 AM_CONDITIONAL([WIN32], [test "${WIN32}" = "yes"])
+AM_CONDITIONAL([LINUX], [test "${LINUX}" = "yes"])
 
 # Create all files from AC_CONFIG_FILES()
 AC_OUTPUT

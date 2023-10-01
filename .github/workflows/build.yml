@@ -89,5 +89,4 @@ jobs:
           make V=1
       - name: Run Unit-Test
         run: |
-          sudo ./test/libnet_unit_tests
-          ./test/libnet_udld_unit_tests
+          make check

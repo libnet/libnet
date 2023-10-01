@@ -1,9 +1,13 @@
-bin_PROGRAMS = libnet_unit_tests libnet_udld_unit_tests
+LOG_DRIVER        = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/tap-driver.sh
 
-libnet_unit_tests_SOURCES = unit_tests.c
-libnet_udld_unit_tests_SOURCES = udld_unit_tests.c
+AM_LDFLAGS        = -lcmocka $(top_builddir)/src/libnet.la
+TESTS             = unit_tests
+TESTS            += udld_unit_tests
 
-libnet_unit_tests_LDFLAGS = -lcmocka
-libnet_udld_unit_tests_LDFLAGS = -lcmocka
+check_PROGRAMS    = $(TESTS)
 
-LDADD = $(top_builddir)/src/libnet.la
+if LINUX
+TESTS_ENVIRONMENT = unshare -mrun $(top_srcdir)/test/setup.sh
+else
+all: $(check_PROGRAMS)
+endif
