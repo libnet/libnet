@@ -1,6 +1,12 @@
 ARG VARIANT="ubuntu-20.04"
 FROM mcr.microsoft.com/vscode/devcontainers/cpp:0-${VARIANT}
 
+LABEL org.opencontainers.image.title         "libnet"
+LABEL org.opencontainers.image.description   "A Portable Framework for Low-Level Network Packet Construction"
+LABEL org.opencontainers.image.documentation "https://codedocs.xyz/libnet/libnet/"
+LABEL org.opencontainers.image.url           "https://github.com/libnet/libnet/"
+LABEL org.opencontainers.image.licenses      "BSD-3"
+
 RUN apt-get update                                                      \
     && export DEBIAN_FRONTEND=noninteractive                            \
     && apt-get -y install --no-install-recommends                       \
