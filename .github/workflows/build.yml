@@ -90,10 +90,11 @@ jobs:
       - name: Run Unit-Test
         run: |
           rc=true
-          make check || rc=false
+          sudo make check || rc=false
           echo "## Test Results"  >> $GITHUB_STEP_SUMMARY
           echo '```'              >> $GITHUB_STEP_SUMMARY
           cat test/test-suite.log >> $GITHUB_STEP_SUMMARY
           echo '```'              >> $GITHUB_STEP_SUMMARY
           cat test/test-suite.log
+          ls -l /dev/bpf* || true
           eval $rc
