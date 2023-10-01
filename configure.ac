@@ -2,11 +2,12 @@
 # Libnet autoconfiguration information file
 # Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
 # Modified by: Ali Abdulkadir <autostart.ini@gmail.com>,
-#              Joachim Nilsson <troglobit@gmail.com>
+#              Joachim Wiberg <troglobit@gmail.com>
 # All rights reserved.
 #
 # Process this file with autoconf to produce a configure script.
 
+# Update VERSION for new releases, used also by the win32 build system.
 AC_INIT([libnet], m4_esyscmd([sed -n '1p' VERSION | tr -d '\n']),
 	[https://github.com/libnet/libnet/issues],[],
 	[https://github.com/libnet/libnet])
@@ -169,7 +170,7 @@ AM_CONDITIONAL(ENABLE_MAN,[test "x${DX_FLAG_man}" = x1])
 # Check for sample building
 AC_MSG_CHECKING([whether to build sample programs])
 AC_ARG_ENABLE([samples],
-    [AS_HELP_STRING([--enable-samples],[do not build sample programs @<:@default=no@:>@])],
+    [AS_HELP_STRING([--enable-samples],[build sample programs @<:@default=no@:>@])],
     [enable_samples=$enableval],
     [enable_samples=no]
 )
@@ -179,7 +180,7 @@ AM_CONDITIONAL([ENABLE_SAMPLES], [test "$enable_samples" = "yes"])
 # Check for tests enabling
 AC_MSG_CHECKING([enable tests])
 AC_ARG_ENABLE([tests],
-    [AS_HELP_STRING([--enable-tests],[do not enable tests @<:@default=no@:>@])],
+    [AS_HELP_STRING([--enable-tests],[enable unit tests @<:@default=no@:>@])],
     [enable_tests=$enableval],
     [enable_tests=no]
 )
