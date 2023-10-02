@@ -5,7 +5,7 @@ All relevant changes are documented in this file.  For a complete list
 of contributors, see the GIT commit log.
 
 
-[v1.3][UNRELEASED]
+[v1.3][] - 2023-10-02
 ---------------------
 
 > **Note:** MSYS2 and Cygwin builds for Windows do not work.  Instead we
@@ -490,6 +490,7 @@ Release curated by Sam Roberts.
 
 
 [UNRELEASED]: https://github.com/libnet/libnet/compare/v1.2...HEAD
+[v1.3]:       https://github.com/libnet/libnet/compare/v1.2...v1.3
 [v1.2]:       https://github.com/libnet/libnet/compare/v1.1.6...v1.2
 [v1.1.6]:     https://github.com/libnet/libnet/compare/v1.1.5...v1.1.6
 [v1.1.5]:     https://github.com/libnet/libnet/compare/v1.1.4...v1.1.5
