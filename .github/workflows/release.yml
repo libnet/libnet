@@ -34,6 +34,6 @@ jobs:
       - name: Create and upload release ...
         uses: ncipollo/release-action@v1
         with:
-          name: libnet v${{ github.ref_name }}
+          name: libnet ${{ github.ref_name }}
           bodyFile: "release.md"
           artifacts: "artifacts/*"
