@@ -35,13 +35,12 @@
 libnet_ptag_t
 libnet_build_rpc_call(uint32_t rm, uint32_t xid, uint32_t prog_num, 
 uint32_t prog_vers, uint32_t procedure, uint32_t cflavor, uint32_t clength, 
-uint8_t *cdata, uint32_t vflavor, uint32_t vlength, const uint8_t *vdata, 
+const uint8_t *cdata, uint32_t vflavor, uint32_t vlength, const uint8_t *vdata, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     (void)cdata; /* unused */
     (void)vdata; /* unused */
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_rpc_call_tcp_hdr rpc_hdr;
     int rc;
 
@@ -63,13 +62,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         n = LIBNET_RPC_CALL_H + payload_s;
     }
  
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_RPC_CALL_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_RPC_CALL_H);
     if (p == NULL)
     {
         return (-1);

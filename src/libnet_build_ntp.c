@@ -41,8 +41,7 @@ uint32_t orig_ts_int, uint32_t orig_ts_frac, uint32_t rec_ts_int,
 uint32_t rec_ts_frac, uint32_t xmt_ts_int, uint32_t xmt_ts_frac,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_ntp_hdr ntp_hdr;
 
     if (l == NULL)
@@ -51,13 +50,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_NTP_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_NTP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_NTP_H);
     if (p == NULL)
     {
         return (-1);

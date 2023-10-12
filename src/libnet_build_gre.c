@@ -2,7 +2,7 @@
  *  libnet
  *  libnet_build_gre.c - GRE packet assembler
  *
- *  Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2003 Frï¿½dï¿½ric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -170,7 +170,6 @@ uint16_t offset, uint32_t key, uint32_t seq, uint16_t len,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_gre_hdr gre_hdr;
 
     if (l == NULL)
@@ -184,7 +183,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_GRE_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_GRE_H);
     if (p == NULL)
     {
         return (-1);
@@ -285,11 +288,10 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
  */
 libnet_ptag_t
 libnet_build_gre_sre(uint16_t af, uint8_t offset, uint8_t length, 
-uint8_t *routing, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag)
+const uint8_t *routing, const uint8_t *payload, uint32_t payload_s,
+libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_gre_sre_hdr sre_hdr;
 
     if (l == NULL)
@@ -303,7 +305,11 @@ libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_GRE_SRE_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_GRE_SRE_H);
     if (p == NULL)
     {
         return (-1);
@@ -348,21 +354,24 @@ bad:
 libnet_ptag_t
 libnet_build_gre_last_sre(libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, zero = 0;
-    libnet_pblock_t *p;
+    const uint32_t zero = 0;
 
     if (l == NULL)
     { 
         return (-1); 
     }
 
-    n = LIBNET_GRE_SRE_H;
+    const uint32_t n = LIBNET_GRE_SRE_H;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_GRE_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_GRE_H);
     if (p == NULL)
     {
         return (-1);

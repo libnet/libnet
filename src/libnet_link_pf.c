@@ -46,15 +46,14 @@
 #endif
 
 struct libnet_link_int *
-libnet_open_link_interface(int8_t *device, int8_t *ebuf)
+libnet_open_link_interface(const int8_t *device, int8_t *ebuf)
 {
-    struct libnet_link_int *l;
     int16_t enmode;
     int backlog = -1;   /* request the most */
     struct enfilter Filter;
     struct endevp devparams;
 
-    l = (struct libnet_link_int *)malloc(sizeof(*l));
+    struct libnet_link_int * const l = (struct libnet_link_int *)malloc(sizeof(*l));
     if (l == NULL)
     {
         snprintf(ebuf, LIBNET_ERRBUF_SIZE,
@@ -162,9 +161,7 @@ int
 libnet_write_link_layer(struct libnet_link_int *l, const int8_t *device,
             const uint8_t *buf, int len)
 {
-    int c;
-
-    c = write(l->fd, buf, len);
+    const int c = write(l->fd, buf, len);
     if (c != len)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,

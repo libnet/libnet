@@ -44,7 +44,6 @@ libnet_addr2name4(uint32_t in, uint8_t use_name)
 	#define HOSTNAME_SIZE 512
     static char hostname[HOSTNAME_SIZE+1], hostname2[HOSTNAME_SIZE+1];
     static uint16_t which;
-    uint8_t *p;
 
     struct hostent *host_ent = NULL;
     struct in_addr addr;
@@ -67,7 +66,7 @@ libnet_addr2name4(uint32_t in, uint8_t use_name)
     if (!host_ent)
     {
 
-        p = (uint8_t *)&in;
+        uint8_t * const p = (uint8_t *)&in;
    		snprintf(((which % 2) ? hostname : hostname2), HOSTNAME_SIZE,
                  "%d.%d.%d.%d",
                  (p[0] & 255), (p[1] & 255), (p[2] & 255), (p[3] & 255));
@@ -86,7 +85,6 @@ void
 libnet_addr2name4_r(uint32_t in, uint8_t use_name, char *hostname,
         int hostname_len)
 {
-    uint8_t *p;
     struct hostent *host_ent = NULL;
     struct in_addr addr;
 
@@ -98,7 +96,7 @@ libnet_addr2name4_r(uint32_t in, uint8_t use_name, char *hostname,
     }
     if (!host_ent)
     {
-        p = (uint8_t *)&in;
+        uint8_t * const p = (uint8_t *)&in;
         snprintf(hostname, hostname_len, "%d.%d.%d.%d",
                 (p[0] & 255), (p[1] & 255), (p[2] & 255), (p[3] & 255));
     }
@@ -113,7 +111,6 @@ uint32_t
 libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name)
 {
     struct in_addr addr;
-    struct hostent *host_ent; 
     uint32_t m;
     uint32_t val;
     int i;
@@ -122,7 +119,8 @@ libnet_name2addr4(libnet_t *l, const char *host_name, uint8_t use_name)
     {
         if ((addr.s_addr = inet_addr(host_name)) == INADDR_NONE)
         {
-            if (!(host_ent = gethostbyname(host_name)))
+            struct hostent * const host_ent = gethostbyname(host_name);
+            if (!host_ent)
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                         "%s(): %s", __func__,
@@ -359,8 +357,6 @@ uint32_t
 libnet_get_ipaddr4(libnet_t *l)
 {
     struct ifreq ifr;
-    struct sockaddr_in *sin;
-    int fd;
 
     if (l == NULL)
     {
@@ -368,7 +364,7 @@ libnet_get_ipaddr4(libnet_t *l)
     }
 
     /* create dummy socket to perform an ioctl upon */
-    fd = socket(PF_INET, SOCK_DGRAM, 0);
+    const int fd = socket(PF_INET, SOCK_DGRAM, 0);
     if (fd == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -376,7 +372,7 @@ libnet_get_ipaddr4(libnet_t *l)
         return (-1);
     }
 
-    sin = (struct sockaddr_in *)&ifr.ifr_addr;
+    struct sockaddr_in * const sin = (struct sockaddr_in *)&ifr.ifr_addr;
 
     if (l->device == NULL)
     {
@@ -425,9 +421,7 @@ libnet_get_ipaddr4(libnet_t *l)
 uint8_t *
 libnet_hex_aton(const char *s, int *len)
 {
-    uint8_t *buf;
     int i;
-    int32_t l;
     char *pp;
         
     while (isspace(*s))
@@ -441,7 +435,7 @@ libnet_hex_aton(const char *s, int *len)
             (*len)++;
         }
     }
-    buf = malloc(*len + 1);
+    uint8_t * const buf = malloc(*len + 1);
     if (buf == NULL)
     {
         return (NULL);
@@ -449,7 +443,7 @@ libnet_hex_aton(const char *s, int *len)
     /* expect len hex octets separated by ':' */
     for (i = 0; i < *len + 1; i++)
     {
-        l = strtol(s, &pp, 16);
+        const int32_t l = strtol(s, &pp, 16);
         if (pp == s || l > 0xff || l < 0)
         {
             *len = 0;

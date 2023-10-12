@@ -67,7 +67,7 @@ libnet_diag_dump_hex(const uint8_t *packet, uint32_t len, int swap, FILE *stream
 
 
 void
-libnet_diag_dump_context(libnet_t *l)
+libnet_diag_dump_context(const libnet_t *l)
 {
     if (l == NULL)
     { 
@@ -118,10 +118,10 @@ libnet_diag_dump_context(libnet_t *l)
 }
 
 void
-libnet_diag_dump_pblock(libnet_t *l)
+libnet_diag_dump_pblock(const libnet_t *l)
 {
     uint32_t n;
-    libnet_pblock_t *p;
+    const libnet_pblock_t *p;
 
     for (p = l->protocol_blocks; p; p = p->next)
     {

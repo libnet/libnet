@@ -226,7 +226,7 @@ bad:
 
 
 int
-libnet_close_link(libnet_t *l)
+libnet_close_link(const libnet_t *l)
 {
     if (close(l->fd) == 0)
     {
@@ -242,14 +242,12 @@ libnet_close_link(libnet_t *l)
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    int c;
-
     if (l == NULL)
     { 
         return (-1);
     } 
 
-    c = write(l->fd, packet, size);
+    const int c = write(l->fd, packet, size);
     if (c != size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -264,9 +262,8 @@ libnet_get_hwaddr(libnet_t *l)
 {
     int mib[6];
     size_t len;
-    int8_t *buf, *next, *end;
+    int8_t *next;
     struct if_msghdr *ifm;
-    struct sockaddr_dl *sdl;
 
     mib[0] = CTL_NET;
     mib[1] = AF_ROUTE;
@@ -296,7 +293,7 @@ libnet_get_hwaddr(libnet_t *l)
         return (NULL);
     }
 
-    buf = (int8_t *)malloc(len);
+    int8_t * const buf = (int8_t *)malloc(len);
     if (buf == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s",
@@ -310,7 +307,7 @@ libnet_get_hwaddr(libnet_t *l)
         free(buf);
         return (NULL);
     }
-    end = buf + len;
+    int8_t * const end = buf + len;
 
     for (next = buf ; next < end ; next += ifm->ifm_msglen)
     {
@@ -321,7 +318,7 @@ libnet_get_hwaddr(libnet_t *l)
 
         if (ifm->ifm_type == RTM_IFINFO)
         {
-            sdl = (struct sockaddr_dl *)(ifm + 1);
+            struct sockaddr_dl * const sdl = (struct sockaddr_dl *)(ifm + 1);
             if (sdl->sdl_type != IFT_ETHER
 #ifdef IFT_FASTETHER
                 && sdl->sdl_type != IFT_FASTETHER

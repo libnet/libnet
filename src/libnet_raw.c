@@ -53,13 +53,13 @@ libnet_open_raw6(libnet_t *l)
 }
 
 int
-libnet_close_raw4(libnet_t *l)
+libnet_close_raw4(const libnet_t *l)
 {
     return (libnet_close_link_interface(l));
 }
 
 int
-libnet_close_raw6(libnet_t *l)
+libnet_close_raw6(const libnet_t *l)
 {
     return (libnet_close_link_interface(l));
 }
@@ -68,14 +68,14 @@ libnet_close_raw6(libnet_t *l)
 static int libnet_finish_setup_socket(libnet_t *l)
 {
 #if !(__WIN32__)
-     int n = 1;
+     const int n = 1;
 #if (__svr4__)
-     void *nptr = &n;
+     const void * const nptr = &n;
 #else
-    int *nptr = &n;
+    const int * const nptr = &n;
 #endif  /* __svr4__ */
 #else
-	BOOL n;
+	const BOOL n;
 #endif
     unsigned len;
 
@@ -116,14 +116,14 @@ int
 libnet_open_raw4(libnet_t *l)
 {
 #if !(__WIN32__)
-     int n = 1;
+     const int n = 1;
 #if (__svr4__)
-     void *nptr = &n;
+     const void * const nptr = &n;
 #else
-    int *nptr = &n;
+    const int * const nptr = &n;
 #endif  /* __svr4__ */
 #else
-	BOOL n;
+	const BOOL n;
 #endif
 
     if (l == NULL)
@@ -176,7 +176,7 @@ bad:
 
 
 int
-libnet_close_raw4(libnet_t *l)
+libnet_close_raw4(const libnet_t *l)
 {
     if (l == NULL)
     { 
@@ -222,7 +222,7 @@ bad:
 #endif
 
 int
-libnet_close_raw6(libnet_t *l)
+libnet_close_raw6(const libnet_t *l)
 {
     if (l == NULL)
     { 

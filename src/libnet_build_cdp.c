@@ -37,8 +37,7 @@ libnet_build_cdp(uint8_t version, uint8_t ttl, uint16_t sum, uint16_t type,
 uint16_t len, const uint8_t *value, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n,h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_cdp_hdr cdp_hdr;
 
     if (l == NULL)
@@ -47,13 +46,17 @@ libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_CDP_H + LIBNET_CDP_H + len + payload_s;
-    h = LIBNET_CDP_H + LIBNET_CDP_H + len + payload_s;
+    const uint32_t h = LIBNET_CDP_H + LIBNET_CDP_H + len + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_CDP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_CDP_H);
     if (p == NULL)
     {
         return (-1);
@@ -98,10 +101,9 @@ bad:
 
 int
 /* Not Yet Implemented */
-libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
-        libnet_ptag_t ptag)
+libnet_build_cdp_value(uint16_t type, uint16_t len, const uint8_t *value,
+        libnet_t *l, libnet_ptag_t ptag)
 {
-    libnet_pblock_t *p;
     struct libnet_cdp_value_hdr cdp_value_hdr;
 
     if (l == NULL)
@@ -112,7 +114,7 @@ libnet_build_cdp_value(uint16_t type, uint16_t len, uint8_t *value, libnet_t *l,
     /*
      *  Find the existing protocol block.
      */
-    p = libnet_pblock_find(l, ptag);
+    libnet_pblock_t * const p = libnet_pblock_find(l, ptag);
     if (p == NULL)
     {
         /* err msg set in libnet_pblock_find */

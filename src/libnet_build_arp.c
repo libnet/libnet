@@ -38,8 +38,7 @@ libnet_build_arp(uint16_t hrd, uint16_t pro, uint8_t hln, uint8_t pln,
 uint16_t op, const uint8_t *sha, const uint8_t *spa, const uint8_t *tha, const uint8_t *tpa,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_arp_hdr arp_hdr;
 
     if (l == NULL)
@@ -48,13 +47,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_ARP_H + (2 * hln) + (2 * pln) + payload_s;
-    h = 0;  /* ARP headers have no checksum */
+    const uint32_t h = 0;  /* ARP headers have no checksum */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ARP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ARP_H);
     if (p == NULL)
     {
         return (-1);

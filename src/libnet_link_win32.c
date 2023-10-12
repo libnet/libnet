@@ -188,7 +188,7 @@ libnet_open_link(libnet_t *l)
 }
 
 int
-libnet_close_link_interface(libnet_t *l)
+libnet_close_link_interface(const libnet_t *l)
 {
     if (l->lpAdapter)
     {
@@ -217,9 +217,8 @@ libnet_write_link(libnet_t *l, const uint8_t *data, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    struct libnet_ether_addr *mac = &l->link_addr;
-    ULONG IoCtlBufferLength = (sizeof(PACKET_OID_DATA) + sizeof(ULONG) - 1);
-    PPACKET_OID_DATA OidData;
+    struct libnet_ether_addr * const mac = &l->link_addr;
+    const ULONG IoCtlBufferLength = (sizeof(PACKET_OID_DATA) + sizeof(ULONG) - 1);
 
     int i = 0;
 
@@ -238,7 +237,7 @@ libnet_get_hwaddr(libnet_t *l)
         }
     }
 
-    OidData = (struct _PACKET_OID_DATA *)malloc(IoCtlBufferLength);
+    const PPACKET_OID_DATA OidData = (struct _PACKET_OID_DATA *)malloc(IoCtlBufferLength);
     if (OidData == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -279,7 +278,6 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
     ULONG   pulMac[6];
     ULONG   ulLen = 6;
 	static PBYTE pbHexMac;
-	PIP_ADAPTER_INFO pinfo = NULL;
 	DWORD dwSize = 0;
 	struct sockaddr_in sin;
 	static BYTE bcastmac[]= {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
@@ -295,7 +293,7 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 		{
 			*(int32_t *)&sin.sin_addr = DestIP;
 			GetAdaptersInfo(NULL, &dwSize);
-			pinfo = (PIP_ADAPTER_INFO)GlobalAlloc(GPTR, dwSize);
+			const PIP_ADAPTER_INFO pinfo = (PIP_ADAPTER_INFO)GlobalAlloc(GPTR, dwSize);
 			GetAdaptersInfo(pinfo, &dwSize);
 			if(pinfo != NULL)
 			{
@@ -328,7 +326,7 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD DestIP)
 BYTE *libnet_win32_read_arp_table(DWORD DestIP)
 {
     static BYTE buffMAC[6];
-    BOOL fOrder = TRUE;
+    const BOOL fOrder = TRUE;
     DWORD status;
 
     MIB_IPNETTABLE *pIpNetTable = NULL;

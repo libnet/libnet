@@ -5,7 +5,7 @@
  *  libnet_cq.c - context queue management routines
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
- *  Copyright (c) 2002 Frédéric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2002 Frï¿½dï¿½ric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,9 +34,9 @@
 #include "common.h"
 
 /* private function prototypes */
-static libnet_cq_t *libnet_cq_find_internal(libnet_t *);
-static int libnet_cq_dup_check(libnet_t *, char *);
-static libnet_cq_t *libnet_cq_find_by_label_internal(char *label);
+static libnet_cq_t *libnet_cq_find_internal(const libnet_t *);
+static int libnet_cq_dup_check(libnet_t *, const char *);
+static libnet_cq_t *libnet_cq_find_by_label_internal(const char *label);
 
 /* global context queue */
 static libnet_cq_t *l_cq = NULL;
@@ -68,10 +68,8 @@ clear_cq_lock(uint32_t x)
 }
 
 int 
-libnet_cq_add(libnet_t *l, char *label)
+libnet_cq_add(libnet_t *l, const char *label)
 {
-    libnet_cq_t *new_cq;
-
     if (l == NULL) 
     {
         return (-1);
@@ -127,7 +125,7 @@ libnet_cq_add(libnet_t *l, char *label)
         return (-1);
     }
 
-    new_cq = (libnet_cq_t *)malloc(sizeof (libnet_cq_t));
+    libnet_cq_t * const new_cq = (libnet_cq_t *)malloc(sizeof (libnet_cq_t));
     if (new_cq == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -157,9 +155,6 @@ libnet_cq_add(libnet_t *l, char *label)
 libnet_t *
 libnet_cq_remove(libnet_t *l) 
 {
-    libnet_cq_t *p;
-    libnet_t *ret;
-
     if (l_cq == NULL) 
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -180,8 +175,9 @@ libnet_cq_remove(libnet_t *l)
                 __func__);
         return (NULL);
     }
-  
-    if ((p = libnet_cq_find_internal(l)) == NULL)
+
+    libnet_cq_t * const p = libnet_cq_find_internal(l);
+    if (p == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): context not present in context queue", __func__);
@@ -201,7 +197,7 @@ libnet_cq_remove(libnet_t *l)
         p->next->prev = p->prev;
     }
 
-    ret = p->context;
+    libnet_t * const ret = p->context;
     free(p);
 
     /* track the number of nodes in the cq */
@@ -211,12 +207,10 @@ libnet_cq_remove(libnet_t *l)
 }
 
 libnet_t *
-libnet_cq_remove_by_label(char *label) 
+libnet_cq_remove_by_label(const char *label) 
 {
-    libnet_cq_t *p;
-    libnet_t *ret;
-
-    if ((p = libnet_cq_find_by_label_internal(label)) == NULL)
+    libnet_cq_t * const p = libnet_cq_find_by_label_internal(label);
+    if (p == NULL)
     {
         /* no context to write an error message */
         return (NULL);
@@ -241,7 +235,7 @@ libnet_cq_remove_by_label(char *label)
         p->next->prev = p->prev;
     }
 
-    ret = p->context;
+    libnet_t * const ret = p->context;
     free(p);
 
     /* track the number of nodes in the cq */
@@ -251,7 +245,7 @@ libnet_cq_remove_by_label(char *label)
 }
 
 libnet_cq_t *
-libnet_cq_find_internal(libnet_t *l) 
+libnet_cq_find_internal(const libnet_t *l) 
 {
     libnet_cq_t *p;
 
@@ -266,7 +260,7 @@ libnet_cq_find_internal(libnet_t *l)
 }
 
 int
-libnet_cq_dup_check(libnet_t *l, char *label)
+libnet_cq_dup_check(libnet_t *l, const char *label)
 {
     libnet_cq_t *p;
 
@@ -290,7 +284,7 @@ libnet_cq_dup_check(libnet_t *l, char *label)
 }
 
 libnet_cq_t *
-libnet_cq_find_by_label_internal(char *label) 
+libnet_cq_find_by_label_internal(const char *label) 
 {
     libnet_cq_t *p;
   
@@ -310,16 +304,14 @@ libnet_cq_find_by_label_internal(char *label)
 }
 
 libnet_t *
-libnet_cq_find_by_label(char *label)
+libnet_cq_find_by_label(const char *label)
 {
-    libnet_cq_t *p;
-  
-    p = libnet_cq_find_by_label_internal(label);
+    libnet_cq_t * const p = libnet_cq_find_by_label_internal(label);
     return (p ? p->context : NULL);
 }
 
 const char *
-libnet_cq_getlabel(libnet_t *l)
+libnet_cq_getlabel(const libnet_t *l)
 {
     return (l->label);
 }

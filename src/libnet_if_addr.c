@@ -73,9 +73,9 @@ int
 libnet_check_iface(libnet_t *l)
 {
     struct ifreq ifr;
-    int fd, res;
+    int res;
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    const int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s() socket: %s", __func__, strerror(errno));
@@ -113,7 +113,7 @@ libnet_check_iface(libnet_t *l)
 #include <ifaddrs.h>
 
 int
-libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, const char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifaddrs *ifap, *ifa;
@@ -185,24 +185,22 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
 #endif
 
 int
-libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, const char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
     struct ifreq ibuf[MAX_IPADDR];
     size_t nipaddr = 0;
     struct ifconf ifc;
     char buf[BUFSIZE];
-    FILE *fp;
-    int fd;
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    const int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s", __func__, strerror(errno));
 	return (-1);
     }
 
-    fp = fopen(PROC_DEV_FILE, "r");
+    FILE * const fp = fopen(PROC_DEV_FILE, "r");
     if (!fp)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): failed opening %s: %s",  __func__, PROC_DEV_FILE, strerror(errno));
@@ -317,16 +315,15 @@ bad:
 #endif
 
 int
-libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
+libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, const char *dev, char *errbuf)
 {
     struct libnet_ifaddr_list *ifaddrlist = NULL;
-    struct ifreq *ifr, *lifr, *pifr, nifr;
+    struct ifreq *ifr, *pifr, nifr;
     struct ifreq ibuf[MAX_IPADDR];
     size_t nipaddr = 0;
     struct ifconf ifc;
-    int fd;
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    const int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
 	snprintf(errbuf, LIBNET_ERRBUF_SIZE, "%s(): socket error: %s", __func__, strerror(errno));
@@ -344,7 +341,7 @@ libnet_ifaddrlist(struct libnet_ifaddr_list **ipaddrp, char *dev, char *errbuf)
     }
 
     pifr = NULL;
-    lifr = (struct ifreq *)&ifc.ifc_buf[ifc.ifc_len];
+    struct ifreq * const lifr = (struct ifreq *)&ifc.ifc_buf[ifc.ifc_len];
 
     ifaddrlist = calloc(ip_addr_num, sizeof(struct libnet_ifaddr_list));
     if (!ifaddrlist)
@@ -449,9 +446,8 @@ static int8_t *iptos(uint32_t in)
 {
     static int8_t output[IPTOSBUFFERS][ 3 * 4 + 3 + 1];
     static int16_t which;
-    uint8_t *p;
 
-    p = (uint8_t *)&in;
+    uint8_t * const p = (uint8_t *)&in;
     which = (which + 1 == IPTOSBUFFERS ? 0 : which + 1);
     snprintf(output[which], IPTOSBUFFERS, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
 
@@ -547,8 +543,7 @@ int
 libnet_select_device(libnet_t *l)
 {
     struct libnet_ifaddr_list *address_list = NULL, *al;
-    uint32_t addr;
-    int c, i, rc;
+    int i, rc;
 
     if (l == NULL)
     { 
@@ -570,7 +565,7 @@ libnet_select_device(libnet_t *l)
     /*
      *  Number of interfaces.
      */
-    c = libnet_ifaddrlist(&address_list, l->device, l->err_buf);
+    const int c = libnet_ifaddrlist(&address_list, l->device, l->err_buf);
     if (c < 0)
     {
         goto end;
@@ -584,7 +579,7 @@ libnet_select_device(libnet_t *l)
     al = address_list;
     if (l->device)
     {
-        addr = libnet_name2addr4(l, l->device, LIBNET_DONT_RESOLVE);
+        const uint32_t addr = libnet_name2addr4(l, l->device, LIBNET_DONT_RESOLVE);
 
         for (i = c; i; --i, ++al)
         {

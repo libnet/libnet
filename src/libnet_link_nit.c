@@ -43,12 +43,11 @@
 #endif
 
 struct libnet_link_int *
-libnet_open_link_interface(int8_t *device, int8_t *ebuf)
+libnet_open_link_interface(const int8_t *device, int8_t *ebuf)
 {
     struct sockaddr_nit snit;
-    struct libnet_link_int *l;
 
-    l = (struct libnet_link_int *)malloc(sizeof(*p));
+    struct libnet_link_int * const l = (struct libnet_link_int *)malloc(sizeof(*p));
     if (l == NULL)
     {
         strcpy(ebuf, strerror(errno));
@@ -109,16 +108,15 @@ libnet_close_link_interface(struct libnet_link_int *l)
 
 
 int
-write_link_layer(struct libnet_link_int *l, const int8_t *device,
-            uint8_t *buf, int len)
+write_link_layer(const struct libnet_link_int *l, const int8_t *device,
+            const uint8_t *buf, int len)
 {
-    int c;
     struct sockaddr sa;
 
     memset(&sa, 0, sizeof(sa));
     strncpy(sa.sa_data, device, sizeof(sa.sa_data));
 
-    c = sendto(l->fd, buf, len, 0, &sa, sizeof(sa));
+    const int c = sendto(l->fd, buf, len, 0, &sa, sizeof(sa));
     if (c != len)
     {
         /* error */

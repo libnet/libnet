@@ -36,8 +36,7 @@ libnet_ptag_t
 libnet_build_802_1x(uint8_t eap_ver, uint8_t eap_type, uint16_t length,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_802_1x_hdr dot1x_hdr;
 
     if (l == NULL)
@@ -46,13 +45,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_802_1X_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_802_1X_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_802_1X_H);
     if (p == NULL)
     {
         return (-1);

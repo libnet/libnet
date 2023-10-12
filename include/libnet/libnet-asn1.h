@@ -117,7 +117,7 @@ libnet_build_asn1_int(
     uint8_t *,           /* Pointer to the output buffer */
     int *,              /* Number of valid bytes left in the buffer */
     uint8_t,             /* ASN object type */
-    int32_t *,             /* Pointer to a int32_t integer */
+    const int32_t *,       /* Pointer to a int32_t integer */
     int                 /* Size of a int32_t integer */
     );
 
@@ -134,7 +134,7 @@ libnet_build_asn1_uint(
     uint8_t *,           /* Pointer to the output buffer */
     int *,              /* Number of valid bytes left in the buffer */
     uint8_t,             /* ASN object type */
-    uint32_t *,           /* Pointer to an unsigned int32_t integer */
+    const uint32_t *,     /* Pointer to an unsigned int32_t integer */
     int                 /* Size of a int32_t integer */
     );
 
@@ -151,7 +151,7 @@ libnet_build_asn1_string(
     uint8_t *,           /* Pointer to the output buffer */
     int *,              /* Number of valid bytes left in the buffer */
     uint8_t,             /* ASN object type */
-    uint8_t *,           /* Pointer to a string to be built into an object */
+    const uint8_t *,     /* Pointer to a string to be built into an object */
     int                 /* Size of the string */
     );
 
@@ -245,8 +245,8 @@ libnet_build_asn1_bitstring(
     uint8_t *,
     int *,
     uint8_t,
-    uint8_t *,       /* Pointer to the input buffer */
-    int             /* Length of the input buffer */
+    const uint8_t *,       /* Pointer to the input buffer */
+    int                   /* Length of the input buffer */
     );
 
 

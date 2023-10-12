@@ -34,7 +34,7 @@
 
 /* Note: len is in bytes, not 16-bit words! */
 int
-libnet_in_cksum(uint16_t *addr, int len)
+libnet_in_cksum(const uint16_t *addr, int len)
 {
     int sum = 0;
     union
@@ -64,9 +64,7 @@ libnet_in_cksum(uint16_t *addr, int len)
 int
 libnet_toggle_checksum(libnet_t *l, libnet_ptag_t ptag, int mode)
 {
-    libnet_pblock_t *p;
-
-    p = libnet_pblock_find(l, ptag);
+    libnet_pblock_t * const p = libnet_pblock_find(l, ptag);
     if (p == NULL)
     {
         /* err msg set in libnet_pblock_find() */
@@ -123,8 +121,8 @@ int
 libnet_do_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len)
 {
     uint16_t ip_len = 0;
-    struct libnet_ipv4_hdr* ip4 = (struct libnet_ipv4_hdr *)iphdr;
-    struct libnet_ipv6_hdr* ip6 = (struct libnet_ipv6_hdr *)iphdr;
+    struct libnet_ipv4_hdr* const ip4 = (struct libnet_ipv4_hdr *)iphdr;
+    struct libnet_ipv6_hdr* const ip6 = (struct libnet_ipv6_hdr *)iphdr;
 
     if(ip4->ip_v == 6) {
         ip_len = ntohs(ip6->ip_len);
@@ -564,7 +562,7 @@ libnet_inet_checksum(libnet_t *l, uint8_t *iphdr, int protocol, int h_len, const
 
 
 uint16_t
-libnet_ip_check(uint16_t *addr, int len)
+libnet_ip_check(const uint16_t *addr, int len)
 {
     int sum;
 

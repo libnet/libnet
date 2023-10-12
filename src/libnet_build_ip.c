@@ -38,11 +38,10 @@ libnet_build_ipv4(uint16_t ip_len, uint8_t tos, uint16_t id, uint16_t frag,
 uint8_t ttl, uint8_t prot, uint16_t sum, uint32_t src, uint32_t dst,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n = LIBNET_IPV4_H; /* size of memory block */
-    libnet_pblock_t *p, *p_data, *p_temp;
+    const uint32_t n = LIBNET_IPV4_H; /* size of memory block */
+    libnet_pblock_t *p_data, *p_temp;
     struct libnet_ipv4_hdr ip_hdr;
     libnet_ptag_t ptag_data = 0; /* used if there is ipv4 payload */
-    libnet_ptag_t ptag_hold;
 
     if (l == NULL)
     { 
@@ -53,7 +52,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV4_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV4_H);
     if (p == NULL)
     {
         return (-1);
@@ -96,7 +99,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     /* save the original ptag value */
-    ptag_hold = ptag;
+    const libnet_ptag_t ptag_hold = ptag;
 
     if (ptag == LIBNET_PTAG_INITIALIZER)
     {
@@ -239,9 +242,7 @@ bad:
 libnet_ptag_t
 libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
 {
-    uint32_t n, i, j, src;
-    uint16_t h;
-    libnet_pblock_t *p;
+    uint32_t i, j;
     libnet_ptag_t ptag;
     struct libnet_ipv4_hdr ip_hdr;
 
@@ -250,10 +251,10 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
         return (-1);
     } 
 
-    n = LIBNET_IPV4_H;                                /* size of memory block */
-    h = len;                                          /* header length */
+    const uint32_t n = LIBNET_IPV4_H;                 /* size of memory block */
+    const uint16_t h = len;                                          /* header length */
     ptag = LIBNET_PTAG_INITIALIZER;
-    src = libnet_get_ipaddr4(l);
+    const uint32_t src = libnet_get_ipaddr4(l);
     if (src == UINT32_MAX)
     {
         /* err msg set in libnet_get_ipaddr() */ 
@@ -263,7 +264,11 @@ libnet_autobuild_ipv4(uint16_t len, uint8_t prot, uint32_t dst, libnet_t *l)
     /*
      *  Create a new pblock.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV4_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV4_H);
     if (p == NULL)
     {
         return (-1);
@@ -321,8 +326,7 @@ libnet_ptag_t ptag)
 {
     int options_size_increase = 0; /* increase will be negative if it's a decrease */
     uint32_t adj_size;
-    libnet_pblock_t *p, *p_temp;
-    struct libnet_ipv4_hdr *ip_hdr;
+    libnet_pblock_t *p_temp;
 
     if (l == NULL)
     { 
@@ -362,7 +366,11 @@ libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, adj_size, LIBNET_PBLOCK_IPO_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        adj_size,
+        LIBNET_PBLOCK_IPO_H);
     if (p == NULL)
     {
         return (-1);
@@ -387,7 +395,7 @@ libnet_ptag_t ptag)
         /* fix the IP header sizes */
         if (p_temp->type == LIBNET_PBLOCK_IPV4_H)
         {
-            ip_hdr = (struct libnet_ipv4_hdr *) p_temp->buf;
+            struct libnet_ipv4_hdr * const ip_hdr = (struct libnet_ipv4_hdr *) p_temp->buf;
             ip_hdr->ip_hl = 5 + adj_size / 4; /* 4 bits wide, so no byte order concerns */
             ip_hdr->ip_len = htons(ntohs(ip_hdr->ip_len) + options_size_increase);
 
@@ -408,7 +416,6 @@ uint8_t hl, struct libnet_in6_addr src, struct libnet_in6_addr dst,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {   
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_ipv6_hdr ip_hdr;
 
     if (l == NULL)
@@ -429,7 +436,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV6_H);
     if (p == NULL)
     {   
         return (-1);
@@ -471,8 +482,6 @@ uint32_t id, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n;
-    uint16_t h;
-    libnet_pblock_t *p;
     struct libnet_ipv6_frag_hdr ipv6_frag_hdr;
 
     if (l == NULL)
@@ -481,7 +490,7 @@ libnet_ptag_t ptag)
     }
 
     n = LIBNET_IPV6_FRAG_H + payload_s;
-    h = 0; 
+    const uint16_t h = 0; 
 
     if (LIBNET_IPV6_FRAG_H + payload_s > IP_MAXPACKET)
     {
@@ -494,7 +503,11 @@ libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_FRAG_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV6_FRAG_H);
     if (p == NULL)
     {
         return (-1);
@@ -536,8 +549,6 @@ uint8_t segments, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
     uint32_t n;
-    uint16_t h;
-    libnet_pblock_t *p;
     struct libnet_ipv6_routing_hdr ipv6_routing_hdr;
 
     if (l == NULL)
@@ -549,7 +560,7 @@ libnet_ptag_t ptag)
      * interface!
      */
     n = LIBNET_IPV6_ROUTING_H + payload_s;
-    h = 0;
+    const uint16_t h = 0;
 
     if (LIBNET_IPV6_ROUTING_H + payload_s > IP_MAXPACKET)
     {
@@ -562,7 +573,11 @@ libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_ROUTING_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV6_ROUTING_H);
     if (p == NULL)
     {
         return (-1);
@@ -603,8 +618,6 @@ libnet_build_ipv6_destopts(uint8_t nh, uint8_t len, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    uint16_t h;
-    libnet_pblock_t *p;
     struct libnet_ipv6_destopts_hdr ipv6_destopts_hdr;
 
     if (l == NULL)
@@ -616,7 +629,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      * interface!
      */
     n = LIBNET_IPV6_DESTOPTS_H + payload_s;
-    h = 0;
+    const uint16_t h = 0;
 
     if (LIBNET_IPV6_DESTOPTS_H + payload_s > IP_MAXPACKET)
     {
@@ -629,7 +642,11 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_DESTOPTS_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV6_DESTOPTS_H);
     if (p == NULL)
     {
         return (-1);
@@ -668,8 +685,6 @@ libnet_build_ipv6_hbhopts(uint8_t nh, uint8_t len, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    uint16_t h;
-    libnet_pblock_t *p;
     struct libnet_ipv6_hbhopts_hdr ipv6_hbhopts_hdr;
 
     if (l == NULL)
@@ -681,7 +696,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      * payload interface!
      */
     n = LIBNET_IPV6_HBHOPTS_H + payload_s;
-    h = 0;
+    const uint16_t h = 0;
 
     if (LIBNET_IPV6_HBHOPTS_H + payload_s > IP_MAXPACKET)
     {
@@ -694,7 +709,11 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPV6_HBHOPTS_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPV6_HBHOPTS_H);
     if (p == NULL)
     {
         return (-1);
@@ -732,9 +751,7 @@ libnet_ptag_t
 libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
             libnet_t *l, libnet_ptag_t ptag)
 {
-    struct libnet_in6_addr src;
-
-    src = libnet_get_ipaddr6(l);
+    const struct libnet_in6_addr src = libnet_get_ipaddr6(l);
 
     if (libnet_in6_is_error(src))
     {

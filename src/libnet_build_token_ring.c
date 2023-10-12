@@ -36,7 +36,7 @@ libnet_build_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst, const uint8_
 uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *org, uint16_t type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_token_ring_hdr token_ring_hdr;
 
@@ -57,7 +57,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_TOKEN_RING_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -102,10 +102,7 @@ libnet_autobuild_token_ring(uint8_t ac, uint8_t fc, const uint8_t *dst,
 uint8_t dsap, uint8_t ssap, uint8_t cf, const uint8_t *org, uint16_t type, 
 libnet_t *l)
 {
-    uint32_t n, h;
-    struct libnet_token_ring_addr *src;
     libnet_pblock_t *p;
-    libnet_ptag_t ptag;
     struct libnet_token_ring_hdr token_ring_hdr;
 
     if (l == NULL)
@@ -124,12 +121,13 @@ libnet_t *l)
         goto bad;
     }
 
-    n = LIBNET_TOKEN_RING_H;
-    h = 0;
-    ptag = LIBNET_PTAG_INITIALIZER;
+    const uint32_t n = LIBNET_TOKEN_RING_H;
+    const uint32_t h = 0;
+    const libnet_ptag_t ptag = LIBNET_PTAG_INITIALIZER;
 
     /* Token Ring and Ethernet have the same address size - so just typecast */
-    src = (struct libnet_token_ring_addr *) libnet_get_hwaddr(l);
+    struct libnet_token_ring_addr *
+        const src = (struct libnet_token_ring_addr *) libnet_get_hwaddr(l);
     if (src == NULL)
     {
         /* err msg set in libnet_get_hwaddr() */

@@ -33,7 +33,7 @@
 #include "common.h"
 
 char *
-libnet_geterror(libnet_t *l)
+libnet_geterror(const libnet_t *l)
 {
     if (l == NULL)
     { 

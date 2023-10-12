@@ -37,12 +37,11 @@ uint16_t *all_lists;
 int
 libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
 {
-    char libnet_plist_legal_tokens[] = "0123456789,- ";
+    const char libnet_plist_legal_tokens[] = "0123456789,- ";
     libnet_plist_t *tmp;
     char *tok;
     int i, valid_token, cur_node;
     size_t j;
-    uint16_t *all_lists_tmp;
     static uint8_t cur_id;
 
     if (l == NULL)
@@ -94,7 +93,7 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
     tmp->node = cur_node = 0;
     tmp->next = NULL;
     tmp->id = cur_id;
-    all_lists_tmp = all_lists;
+    uint16_t * const all_lists_tmp = all_lists;
     all_lists = realloc(all_lists_tmp, (sizeof(uint16_t) * (cur_id + 1)));
     if (!all_lists)
     {
@@ -186,14 +185,13 @@ int
 libnet_plist_chain_next_pair(libnet_plist_t *plist, uint16_t *bport,
         uint16_t *eport)
 {
-    uint16_t *node_cnt;
     uint16_t tmp_cnt;
 
     if (plist == NULL)
     {
         return (-1);
     }
-    node_cnt = &(all_lists[plist->id]);
+    uint16_t * const node_cnt = &(all_lists[plist->id]);
 
     /*
      *  We are at the end of the list.
@@ -271,7 +269,6 @@ int
 libnet_plist_chain_free(libnet_plist_t *plist)
 {
     uint16_t i;
-    libnet_plist_t *tmp;
 
     if (plist == NULL)
     {
@@ -280,7 +277,7 @@ libnet_plist_chain_free(libnet_plist_t *plist)
 
     for (i = plist->node; i; i--)
     {
-        tmp = plist;
+        libnet_plist_t * const tmp = plist;
         plist = plist->next;
         free(tmp);
     }

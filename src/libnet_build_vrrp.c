@@ -38,8 +38,7 @@ uint8_t priority, uint8_t ip_count, uint8_t auth_type, uint8_t advert_int,
 uint16_t sum, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_vrrp_hdr vrrp_hdr;
 
     if (l == NULL)
@@ -48,13 +47,17 @@ libnet_ptag_t ptag)
     } 
 
     n = LIBNET_VRRP_H + payload_s;
-    h = LIBNET_VRRP_H + payload_s;
+    const uint32_t h = LIBNET_VRRP_H + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_VRRP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_VRRP_H);
     if (p == NULL)
     {
         return (-1);

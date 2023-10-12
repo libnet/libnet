@@ -39,7 +39,6 @@ libnet_build_tcp(
             const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     int offset;
-    libnet_pblock_t *p = NULL;
     libnet_ptag_t ptag_data = 0;
     struct libnet_tcp_hdr tcp_hdr;
 
@@ -53,7 +52,11 @@ libnet_build_tcp(
         return -1;
     }
 
-    p = libnet_pblock_probe(l, ptag, LIBNET_TCP_H, LIBNET_PBLOCK_TCP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        LIBNET_TCP_H,
+        LIBNET_PBLOCK_TCP_H);
     if (p == NULL)
         return -1;
 
@@ -119,8 +122,8 @@ libnet_build_tcp(
 
         if(ipblock && ipblock->type == LIBNET_PBLOCK_IPV4_H)
         {
-            struct libnet_ipv4_hdr * ip_hdr = (struct libnet_ipv4_hdr *)ipblock->buf;
-            int ip_len = ntohs(ip_hdr->ip_len) + offset;
+            struct libnet_ipv4_hdr * const ip_hdr = (struct libnet_ipv4_hdr *)ipblock->buf;
+            const int ip_len = ntohs(ip_hdr->ip_len) + offset;
             ip_hdr->ip_len = htons(ip_len);
         }
     }
@@ -182,9 +185,7 @@ libnet_ptag_t ptag)
     static const uint8_t padding[] = { 0 };
     int offset, underflow;
     uint32_t i, j, adj_size;
-    libnet_pblock_t *p, *p_temp;
-    struct libnet_ipv4_hdr *ip_hdr;
-    struct libnet_tcp_hdr *tcp_hdr;
+    libnet_pblock_t *p_temp;
 
     if (l == NULL)
     { 
@@ -231,7 +232,11 @@ libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, adj_size, LIBNET_PBLOCK_TCPO_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        adj_size,
+        LIBNET_PBLOCK_TCPO_H);
     if (p == NULL)
     {
         return (-1);
@@ -264,7 +269,7 @@ libnet_ptag_t ptag)
             {
                 (i % 4) ? j : j++;
             }
-            tcp_hdr = (struct libnet_tcp_hdr *)p_temp->buf;
+            struct libnet_tcp_hdr * const tcp_hdr = (struct libnet_tcp_hdr *)p_temp->buf;
             tcp_hdr->th_off = j + 5;
             if (!underflow)
             {
@@ -281,7 +286,7 @@ libnet_ptag_t ptag)
         }
         if (p_temp->type == LIBNET_PBLOCK_IPV4_H)
         {
-            ip_hdr = (struct libnet_ipv4_hdr *)p_temp->buf;
+            struct libnet_ipv4_hdr * const ip_hdr = (struct libnet_ipv4_hdr *)p_temp->buf;
             if (!underflow)
             {
                 ip_hdr->ip_len += htons(offset);

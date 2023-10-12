@@ -69,8 +69,7 @@ libnet_build_icmpv4_echo(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag) 
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
@@ -79,13 +78,17 @@ libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_ICMPV4_ECHO_H + payload_s;        /* size of memory block */
-    h = LIBNET_ICMPV4_ECHO_H + payload_s;        /* hl for checksum */
+    const uint32_t h = LIBNET_ICMPV4_ECHO_H + payload_s;        /* hl for checksum */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_ECHO_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_ECHO_H);
     if (p == NULL)
     {
         return (-1);
@@ -127,8 +130,7 @@ libnet_build_icmpv4_mask(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, uint32_t mask, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
@@ -137,13 +139,18 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_ICMPV4_MASK_H + payload_s;        /* size of memory block */
-    h = LIBNET_ICMPV4_MASK_H + payload_s;        /* hl for checksum */
+    /* hl for checksum */
+    const uint32_t h = LIBNET_ICMPV4_MASK_H + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_MASK_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_MASK_H);
     if (p == NULL)
     {
         return (-1);
@@ -187,8 +194,7 @@ libnet_build_icmpv4_timestamp(uint8_t type, uint8_t code, uint16_t sum,
 uint16_t id, uint16_t seq, uint32_t otime, uint32_t rtime, uint32_t ttime,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
@@ -197,13 +203,18 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_ICMPV4_TS_H + payload_s;        /* size of memory block */
-    h = LIBNET_ICMPV4_TS_H + payload_s;        /* hl for checksum */
+    /* hl for checksum */
+    const uint32_t h = LIBNET_ICMPV4_TS_H + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_TS_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_TS_H);
     if (p == NULL)
     {
         return (-1);
@@ -248,28 +259,31 @@ libnet_ptag_t
 libnet_build_icmpv4_unreach(uint8_t type, uint8_t code, uint16_t sum,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
     { 
         return (-1);
     } 
-    n = LIBNET_ICMPV4_UNREACH_H + payload_s;        /* size of memory block */
+    /* size of memory block */
+    const uint32_t n = LIBNET_ICMPV4_UNREACH_H + payload_s;
 
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
      * those 2 sizes.
      */
-    h = LIBNET_ICMPV4_UNREACH_H + payload_s + l->total_size; 
+    const uint32_t h = LIBNET_ICMPV4_UNREACH_H + payload_s + l->total_size; 
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_UNREACH_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_UNREACH_H);
     if (p == NULL)
     {
         return (-1);
@@ -295,8 +309,6 @@ libnet_ptag_t
 libnet_build_icmpv4_timeexceed(uint8_t type, uint8_t code, uint16_t sum,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
@@ -305,19 +317,23 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     /* size of memory block */
-    n = LIBNET_ICMPV4_TIMXCEED_H + payload_s;
+    const uint32_t n = LIBNET_ICMPV4_TIMXCEED_H + payload_s;
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
      * those 2 sizes.
      */
-    h = LIBNET_ICMPV4_TIMXCEED_H + payload_s + l->total_size; 
+    const uint32_t h = LIBNET_ICMPV4_TIMXCEED_H + payload_s + l->total_size; 
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_TIMXCEED_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_TIMXCEED_H);
     if (p == NULL)
     {
         return (-1);
@@ -343,10 +359,7 @@ libnet_ptag_t
 libnet_build_icmpv4_redirect(uint8_t type, uint8_t code, uint16_t sum,
 uint32_t gateway, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
-
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
     struct libnet_icmpv4_hdr icmp_hdr;
 
     if (l == NULL)
@@ -354,19 +367,24 @@ libnet_ptag_t ptag)
         return (-1);
     } 
 
-    n = LIBNET_ICMPV4_REDIRECT_H + payload_s;               /* size of memory block */
+    /* size of memory block */
+    const uint32_t n = LIBNET_ICMPV4_REDIRECT_H + payload_s;
     /* 
      * FREDRAYNAL: as ICMP checksum includes what is embedded in 
      * the payload, and what is after the ICMP header, we need to include
      * those 2 sizes.
      */
-    h = LIBNET_ICMPV4_REDIRECT_H + payload_s + l->total_size; 
+    const uint32_t h = LIBNET_ICMPV4_REDIRECT_H + payload_s + l->total_size; 
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV4_REDIRECT_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV4_REDIRECT_H);
     if (p == NULL)
     {
         return (-1);
@@ -392,12 +410,10 @@ libnet_ptag_t
 libnet_build_icmpv6_common(
         uint8_t type, uint8_t code, uint16_t sum,
         const void* specific, uint32_t specific_s, uint8_t pblock_type,
-        uint8_t *payload, uint32_t payload_s,
+        const uint8_t *payload, uint32_t payload_s,
         libnet_t *l, libnet_ptag_t ptag
         )
 {
-    uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_icmpv6_hdr icmp_hdr;
 
     if (l == NULL)
@@ -405,9 +421,9 @@ libnet_build_icmpv6_common(
         return (-1);
     } 
 
-    n = LIBNET_ICMPV6_COMMON_H + specific_s + payload_s;
+    const uint32_t n = LIBNET_ICMPV6_COMMON_H + specific_s + payload_s;
 
-    p = libnet_pblock_probe(l, ptag, n, pblock_type);
+    libnet_pblock_t * const p = libnet_pblock_probe(l, ptag, n, pblock_type);
 
     if (p == NULL)
     {
@@ -448,7 +464,7 @@ bad:
 }
 
 libnet_ptag_t libnet_build_icmpv6(uint8_t type, uint8_t code, uint16_t sum,
-                                  uint8_t* payload, uint32_t payload_s,
+                                  const uint8_t* payload, uint32_t payload_s,
                                   libnet_t* l, libnet_ptag_t ptag)
 {
     return libnet_build_icmpv6_common(
@@ -461,7 +477,7 @@ libnet_ptag_t libnet_build_icmpv6(uint8_t type, uint8_t code, uint16_t sum,
 libnet_ptag_t
 libnet_build_icmpv6_unreach(
         uint8_t type, uint8_t code, uint16_t sum,
-        uint8_t *payload, uint32_t payload_s,
+        const uint8_t *payload, uint32_t payload_s,
         libnet_t *l, libnet_ptag_t ptag
         )
 {
@@ -480,7 +496,7 @@ libnet_ptag_t
 libnet_build_icmpv6_echo(
         uint8_t type, uint8_t code, uint16_t sum,
         uint16_t id, uint16_t seq,
-        uint8_t *payload, uint32_t payload_s,
+        const uint8_t *payload, uint32_t payload_s,
         libnet_t *l, libnet_ptag_t ptag
         )
 {
@@ -501,7 +517,7 @@ libnet_build_icmpv6_echo(
 libnet_ptag_t libnet_build_icmpv6_ndp_nsol(
         uint8_t type, uint8_t code, uint16_t sum,
         struct libnet_in6_addr target,
-        uint8_t *payload, uint32_t payload_s,
+        const uint8_t *payload, uint32_t payload_s,
         libnet_t* l, libnet_ptag_t ptag)
 {
     struct libnet_icmpv6_ndp_nsol specific;
@@ -521,7 +537,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nsol(
 libnet_ptag_t libnet_build_icmpv6_ndp_nadv(
         uint8_t type, uint8_t code, uint16_t sum,
         uint32_t flags, struct libnet_in6_addr target,
-        uint8_t *payload, uint32_t payload_s,
+        const uint8_t *payload, uint32_t payload_s,
         libnet_t* l, libnet_ptag_t ptag)
 {
 
@@ -539,14 +555,12 @@ libnet_ptag_t libnet_build_icmpv6_ndp_nadv(
 }
 
 libnet_ptag_t libnet_build_icmpv6_ndp_opt(
-        uint8_t type, uint8_t* option, uint32_t option_s,
+        uint8_t type, const uint8_t *option, uint32_t option_s,
         libnet_t* l, libnet_ptag_t ptag)
 {
     struct libnet_icmpv6_ndp_opt opt;
     uint32_t n;
-    static uint8_t pad[8] = { 0 };
-    uint32_t pad_s = 0;
-    libnet_pblock_t* p;
+    static const uint8_t pad[8] = { 0 };
 
     if(l == NULL)
         return -1;
@@ -567,12 +581,16 @@ libnet_ptag_t libnet_build_icmpv6_ndp_opt(
         return -1;
     }
 
-    pad_s = n - option_s - sizeof(opt);
+    const uint32_t pad_s = n - option_s - sizeof(opt);
 
     assert((n % 8) == 0);
     assert(pad_s < sizeof(pad));
 
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ICMPV6_NDP_OPT_H);
+    libnet_pblock_t* const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ICMPV6_NDP_OPT_H);
     if(p == NULL)
         return -1;
 

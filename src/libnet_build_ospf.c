@@ -40,8 +40,7 @@ libnet_build_ospfv2(uint16_t len, uint8_t type, uint32_t rtr_id,
 uint32_t area_id, uint16_t sum, uint16_t autype, const uint8_t *payload, 
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_ospf_hdr ospf_hdr;
 
     if (l == NULL)
@@ -50,13 +49,17 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
  
     n = LIBNET_OSPF_H + payload_s;
-    h = LIBNET_OSPF_H + payload_s + len;
+    const uint32_t h = LIBNET_OSPF_H + payload_s + len;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_H);
     if (p == NULL)
     {
         return (-1);
@@ -110,8 +113,7 @@ libnet_build_ospfv2_hello_neighbor(uint32_t netmask, uint16_t interval, uint8_t 
 uint8_t priority, uint32_t dead_int, uint32_t des_rtr, uint32_t bkup_rtr, uint32_t neighbor,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_ospf_hello_hdr hello_hdr;
 
     if (l == NULL)
@@ -120,13 +122,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_OSPF_HELLO_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_HELLO_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_HELLO_H);
     if (p == NULL)
     {
         return (-1);
@@ -162,8 +168,7 @@ libnet_build_ospfv2_dbd(uint16_t dgram_len, uint8_t opts, uint8_t type,
 uint32_t seqnum, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_dbd_hdr dbd_hdr;
 
     if (l == NULL)
@@ -172,13 +177,17 @@ libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_DBD_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_DBD_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_DBD_H);
     if (p == NULL)
     {
         return (-1);
@@ -211,8 +220,7 @@ libnet_ptag_t
 libnet_build_ospfv2_lsr(uint32_t type, uint32_t lsid, uint32_t advrtr, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_lsr_hdr lsr_hdr;
 
     if (l == NULL)
@@ -221,13 +229,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LSR_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_LSR_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_LSR_H);
     if (p == NULL)
     {
         return (-1);
@@ -259,8 +271,7 @@ libnet_ptag_t
 libnet_build_ospfv2_lsu(uint32_t num, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_lsu_hdr lh_hdr;
 
     if (l == NULL)
@@ -269,13 +280,17 @@ libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LSU_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_LSU_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_LSU_H);
     if (p == NULL)
     {
         return (-1);
@@ -305,8 +320,7 @@ libnet_build_ospfv2_lsa(uint16_t age, uint8_t opts, uint8_t type, uint32_t lsid,
 uint32_t advrtr, uint32_t seqnum, uint16_t sum, uint16_t len,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_lsa_hdr lsa_hdr;
 
     if (l == NULL)
@@ -315,13 +329,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LSA_H + payload_s;
-    h = len + payload_s;
+    const uint32_t h = len + payload_s;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_OSPF_LSA_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_OSPF_LSA_H);
     if (p == NULL)
     {
         return (-1);
@@ -368,8 +386,7 @@ libnet_build_ospfv2_lsa_rtr(uint16_t flags, uint16_t num, uint32_t id,
 uint32_t data, uint8_t type, uint8_t tos, uint16_t metric,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_rtr_lsa_hdr rtr_lsa_hdr;
 
     if (l == NULL)
@@ -378,13 +395,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LS_RTR_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LS_RTR_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LS_RTR_H);
     if (p == NULL)
     {
         return (-1);
@@ -420,8 +441,7 @@ libnet_ptag_t
 libnet_build_ospfv2_lsa_net(uint32_t nmask, uint32_t rtrid,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_net_lsa_hdr net_lsa_hdr;
 
     if (l == NULL)
@@ -430,13 +450,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LS_NET_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LS_NET_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LS_NET_H);
     if (p == NULL)
     {
         return (-1);
@@ -467,8 +491,7 @@ libnet_ptag_t
 libnet_build_ospfv2_lsa_sum(uint32_t nmask, uint32_t metric, uint32_t tos, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_sum_lsa_hdr sum_lsa_hdr;
 
     if (l == NULL)
@@ -477,13 +500,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_OSPF_LS_SUM_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LS_SUM_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LS_SUM_H);
     if (p == NULL)
     {
         return (-1);
@@ -516,8 +543,7 @@ libnet_build_ospfv2_lsa_as(uint32_t nmask, uint32_t metric, uint32_t fwdaddr,
 uint32_t tag, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_as_lsa_hdr as_lsa_hdr;
 
     if (l == NULL)
@@ -526,13 +552,17 @@ libnet_ptag_t ptag)
     } 
    
     n = LIBNET_OSPF_LS_AS_EXT_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LS_AS_EXT_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LS_AS_EXT_H);
     if (p == NULL)
     {
         return (-1);
