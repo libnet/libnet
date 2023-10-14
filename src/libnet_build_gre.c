@@ -2,7 +2,7 @@
  *  libnet
  *  libnet_build_gre.c - GRE packet assembler
  *
- *  Copyright (c) 2003 Fr�d�ric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2003 Frédéric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
