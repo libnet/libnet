@@ -53,13 +53,13 @@ libnet_open_raw6(libnet_t *l)
 }
 
 int
-libnet_close_raw4(const libnet_t *l)
+libnet_close_raw4(libnet_t *l)
 {
     return (libnet_close_link_interface(l));
 }
 
 int
-libnet_close_raw6(const libnet_t *l)
+libnet_close_raw6(libnet_t *l)
 {
     return (libnet_close_link_interface(l));
 }
@@ -176,7 +176,7 @@ bad:
 
 
 int
-libnet_close_raw4(const libnet_t *l)
+libnet_close_raw4(libnet_t *l)
 {
     if (l == NULL)
     { 
@@ -222,7 +222,7 @@ bad:
 #endif
 
 int
-libnet_close_raw6(const libnet_t *l)
+libnet_close_raw6(libnet_t *l)
 {
     if (l == NULL)
     { 

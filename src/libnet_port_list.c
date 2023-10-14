@@ -269,6 +269,7 @@ int
 libnet_plist_chain_free(libnet_plist_t *plist)
 {
     uint16_t i;
+    libnet_plist_t *tmp;
 
     if (plist == NULL)
     {
@@ -277,7 +278,7 @@ libnet_plist_chain_free(libnet_plist_t *plist)
 
     for (i = plist->node; i; i--)
     {
-        libnet_plist_t * const tmp = plist;
+        tmp = plist;
         plist = plist->next;
         free(tmp);
     }

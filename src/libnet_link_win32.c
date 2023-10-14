@@ -188,7 +188,7 @@ libnet_open_link(libnet_t *l)
 }
 
 int
-libnet_close_link_interface(const libnet_t *l)
+libnet_close_link_interface(libnet_t *l)
 {
     if (l->lpAdapter)
     {

@@ -35,6 +35,8 @@
 libnet_t *
 libnet_init(int injection_type, const char *device, char *err_buf)
 {
+    libnet_t *l = NULL;
+
 #if defined(__WIN32__)
     WSADATA wsaData;
 
@@ -46,7 +48,7 @@ libnet_init(int injection_type, const char *device, char *err_buf)
     }
 #endif
 
-    libnet_t * const l = (libnet_t *)malloc(sizeof (libnet_t));
+    l = (libnet_t *)malloc(sizeof (libnet_t));
     if (l == NULL)
     {
         snprintf(err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s", __func__,

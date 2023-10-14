@@ -700,7 +700,7 @@ struct  EnetHeaderInfo
 
 
 int
-libnet_close_link(const libnet_t *l)
+libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {

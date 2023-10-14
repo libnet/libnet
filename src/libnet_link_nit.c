@@ -91,6 +91,7 @@ bad:
 }
 
 
+/* FIXME: The function prototype is different from the one found in the header */
 int
 libnet_close_link_interface(struct libnet_link_int *l)
 {

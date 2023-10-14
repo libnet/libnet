@@ -7,6 +7,7 @@ internal_build_udld_tlv(uint16_t tlv_type, const uint8_t *value,
 uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     struct libnet_udld_hdr hdr;
+    libnet_pblock_t *p;
 
     hdr.tlv__type   = tlv_type;
     hdr.tlv__length = LIBNET_UDLD_TLV_HDR_SIZE + value_s;
@@ -54,6 +55,7 @@ uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
         default:
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
             "%s(): incorrect TLV type", __func__);
+            p = NULL;
             goto bad;
     }
 
@@ -61,7 +63,7 @@ uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    libnet_pblock_t * const p = libnet_pblock_probe(l, ptag, n, pblock_type);
+    p = libnet_pblock_probe(l, ptag, n, pblock_type);
     if (p == NULL)
     {
         return (-1);

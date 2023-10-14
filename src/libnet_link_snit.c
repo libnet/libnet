@@ -51,7 +51,7 @@ libnet_open_link_interface(const int8_t *device, int8_t *ebuf)
 {
     struct strioctl si;	    /* struct for ioctl() */
     struct ifreq ifr;       /* interface request struct */
-    static int8_t dev[] = "/dev/nit";
+    static const int8_t dev[] = "/dev/nit";
 
     struct libnet_link_int * const l = (struct libnet_link_int *)malloc(sizeof(*l));
     if (l == NULL)
@@ -117,6 +117,7 @@ bad:
 }
 
 
+/* FIXME: The function prototype is different from the one found in the header */
 int
 libnet_close_link_interface(struct libnet_link_int *l)
 {

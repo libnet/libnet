@@ -116,7 +116,7 @@ libnet_autobuild_ethernet(const uint8_t *dst, uint16_t type, libnet_t *l)
     const uint32_t n = LIBNET_ETH_H;
     const uint32_t h = 0;
     const libnet_ptag_t ptag = LIBNET_PTAG_INITIALIZER;
-    const struct libnet_ether_addr * const src = libnet_get_hwaddr(l);
+    struct libnet_ether_addr * const src = libnet_get_hwaddr(l);
     if (src == NULL)
     {
         /* err msg set in libnet_get_hwaddr() */

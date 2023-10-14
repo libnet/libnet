@@ -96,7 +96,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t typ
 
 static void* zmalloc(libnet_t* l, uint32_t size, const char* func)
 {
-    void* const v = malloc(size);
+    void * const v = malloc(size);
     if(v)
         memset(v, 0, size);
     else
@@ -304,7 +304,7 @@ static int pblock_is_ip(const libnet_pblock_t* p)
 static int calculate_ip_offset(const libnet_t* l, const libnet_pblock_t* q)
 {
     int ip_offset = 0;
-    const libnet_pblock_t* p = l->protocol_blocks;
+    const libnet_pblock_t * p = l->protocol_blocks;
     for(; p && p != q; p = p->next) {
 	ip_offset += p->b_len;
     }

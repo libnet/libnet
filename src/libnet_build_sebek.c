@@ -45,7 +45,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
         return (-1);
     } 
 
-    n = LIBNET_SEBEK_H + payload_s;   /* size of memory block */
+    n = LIBNET_SEBEK_H + payload_s;               /* size of memory block */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create

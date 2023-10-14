@@ -2659,7 +2659,7 @@ libnet_open_raw4(libnet_t *l);
  */
 LIBNET_API
 int
-libnet_close_raw4(const libnet_t *l);
+libnet_close_raw4(libnet_t *l);
 
 /*
  * [Internal] 
@@ -2671,7 +2671,7 @@ libnet_open_raw6(libnet_t *l);
  * [Internal] 
  */
 int
-libnet_close_raw6(const libnet_t *l);
+libnet_close_raw6(libnet_t *l);
 
 /*
  * [Internal] 
@@ -2689,7 +2689,7 @@ libnet_open_link(libnet_t *l);
  * [Internal] 
  */
 int
-libnet_close_link(const libnet_t *l);
+libnet_close_link(libnet_t *l);
 
 /*
  * [Internal]
@@ -2862,7 +2862,7 @@ libnet_win32_get_remote_mac(libnet_t *l, DWORD IP);
  * [Internal] 
  */
 int
-libnet_close_link_interface(const libnet_t *l);
+libnet_close_link_interface(libnet_t *l);
 
 /*
  * [Internal] 

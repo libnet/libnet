@@ -586,7 +586,7 @@ libnet_ptag_t libnet_build_icmpv6_ndp_opt(
     assert((n % 8) == 0);
     assert(pad_s < sizeof(pad));
 
-    libnet_pblock_t* const p = libnet_pblock_probe(
+    libnet_pblock_t * const p = libnet_pblock_probe(
         l,
         ptag,
         n,

@@ -131,7 +131,7 @@ libnet_open_link(libnet_t *l)
 
     return 1;
 bad:
-    // Is this bug? closing uninitialized fd
+    /* FIXME: Is this bug? closing uninitialized fd */
     close(fd);
     free(l);
     return -1;
@@ -139,7 +139,7 @@ bad:
 
 
 int
-libnet_close_link(const libnet_t *l)
+libnet_close_link(libnet_t *l)
 {
     if (close(l->fd) == 0)
     {

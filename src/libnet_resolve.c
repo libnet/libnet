@@ -422,6 +422,7 @@ uint8_t *
 libnet_hex_aton(const char *s, int *len)
 {
     int i;
+    int32_t l;
     char *pp;
         
     while (isspace(*s))
@@ -443,7 +444,7 @@ libnet_hex_aton(const char *s, int *len)
     /* expect len hex octets separated by ':' */
     for (i = 0; i < *len + 1; i++)
     {
-        const int32_t l = strtol(s, &pp, 16);
+        l = strtol(s, &pp, 16);
         if (pp == s || l > 0xff || l < 0)
         {
             *len = 0;

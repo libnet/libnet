@@ -5,7 +5,7 @@
  *  libnet_cq.c - context queue management routines
  *
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
- *  Copyright (c) 2002 Fr�d�ric Raynal <pappy@security-labs.org>
+ *  Copyright (c) 2002 Frédéric Raynal <pappy@security-labs.org>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
