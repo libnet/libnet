@@ -156,7 +156,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag);
  */ 
 LIBNET_API
 char *
-libnet_geterror(const libnet_t *l);
+libnet_geterror(libnet_t *l);
 
 /**
  * Returns the sum of the size of all of the pblocks inside of l (this should
