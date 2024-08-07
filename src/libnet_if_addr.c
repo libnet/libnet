@@ -548,7 +548,8 @@ libnet_select_device(libnet_t *l)
 {
     struct libnet_ifaddr_list *address_list = NULL, *al;
     uint32_t addr;
-    int c, i, rc;
+    int rc = -1;
+    int c, i;
 
     if (l == NULL)
     { 
@@ -600,7 +601,7 @@ libnet_select_device(libnet_t *l)
         if (i <= 0)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): can't find interface for IP %s", __func__, l->device);
-	    goto bad;
+	    goto end;
         }
     }
     else
@@ -610,9 +611,6 @@ libnet_select_device(libnet_t *l)
 
 good:
     rc = 1;
-    goto end;
-bad:
-    rc = -1;
 end:
     if (address_list) {
         for (i = 0; i < c; i++)
