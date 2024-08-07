@@ -8,7 +8,7 @@ const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     struct libnet_udld_hdr hdr;
     uint32_t n, h;
-    libnet_pblock_t *p;
+    libnet_pblock_t *p = NULL;
 
     hdr.tlv__type   = tlv_type;
     hdr.tlv__length = LIBNET_UDLD_TLV_HDR_SIZE + value_s;
