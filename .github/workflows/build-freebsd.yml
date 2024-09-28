@@ -1,6 +1,8 @@
-name: FreeBSD
+name: FreeBSD DISABLED PLEASE HELP
 
-on: [push, pull_request]
+# DISABLED DUE TO VM NOT STARTING UP PROPERLY
+#on: [push, pull_request]
+on: workflow_dispatch
 
 env:
   # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
