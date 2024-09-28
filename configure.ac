@@ -189,7 +189,7 @@ AC_ARG_ENABLE([tests],
 AC_MSG_RESULT([$enable_tests])
 AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
 AS_IF([test "$enable_tests" = "yes"], [
-    PKG_CHECK_MODULES([cocka], [cmocka >= 1.0.0])
+    PKG_CHECK_MODULES([cmocka], [cmocka >= 1.0.0])
     AC_DEFINE(LIBNET_ENABLE_TESTS, 1, [Useful define for testing purposes.])
 ])
 
