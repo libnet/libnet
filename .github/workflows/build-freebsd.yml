@@ -19,7 +19,7 @@ jobs:
             os: macos-latest
             cc: clang
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build
@@ -27,7 +27,7 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           prepare: |
-            pkg install -y autotools gcc llvm doxygen tree
+            pkg install -y autotools libtool gcc llvm doxygen tree
           run: |
             ./autogen.sh
             ./configure --prefix=/usr CC=${{ matrix.cc }}
