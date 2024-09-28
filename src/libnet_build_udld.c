@@ -156,8 +156,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)
     /*
      *  Appened the protocol unit to the list.
      */
-    n = libnet_pblock_append(l, p, (u_char *) & udld_hdr, LIBNET_UDLD_H);
-    if (n == -1)
+    n = libnet_pblock_append(l, p, &udld_hdr, LIBNET_UDLD_H);
+    if (n == (uint32_t)-1)
     {
         goto bad;
     }
