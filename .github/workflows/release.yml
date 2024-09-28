@@ -15,7 +15,7 @@ jobs:
       - name: Installing dependencies ...
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential autoconf automake tree doxygen libcmocka-dev
+          sudo apt-get install -y build-essential autoconf automake pkg-config tree doxygen libcmocka-dev
       - name: Creating Makefiles ...
         run: |
           ./autogen.sh

@@ -54,6 +54,9 @@ AC_USE_SYSTEM_EXTENSIONS
 # This can still be overwritten with --without-pic
 LT_INIT([pic-only])
 
+# Check for pkg-config first, warn if it's not installed
+PKG_PROG_PKG_CONFIG
+
 #
 # Check for headers
 #
@@ -85,10 +88,9 @@ AC_SUBST(PKG_CONFIG_CFLAGS)
 AC_SUBST(LTLIBOBJS)
 
 # Get link-layer interface type
-AC_ARG_WITH(
-	[link-layer],
-	[AS_HELP_STRING([--with-link-layer],
-	[when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])])
+AC_ARG_WITH([link-layer], [
+	AS_HELP_STRING([--with-link-layer], [
+		when cross-compiling, one of * from libnet_link_*.c @<:@autodetect@:>@])])
 
 AC_CHECK_HEADERS([net/pfilt.h sys/net/nit.h net/raw.h sys/dlpi.h linux/socket.h])
 
@@ -187,6 +189,7 @@ AC_ARG_ENABLE([tests],
 AC_MSG_RESULT([$enable_tests])
 AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
 AS_IF([test "$enable_tests" = "yes"], [
+    PKG_CHECK_MODULES([cocka], [cmocka >= 1.0.0])
     AC_DEFINE(LIBNET_ENABLE_TESTS, 1, [Useful define for testing purposes.])
 ])
 
