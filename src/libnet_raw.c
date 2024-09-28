@@ -32,10 +32,6 @@
 
 #include "common.h"
 
-#ifndef HAVE_SOCKLEN_T
-typedef int socklen_t;
-#endif
-
 /* TODO this doesn't make any sense, the code in the #else branch is littered
    with conditionals on __WIN32__ that are never reachable, what happened?
    */

@@ -66,15 +66,7 @@ AC_CHECK_FUNCS([getifaddrs])
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
-
-AC_MSG_CHECKING(for socklen_t)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-        #include <sys/types.h>
-        #include <sys/socket.h>
-        ]], [[ socklen_t x; ]])],[have_socklen_t=yes],[have_socklen_t=no])
-AS_IF([test "x$have_socklen_t" = "xyes"], [
-        AC_DEFINE(HAVE_SOCKLEN_T, 1, [define if socklen_t is defined])])
-AC_MSG_RESULT($have_socklen_t)
+AX_TYPE_SOCKLEN_T
 
 #
 # And some custom things
