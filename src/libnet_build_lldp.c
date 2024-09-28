@@ -142,13 +142,6 @@ libnet_ptag_t libnet_build_lldp_ttl(const uint16_t ttl,
     if (l == NULL)
         return (-1);
 
-    if (ttl > UINT16_MAX)
-    {
-        snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                 "%s(): Incorrect value of ttl", __func__);
-        return (-1);
-    }
-
     /* size of memory block */
     n = h =  LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
         sizeof(uint16_t);               /* Size of 2 octets */
