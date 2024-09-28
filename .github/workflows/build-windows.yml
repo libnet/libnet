@@ -10,7 +10,7 @@ jobs:
         arch: [x86, x86_64]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: microsoft/setup-msbuild@v1.1
       - name: Install Npcap
         run: |
