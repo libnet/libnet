@@ -113,7 +113,7 @@ done:
 
 #if defined (__WIN32__)
 libnet_ptag_t
-libnet_win32_build_fake_ethernet (uint8_t *dst, uint8_t *src, uint16_t type,
+libnet_win32_build_fake_ethernet (const uint8_t *dst, const uint8_t *src, uint16_t type,
                                   const uint8_t *payload, uint32_t payload_s,
                                   uint8_t *packet, libnet_t *l, libnet_ptag_t ptag)
 {
@@ -142,7 +142,7 @@ libnet_win32_build_fake_ethernet (uint8_t *dst, uint8_t *src, uint16_t type,
 }
 
 libnet_ptag_t
-libnet_win32_build_fake_token (uint8_t *dst, uint8_t *src, uint16_t type,
+libnet_win32_build_fake_token (const uint8_t *dst, uint8_t *src, uint16_t type,
                                const uint8_t *payload, uint32_t payload_s,
                                uint8_t *packet, libnet_t *l, libnet_ptag_t ptag)
 {
@@ -182,18 +182,13 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
     static BYTE dst[ETHER_ADDR_LEN];
     static BYTE src[ETHER_ADDR_LEN];
 
-    uint8_t *packet;
-    uint32_t packet_s;
-
-    DWORD remoteip = 0;
     NetType type;
-    struct libnet_ipv4_hdr *ip_hdr = NULL;
 
     memset(dst, 0, sizeof(dst));
     memset(src, 0, sizeof(src));
 
-    packet_s = payload_s + l->link_offset;
-    packet = (uint8_t*) alloca(packet_s);
+    const uint32_t packet_s = payload_s + l->link_offset;
+    uint8_t * const packet = (uint8_t*) alloca(packet_s);
 
     /* we have to do the IP checksum
      * FIXME: warning is correct, checksum modifies its input.
@@ -206,9 +201,9 @@ libnet_win32_write_raw_ipv4(libnet_t *l, const uint8_t *payload, uint32_t payloa
     }
 
     /* MACs, IPs and other stuff... */
-    ip_hdr = (struct libnet_ipv4_hdr *)payload;
+    struct libnet_ipv4_hdr * const ip_hdr = (struct libnet_ipv4_hdr *)payload;
     memcpy(src, libnet_get_hwaddr(l), sizeof(src));
-    remoteip = ip_hdr->ip_dst.S_un.S_addr;
+    const DWORD remoteip = ip_hdr->ip_dst.S_un.S_addr;
 
     /* check if the remote station is the local station */
     if (remoteip == libnet_get_ipaddr4(l))
@@ -264,16 +259,14 @@ libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    ssize_t c;
     struct sockaddr_in sin;
-    struct libnet_ipv4_hdr *ip_hdr;
 
     if (l == NULL)
     {
         return (-1);
     }
 
-    ip_hdr = (struct libnet_ipv4_hdr *)packet;
+    struct libnet_ipv4_hdr * const ip_hdr = (struct libnet_ipv4_hdr *)packet;
 
 #if (LIBNET_BSD_BYTE_SWAP)
     /*
@@ -290,7 +283,7 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
     sin.sin_family  = AF_INET;
     sin.sin_addr.s_addr = ip_hdr->ip_dst.s_addr;
 
-    c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin,
+    const ssize_t c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin,
             sizeof(sin));
 
 #if (LIBNET_BSD_BYTE_SWAP)
@@ -310,28 +303,26 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_raw_ipv6(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    ssize_t c = -1;
-
 #if defined HAVE_SOLARIS && !defined HAVE_SOLARIS_IPV6
     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): no IPv6 support",
             __func__, strerror(errno));
 #else
     struct sockaddr_in6 sin;
-    struct libnet_ipv6_hdr *ip_hdr;
 
     if (l == NULL)
     {
         return (-1);
     }
 
-    ip_hdr = (struct libnet_ipv6_hdr *)packet;
+    struct libnet_ipv6_hdr * const ip_hdr = (struct libnet_ipv6_hdr *)packet;
 
     memset(&sin, 0, sizeof(sin));
     sin.sin6_family  = AF_INET6;
     memcpy(sin.sin6_addr.s6_addr, ip_hdr->ip_dst.libnet_s6_addr,
             sizeof(ip_hdr->ip_dst.libnet_s6_addr));
 
-    c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin, sizeof(sin));
+    const ssize_t c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin,
+            sizeof(sin));
     if (c != (ssize_t)size)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,

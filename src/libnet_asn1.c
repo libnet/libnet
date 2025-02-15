@@ -58,8 +58,8 @@
 #include "common.h"
 
 uint8_t *
-libnet_build_asn1_int(uint8_t *data, int *datalen, uint8_t type, int32_t *int_p,
-            int int_s)
+libnet_build_asn1_int(uint8_t *data, int *datalen, uint8_t type,
+            const int32_t *int_p, int int_s)
 {
     /*
      *  ASN.1 integer ::= 0x02 asnlength byte {byte}*
@@ -109,8 +109,8 @@ libnet_build_asn1_int(uint8_t *data, int *datalen, uint8_t type, int32_t *int_p,
 
 
 uint8_t *
-libnet_build_asn1_uint(uint8_t *data, int *datalen, uint8_t type, uint32_t *int_p,
-            int int_s)
+libnet_build_asn1_uint(uint8_t *data, int *datalen, uint8_t type,
+            const uint32_t *int_p, int int_s)
 {
     /*
      *  ASN.1 integer ::= 0x02 asnlength byte {byte}*
@@ -181,7 +181,7 @@ libnet_build_asn1_uint(uint8_t *data, int *datalen, uint8_t type, uint32_t *int_
 
 uint8_t *
 libnet_build_asn1_string(uint8_t *data, int *datalen, uint8_t type,
-            uint8_t *string, int str_s)
+            const uint8_t *string, int str_s)
 {
 
     /*
@@ -237,7 +237,7 @@ libnet_build_asn1_sequence(uint8_t *data, int *datalen, uint8_t type, int len)
 uint8_t *
 libnet_build_asn1_length(uint8_t *data, int *datalen, int len)
 {
-    uint8_t *start_data = data;
+    uint8_t * const start_data = data;
 
     /* no indefinite lengths sent */
     if (len < 0x80)
@@ -286,7 +286,6 @@ libnet_build_asn1_objid(uint8_t *data, int *datalen, uint8_t type, oid *objid,
     oid *op = objid;
     uint8_t objid_size[MAX_OID_LEN];
     uint32_t objid_val;
-    uint32_t first_objid_val;
     int i;
 
     /* check if there are at least 2 sub-identifiers */
@@ -302,7 +301,7 @@ libnet_build_asn1_objid(uint8_t *data, int *datalen, uint8_t type, oid *objid,
         objid_val = (op[0] * 40) + op[1];
         op += 2;
     }
-    first_objid_val = objid_val;
+    const uint32_t first_objid_val = objid_val;
 
     /* calculate the number of bytes needed to store the encoded value */
     for (i = 1, asnlen = 0;;)
@@ -405,7 +404,7 @@ libnet_build_asn1_null(uint8_t *data, int *datalen, uint8_t type)
 
 uint8_t *
 libnet_build_asn1_bitstring(uint8_t *data, int *datalen, uint8_t type,
-            uint8_t *string, int str_s)
+            const uint8_t *string, int str_s)
 {
 
     /*

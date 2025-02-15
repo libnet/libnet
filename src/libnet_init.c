@@ -150,7 +150,7 @@ libnet_clear_packet(libnet_t *l)
 }
 
 void
-libnet_stats(libnet_t *l, struct libnet_stats *ls)
+libnet_stats(const libnet_t *l, struct libnet_stats *ls)
 {
     if (l == NULL)
     { 
@@ -163,7 +163,7 @@ libnet_stats(libnet_t *l, struct libnet_stats *ls)
 }
 
 int
-libnet_getfd(libnet_t *l)
+libnet_getfd(const libnet_t *l)
 {
     if (l == NULL)
     { 
@@ -194,7 +194,7 @@ libnet_setfd_max_sndbuf(libnet_t *l, int max_bytes)
 #endif /* SO_SNDBUF */
 
 const char *
-libnet_getdevice(libnet_t *l)
+libnet_getdevice(const libnet_t *l)
 {
     if (l == NULL)
     { 
@@ -207,14 +207,12 @@ libnet_getdevice(libnet_t *l)
 uint8_t *
 libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag)
 {
-    libnet_pblock_t *p;
-
     if (l == NULL)
     { 
         return (NULL);
     }
 
-    p = libnet_pblock_find(l, ptag);
+    libnet_pblock_t * const p = libnet_pblock_find(l, ptag);
     if (p == NULL)
     {
         /* err msg set in libnet_pblock_find() */
@@ -229,14 +227,12 @@ libnet_getpbuf(libnet_t *l, libnet_ptag_t ptag)
 uint32_t
 libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
 {
-    libnet_pblock_t *p;
-
     if (l == NULL)
     { 
         return (0);
     } 
 
-    p = libnet_pblock_find(l, ptag);
+    libnet_pblock_t * const p = libnet_pblock_find(l, ptag);
     if (p == NULL)
     {
         /* err msg set in libnet_pblock_find() */
@@ -249,7 +245,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
 }
 
 uint32_t
-libnet_getpacket_size(libnet_t *l)
+libnet_getpacket_size(const libnet_t *l)
 {
     /* Why doesn't this return l->total_size? */
     libnet_pblock_t *p;

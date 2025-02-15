@@ -34,10 +34,10 @@
 libnet_ptag_t
 libnet_build_hsrp(uint8_t version, uint8_t opcode, uint8_t state, 
 uint8_t hello_time, uint8_t hold_time, uint8_t priority, uint8_t group,
-uint8_t reserved, uint8_t authdata[HSRP_AUTHDATA_LENGTH], uint32_t virtual_ip,
-const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+uint8_t reserved, const uint8_t authdata[HSRP_AUTHDATA_LENGTH],
+uint32_t virtual_ip, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
+libnet_ptag_t ptag)
 {
-    libnet_pblock_t *p;
     struct libnet_hsrp_hdr hsrp_hdr;
 
     if (l == NULL)
@@ -49,7 +49,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, LIBNET_HSRP_H + payload_s, LIBNET_PBLOCK_HSRP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        LIBNET_HSRP_H + payload_s,
+        LIBNET_PBLOCK_HSRP_H);
     if (p == NULL)
     {
         return (-1);

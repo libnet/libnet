@@ -39,14 +39,12 @@ uint16_t port_id, uint16_t message_age, uint16_t max_age,
 uint16_t hello_time, uint16_t f_delay, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
 
     /* until we get some data marshalling in place we can't use this */
     /* struct libnet_stp_conf_hdr stp_hdr; */
     uint8_t stp_hdr[35];
     uint16_t value_s;
-    uint32_t value_l;
 
     if (l == NULL)
     { 
@@ -54,13 +52,17 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_STP_CONF_H + payload_s;          /* size of memory block */
-    h = 0;                                      /* no checksum */
+    const uint32_t h = 0;                       /* no checksum */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_STP_CONF_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_STP_CONF_H);
     if (p == NULL)
     {
         return (-1);
@@ -88,7 +90,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     stp_hdr[3] = bpdu_type;
     stp_hdr[4] = flags;
     memcpy(&stp_hdr[5], root_id, 8);
-    value_l = htonl(root_pc);
+    const uint32_t value_l = htonl(root_pc);
     memcpy(&stp_hdr[13], &value_l, 4);
     memcpy(&stp_hdr[17], bridge_id, 8);
     value_s = htons(port_id);
@@ -141,8 +143,7 @@ libnet_ptag_t
 libnet_build_stp_tcn(uint16_t id, uint8_t version, uint8_t bpdu_type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
 
     struct libnet_stp_tcn_hdr stp_hdr;
 
@@ -152,13 +153,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_STP_TCN_H + payload_s;           /* size of memory block */
-    h = 0;                                      /* no checksum */
+    const uint32_t h = 0;                       /* no checksum */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_STP_TCN_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_STP_TCN_H);
     if (p == NULL)
     {
         return (-1);

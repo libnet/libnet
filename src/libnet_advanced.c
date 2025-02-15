@@ -59,8 +59,6 @@ int
 libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
         uint32_t *header_s)
 {
-    libnet_pblock_t *p;
-
     *header = NULL;
     *header_s = 0;
 
@@ -77,7 +75,7 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
     }
 #endif
 
-    p = libnet_pblock_find(l, ptag);
+    const libnet_pblock_t *p = libnet_pblock_find(l, ptag);
     if (p == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -93,15 +91,13 @@ libnet_adv_cull_header(libnet_t *l, libnet_ptag_t ptag, uint8_t **header,
 int
 libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
-    ssize_t c;
-
     if (l->injection_type != LIBNET_LINK_ADV)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): advanced link mode not enabled", __func__);
         return (-1);
     }
-    c = libnet_write_link(l, packet, packet_s);
+    const ssize_t c = libnet_write_link(l, packet, packet_s);
 
     /* do statistics */
     if (c == (ssize_t)packet_s)
@@ -127,15 +123,13 @@ libnet_adv_write_link(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 int
 libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 {
-    ssize_t c;
-
     if (l->injection_type != LIBNET_RAW4_ADV)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "%s(): advanced raw4 mode not enabled", __func__);
         return (-1);
     }
-    c = libnet_write_raw_ipv4(l, packet, packet_s);
+    const ssize_t c = libnet_write_raw_ipv4(l, packet, packet_s);
 
     /* do statistics */
     if (c == (ssize_t)packet_s)
@@ -159,7 +153,7 @@ libnet_adv_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t packet_s)
 }
 
 void
-libnet_adv_free_packet(libnet_t *l, uint8_t *packet)
+libnet_adv_free_packet(const libnet_t *l, uint8_t *packet)
 {
     /*
      *  Restore original pointer address so free won't complain about a

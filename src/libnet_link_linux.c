@@ -68,7 +68,7 @@ int
 libnet_open_link(libnet_t *l)
 {
     struct ifreq ifr;
-    int n = 1;
+    const int n = 1;
 
     if (l == NULL)
     { 
@@ -201,7 +201,6 @@ get_iface_index(int fd, const char *device)
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    ssize_t c;
     struct sockaddr_ll sa;
 
     if (l == NULL)
@@ -218,7 +217,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     }
     sa.sll_protocol  = htons(ETH_P_ALL);
 
-    c = sendto(l->fd, packet, size, 0,
+    const ssize_t c = sendto(l->fd, packet, size, 0,
             (struct sockaddr *)&sa, sizeof (sa));
     if (c != (ssize_t)size)
     {
@@ -233,7 +232,6 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    int fd;
     struct ifreq ifr;
 
     if (l == NULL)
@@ -254,7 +252,7 @@ libnet_get_hwaddr(libnet_t *l)
     /*
      *  Create dummy socket to perform an ioctl upon.
      */
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    const int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,

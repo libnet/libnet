@@ -36,8 +36,7 @@ libnet_build_fddi(uint8_t fc, const uint8_t *dst, const uint8_t *src, uint8_t ds
 uint8_t ssap, uint8_t cf, const uint8_t *org, uint16_t type, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    uint16_t protocol_type;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_fddi_hdr fddi_hdr;
 
@@ -58,7 +57,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_FDDI_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -80,7 +79,7 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     memcpy(&fddi_hdr.fddi_llc_org_code, org, LIBNET_ORG_CODE_SIZE); 
 
     /* Deal with unaligned int16_t for type */
-    protocol_type = htons(type);
+    const uint16_t protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));   /* Protocol Type */
 
     if (libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H) == -1)
@@ -102,11 +101,7 @@ libnet_ptag_t
 libnet_autobuild_fddi(uint8_t fc, const uint8_t *dst, uint8_t dsap, uint8_t ssap,
 uint8_t cf, const uint8_t *org, uint16_t type, libnet_t *l)
 {
-    uint32_t n, h;
-    uint16_t protocol_type;
-    struct libnet_fddi_addr *src;
     libnet_pblock_t *p;
-    libnet_ptag_t ptag;
     struct libnet_fddi_hdr fddi_hdr;
 
     if (l == NULL)
@@ -125,12 +120,12 @@ uint8_t cf, const uint8_t *org, uint16_t type, libnet_t *l)
         goto bad;
     }
 
-    n = LIBNET_FDDI_H;
-    h = 0;
-    ptag = LIBNET_PTAG_INITIALIZER;
+    const uint32_t n = LIBNET_FDDI_H;
+    const uint32_t h = 0;
+    const libnet_ptag_t ptag = LIBNET_PTAG_INITIALIZER;
 
     /* FDDI and Ethernet have the same address size - so just typecast */
-    src = (struct libnet_fddi_addr *) libnet_get_hwaddr(l);
+    struct libnet_fddi_addr * const src = (struct libnet_fddi_addr *) libnet_get_hwaddr(l);
     if (src == NULL)
     {
         /* err msg set in libnet_get_hwaddr() */
@@ -153,7 +148,7 @@ uint8_t cf, const uint8_t *org, uint16_t type, libnet_t *l)
     memcpy(&fddi_hdr.fddi_llc_org_code, org, LIBNET_ORG_CODE_SIZE); 
 
     /* Deal with unaligned int16_t for type */
-    protocol_type = htons(type);
+    const uint16_t protocol_type = htons(type);
     memcpy(&fddi_hdr.fddi_type, &protocol_type, sizeof(int16_t));
 
     if (libnet_pblock_append(l, p, (uint8_t *)&fddi_hdr, LIBNET_FDDI_H) == -1)

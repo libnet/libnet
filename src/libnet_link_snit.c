@@ -47,14 +47,13 @@
 #endif
 
 struct libnet_link_int *
-libnet_open_link_interface(int8_t *device, int8_t *ebuf)
+libnet_open_link_interface(const int8_t *device, int8_t *ebuf)
 {
     struct strioctl si;	    /* struct for ioctl() */
     struct ifreq ifr;       /* interface request struct */
-    static int8_t dev[] = "/dev/nit";
-    struct libnet_link_int *l;
+    static const int8_t dev[] = "/dev/nit";
 
-    l = (struct libnet_link_int *)malloc(sizeof(*l));
+    struct libnet_link_int * const l = (struct libnet_link_int *)malloc(sizeof(*l));
     if (l == NULL)
     {
         strcpy(ebuf, strerror(errno));
@@ -118,6 +117,7 @@ bad:
 }
 
 
+/* FIXME: The function prototype is different from the one found in the header */
 int
 libnet_close_link_interface(struct libnet_link_int *l)
 {
@@ -138,13 +138,12 @@ int
 libnet_write_link_layer(struct libnet_link_int *l, const int8_t *device,
             const uint8_t *buf, int len)
 {
-    int c;
     struct sockaddr sa;
 
     memset(&sa, 0, sizeof(sa));
     strncpy(sa.sa_data, device, sizeof(sa.sa_data));
 
-    c = sendto(l->fd, buf, len, 0, &sa, sizeof(sa));
+    const int c = sendto(l->fd, buf, len, 0, &sa, sizeof(sa));
     if (c != len)
     {
         /* err */

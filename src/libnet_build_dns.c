@@ -40,9 +40,7 @@ libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
             libnet_t *l, libnet_ptag_t ptag)
 {
 
-    uint32_t n, h;
-    uint32_t offset;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_dnsv4_hdr dns_hdr;
 
     if (l == NULL)
@@ -56,15 +54,21 @@ libnet_build_dnsv4(uint16_t h_len, uint16_t id, uint16_t flags,
                 "%s(): invalid header length: %d", __func__, h_len);
        return (-1);
     }
-    offset = (h_len == LIBNET_UDP_DNSV4_H ? sizeof(dns_hdr.h_len) : 0);
+    const uint32_t offset = (h_len == LIBNET_UDP_DNSV4_H
+        ? sizeof(dns_hdr.h_len)
+        : 0);
     n = h_len + payload_s;
-    h = 0;          /* no checksum */
+    const uint32_t h = 0;          /* no checksum */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_DNSV4_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_DNSV4_H);
     if (p == NULL)
     {
         return (-1);

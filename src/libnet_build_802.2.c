@@ -36,8 +36,7 @@ libnet_ptag_t
 libnet_build_802_2(uint8_t dsap, uint8_t ssap, uint8_t control, 
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_802_2_hdr _802_2_hdr;
 
     if (l == NULL)
@@ -46,13 +45,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_802_2_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_802_2_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_802_2_H);
     if (p == NULL)
     {
         return (-1);
@@ -81,11 +84,10 @@ bad:
 
 libnet_ptag_t
 libnet_build_802_2snap(uint8_t dsap, uint8_t ssap, uint8_t control,
-uint8_t *oui, uint16_t type, const uint8_t *payload, uint32_t payload_s,
+const uint8_t *oui, uint16_t type, const uint8_t *payload, uint32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_802_2snap_hdr _802_2_hdr;
 
     if (l == NULL)
@@ -94,13 +96,17 @@ libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_802_2SNAP_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_802_2SNAP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_802_2SNAP_H);
     if (p == NULL)
     {
         return (-1);

@@ -36,8 +36,7 @@ libnet_ptag_t
 libnet_build_igmp(uint8_t type, uint8_t reserved, uint16_t sum, uint32_t ip,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_igmp_hdr igmp_hdr;
 
     if (l == NULL)
@@ -46,13 +45,17 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_IGMP_H + payload_s;
-    h = LIBNET_IGMP_H;
+    const uint32_t h = LIBNET_IGMP_H;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IGMP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IGMP_H);
     if (p == NULL)
     {
         return (-1);

@@ -37,8 +37,7 @@ libnet_build_802_1q(const uint8_t *dst, const uint8_t *src, uint16_t tpi,
 uint8_t priority, uint8_t cfi, uint16_t vlan_id, uint16_t len_proto,
 const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_802_1q_hdr _802_1q_hdr;
 
     if (l == NULL)
@@ -47,13 +46,17 @@ const uint8_t* payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_802_1Q_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
  
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_802_1Q_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_802_1Q_H);
     if (p == NULL)
     {
         return (-1);
