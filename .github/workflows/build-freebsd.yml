@@ -1,39 +1,31 @@
-name: FreeBSD DISABLED PLEASE HELP
+name: FreeBSD
 
-# DISABLED DUE TO VM NOT STARTING UP PROPERLY
-#on: [push, pull_request]
-on: workflow_dispatch
-
-env:
-  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
-  MAKEFLAGS: -j3
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   build:
     strategy:
       matrix:
-        name: [ freebsd-13-gcc, freebsd-13-clang ]
         include:
-          - name: freebsd-13-gcc
-            os: macos-latest
+          - name: FreeBSD-15
             cc: gcc
-          - name: freebsd-13-clang
-            os: macos-latest
+          - name: FreeBSD-15
             cc: clang
 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build
+      - name: ${{ matrix.name }} Build
         # https://github.com/vmactions/freebsd-vm
         uses: vmactions/freebsd-vm@v1
         with:
+          release: "15.0"
+          usesh: true
           prepare: |
-            pkg install -y autotools libtool gcc llvm doxygen tree
+            pkg install -y autotools libtool gcc llvm doxygen tree pkgconf
           run: |
             ./autogen.sh
-            ./configure --prefix=/usr CC=${{ matrix.cc }}
-
+            CC=${{ matrix.cc }} ./configure --prefix=/usr
             make V=1
             make install-strip DESTDIR=/tmp
             tree /tmp/usr
