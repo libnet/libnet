@@ -21,7 +21,7 @@ jobs:
         run: |
           .\win32\msvcbuild.bat ${{ matrix.arch }}
       - name: Archive DLL files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: libnet-${{ matrix.arch }}-build${{ github.run_number }}
           path: lib/${{ matrix.arch }}
