@@ -1,16 +1,13 @@
 #include "common.h"
 
 LIBNET_API
-libnet_ptag_t libnet_build_lldp_chassis(const uint8_t subtype,
+libnet_ptag_t libnet_build_lldp_chassis(uint8_t subtype,
                                         const uint8_t *value,
-                                        const uint8_t value_s,
+                                        uint8_t value_s,
                                         libnet_t *l,
                                         libnet_ptag_t ptag)
 {
     struct libnet_lldp_hdr hdr = { 0 };
-    uint16_t type_and_len;
-    libnet_pblock_t *p;
-    uint32_t n, h;
 
     if (l == NULL)
         return (-1);
@@ -30,9 +27,10 @@ libnet_ptag_t libnet_build_lldp_chassis(const uint8_t subtype,
     }
 
     /* size of memory block */
-    n = h =  LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
+    const uint32_t n = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
         LIBNET_LLDP_SUBTYPE_SIZE +      /* Chassis ID subtype size */
         value_s;                        /* Chassis ID string length */
+    const uint32_t h = n;
 
     LIBNET_LLDP_TLV_SET_TYPE(hdr.tlv_info, LIBNET_LLDP_CHASSIS_ID);
     LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, value_s + LIBNET_LLDP_SUBTYPE_SIZE);
@@ -41,13 +39,17 @@ libnet_ptag_t libnet_build_lldp_chassis(const uint8_t subtype,
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_CHASSIS_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LLDP_CHASSIS_H);
     if (p == NULL)
     {
         return (-1);
     }
 
-    type_and_len = htons(hdr.tlv_info);
+    const uint16_t type_and_len = htons(hdr.tlv_info);
     if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
         goto bad;
 
@@ -66,16 +68,13 @@ bad:
 
 
 LIBNET_API
-libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
+libnet_ptag_t libnet_build_lldp_port(uint8_t subtype,
                                      const uint8_t *value,
-                                     const uint8_t value_s,
+                                     uint8_t value_s,
                                      libnet_t *l,
                                      libnet_ptag_t ptag)
 {
     struct libnet_lldp_hdr hdr = { 0 };
-    uint16_t type_and_len;
-    libnet_pblock_t *p;
-    uint32_t n, h;
 
     if (l == NULL)
         return (-1);
@@ -95,9 +94,10 @@ libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
     }
 
     /* size of memory block */
-    n = h =  LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
+    const uint32_t n = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
         LIBNET_LLDP_SUBTYPE_SIZE +      /* Port ID subtype size */
         value_s;                        /* Port ID string length */
+    const uint32_t h = n;
 
     LIBNET_LLDP_TLV_SET_TYPE(hdr.tlv_info, LIBNET_LLDP_PORT_ID);
     LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, value_s + LIBNET_LLDP_SUBTYPE_SIZE);
@@ -106,11 +106,15 @@ libnet_ptag_t libnet_build_lldp_port(const uint8_t subtype,
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_PORT_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LLDP_PORT_H);
     if (p == NULL)
         return (-1);
 
-    type_and_len = htons(hdr.tlv_info);
+    const uint16_t type_and_len = htons(hdr.tlv_info);
     if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
         goto bad;
 
@@ -130,21 +134,19 @@ bad:
 }
 
 LIBNET_API
-libnet_ptag_t libnet_build_lldp_ttl(const uint16_t ttl,
+libnet_ptag_t libnet_build_lldp_ttl(uint16_t ttl,
                                     libnet_t *l,
                                     libnet_ptag_t ptag)
 {
     struct libnet_lldp_hdr hdr = { 0 };
-    uint16_t type_and_len;
-    libnet_pblock_t *p;
-    uint32_t n, h;
 
     if (l == NULL)
         return (-1);
 
     /* size of memory block */
-    n = h =  LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
+    const uint32_t n = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
         sizeof(uint16_t);               /* Size of 2 octets */
+    const uint32_t h = n;
 
     LIBNET_LLDP_TLV_SET_TYPE(hdr.tlv_info, LIBNET_LLDP_TTL);
     LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, sizeof(uint16_t)); /* Size is 2 octets */
@@ -153,11 +155,15 @@ libnet_ptag_t libnet_build_lldp_ttl(const uint16_t ttl,
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_TTL_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LLDP_TTL_H);
     if (p == NULL)
         return (-1);
 
-    type_and_len = htons(hdr.tlv_info);
+    const uint16_t type_and_len = htons(hdr.tlv_info);
     if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
         goto bad;
 
@@ -178,15 +184,13 @@ LIBNET_API
 libnet_ptag_t libnet_build_lldp_end(libnet_t *l, libnet_ptag_t ptag)
 {
     struct libnet_lldp_hdr hdr = { 0 };
-    uint16_t type_and_len;
-    libnet_pblock_t *p;
-    uint32_t n, h;
 
     if (l == NULL)
         return (-1);
 
     /* size of memory block */
-    n = h =  LIBNET_LLDP_TLV_HDR_SIZE; /* TLV Header size */
+    const uint32_t n = LIBNET_LLDP_TLV_HDR_SIZE; /* TLV Header size */
+    const uint32_t h = n;
 
     LIBNET_LLDP_TLV_SET_TYPE(hdr.tlv_info, LIBNET_LLDP_END_LLDPDU);
     LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, 0);
@@ -195,11 +199,15 @@ libnet_ptag_t libnet_build_lldp_end(libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_TTL_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LLDP_TTL_H);
     if (p == NULL)
         return (-1);
 
-    type_and_len = htons(hdr.tlv_info);
+    const uint16_t type_and_len = htons(hdr.tlv_info);
     if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
         goto bad;
 
@@ -214,14 +222,11 @@ bad:
 
 LIBNET_API
 libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *value,
-                                         const uint16_t value_s,
+                                         uint16_t value_s,
                                          libnet_t *l,
                                          libnet_ptag_t ptag)
 {
     struct libnet_lldp_hdr hdr = { 0 };
-    uint16_t type_and_len;
-    libnet_pblock_t *p;
-    uint32_t n, h;
 
     if (l == NULL)
         return (-1);
@@ -244,18 +249,23 @@ libnet_ptag_t libnet_build_lldp_org_spec(const uint8_t *value,
     LIBNET_LLDP_TLV_SET_LEN(hdr.tlv_info, value_s);
 
     /* size of memory block */
-    n = h = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
+    const uint32_t n = LIBNET_LLDP_TLV_HDR_SIZE + /* TLV Header size */
         value_s;                       /* TLV Information length*/
+    const uint32_t h = n;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_LLDP_ORG_SPEC_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_LLDP_ORG_SPEC_H);
     if (p == NULL)
         return (-1);
 
-    type_and_len = htons(hdr.tlv_info);
+    const uint16_t type_and_len = htons(hdr.tlv_info);
     if (libnet_pblock_append(l, p, &type_and_len, sizeof(type_and_len)) == -1)
         goto bad;
 

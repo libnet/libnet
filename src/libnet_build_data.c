@@ -37,8 +37,7 @@ libnet_ptag_t
 libnet_build_data(const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
 
     if (l == NULL)
     { 
@@ -46,13 +45,17 @@ libnet_ptag_t ptag)
     } 
 
     n = payload_s;
-    h = 0;          /* no checksum on generic block */
+    const uint32_t h = 0;          /* no checksum on generic block */
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_DATA_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_DATA_H);
     if (p == NULL)
     {
         return (-1);

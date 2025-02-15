@@ -37,8 +37,7 @@ libnet_ptag_t
 libnet_build_ipsec_esp_hdr(uint32_t spi, uint32_t seq, uint32_t iv,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_esp_hdr esp_hdr;
 
     if (l == NULL)
@@ -47,7 +46,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_IPSEC_ESP_HDR_H + payload_s;/* size of memory block */
-    h = 0;
+    const uint32_t h = 0;
 
     memset(&esp_hdr, 0, sizeof(esp_hdr));
     esp_hdr.esp_spi = htonl(spi);      /* SPI */
@@ -58,7 +57,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPSEC_ESP_HDR_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPSEC_ESP_HDR_H);
     if (p == NULL)
     {
         return (-1);
@@ -86,8 +89,7 @@ libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
             libnet_ptag_t ptag)
 {
     /* XXX we need to know the size of auth */
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_esp_ftr esp_ftr;
 
     if (l == NULL)
@@ -96,7 +98,7 @@ libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
     } 
 
     n = LIBNET_IPSEC_ESP_FTR_H + payload_s;/* size of memory block */
-    h = 0;
+    const uint32_t h = 0;
 
     memset(&esp_ftr, 0, sizeof(esp_ftr));
     esp_ftr.esp_pad_len = len;      /* pad length */
@@ -107,7 +109,11 @@ libnet_build_ipsec_esp_ftr(uint8_t len, uint8_t nh, int8_t *auth,
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPSEC_ESP_FTR_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPSEC_ESP_FTR_H);
     if (p == NULL)
     {
         return (-1);
@@ -135,8 +141,7 @@ libnet_build_ipsec_ah(uint8_t nh, uint8_t len, uint16_t res,
 uint32_t spi, uint32_t seq, uint32_t auth, const uint8_t *payload,
 uint32_t payload_s,  libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_ah_hdr ah_hdr;
 
     if (l == NULL)
@@ -145,13 +150,17 @@ uint32_t payload_s,  libnet_t *l, libnet_ptag_t ptag)
     } 
 
     n = LIBNET_IPSEC_AH_H + payload_s;/* size of memory block */
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_IPSEC_AH_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_IPSEC_AH_H);
     if (p == NULL)
     {
         return (-1);

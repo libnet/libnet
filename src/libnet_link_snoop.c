@@ -131,6 +131,7 @@ libnet_open_link(libnet_t *l)
 
     return 1;
 bad:
+    /* FIXME: Is this bug? closing uninitialized fd */
     close(fd);
     free(l);
     return -1;
@@ -156,7 +157,7 @@ libnet_write_link(libnet_t *l, const uint8_t *buf, uint32_t len)
 {
     int c;
     struct ifreq ifr;
-    struct ether_header *eh = (struct ether_header *)buf;
+    struct ether_header * const eh = (struct ether_header *)buf;
 
     memset(&ifr, 0, sizeof(ifr));
     strncpy(ifr.ifr_name, l->device, sizeof(ifr.ifr_name));
@@ -182,9 +183,9 @@ struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
     struct ifreq ifdat;
-    int s = -1;
+    const int s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP);
 
-    if (-1 == (s = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP)))
+    if (s == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                 "socket(): %s", strerror(errno));

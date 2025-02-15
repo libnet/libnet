@@ -37,7 +37,6 @@ libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t type)
 {
     int offset;
-    libnet_pblock_t *p;
 
     if (ptag == LIBNET_PTAG_INITIALIZER)
     {
@@ -48,7 +47,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t typ
      *  Update this pblock, don't create a new one.  Note that if the
      *  new packet size is larger than the old one we will do a malloc.
      */
-    p = libnet_pblock_find(l, ptag);
+    libnet_pblock_t * const p = libnet_pblock_find(l, ptag);
 
     if (p == NULL)
     {
@@ -97,7 +96,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, uint32_t b_len, uint8_t typ
 
 static void* zmalloc(libnet_t* l, uint32_t size, const char* func)
 {
-    void* v = malloc(size);
+    void * const v = malloc(size);
     if(v)
         memset(v, 0, size);
     else
@@ -109,7 +108,7 @@ static void* zmalloc(libnet_t* l, uint32_t size, const char* func)
 libnet_pblock_t *
 libnet_pblock_new(libnet_t *l, uint32_t b_len)
 {
-    libnet_pblock_t *p = zmalloc(l, sizeof(libnet_pblock_t), __func__);
+    libnet_pblock_t * const p = zmalloc(l, sizeof(libnet_pblock_t), __func__);
     if(!p)
         return NULL;
 
@@ -145,10 +144,8 @@ libnet_pblock_new(libnet_t *l, uint32_t b_len)
 int
 libnet_pblock_swap(libnet_t *l, libnet_ptag_t ptag1, libnet_ptag_t ptag2)
 {
-    libnet_pblock_t *p1, *p2;
-
-    p1 = libnet_pblock_find(l, ptag1);
-    p2 = libnet_pblock_find(l, ptag2);
+    libnet_pblock_t * const p1 = libnet_pblock_find(l, ptag1);
+    libnet_pblock_t * const p2 = libnet_pblock_find(l, ptag2);
     if (p1 == NULL || p2 == NULL)
     {
         /* error set elsewhere */
@@ -207,10 +204,8 @@ int
 libnet_pblock_insert_before(libnet_t *l, libnet_ptag_t ptag1,
         libnet_ptag_t ptag2)
 {
-    libnet_pblock_t *p1, *p2;
-
-    p1 = libnet_pblock_find(l, ptag1);
-    p2 = libnet_pblock_find(l, ptag2);
+    libnet_pblock_t * const p1 = libnet_pblock_find(l, ptag1);
+    libnet_pblock_t * const p2 = libnet_pblock_find(l, ptag2);
     if (p1 == NULL || p2 == NULL)
     {
         /* error set elsewhere */
@@ -297,7 +292,7 @@ libnet_pblock_update(libnet_t *l, libnet_pblock_t *p, uint32_t h_len, uint8_t ty
     return (p->ptag);
 }
 
-static int pblock_is_ip(libnet_pblock_t* p)
+static int pblock_is_ip(const libnet_pblock_t* p)
 {
     return p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H;
 }
@@ -306,10 +301,10 @@ static int pblock_is_ip(libnet_pblock_t* p)
  * from end of packet. if there is no offset, we'll return the total size,
  * and things will break later
  */
-static int calculate_ip_offset(libnet_t* l, libnet_pblock_t* q)
+static int calculate_ip_offset(const libnet_t* l, const libnet_pblock_t* q)
 {
     int ip_offset = 0;
-    libnet_pblock_t* p = l->protocol_blocks;
+    const libnet_pblock_t * p = l->protocol_blocks;
     for(; p && p != q; p = p->next) {
 	ip_offset += p->b_len;
     }
@@ -347,7 +342,7 @@ libnet_pblock_coalesce(libnet_t *l, uint8_t **packet, uint32_t *size)
     if(!l->total_size && !l->aligner) {
         /* Avoid allocating zero bytes of memory, it perturbs electric fence. */
         *packet = malloc(1);
-        **packet =1;
+        **packet = 1;
     } else {
         *packet = malloc(l->aligner + l->total_size);
     }

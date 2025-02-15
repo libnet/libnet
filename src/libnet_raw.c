@@ -64,14 +64,14 @@ libnet_close_raw6(libnet_t *l)
 static int libnet_finish_setup_socket(libnet_t *l)
 {
 #if !(__WIN32__)
-     int n = 1;
+     const int n = 1;
 #if (__svr4__)
-     void *nptr = &n;
+     const void * const nptr = &n;
 #else
-    int *nptr = &n;
+    const int * const nptr = &n;
 #endif  /* __svr4__ */
 #else
-	BOOL n;
+	const BOOL n;
 #endif
 
 #ifdef SO_BROADCAST
@@ -111,14 +111,14 @@ int
 libnet_open_raw4(libnet_t *l)
 {
 #if !(__WIN32__)
-     int n = 1;
+     const int n = 1;
 #if (__svr4__)
-     void *nptr = &n;
+     const void * const nptr = &n;
 #else
-    int *nptr = &n;
+    const int * const nptr = &n;
 #endif  /* __svr4__ */
 #else
-	BOOL n;
+	const BOOL n;
 #endif
 
     if (l == NULL)

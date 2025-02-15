@@ -3,22 +3,22 @@
 #include <assert.h>
 
 static libnet_ptag_t
-internal_build_udld_tlv(const uint16_t tlv_type, const uint8_t *value,
-const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
+internal_build_udld_tlv(uint16_t tlv_type, const uint8_t *value,
+uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     struct libnet_udld_hdr hdr;
-    uint32_t n, h;
     libnet_pblock_t *p = NULL;
 
     hdr.tlv__type   = tlv_type;
     hdr.tlv__length = LIBNET_UDLD_TLV_HDR_SIZE + value_s;
 
-    uint32_t host_type_and_len    = 0;
-    host_type_and_len             |= (hdr.tlv__type << 16);
-    host_type_and_len             |= (hdr.tlv__length);
-    uint32_t network_type_and_len = htonl(host_type_and_len);
+    const uint32_t host_type_and_len = 0
+        | (hdr.tlv__type << 16)
+        | (hdr.tlv__length);
+    const uint32_t network_type_and_len = htonl(host_type_and_len);
 
-    n = h = LIBNET_UDLD_TLV_HDR_SIZE + value_s;
+    const uint32_t n = LIBNET_UDLD_TLV_HDR_SIZE + value_s;
+    const uint32_t h = n;
 
     uint8_t pblock_type = 0;
     uint8_t value_type  = 0;
@@ -53,8 +53,7 @@ const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
             value_type  = LIBNET_UDLD_VALUE_TYPE_32_BIT_UINT;
             break;
         default:
-            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-            "%s(): incorrect TLV type", __func__);
+            snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): incorrect TLV type", __func__);
             goto bad;
     }
 
@@ -126,9 +125,8 @@ const uint8_t *payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)
 {
 
     struct libnet_udld_hdr udld_hdr;
-    libnet_pblock_t *p = NULL;
     uint32_t n = 0;
-    uint32_t h = 0;
+    const uint32_t h = 0;
 
     if (l == NULL)
     {
@@ -141,7 +139,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_UDLD_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_UDLD_H);
     if (p == NULL)
     {
         return (-1);
@@ -181,7 +183,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t * l, libnet_ptag_t ptag)
 }
 
 LIBNET_API libnet_ptag_t
-libnet_build_udld_device_id(const uint8_t *value, const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
+libnet_build_udld_device_id(const uint8_t *value, uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     if (l == NULL)
     {
@@ -198,7 +200,7 @@ libnet_build_udld_device_id(const uint8_t *value, const uint8_t value_s, libnet_
 }
 
 LIBNET_API libnet_ptag_t
-libnet_build_udld_port_id(const uint8_t *value, const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
+libnet_build_udld_port_id(const uint8_t *value, uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     if (l == NULL)
     {
@@ -215,7 +217,7 @@ libnet_build_udld_port_id(const uint8_t *value, const uint8_t value_s, libnet_t 
 }
 
 LIBNET_API libnet_ptag_t
-libnet_build_udld_echo(const uint8_t *value, const uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
+libnet_build_udld_echo(const uint8_t *value, uint8_t value_s, libnet_t * l, libnet_ptag_t ptag)
 {
     if (l == NULL)
     {
@@ -270,7 +272,7 @@ libnet_ptag_t ptag)
 }
 
 LIBNET_API libnet_ptag_t
-libnet_build_udld_device_name(const uint8_t *value, const uint8_t value_s,
+libnet_build_udld_device_name(const uint8_t *value, uint8_t value_s,
 libnet_t *l, libnet_ptag_t ptag)
 {
     if (l == NULL)

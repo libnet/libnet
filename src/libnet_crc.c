@@ -88,7 +88,7 @@ static uint32_t crc_table[256] =
  *      n = 32, 26, 23, 22, 16, 12, 11, 10, 8, 7, 5, 4, 2, 1, 0
  */
 uint32_t
-libnet_compute_crc(uint8_t *buf, uint32_t len)
+libnet_compute_crc(const uint8_t *buf, uint32_t len)
 {
     uint32_t val;
 

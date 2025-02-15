@@ -102,7 +102,7 @@ static int dlinfoack(int, int8_t *, int8_t *);
 static int dlinforeq(int, int8_t *);
 static int dlokack(int, const int8_t *, int8_t *, int8_t *);
 static int recv_ack(int, int, const int8_t *, int8_t *, int8_t *);
-static int send_request(int, int8_t *, int, int8_t *, int8_t *, int);
+static int send_request(int, int8_t *, int, const int8_t *, int8_t *, int);
 #ifdef HAVE_SYS_BUFMOD_H
 static int strioctl(int, int, int, int8_t *);
 #endif
@@ -118,7 +118,7 @@ static bpf_u_int32 ctlbuf[MAXDLBUF];
 
 /* Return a pointer to the last character in 'in' that is not in 's',
  * or NULL if no such character exists. */
-static char *find_last_not_of(char *in, const char *s)
+static char *find_last_not_of(const char *in, const char *s)
 {
   char* cur;
   cur = in + strlen(in);
@@ -202,7 +202,6 @@ try_open_dev(libnet_t *l, const char *dev, int unit)
 int
 libnet_open_link(libnet_t *l)
 {
-    int8_t *cp;
     int8_t *eos;
     int ppa;
     dl_info_ack_t *infop;
@@ -242,7 +241,7 @@ libnet_open_link(libnet_t *l)
     /*
      *  Map network device to /dev/dlpi unit
      */
-    cp = "/dev/dlpi";
+    int8_t * const cp = "/dev/dlpi";
 
     l->fd = open(cp, O_RDWR);
     if (l->fd == -1)
@@ -349,7 +348,7 @@ bad:
 
 
 static int
-send_request(int fd, int8_t *ptr, int len, int8_t *what, int8_t *ebuf, int flags)
+send_request(int fd, int8_t *ptr, int len, const int8_t *what, int8_t *ebuf, int flags)
 {
     struct strbuf ctl;
 
@@ -370,7 +369,6 @@ send_request(int fd, int8_t *ptr, int len, int8_t *what, int8_t *ebuf, int flags
 static int
 recv_ack(int fd, int size, const int8_t *what, int8_t *bufp, int8_t *ebuf)
 {
-    union DL_primitives *dlp;
     struct strbuf ctl;
     int flags;
 
@@ -386,7 +384,7 @@ recv_ack(int fd, int size, const int8_t *what, int8_t *bufp, int8_t *ebuf)
         return (-1);
     }
 
-    dlp = (union DL_primitives *)ctl.buf;
+    union DL_primitives * const dlp = (union DL_primitives *)ctl.buf;
     switch (dlp->dl_primitive)
     {
         case DL_INFO_ACK:
@@ -512,14 +510,13 @@ static int
 strioctl(int fd, int cmd, int len, int8_t *dp)
 {
     struct strioctl str;
-    int rc;
 
     str.ic_cmd    = cmd;
     str.ic_timout = -1;
     str.ic_len    = len;
     str.ic_dp     = dp;
     
-    rc = ioctl(fd, I_STR, &str);
+    const int rc = ioctl(fd, I_STR, &str);
     if (rc < 0)
     {
         return (rc);
@@ -539,10 +536,8 @@ strioctl(int fd, int cmd, int len, int8_t *dp)
 static int
 get_dlpi_ppa(int fd, const int8_t *device, int unit, int8_t *ebuf)
 {
-    dl_hp_ppa_ack_t *ap;
     dl_hp_ppa_info_t *ip;
     int i;
-    uint32_t majdev;
     dl_hp_ppa_req_t	req;
     struct stat statbuf;
     bpf_u_int32 buf[MAXDLBUF];
@@ -553,7 +548,7 @@ get_dlpi_ppa(int fd, const int8_t *device, int unit, int8_t *ebuf)
                  "stat: %s: %s", device, strerror(errno));
         return (-1);
     }
-    majdev = major(statbuf.st_rdev);
+    const uint32_t majdev = major(statbuf.st_rdev);
 
     memset((int8_t *)&req, 0, sizeof(req));
     req.dl_primitive = DL_HP_PPA_REQ;
@@ -565,7 +560,7 @@ get_dlpi_ppa(int fd, const int8_t *device, int unit, int8_t *ebuf)
         return (-1);
     }
 
-    ap = (dl_hp_ppa_ack_t *)buf;
+    dl_hp_ppa_ack_t * const ap = (dl_hp_ppa_ack_t *)buf;
     ip = (dl_hp_ppa_info_t *)((uint8_t *)ap + ap->dl_offset);
 
     for (i = 0; i < ap->dl_count; i++)
@@ -613,13 +608,11 @@ static int8_t path_vmunix[] = "/hp-ux";
 static int
 get_dlpi_ppa(int fd, const int8_t *ifname, int unit, int8_t *ebuf)
 {
-    const int8_t *cp;
-    int kd;
     void *addr;
     struct ifnet ifnet;
     int8_t if_name[sizeof(ifnet.if_name)], tifname[32];
 
-    cp = strrchr(ifname, '/');
+    const int8_t * const cp = strrchr(ifname, '/');
     if (cp != NULL)
     {
         ifname = cp + 1;
@@ -638,7 +631,7 @@ get_dlpi_ppa(int fd, const int8_t *ifname, int unit, int8_t *ebuf)
         return (-1);
     }
 
-    kd = open("/dev/kmem", O_RDONLY);
+    const int kd = open("/dev/kmem", O_RDONLY);
     if (kd < 0)
     {
         snprintf(ebuf, LIBNET_ERRBUF_SIZE,
@@ -675,15 +668,13 @@ get_dlpi_ppa(int fd, const int8_t *ifname, int unit, int8_t *ebuf)
 static int
 dlpi_kread(int fd, off_t addr, void *buf, uint len, int8_t *ebuf)
 {
-    int cc;
-
     if (lseek(fd, addr, SEEK_SET) < 0)
     {
         snprintf(ebuf, LIBNET_ERRBUF_SIZE,
                  "lseek: %s", strerror(errno));
         return (-1);
     }
-    cc = read(fd, buf, len);
+    const int cc = read(fd, buf, len);
     if (cc < 0)
     {
         snprintf(ebuf, LIBNET_ERRBUF_SIZE,
@@ -726,15 +717,13 @@ int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)   
 {                                                             
     struct strbuf data, ctl;
-    dl_hp_rawdata_req_t *rdata;
-    int c;                     
                           
     if (l == NULL)
     {             
         return (-1);           
     }       
             
-    rdata = (dl_hp_rawdata_req_t *)ctlbuf;
+    dl_hp_rawdata_req_t * const rdata = (dl_hp_rawdata_req_t *)ctlbuf;
     rdata->dl_primitive = DL_HP_RAWDATA_REQ; 
 
     /* send it */                                  
@@ -746,7 +735,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     data.len    = size;                                
     data.buf    = packet;  
 
-    c = putmsg(l->fd, &ctl, &data, 0);
+    const int c = putmsg(l->fd, &ctl, &data, 0);
     if (c == -1)                      
     {                    
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -763,7 +752,6 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 int
 libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 {
-    int c;
     struct strbuf data;
 
     if (l == NULL)
@@ -775,7 +763,7 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
     data.len    = size;
     data.buf    = packet;
 
-    c = putmsg(l->fd, NULL, &data, 0);
+    const int c = putmsg(l->fd, NULL, &data, 0);
     if (c == -1)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
@@ -793,16 +781,12 @@ libnet_write_link(libnet_t *l, const uint8_t *packet, uint32_t size)
 struct libnet_ether_addr *
 libnet_get_hwaddr(libnet_t *l)
 {
-    union DL_primitives *dlp;
-    int8_t *buf;
-    int8_t *mac;
-
     if (l == NULL)
     { 
         return (NULL);
     }
 
-    buf = (int8_t *)malloc(2048);
+    int8_t * const buf = (int8_t *)malloc(2048);
     if (buf == NULL)
     {
         snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, "%s(): malloc(): %s",
@@ -810,7 +794,7 @@ libnet_get_hwaddr(libnet_t *l)
         return (NULL);
     }
 
-    dlp = (union DL_primitives *)buf;
+    union DL_primitives * const dlp = (union DL_primitives *)buf;
 
     dlp->physaddr_req.dl_primitive = DL_PHYS_ADDR_REQ;
     dlp->physaddr_req.dl_addr_type = DL_CURR_PHYS_ADDR;
@@ -828,7 +812,7 @@ libnet_get_hwaddr(libnet_t *l)
         return (NULL);
     }
 
-    mac = (int8_t *)dlp + dlp->physaddr_ack.dl_addr_offset;
+    int8_t * const mac = (int8_t *)dlp + dlp->physaddr_ack.dl_addr_offset;
     memcpy(l->link_addr.ether_addr_octet, mac, ETHER_ADDR_LEN);
     free(buf);
 

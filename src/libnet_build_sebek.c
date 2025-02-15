@@ -34,11 +34,10 @@
 libnet_ptag_t
 libnet_build_sebek(uint32_t magic, uint16_t version, uint16_t type, 
 uint32_t counter, uint32_t time_sec, uint32_t time_usec, uint32_t pid,
-uint32_t uid, uint32_t fd, uint8_t cmd[SEBEK_CMD_LENGTH], uint32_t length,
+uint32_t uid, uint32_t fd, const uint8_t cmd[SEBEK_CMD_LENGTH], uint32_t length,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_sebek_hdr sebek_hdr;
 
     if (l == NULL)
@@ -52,7 +51,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_SEBEK_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_SEBEK_H);
     if (p == NULL)
     {
         return (-1);

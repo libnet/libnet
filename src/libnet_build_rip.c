@@ -38,8 +38,7 @@ uint16_t rt, uint32_t addr, uint32_t mask, uint32_t next_hop,
 uint32_t metric, const uint8_t *payload, uint32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
+    uint32_t n;
     struct libnet_rip_hdr rip_hdr;
 
     if (l == NULL)
@@ -48,13 +47,17 @@ libnet_ptag_t ptag)
     } 
 
     n = LIBNET_RIP_H + payload_s;
-    h = 0;
+    const uint32_t h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_RIP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_RIP_H);
     if (p == NULL)
     {
         return (-1);

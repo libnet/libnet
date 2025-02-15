@@ -37,7 +37,6 @@ libnet_build_udp(uint16_t sp, uint16_t dp, uint16_t len, uint16_t sum,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_udp_hdr udp_hdr;
 
     if (l == NULL)
@@ -51,7 +50,11 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_UDP_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_UDP_H);
     if (p == NULL)
     {
         return (-1);

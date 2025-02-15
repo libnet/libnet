@@ -33,13 +33,12 @@
 #include "common.h"
 
 libnet_ptag_t
-libnet_build_isl(uint8_t *dhost, uint8_t type, uint8_t user,
-uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
+libnet_build_isl(const uint8_t *dhost, uint8_t type, uint8_t user,
+const uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
 uint16_t portindex, uint16_t reserved, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
     uint32_t n;
-    libnet_pblock_t *p;
     struct libnet_isl_hdr isl_hdr;
 
     if (l == NULL)
@@ -53,7 +52,11 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
      *  Find the existing protocol block if a ptag is specified, or create
      *  a new one.
      */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_ISL_H);
+    libnet_pblock_t * const p = libnet_pblock_probe(
+        l,
+        ptag,
+        n,
+        LIBNET_PBLOCK_ISL_H);
     if (p == NULL)
     {
         return (-1);
