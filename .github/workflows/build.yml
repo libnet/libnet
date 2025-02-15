@@ -88,6 +88,10 @@ jobs:
       - name: Build
         run: |
           make V=1
+      - name: Enable unprivileged userns (unshare)
+        if: startsWith(matrix.os,'ubuntu')
+        run: |
+          sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run Linux unit tests
         if: startsWith(matrix.os,'ubuntu')
         run: |
