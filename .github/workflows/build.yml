@@ -1,6 +1,9 @@
 name: Linux/macOS
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches: main
 
 env:
   # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
@@ -88,6 +91,10 @@ jobs:
       - name: Build
         run: |
           make V=1
+      - name: Enable unprivileged userns (unshare)
+        if: startsWith(matrix.os,'ubuntu')
+        run: |
+          sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run Linux unit tests
         if: startsWith(matrix.os,'ubuntu')
         run: |
