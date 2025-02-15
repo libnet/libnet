@@ -1,6 +1,9 @@
 name: Linux/macOS
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches: main
 
 env:
   # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
