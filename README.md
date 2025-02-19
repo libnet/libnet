@@ -108,6 +108,47 @@ Then compile libnet with docker:
     $ ./configure
     $ make
 
+### Building with MSYS2
+
+First install all the dependencies we need including the Npcap SDK.
+
+Type in your MSYS2 terminal to install the dependencies:
+
+```bash
+pacman -S autoconf automake libtool unzip
+```
+
+Download the Npcap SDK and unzips it as a `npcap` directory to easily add it to the `configure` command:
+
+```bash
+wget https://npcap.com/dist/npcap-sdk-1.13.zip && unzip npcap-sdk-1.13.zip -d npcap
+```
+
+Download the libnet from it's [latest release][], unpack it and then generate a Makefiles:
+
+```bash
+cd libnet-x.y && ./autogen.sh
+```
+
+```bash
+CFLAGS="-I${HOME}/npcap/Include -Wno-incompatible-pointer-types" LDFLAGS="-L${HOME}/npcap/Lib/x64" ./configure --prefix=/ucrt64
+```
+
+> [!Note]
+> This is currently using a UCRT64 environment.
+
+
+Build and then install:
+
+```bash
+make && make install
+```
+
+Building Done. You can verify it's installation:
+
+```bash
+pkg-config --libs --cflags libnet
+```
 
 ### Running Unit Tests with CMocka
 
