@@ -238,28 +238,40 @@ char *
 libnet_plist_chain_dump_string(libnet_plist_t *plist)
 {
     char buf[BUFSIZ] = {0};
-    int i, j;
+    size_t j = 0;
 
     if (plist == NULL)
     {
         return (NULL);
     }
 
-    for (i = 0, j = 0; plist; plist = plist->next)
+    for (; plist; plist = plist->next)
     {
+        int i;
+
         if (plist->bport == plist->eport)
         {
-            i = snprintf(&buf[j], BUFSIZ-j, "%d", plist->bport);
+            i = snprintf(&buf[j], sizeof(buf) - j, "%d", plist->bport);
         }
         else
         {
-            i = snprintf(&buf[j], BUFSIZ-j, "%d-%d", plist->bport, plist->eport);
+            i = snprintf(&buf[j], sizeof(buf) - j, "%d-%d", plist->bport, plist->eport);
         }
-        j += i;
+
+        if (i < 0 || (size_t)i >= sizeof(buf) - j)
+        {
+            break;
+        }
+        j += (size_t)i;
+
         if (plist->next)
         {
-            snprintf(&buf[j], BUFSIZ-j, ",");
-            j++;
+            if (j + 1 >= sizeof(buf))
+            {
+                break;
+            }
+            buf[j++] = ',';
+            buf[j] = '\0';
         }
     }
     return (strdup(buf));       /* XXX - reentrancy == no */
