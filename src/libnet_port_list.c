@@ -123,13 +123,17 @@ libnet_plist_chain_new(libnet_t *l, libnet_plist_t **plist, char *token_list)
             tmp->next = malloc(sizeof (libnet_plist_t));
             if (!tmp->next)
             {
+                libnet_plist_t *cur, *nxt;
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
                     "libnet_build_plist_chain: malloc %s", strerror(errno));
-                /*
-                 *  XXX - potential memory leak if other nodes are allocated
-                 *  but not freed.
-                 */
+                /* Free all previously allocated nodes */
+                for (cur = *plist; cur != NULL; cur = nxt)
+                {
+                    nxt = cur->next;
+                    free(cur);
+                }
                 *plist = NULL;
+                cur_id--;
                 return(-1);
             }
             tmp = tmp->next;
@@ -204,7 +208,12 @@ libnet_plist_chain_next_pair(libnet_plist_t *plist, uint16_t *bport,
         return (0);
     }
 
-    for (tmp_cnt = *node_cnt; tmp_cnt; tmp_cnt--, plist = plist->next) ;
+    for (tmp_cnt = *node_cnt; tmp_cnt; tmp_cnt--)
+    {
+        plist = plist->next;
+        if (plist == NULL)
+            return (-1);
+    }
     *bport = plist->bport;
     *eport = plist->eport;
     *node_cnt += 1;
