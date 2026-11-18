@@ -255,9 +255,17 @@ libnet_plist_chain_dump_string(libnet_plist_t *plist)
         {
             i = snprintf(&buf[j], BUFSIZ-j, "%d-%d", plist->bport, plist->eport);
         }
+        if (i < 0 || i >= BUFSIZ-j)
+        {
+            return (NULL);
+        }
         j += i;
         if (plist->next)
         {
+            if (j == BUFSIZ-1)
+            {
+                return (NULL);
+            }
             snprintf(&buf[j], BUFSIZ-j, ",");
             j++;
         }
